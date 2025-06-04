@@ -20,7 +20,7 @@ function bootstrap() {
 
 	$did_init = true;
 
-	register_class_path( __NAMESPACE__, __DIR__ . '/inc' );
+	register_class_path( __NAMESPACE__, __DIR__ . DIRECTORY_SEPARATOR );
 
 	// Modules:
 	Avatars\bootstrap();
@@ -29,6 +29,7 @@ function bootstrap() {
 	Default_Repo\bootstrap();
 	Disable_Openverse\bootstrap();
 	Importers\bootstrap();
+	Packages\bootstrap();
 	Pings\bootstrap();
 	Salts\bootstrap();
 	Settings\bootstrap();
