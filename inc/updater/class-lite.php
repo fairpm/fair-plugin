@@ -116,7 +116,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 			$response = get_site_transient( "git-updater-lite_{$this->file}" );
 			if ( ! $response ) {
 				$response = wp_remote_post( $url );
-				if ( is_wp_error( $response ) ) {
+				if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) === 404 ) {
 					return $response;
 				}
 
