@@ -9,6 +9,8 @@
  * Requires PHP: 7.2.24
  * Text Domain: fair
  * Update URI: https://api.fair.pm
+ * GitHub Plugin URI: https://github.com/fairpm/fair-plugin
+ * Primary Branch: main
  */
 
 namespace FAIR;
