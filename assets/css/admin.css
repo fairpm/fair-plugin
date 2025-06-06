@@ -4,6 +4,7 @@
 	gap: 1em;
 	margin-bottom: 1em;
 }
+
 .fair-settings .row > .label-wrapper {
 	flex: 0 0 auto;
 	font-weight: 600;
@@ -21,12 +22,13 @@
 		flex-direction: column;
 		gap: 0;
 	}
+
 	.fair-settings .row > .label-wrapper {
 		max-width: 100%;
 		padding-bottom: 0.5em;
 	}
 
-	.fair-settings .row .field select,
+	.fair-settings .row .field select {
 		margin: 0;
 	}
 }
