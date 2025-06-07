@@ -74,7 +74,7 @@ msgid "alt for unknown avatar userprofile picture for user"
 msgstr "Profilbild für Benutzer"
 
 msgid "browser version checkyour platform"
-msgstr "Ihre Plattform"
+msgstr "Deine Plattform"
 
 msgid "%s is not a valid version string."
 msgstr "%s ist keine gültige Versionszeichenfolge."
@@ -86,7 +86,7 @@ msgid "FAIR - Federated and Independent Repositories"
 msgstr "FAIR - Föderierte und unabhängige Repositorien"
 
 msgid "Make your site more FAIR."
-msgstr "Mache Ihre Website FAIRer."
+msgstr "Mache deine Website FAIRer."
 
 msgid "FAIR Contributors"
 msgstr "FAIR-Mitwirkende"
