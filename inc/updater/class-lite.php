@@ -385,7 +385,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 					<?php
 					printf(
 						/* translators: %s: theme name */
-						esc_html__( 'There is a new version of %s available.', 'git-updater-lite' ),
+						esc_html__( 'There is a new version of %s available.', 'fair' ),
 						esc_attr( $theme->name )
 					);
 						printf(
@@ -396,25 +396,25 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 					if ( ! empty( $current->response[ $theme->slug ]['package'] ) ) {
 						printf(
 						/* translators: 1: version number, 2: closing anchor tag, 3: update URL */
-							esc_html__( 'View version %1$s details%2$s or %3$supdate now%2$s.', 'git-updater-lite' ),
+							esc_html__( 'View version %1$s details%2$s or %3$supdate now%2$s.', 'fair' ),
 							$theme->remote_version = isset( $theme->remote_version ) ? esc_attr( $theme->remote_version ) : null,
 							'</a>',
 							sprintf(
 							/* translators: %s: theme name */
-								'<a aria-label="' . esc_html__( 'Update %s now', 'git-updater-lite' ) . '" id="update-theme" data-slug="' . esc_attr( $theme->slug ) . '" href="' . esc_url( $nonced_update_url ) . '">',
+								'<a aria-label="' . esc_html__( 'Update %s now', 'fair' ) . '" id="update-theme" data-slug="' . esc_attr( $theme->slug ) . '" href="' . esc_url( $nonced_update_url ) . '">',
 								esc_attr( $theme->name )
 							)
 						);
 					} else {
 						printf(
 						/* translators: 1: version number, 2: closing anchor tag, 3: update URL */
-							esc_html__( 'View version %1$s details%2$s.', 'git-updater-lite' ),
+							esc_html__( 'View version %1$s details%2$s.', 'fair' ),
 							$theme->remote_version = isset( $theme->remote_version ) ? esc_attr( $theme->remote_version ) : null,
 							'</a>'
 						);
 						printf(
 						/* translators: %s: opening/closing paragraph and italic tags */
-							esc_html__( '%1$sAutomatic update is unavailable for this theme.%2$s', 'git-updater-lite' ),
+							esc_html__( '%1$sAutomatic update is unavailable for this theme.%2$s', 'fair' ),
 							'<p><i>',
 							'</i></p>'
 						);

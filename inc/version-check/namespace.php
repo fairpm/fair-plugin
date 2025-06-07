@@ -98,7 +98,7 @@ function get_browser_check_response( string $agent ) {
 		],
 		'body' => json_encode( [
 			'platform' => _x( 'your platform', 'browser version check', 'fair' ),
-			'name' => __( 'your browser', 'browser version check', 'fair' ),
+			'name' => _x( 'your browser', 'browser version check', 'fair' ),
 			'version' => '',
 			'current_version' => '',
 			'upgrade' => ! $supported,
