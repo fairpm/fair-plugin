@@ -16,7 +16,7 @@ return [
     'x-domain'               => 'fair',
     'messages' => [
         'FAIR Settings' => 'FAIR-Einstellungen',
-        'You do not have sufficient permissions to access this page.' => 'Sie haben nicht genügend Berechtigungen, um diese Seite zu betreten.',
+        'You do not have sufficient permissions to access this page.' => 'Du hast nicht genügend Berechtigungen, um diese Seite zu betreten.',
         'Save Settings' => 'Einstellungen speichern',
         'Avatar Settings' => 'Avatar-Einstellungen',
         'Avatar Source' => 'Avatar-Quelle',
@@ -31,14 +31,14 @@ return [
         'Updates served from the <a href="%1$s">FAIR Package Manager</a> and <a href="%2$s">AspirePress</a>' => 'Updates werden vom <a href="%1$s">FAIR Paketmanager</a> und <a href="%2$s">AspirePress</a> bereitgestellt.',
         'Choose Profile Image' => 'Profilbild auswählen',
         'Remove Profile Image' => 'Profilbild entfernen',
-        'Upload a custom profile picture for your account.' => 'Laden Sie ein benutzerdefiniertes Profilbild für Ihr Konto hoch.',
+        'Upload a custom profile picture for your account.' => 'Lade ein benutzerdefiniertes Profilbild für dein Konto hoch.',
         'profile picture for %s' => 'Profilbild für %s',
         'alt for unknown avatar userprofile picture for user' => 'Profilbild für Benutzer',
-        'browser version checkyour platform' => 'Ihre Plattform',
+        'browser version checkyour platform' => 'Deine Plattform',
         '%s is not a valid version string.' => '%s ist keine gültige Versionszeichenfolge.',
         'No credits could be found.' => 'Keine Mitwirkenden gefunden.',
         'FAIR - Federated and Independent Repositories' => 'FAIR - Föderierte und unabhängige Repositorien',
-        'Make your site more FAIR.' => 'Machen Sie Ihre Website FAIRer.',
+        'Make your site more FAIR.' => 'Mache deine Website FAIRer.',
         'FAIR Contributors' => 'FAIR-Mitwirkende',
     ]
 ];
