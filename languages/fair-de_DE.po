@@ -1,0 +1,93 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: FAIR - Federated and Independent Repositories\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-07 07:13+0000\n"
+"PO-Revision-Date: 2025-06-07 07:25+0000\n"
+"Last-Translator: \n"
+"Language-Team: German\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.8.0; wp-6.8.1; php-8.2.27\n"
+"X-Domain: fair\n"
+
+#: FAIR Plugin
+msgid "FAIR Settings"
+msgstr "FAIR-Einstellungen"
+
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Du hast nicht genügend Berechtigungen, um diese Seite zu betreten."
+
+msgid "Save Settings"
+msgstr "Einstellungen speichern"
+
+msgid "Avatar Settings"
+msgstr "Avatar-Einstellungen"
+
+msgid "Avatar Source"
+msgstr "Avatar-Quelle"
+
+msgid "Avatars will be loaded from the selected source."
+msgstr "Avatare werden von der ausgewählten Quelle geladen."
+
+msgid "FAIR Avatars"
+msgstr "FAIR-Avatare"
+
+msgid "Gravatar"
+msgstr "Gravatar"
+
+msgid "Settings saved successfully."
+msgstr "Einstellungen erfolgreich gespeichert."
+
+msgid "Unable to fetch events (parse error)."
+msgstr "Veranstaltungen konnten nicht abgerufen werden (Parser-Fehler)."
+
+msgid "default event locationOnline"
+msgstr "Online"
+
+msgid "Events and News dashboard widgethttps://fair.pm/"
+msgstr "https://fair.pm/"
+
+msgid "Events (by The WP World)"
+msgstr "Veranstaltungen (von The WP World)"
+
+msgid "Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a href=\"%2$s\">AspirePress</a>"
+msgstr "Updates werden vom <a href=\"%1$s\">FAIR Paketmanager</a> und <a href=\"%2$s\">AspirePress</a> bereitgestellt."
+
+msgid "Choose Profile Image"
+msgstr "Profilbild auswählen"
+
+msgid "Remove Profile Image"
+msgstr "Profilbild entfernen"
+
+msgid "Upload a custom profile picture for your account."
+msgstr "Lade ein benutzerdefiniertes Profilbild für dein Konto hoch."
+
+msgid "profile picture for %s"
+msgstr "Profilbild für %s"
+
+msgid "alt for unknown avatar userprofile picture for user"
+msgstr "Profilbild für Benutzer"
+
+msgid "browser version checkyour platform"
+msgstr "Deine Plattform"
+
+msgid "%s is not a valid version string."
+msgstr "%s ist keine gültige Versionszeichenfolge."
+
+msgid "No credits could be found."
+msgstr "Keine Mitwirkenden gefunden."
+
+msgid "FAIR - Federated and Independent Repositories"
+msgstr "FAIR - Föderierte und unabhängige Repositorien"
+
+msgid "Make your site more FAIR."
+msgstr "Mache deine Website FAIRer."
+
+msgid "FAIR Contributors"
+msgstr "FAIR-Mitwirkende"
+
