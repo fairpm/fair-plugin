@@ -172,7 +172,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 		/**
 		 * Correctly rename dependency for activation.
 		 *
-		 * @param string                           $source        Path fo $source.
+		 * @param string                           $source        Path of $source.
 		 * @param string                           $remote_source Path of $remote_source.
 		 * @param \Plugin_Upgrader|\Theme_Upgrader $upgrader      An Upgrader object.
 		 * @param array                            $hook_extra    Array of hook data.
