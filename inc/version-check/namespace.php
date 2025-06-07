@@ -98,7 +98,7 @@ function get_browser_check_response( string $agent ) {
 		],
 		'body' => json_encode( [
 			'platform' => _x( 'your platform', 'browser version check', 'fair' ),
-			'name' => __( 'your browser', 'browser version check', 'fair' ),
+			'name' => _x( 'your browser', 'browser version check', 'fair' ),
 			'version' => '',
 			'current_version' => '',
 			'upgrade' => ! $supported,
@@ -168,7 +168,7 @@ function get_php_branches() {
  * - Else if is_lower_than_future_minimum, show "outdated version which does not receive security updates and will soon not be supported"
  * - Else, show "outdated version which does not receive security updates"
  *
- * @param string $agent User-agent to check.
+ * @param string $version Version to check.
  * @return array HTTP API response-like data.
  */
 function check_php_version( string $version ) {

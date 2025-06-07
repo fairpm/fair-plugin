@@ -23,7 +23,7 @@ function bootstrap() {
 /**
  * Replace versions 1.0 and 1.1 of the Credits API with local file copies.
  *
- * @param bool|array $value Filtered value, or false to proceed.
+ * @param false|array|WP_Error $response Filtered response.
  * @param array $parsed_args The request's arguments.
  * @param string $url The request's URL.
  * @return bool|array|WP_Error Replaced value, false to proceed, or WP_Error on failure.

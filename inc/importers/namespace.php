@@ -7,6 +7,8 @@
 
 namespace FAIR\Importers;
 
+use WP_Error;
+
 /**
  * Bootstrap.
  */

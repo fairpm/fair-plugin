@@ -234,7 +234,6 @@ function get_avatar_url( $id_or_email, $args ) {
  * Get the default avatar alt text.
  *
  * @param  mixed  $id_or_email User ID, email, or comment object.
- * @param  array  $args        Avatar arguments.
  *
  * @return string              Filtered avatar URL.
  */

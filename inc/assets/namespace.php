@@ -33,7 +33,6 @@ function get_emoji_base_url() : string {
 /**
  * Replace the CDN domain for regular Twemoji images.
  *
- * @param string $url The emoji URLs from s.w.org.
  * @return string Replaced URL.
  */
 function replace_emoji_url() {
@@ -43,7 +42,6 @@ function replace_emoji_url() {
 /**
  * Replace the CDN domain for regular Twemoji images.
  *
- * @param string $url The emoji URLs from s.w.org.
  * @return string Replaced URL.
  */
 function replace_emoji_svg_url() {
