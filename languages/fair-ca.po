@@ -1,147 +1,148 @@
-# Copyright (C) 2025 FAIR Contributors
-# This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2025-06-05T09:53:17+00:00\n"
+"PO-Revision-Date: 2025-06-07 11:44+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-05T09:53:17+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.12.0\n"
-"X-Domain: fair\n"
+"X-Generator: Poedit 3.6\n"
+"X-Poedit-Basepath: .\n"
 
 #. Plugin Name of the plugin
 #: plugin.php
 msgid "FAIR - Federated and Independent Repositories"
-msgstr ""
+msgstr "FAIR - Repositoris federats i independents"
 
 #. Description of the plugin
 #: plugin.php
 msgid "Make your site more FAIR."
-msgstr ""
+msgstr "Feu que el vostre lloc web sigui més FAIR."
 
 #. Author of the plugin
 #: plugin.php
 msgid "FAIR Contributors"
-msgstr ""
+msgstr "Col·laboradors FAIR"
 
 #: inc/avatars/namespace.php:93
 msgid "Choose Profile Image"
-msgstr ""
+msgstr "Trieu una imatge de perfil"
 
 #: inc/avatars/namespace.php:94
 msgid "Remove Profile Image"
-msgstr ""
+msgstr "Elimina la imatge del perfil"
 
 #: inc/avatars/namespace.php:97
 msgid "Upload a custom profile picture for your account."
-msgstr ""
+msgstr "Pugeu una imatge de perfil personalitzada per al vostre compte."
 
-#: inc/avatars/namespace.php:244
-#: inc/avatars/namespace.php:259
+#: inc/avatars/namespace.php:244 inc/avatars/namespace.php:259
 #, php-format
 msgid "profile picture for %s"
-msgstr ""
+msgstr "imatge de perfil per a %s"
 
 #: inc/avatars/namespace.php:256
 msgctxt "alt for unknown avatar user"
 msgid "profile picture for user"
-msgstr ""
+msgstr "imatge de perfil per a l'usuari"
 
 #. translators: %s: The version string.
 #: inc/credits/namespace.php:84
 #, php-format
 msgid "%s is not a valid version string."
-msgstr ""
+msgstr "%s no és una cadena de versió vàlida."
 
 #: inc/credits/namespace.php:113
 msgid "No credits could be found."
-msgstr ""
+msgstr "No s'han trobat crèdits."
 
 #: inc/dashboard-widgets/namespace.php:92
 msgid "Unable to fetch events (parse error)."
-msgstr ""
+msgstr "No s'han pogut recuperar els esdeveniments (error d'anàlisi)."
 
 #: inc/dashboard-widgets/namespace.php:99
 msgctxt "default event location"
 msgid "Online"
-msgstr ""
+msgstr "En línia"
 
 #. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
 #: inc/dashboard-widgets/namespace.php:171
 msgctxt "Events and News dashboard widget"
 msgid "https://fair.pm/"
-msgstr ""
+msgstr "https://ca.fair.pm/news/"
 
 #: inc/dashboard-widgets/namespace.php:184
 msgid "Events (by The WP World)"
-msgstr ""
+msgstr "Esdeveniments (pel WP World)"
 
-#: inc/settings/namespace.php:46
-#: inc/settings/namespace.php:47
+#: inc/settings/namespace.php:46 inc/settings/namespace.php:47
 #: inc/settings/namespace.php:71
 msgid "FAIR Settings"
-msgstr ""
+msgstr "Configuració del FAIR"
 
 #: inc/settings/namespace.php:60
 msgid "You do not have sufficient permissions to access this page."
-msgstr ""
+msgstr "No teniu permisos suficients per accedir a aquesta pàgina."
 
 #: inc/settings/namespace.php:75
 msgid "Save Settings"
-msgstr ""
+msgstr "Desa la configuració"
 
 #: inc/settings/namespace.php:96
 msgid "Avatar Settings"
-msgstr ""
+msgstr "Configuració de l'avatar"
 
 #: inc/settings/namespace.php:101
 msgid "Avatar Source"
-msgstr ""
+msgstr "Font de l'avatar"
 
 #: inc/settings/namespace.php:113
 msgid "Avatars will be loaded from the selected source."
-msgstr ""
+msgstr "Els avatars seran pujats des de la font seleccionada."
 
 #: inc/settings/namespace.php:156
 msgid "FAIR Avatars"
-msgstr ""
+msgstr "Avatars del FAIR"
 
 #: inc/settings/namespace.php:157
 msgid "Gravatar"
-msgstr ""
+msgstr "Gravatar"
 
 #: inc/settings/namespace.php:171
 msgid "Settings saved successfully."
-msgstr ""
+msgstr "La configuració s'ha desat correctament."
 
 #. translators: 1) Fair PM URL, 2) AspirePress URL.
 #: inc/user-notification/namespace.php:27
 #, php-format
-msgid "Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a href=\"%2$s\">AspirePress</a>"
+msgid ""
+"Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a "
+"href=\"%2$s\">AspirePress</a>"
 msgstr ""
+"Actualitzacions proporcionades pel <a href=\"%1$s\">gestor de paquets "
+"FAIR</a> i <a href=\"%2$s\">AspirePress</a>"
 
 #: inc/version-check/namespace.php:100
 msgctxt "browser version check"
 msgid "your platform"
-msgstr ""
+msgstr "la vostra plataforma"
 
 #: assets/js/fair-avatars.js:20
 msgid "Choose Profile Picture"
-msgstr ""
+msgstr "Trieu la imatge del perfil"
 
 #: assets/js/fair-avatars.js:22
 msgid "Use as Profile Picture"
-msgstr ""
+msgstr "Utilitza com a imatge de perfil"
 
 #: assets/js/fair-avatars.js:44
 msgid "Profile Picture Assigned"
-msgstr ""
+msgstr "Imatge del perfil assignada"
 
 #: assets/js/fair-avatars.js:60
 msgid "Profile Picture Removed"
-msgstr ""
+msgstr "S'ha suprimit la imatge del perfil"
