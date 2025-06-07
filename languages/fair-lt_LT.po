@@ -1,0 +1,132 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: FAIR - Federated and Independent Repositories\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-07 07:13+0000\n"
+"PO-Revision-Date: 2025-06-07 07:25+0000\n"
+"Last-Translator: \n"
+"Language-Team: Lithuanian\n"
+"Language: lt_LT\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 "
+"&&(n%100<10||n%100 >= 20)? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.8.0; wp-6.8.1; php-8.2.27\n"
+"X-Domain: fair"
+
+#: inc/settings/namespace.php:46 inc/settings/namespace.php:47
+#: inc/settings/namespace.php:71
+msgid "FAIR Settings"
+msgstr "FAIR nustatymai"
+
+#: inc/settings/namespace.php:60
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Neturite teisės pasiekti šį puslapį."
+
+#: inc/settings/namespace.php:75
+msgid "Save Settings"
+msgstr "Išsaugoti nustatymus"
+
+#: inc/settings/namespace.php:96
+msgid "Avatar Settings"
+msgstr "Avatarų nustatymai"
+
+#: inc/settings/namespace.php:101
+msgid "Avatar Source"
+msgstr "Avatarų šaltinis"
+
+#: inc/settings/namespace.php:113
+msgid "Avatars will be loaded from the selected source."
+msgstr "Avatarai bus naudojami iš pasirinkto šaltinio."
+
+#: inc/settings/namespace.php:156
+msgid "FAIR Avatars"
+msgstr "FAIR avatarai"
+
+#: inc/settings/namespace.php:157
+msgid "Gravatar"
+msgstr "Gravatar"
+
+#: inc/settings/namespace.php:171
+msgid "Settings saved successfully."
+msgstr "Nustatymai išsaugotiu sėkmingai"
+
+#: inc/dashboard-widgets/namespace.php:92
+msgid "Unable to fetch events (parse error)."
+msgstr "Nepavyko gauti renginių informacijos (skaitymo klaida)."
+
+#: inc/dashboard-widgets/namespace.php:99
+msgctxt "default event location"
+msgid "Online"
+msgstr "Internete"
+
+#. If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
+#: inc/dashboard-widgets/namespace.php:171
+msgctxt "Events and News dashboard widget"
+msgid "https://fair.pm/"
+msgstr "https://fair.pm/"
+
+#: inc/dashboard-widgets/namespace.php:184
+msgid "Events (by The WP World)"
+msgstr "Renginiai (iš The WP World)"
+
+#. 1) Fair PM URL, 2) AspirePress URL.
+#: inc/user-notification/namespace.php:27
+#, php-format
+msgid ""
+"Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a "
+"href=\"%2$s\">AspirePress</a>"
+msgstr ""
+"Atnaujinimai pasiekiami iš <a href=\"%1$s\">FAIR paketų valdyklės</a> ir <a "
+"href=\"%2$s\">AspirePress</a>"
+
+#: inc/avatars/namespace.php:93
+msgid "Choose Profile Image"
+msgstr "Pasirinkite profilio paveikslėlį"
+
+#: inc/avatars/namespace.php:94
+msgid "Remove Profile Image"
+msgstr "Pašaliniti profilio nuotrauką"
+
+#: inc/avatars/namespace.php:97
+msgid "Upload a custom profile picture for your account."
+msgstr "Įkelkite savo profilio nutrauką"
+
+#: inc/avatars/namespace.php:244 inc/avatars/namespace.php:259
+#, php-format
+msgid "profile picture for %s"
+msgstr "%s profilio nuotrauka"
+
+#: inc/avatars/namespace.php:256
+msgctxt "alt for unknown avatar user"
+msgid "profile picture for user"
+msgstr "vartotojo profilio nuotrauka"
+
+#: inc/version-check/namespace.php:100
+msgctxt "browser version check"
+msgid "your platform"
+msgstr "jūsų platforma"
+
+#. %s: The version string.
+#: inc/credits/namespace.php:84
+#, php-format
+msgid "%s is not a valid version string."
+msgstr "%s nėra tinkamas versijos pavadinimas"
+
+#: inc/credits/namespace.php:113
+msgid "No credits could be found."
+msgstr "Kūrėjų informacija nerasta."
+
+#. Name of the plugin
+msgid "FAIR - Federated and Independent Repositories"
+msgstr "FAIR - Federuotos ir nepriklausomos repozitorijos"
+
+#. Description of the plugin
+msgid "Make your site more FAIR."
+msgstr "Padarykite savo svetainę labiau FAIR."
+
+#. Author of the plugin
+msgid "FAIR Contributors"
+msgstr "FAIR kūrėjai"
