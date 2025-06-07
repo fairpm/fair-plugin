@@ -20,7 +20,7 @@ msgid "FAIR Settings"
 msgstr "FAIR-Einstellungen"
 
 msgid "You do not have sufficient permissions to access this page."
-msgstr "Sie haben nicht genügend Berechtigungen, um diese Seite zu betreten."
+msgstr "Du hast nicht genügend Berechtigungen, um diese Seite zu betreten."
 
 msgid "Save Settings"
 msgstr "Einstellungen speichern"
@@ -65,7 +65,7 @@ msgid "Remove Profile Image"
 msgstr "Profilbild entfernen"
 
 msgid "Upload a custom profile picture for your account."
-msgstr "Laden Sie ein benutzerdefiniertes Profilbild für Ihr Konto hoch."
+msgstr "Lade ein benutzerdefiniertes Profilbild für dein Konto hoch."
 
 msgid "profile picture for %s"
 msgstr "Profilbild für %s"
@@ -86,7 +86,7 @@ msgid "FAIR - Federated and Independent Repositories"
 msgstr "FAIR - Föderierte und unabhängige Repositorien"
 
 msgid "Make your site more FAIR."
-msgstr "Machen Sie Ihre Website FAIRer."
+msgstr "Mache Ihre Website FAIRer."
 
 msgid "FAIR Contributors"
 msgstr "FAIR-Mitwirkende"
