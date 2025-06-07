@@ -8,6 +8,7 @@
  * Requires at least: 4.1
  * Requires PHP: 7.2.24
  * Text Domain: fair
+ * Domain Path: /languages
  * Update URI: https://api.fair.pm
  * GitHub Plugin URI: https://github.com/fairpm/fair-plugin
  * Primary Branch: main
