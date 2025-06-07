@@ -33,4 +33,4 @@ The FAIR plugin is currently maintained by the Technical Independence Working Gr
 
 FAIR is licensed under the GNU General Public License, v2 or later. Copyright 2025 the contributors.
 
-WordPress is a registered trademark of the WordPress Foundation. FAIR is not endorse by, or affiliated with, the WordPress Foundation.
+WordPress is a registered trademark of the WordPress Foundation. FAIR is not endorsed by, or affiliated with, the WordPress Foundation.
