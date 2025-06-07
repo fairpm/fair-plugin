@@ -1,0 +1,30 @@
+{
+    "name": "fairpm/fair-plugin",
+    "description": "Make your site more FAIR",
+	"version": "0.1.0",
+    "type": "wordpress-plugin",
+	"homepage": "https://github.com/fairpm/fair-plugin",
+	"readme": "README.md",
+	"keywords": [
+		"wordpress",
+		"plugin",
+		"FAIR"
+	],
+    "license": "GPLv2",
+    "authors": [
+        {
+            "name": "FAIR Contributors",
+			"email": "operations@fair.pm",
+			"homepage": "https://fair.pm"
+        }
+    ],
+	"support": {
+		"issues": "https://github.com/fairpm/fair-plugin/issues",
+		"source": "https://github.com/fairpm/fair-plugin/issues",
+		"docs": "https://github.com/fairpm/fair-plugin/blob/main/README.md"
+	},
+    "minimum-stability": "stable",
+    "require": {
+		"php": ">=7.4"
+	}
+}
