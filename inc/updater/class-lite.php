@@ -112,7 +112,10 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 			if ( empty( $this->update_server ) || is_wp_error( $this->update_server ) ) {
 				return new \WP_Error( 'invalid_domain', 'Invalid update server domain', $this->update_server );
 			}
-			$url      = "$this->update_server/wp-json/git-updater/v1/update-api/?slug=$this->slug";
+			$url      = add_query_arg(
+				array( 'slug', $this->slug ),
+				sprintf( '%s/wp-json/git-updater/v1/update-api/', $this->update_server )
+			);
 			$response = get_site_transient( "git-updater-lite_{$this->file}" );
 			if ( ! $response ) {
 				$response = wp_remote_post( $url );
