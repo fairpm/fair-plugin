@@ -8,7 +8,6 @@ set  -eo pipefail
 BROWSER_QUERY="defaults, unreleased versions"
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-VERSION_CHECK_FOO="$SCRIPT_DIR/../inc/version-check/foo.txt"
 VERSION_CHECK_FILE="$SCRIPT_DIR/../inc/version-check/namespace.php"
 
 LINE_START="const BROWSER_REGEX = ";
