@@ -3,6 +3,7 @@
 # Update the browser regex in the version check script.
 #
 # Uses a browserslist query to generate this data.
+# Needs you to run `npx browserslist-useragent-regexp "defaults, unreleased versions"` before first use
 set  -eo pipefail
 
 BROWSER_QUERY="defaults, unreleased versions"
