@@ -24,9 +24,19 @@ function enqueue_media_scripts( $hook_suffix ) {
 	wp_localize_script( 'fair-site-health', 'fairSiteHealth',
 		[
 			'defaultRepoDomain' => \FAIR\Default_Repo\get_default_repo_domain(),
-			'repoIPAddress' => gethostbyname( \FAIR\Default_Repo\get_default_repo_domain() ),
+			'repoIPAddress'     => gethostbyname( \FAIR\Default_Repo\get_default_repo_domain() ),
+			'errorMessageRegex' => build_error_message_regex(),
 		]
 	);
 
 }
 
+function build_error_message_regex() {
+	$regex = str_replace(
+		[ '%1\$s', '%2\$s' ],
+		[ '(?:.*?)', '(.*)'],
+		preg_quote( __( 'Your site is unable to reach WordPress.org at %1$s, and returned the error: %2$s' ) )
+	);
+	$regex = $regex . '<\/p>';
+	return $regex;
+}
