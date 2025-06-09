@@ -44,7 +44,8 @@ jobs:
         run: |
           git fetch --all --prune
           git checkout generate-pot
-          git pull --no-rebase
+          git pull origin generate-pot --no-rebase
+          git merge origin/main --no-edit
 
       - name: Generate POT
         run: |
