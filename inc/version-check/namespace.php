@@ -1,6 +1,6 @@
 <?php
 /**
- * Prevents calls to the WordPress.org API for version checks.
+ * Replaces calls to the WordPress.org BrowseHappy and ServeHappy APIs with static local data.
  *
  * @package FAIR
  */

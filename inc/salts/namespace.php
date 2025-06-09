@@ -1,6 +1,6 @@
 <?php
 /**
- * Prevents calls to the WordPress.org API for salt generation.
+ * Replaces calls to the WordPress.org Secret Key API with locally generated keys and salts.
  *
  * @package FAIR
  */

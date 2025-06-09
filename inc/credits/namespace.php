@@ -1,7 +1,6 @@
 <?php
 /**
- * Prevents calls to the Credits API.
- * Prevents calls to Gravatar.com.
+ * Configures the Credits API to fetch credits from local files.
  *
  * @package FAIR
  */
@@ -21,7 +20,9 @@ function bootstrap() {
 }
 
 /**
- * Replace versions 1.0 and 1.1 of the Credits API with local file copies.
+ * Respond to a Credits API request with a response from a local file.
+ *
+ * Supports Credits API versions 1.0 and 1.1.
  *
  * @param false|array|WP_Error $response Filtered response.
  * @param array $parsed_args The request's arguments.
@@ -115,7 +116,7 @@ function get_credits( string $major_version ) {
 }
 
 /**
- * Get a fake response.
+ * Mock an HTTP response for the Credits API with the local credits data.
  *
  * @param string $body The response's body.
  * @return array The response.
