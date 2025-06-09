@@ -6,24 +6,32 @@ This repository contains the plugin for installation into WordPress.
 
 ## Description
 
-This plugin prevents all calls to WordPress.org, WordPress.com, Gravatar.com, and any other connection to Automattic servers from the core WordPress code.
+Many features in WordPress rely on requests to WordPress.org services, including update checks, translations, emojis, and more. Services on WordPress.org are expensive to maintain and centralized. In order to help strengthen the future of the whole WordPress ecosystem, FAIR was built to reduce reliance and burden on the central WordPress.org services.
+
+This plugin configures your site to use FAIR implementations of the key services that are currently centralized on WordPress.org.
 
 ### Features
 
-* Credits - Replace calls to the update API for version information. Prevent loading Gravatars for contributors.
-* Default Repository - Changes the default repository for extensions to `api.aspirecloud.net`
-* Importers - Replace the retrieval of popular import plugins.
-* Openverse - Disable the media category in the block editor.
-* Salts - Prevents calls to the WordPress.org API for salt generation.
-* Version Check - Prevents calls to the WordPress.org API for version checks.
+> [!NOTE]  
+> The FAIR project is brand new. This plugin is a pre-release and some features are yet to be fully implemented.
 
-### Assets
+The FAIR plugin implements federated or local versions of the following features in WordPress:
 
-Assets normally hosted on WordPress.org or the WordPress.com CDN will be hosted on `{{ LOCATION_TBD }}`.
+* Version checks and updates to WordPress, plugins, and themes
+* Language packs and translations
+* Events and News feeds in the dashboard
+* Images used on the About screen, Credits screen, and elsewhere
+* Browser and server health checks
+* Other APIs such as the Credits API, Secret Keys API, and Importers API
+* Twemoji images for emojis
 
-* Language Packs
-* Credit Page images
-* Twemoji
+The default FAIR provider in this plugin is [AspireCloud from AspirePress](https://aspirepress.org/). The AspirePress team were key in helping the FAIR project get off the ground. As the FAIR project grows and other providers come online you will be able to configure your chosen FAIR provider within the plugin.
+
+In addition to the key FAIR implementations, a few other features in WordPress are configured by this plugin to reduce reliance and burden on other centralized external services:
+
+* User avatars can optionally be uploaded locally as an alternative to the Gravatar service
+* Media features provided by OpenVerse are disabled, pending discussion and work by the FAIR working group
+* Ping services are configured to use IndexNow in place of Pingomatic
 
 ## Contributing
 
