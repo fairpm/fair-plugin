@@ -1,6 +1,6 @@
 <?php
 /**
- * Prevents calls to the WordPress.org API for popular importers.
+ * Replaces calls to the WordPress.org Importer API with calls to the Importer API of the chosen FAIR repository.
  *
  * @package FAIR
  */

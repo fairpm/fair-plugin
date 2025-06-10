@@ -20,10 +20,8 @@ function bootstrap() {
 
 	add_action( 'admin_head-index.php', __NAMESPACE__ . '\\set_help_content_fair_planet_urls' );
 
-	// Replace the Planet URL in the legacy WordPress Planet Feed Widget.
+	// Configure the WordPress Events and News widget to use FAIR.
 	add_filter( 'dashboard_secondary_link', __NAMESPACE__ . '\\get_fair_planet_url' );
-
-	// Replace the Planet feed in the legacy WordPress Planet Feed Widget.
 	add_filter( 'dashboard_secondary_feed', __NAMESPACE__ . '\\get_fair_planet_feed' );
 }
 
@@ -215,7 +213,7 @@ function get_fair_planet_feed() : string {
 }
 
 /**
- * Replace the WordPress Planet URL with the Fair Planet URL.
+ * Point the WordPress Planet URL to the Fair Planet URL in the Help -> Content tab on the Dashboard.
  * No available filter for this.
  *
  * @return void
