@@ -129,7 +129,7 @@ msgstr "Es ist eine neue Version von %s verfügbar."
 #: inc/updater/class-lite.php:399
 #, php-format
 msgid "View version %1$s details%2$s or %3$supdate now%2$s."
-msgstr "Details%2$s der Version %1$s anzeigen oder %3$sjetzt aktualisieren%2$s."
+msgstr "Details der Version %1$s anzeigen%2$s oder %3$sjetzt aktualisieren%2$s."
 
 #. translators: %s: theme name
 #: inc/updater/class-lite.php:404
