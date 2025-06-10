@@ -10,6 +10,9 @@ const EVENTS_API = 'https://api.fair.pm/fair/v1/events';
  * Bootstrap.
  */
 function bootstrap() {
+	if ( function_exists( 'classicpress_version' ) ) {
+		return;
+	}
 	add_action( 'wp_ajax_get-community-events', __NAMESPACE__ . '\\get_community_events_ajax', 0 );
 	remove_action( 'wp_ajax_get-community-events', 'wp_ajax_get_community_events', 1 );
 
