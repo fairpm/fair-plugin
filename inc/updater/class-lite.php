@@ -395,7 +395,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 						);
 					if ( ! empty( $current->response[ $theme->slug ]['package'] ) ) {
 						printf(
-						/* translators: 1: version number, 2: closing anchor tag, 3: update URL */
+						/* translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL */
 							esc_html__( 'View version %1$s details%2$s or %3$supdate now%2$s.', 'fair' ),
 							$theme->remote_version = isset( $theme->remote_version ) ? esc_attr( $theme->remote_version ) : null,
 							'</a>',
@@ -407,16 +407,13 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 						);
 					} else {
 						printf(
-						/* translators: 1: version number, 2: closing anchor tag, 3: update URL */
+						/* translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL */
 							esc_html__( 'View version %1$s details%2$s.', 'fair' ),
 							$theme->remote_version = isset( $theme->remote_version ) ? esc_attr( $theme->remote_version ) : null,
 							'</a>'
 						);
-						printf(
-						/* translators: %s: opening/closing paragraph and italic tags */
-							esc_html__( '%1$sAutomatic update is unavailable for this theme.%2$s', 'fair' ),
-							'<p><i>',
-							'</i></p>'
+						echo(
+							'<p><i>' . esc_html__( 'Automatic update is unavailable for this theme.', 'fair' ) . '</i></p>'
 						);
 					}
 					?>
