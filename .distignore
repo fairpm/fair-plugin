@@ -3,5 +3,8 @@
 .github/
 bin/
 node_modules/
+tests/
+phpunit.xml.dist
+composer.json
 .gitignore
 .distignore
