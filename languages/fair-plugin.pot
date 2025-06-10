@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-05T09:53:17+00:00\n"
+"POT-Creation-Date: 2025-06-10T04:28:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -41,43 +41,43 @@ msgstr ""
 msgid "Upload a custom profile picture for your account."
 msgstr ""
 
-#: inc/avatars/namespace.php:244
-#: inc/avatars/namespace.php:259
+#: inc/avatars/namespace.php:243
+#: inc/avatars/namespace.php:258
 #, php-format
 msgid "profile picture for %s"
 msgstr ""
 
-#: inc/avatars/namespace.php:256
+#: inc/avatars/namespace.php:255
 msgctxt "alt for unknown avatar user"
 msgid "profile picture for user"
 msgstr ""
 
 #. translators: %s: The version string.
-#: inc/credits/namespace.php:84
+#: inc/credits/namespace.php:85
 #, php-format
 msgid "%s is not a valid version string."
 msgstr ""
 
-#: inc/credits/namespace.php:113
+#: inc/credits/namespace.php:114
 msgid "No credits could be found."
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:92
+#: inc/dashboard-widgets/namespace.php:90
 msgid "Unable to fetch events (parse error)."
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:99
+#: inc/dashboard-widgets/namespace.php:97
 msgctxt "default event location"
 msgid "Online"
 msgstr ""
 
 #. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
-#: inc/dashboard-widgets/namespace.php:171
+#: inc/dashboard-widgets/namespace.php:169
 msgctxt "Events and News dashboard widget"
 msgid "https://fair.pm/"
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:184
+#: inc/dashboard-widgets/namespace.php:182
 msgid "Events (by The WP World)"
 msgstr ""
 
@@ -119,6 +119,36 @@ msgstr ""
 msgid "Settings saved successfully."
 msgstr ""
 
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:388
+#, php-format
+msgid "There is a new version of %s available."
+msgstr ""
+
+#. translators: 1: version number, 2: closing anchor tag, 3: update URL
+#: inc/updater/class-lite.php:399
+#, php-format
+msgid "View version %1$s details%2$s or %3$supdate now%2$s."
+msgstr ""
+
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:404
+#, php-format
+msgid "Update %s now"
+msgstr ""
+
+#. translators: 1: version number, 2: closing anchor tag, 3: update URL
+#: inc/updater/class-lite.php:411
+#, php-format
+msgid "View version %1$s details%2$s."
+msgstr ""
+
+#. translators: %s: opening/closing paragraph and italic tags
+#: inc/updater/class-lite.php:417
+#, php-format
+msgid "%1$sAutomatic update is unavailable for this theme.%2$s"
+msgstr ""
+
 #. translators: 1) Fair PM URL, 2) AspirePress URL.
 #: inc/user-notification/namespace.php:27
 #, php-format
@@ -128,6 +158,11 @@ msgstr ""
 #: inc/version-check/namespace.php:100
 msgctxt "browser version check"
 msgid "your platform"
+msgstr ""
+
+#: inc/version-check/namespace.php:101
+msgctxt "browser version check"
+msgid "your browser"
 msgstr ""
 
 #: assets/js/fair-avatars.js:20
