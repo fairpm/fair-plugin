@@ -69,6 +69,17 @@ function render_settings_page() {
 	?>
 	<div class="wrap fair-settings">
 		<h1><?php esc_html_e( 'FAIR Settings', 'fair' ); ?></h1>
+		<p><?php printf(
+			/* translators: %s: AspirePress website URL */
+			esc_html__( 'Your site is now disconnected from WordPress.org managed servers and uses a dedicated mirror from %s. In the coming weeks and months, we\'ll be making the mirror configurable and add in the ability to add your own.', 'fair' ),
+			'<a href="https://aspirepress.org/">AspirePress</a>'
+		); ?></p>
+		<p><?php printf(
+			/* translators: %1$s: FAIR GitHub URL, %2$s: FAQ URL */
+			esc_html__( 'If you want to learn more, check out the %1$s and our %2$s.', 'fair' ),
+			'<a href="https://fair.pm/">FAIR GitHub</a>',
+			'<a href="https://github.com/fairpm/tsc/blob/main/faqs/README.md">FAQ</a>'
+		); ?></p>
 		<form method="post">
 			<?php wp_nonce_field( 'fair_save_settings' ); ?>
 			<?php render_avatar_setting( $settings ); ?>
