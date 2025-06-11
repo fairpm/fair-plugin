@@ -324,13 +324,13 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 		case 'install':
 			if ( ! $compatible ) {
 				return sprintf(
-					'<button type="button" class="install-now button button-disabled" disabled="disabled">%s</button>',
+					'<button type="button" class="z_install-now button button-disabled" disabled="disabled">%s</button>',
 					esc_html_x( 'Install Now', 'fair' )
 				);
 			}
 
 			return sprintf(
-				'<a class="install-now button" data-id="%s" href="%s" aria-label="%s" data-name="%s" role="button">%s</a>',
+				'<a class="z_install-now button" data-id="%s" href="%s" aria-label="%s" data-name="%s" role="button">%s</a>',
 				esc_attr( $doc->id ),
 				esc_url( Admin\get_direct_install_url( $doc ) ),
 				/* translators: %s: Plugin name and version. */
