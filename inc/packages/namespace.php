@@ -115,6 +115,9 @@ function install_plugin( string $id, ?string $version = null, $skin ) {
 	}
 
 	$metadata = fetch_metadata_doc( $repo_url );
+	if ( is_wp_error( $metadata ) ) {
+		return $metadata;
+	}
 
 	// Select the appropriate release.
 	$release = pick_release( $metadata->releases, $version );
