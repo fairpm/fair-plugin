@@ -57,7 +57,7 @@ class MetadataDocument {
 	public $sections = [];
 
 	/**
-	 * @var array
+	 * @var ReleaseDocument[]
 	 */
 	public $releases = [];
 

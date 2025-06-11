@@ -24,12 +24,12 @@ class ReleaseDocument {
 	/**
 	 * @var array
 	 */
-	public $require;
+	public $requires;
 
 	/**
 	 * @var array
 	 */
-	public $suggest;
+	public $suggests;
 
 	/**
 	 * @var array
@@ -51,8 +51,8 @@ class ReleaseDocument {
 
 		$optional = [
 			'provides',
-			'require',
-			'suggest',
+			'requires',
+			'suggests',
 			'auth',
 		];
 		foreach ( $optional as $key ) {
