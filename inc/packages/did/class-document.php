@@ -38,15 +38,11 @@ class Document {
 	public function get_fair_signing_keys() : array {
 		return array_filter( $this->verificationMethod, function ( $key ) {
 			// Only multibase keys are supported.
-			if ( $key->type !== 'Multibase' ) {
+			if ( $key->type !== 'Multikey' ) {
 				return false;
 			}
 
-			// Ensure this is a did:key
 			$parsed = parse_url( $key->id );
-			if ( $parsed['protocol'] !== 'did' || $parsed['host'] !== 'key' ) {
-				return false;
-			}
 
 			// Only permit keys with IDs prefixed with 'fair'
 			return str_starts_with( $parsed['fragment'], 'fair' );
