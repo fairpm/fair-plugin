@@ -158,11 +158,12 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 		<?php
 		if ( current_user_can( 'install_plugins' ) || current_user_can( 'update_plugins' ) ) {
 			$data = [];
-			$button = wp_get_plugin_action_button( $doc->name, $data, true, true );
+			$button = get_action_button( $doc, $latest );
 			$button = str_replace( 'class="', 'class="right ', $button );
 
 			if ( ! str_contains( $button, _x( 'Activate', 'plugin' ) ) ) {
-				$button = str_replace( 'class="', 'id="plugin_install_from_iframe" class="', $button );
+				// todo: requires changes to the JS to catch the DID.
+				// $button = str_replace( 'class="', 'id="plugin_install_from_iframe" class="', $button );
 			}
 
 			echo wp_kses_post( $button );
@@ -189,7 +190,6 @@ function name_requirement( string $requirement ) : string {
 }
 
 function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
-	var_dump( $release );
 	?>
 	<div class="fyi">
 		<ul>
@@ -301,5 +301,46 @@ function check_requirements( ReleaseDocument $release ) {
 				'additional_classes' => array( 'notice-alt' ),
 			)
 		);
+	}
+}
+
+/**
+ * Gets the markup for the plugin install action button.
+ *
+ * @return string The markup for the dependency row button. An empty string if the user does not have capabilities.
+ */
+function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
+	if ( ! current_user_can( 'install_plugins' ) && ! current_user_can( 'update_plugins' ) ) {
+		// How did you get here, pal?
+		return '';
+	}
+
+	// Do we actually meet the requirements?
+	// $compatible = check_requirements( $release );
+	$compatible = true;
+
+	$status = 'install'; // todo
+	switch ( $status ) {
+		case 'install':
+			if ( ! $compatible ) {
+				return sprintf(
+					'<button type="button" class="install-now button button-disabled" disabled="disabled">%s</button>',
+					esc_html_x( 'Install Now', 'fair' )
+				);
+			}
+
+			$url = wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=' . $doc->id ), 'install-plugin_' . $doc->id );
+			return sprintf(
+				'<a class="install-now button" data-id="%s" href="%s" aria-label="%s" data-name="%s" role="button">%s</a>',
+				esc_attr( $doc->id ),
+				esc_url( $url ),
+				/* translators: %s: Plugin name and version. */
+				esc_attr( sprintf( _x( 'Install %s now', 'plugin' ), $doc->name ) ),
+				esc_attr( $doc->name ),
+				esc_html_x( 'Install Now', 'plugin' )
+			);
+
+		default:
+			// todo
 	}
 }
