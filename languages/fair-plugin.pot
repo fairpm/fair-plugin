@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-10T04:28:22+00:00\n"
+"POT-Creation-Date: 2025-06-11T19:50:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -120,31 +120,31 @@ msgid "Settings saved successfully."
 msgstr ""
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:388
+#: inc/updater/class-lite.php:391
 #, php-format
 msgid "There is a new version of %s available."
 msgstr ""
 
 #. translators: 1: version number, 2: closing anchor tag, 3: update URL
-#: inc/updater/class-lite.php:399
+#: inc/updater/class-lite.php:402
 #, php-format
 msgid "View version %1$s details%2$s or %3$supdate now%2$s."
 msgstr ""
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:404
+#: inc/updater/class-lite.php:407
 #, php-format
 msgid "Update %s now"
 msgstr ""
 
 #. translators: 1: version number, 2: closing anchor tag, 3: update URL
-#: inc/updater/class-lite.php:411
+#: inc/updater/class-lite.php:414
 #, php-format
 msgid "View version %1$s details%2$s."
 msgstr ""
 
 #. translators: %s: opening/closing paragraph and italic tags
-#: inc/updater/class-lite.php:417
+#: inc/updater/class-lite.php:420
 #, php-format
 msgid "%1$sAutomatic update is unavailable for this theme.%2$s"
 msgstr ""
