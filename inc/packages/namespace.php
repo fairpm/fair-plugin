@@ -11,6 +11,7 @@ use WP_Error;
 
 const SERVICE_ID = 'FairPackageManagementRepo';
 const CONTENT_TYPE = 'application/json+fair';
+const DID_CACHE_LIFETIME = 5 * MINUTE_IN_SECONDS;
 
 function bootstrap() {
 	Admin\bootstrap();
@@ -45,10 +46,9 @@ function parse_did( string $id ) {
  * @return DIDDocument|WP_Error
  */
 function get_did_document( string $id ) {
-	static $cache = [];
-
-	if ( isset( $cache[ $id ] ) ) {
-		return $cache[ $id ];
+	$cached = wp_cache_get( $id, 'fair_did_documents', false, $found );
+	if ( $found ) {
+		return $cached;
 	}
 
 	// Parse the DID, then fetch the details.
@@ -62,7 +62,7 @@ function get_did_document( string $id ) {
 		return $document;
 	}
 
-	$cache[ $id ] = $document;
+	wp_cache_set( $id, $document, 'fair_did_documents', DID_CACHE_LIFETIME );
 	return $document;
 }
 
