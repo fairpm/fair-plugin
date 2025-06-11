@@ -102,7 +102,7 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 		$section = array_keys( $sections )[0];
 	}
 
-	$releases = $doc->releases;
+	$releases = array_values( $doc->releases );
 	usort( $releases, fn ( $a, $b ) => version_compare( $b->version, $a->version ) );
 	$latest = ! empty( $releases ) ? reset( $releases ) : null;
 
@@ -332,7 +332,7 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 			return sprintf(
 				'<a class="z_install-now button" data-id="%s" href="%s" aria-label="%s" data-name="%s" role="button">%s</a>',
 				esc_attr( $doc->id ),
-				esc_url( Admin\get_direct_install_url( $doc ) ),
+				esc_url( Admin\get_direct_install_url( $doc, $release ) ),
 				/* translators: %s: Plugin name and version. */
 				esc_attr( sprintf( _x( 'Install %s now', 'plugin' ), $doc->name ) ),
 				esc_attr( $doc->name ),

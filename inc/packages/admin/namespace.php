@@ -5,6 +5,7 @@ namespace FAIR\Packages\Admin;
 use FAIR;
 use FAIR\Packages;
 use FAIR\Packages\MetadataDocument;
+use FAIR\Packages\ReleaseDocument;
 
 const TAB_DIRECT = 'fair_direct';
 const ACTION_INSTALL = 'fair-install-plugin';
@@ -125,10 +126,11 @@ function render_tab_direct() {
 	<?php
 }
 
-function get_direct_install_url( MetadataDocument $doc ) {
+function get_direct_install_url( MetadataDocument $doc, ReleaseDocument $release ) {
 	$args = [
 		'action' => ACTION_INSTALL,
 		'id' => urlencode( $doc->id ),
+		'version' => urlencode( $release->version ),
 	];
 	$url = add_query_arg( $args, self_admin_url( 'update.php' ) );
 	return wp_nonce_url( $url, ACTION_INSTALL_NONCE . $doc->id );
@@ -138,8 +140,13 @@ function handle_direct_install() {
 	$id = wp_unslash( $_GET['id'] );
 	check_admin_referer( ACTION_INSTALL_NONCE . $id );
 
+	$version = wp_unslash( $_GET['version'] ?? null );
+	if ( empty( $version ) ) {
+		wp_die( __( 'No version specified for the plugin.', 'fair' ) );
+	}
+
 	$skin = new \WP_Upgrader_Skin();
-	$res = Packages\install_plugin( $id, null, $skin );
+	$res = Packages\install_plugin( $id, $version, $skin );
 	var_dump( $res );
 	exit;
 }
