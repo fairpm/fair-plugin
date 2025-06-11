@@ -186,9 +186,7 @@ class Upgrader extends WP_Upgrader {
 		}
 
 		// Resolve the release artifact to a URL.
-		/** @var ReleaseDocument */
-		$release = $options['release'];
-		$artifact = pick_artifact_by_lang( $release->artifacts->package );
+		$artifact = pick_artifact_by_lang( $this->release->artifacts->package );
 
 		// Download the package.
 		$path = $this->download_package( $artifact->url, false, $options['hook_extra'] );
