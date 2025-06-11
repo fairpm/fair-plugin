@@ -4,8 +4,11 @@ namespace FAIR\Packages\Admin;
 
 use FAIR;
 use FAIR\Packages;
+use FAIR\Packages\MetadataDocument;
 
 const TAB_DIRECT = 'fair_direct';
+const ACTION_INSTALL = 'fair-install-plugin';
+const ACTION_INSTALL_NONCE = 'fair-install-plugin';
 
 function bootstrap() {
 	if ( ! is_admin() ) {
@@ -16,6 +19,7 @@ function bootstrap() {
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__. '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
+	add_action( 'update-custom_' . ACTION_INSTALL, __NAMESPACE__ . '\\handle_direct_install' );
 }
 
 /**
@@ -31,16 +35,6 @@ function add_direct_tab( $tabs ) {
 
 function load_plugin_install() {
 	enqueue_assets();
-
-	// Is this our page?
-	if ( empty( $_POST['tab'] ) || $_POST['tab'] !== TAB_DIRECT ) {
-		return;
-	}
-
-	// If the form was submitted, handle it.
-	if ( isset( $_POST['plugin_id'] ) ) {
-		handle_direct_install();
-	}
 }
 
 /**
@@ -131,13 +125,21 @@ function render_tab_direct() {
 	<?php
 }
 
+function get_direct_install_url( MetadataDocument $doc ) {
+	$args = [
+		'action' => ACTION_INSTALL,
+		'id' => urlencode( $doc->id ),
+	];
+	$url = add_query_arg( $args, self_admin_url( 'update.php' ) );
+	return wp_nonce_url( $url, ACTION_INSTALL_NONCE . $doc->id );
+}
+
 function handle_direct_install() {
-	check_admin_referer( TAB_DIRECT );
+	$id = wp_unslash( $_GET['id'] );
+	check_admin_referer( ACTION_INSTALL_NONCE . $id );
 
-	$id = wp_unslash( $_POST['plugin_id'] );
-
-	header( 'Content-Type: text/plain' );
-	$res = Packages\install_plugin( $id );
+	$skin = new \WP_Upgrader_Skin();
+	$res = Packages\install_plugin( $id, null, $skin );
 	var_dump( $res );
 	exit;
 }

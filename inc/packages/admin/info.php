@@ -2,7 +2,7 @@
 
 namespace FAIR\Packages\Admin\Info;
 
-use FAIR\Packages;
+use FAIR\Packages\Admin;
 use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
 
@@ -329,11 +329,10 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 				);
 			}
 
-			$url = wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=' . $doc->id ), 'install-plugin_' . $doc->id );
 			return sprintf(
 				'<a class="install-now button" data-id="%s" href="%s" aria-label="%s" data-name="%s" role="button">%s</a>',
 				esc_attr( $doc->id ),
-				esc_url( $url ),
+				esc_url( Admin\get_direct_install_url( $doc ) ),
 				/* translators: %s: Plugin name and version. */
 				esc_attr( sprintf( _x( 'Install %s now', 'plugin' ), $doc->name ) ),
 				esc_attr( $doc->name ),

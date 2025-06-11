@@ -95,7 +95,7 @@ function fetch_package_metadata( string $id ) {
  * @param string|null $version Version to install. If null, the latest version is installed.
  * @return bool|WP_Error True on success, WP_Error on failure.
  */
-function install_plugin( string $id, ?string $version = null ) {
+function install_plugin( string $id, ?string $version = null, $skin ) {
 	$document = get_did_document( $id );
 	if ( is_wp_error( $document ) ) {
 		return $document;
@@ -122,7 +122,6 @@ function install_plugin( string $id, ?string $version = null ) {
 		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
 	}
 
-	$skin = new \WP_Ajax_Upgrader_Skin();
 	$upgrader = new Upgrader( $skin );
 	return $upgrader->install( $metadata, $release );
 }
