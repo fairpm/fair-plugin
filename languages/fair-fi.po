@@ -1,0 +1,131 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: FAIR - Federated and Independent Repositories\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-07 08:58+0000\n"
+"PO-Revision-Date: 2025-06-07 09:05+0000\n"
+"Last-Translator: \n"
+"Language-Team: Finnish\n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.8.0; wp-6.7.2; php-8.1.29\n"
+"X-Domain: fair"
+
+#. %s: The version string.
+#: inc/credits/namespace.php:84
+#, php-format
+msgid "%s is not a valid version string."
+msgstr "%s ei ole kelvollinen versio."
+
+#: inc/credits/namespace.php:113
+msgid "No credits could be found."
+msgstr "Tekijöitä ei löytynyt."
+
+#: inc/avatars/namespace.php:93
+msgid "Choose Profile Image"
+msgstr "Valitse profiilikuva"
+
+#: inc/avatars/namespace.php:94
+msgid "Remove Profile Image"
+msgstr "Poista profiilikuva"
+
+#: inc/avatars/namespace.php:97
+msgid "Upload a custom profile picture for your account."
+msgstr "Lataa tilillesi mukautettu profiilikuva."
+
+#: inc/avatars/namespace.php:244 inc/avatars/namespace.php:259
+#, php-format
+msgid "profile picture for %s"
+msgstr "profiilikuva, %s"
+
+#: inc/avatars/namespace.php:256
+msgctxt "alt for unknown avatar user"
+msgid "profile picture for user"
+msgstr "profiilikuva käyttäjälle"
+
+#: inc/dashboard-widgets/namespace.php:92
+msgid "Unable to fetch events (parse error)."
+msgstr "Tapahtumia ei voitu hakea (virhe datan käsittelyssä)."
+
+#: inc/dashboard-widgets/namespace.php:99
+msgctxt "default event location"
+msgid "Online"
+msgstr "Verkossa"
+
+#. If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
+#: inc/dashboard-widgets/namespace.php:171
+msgctxt "Events and News dashboard widget"
+msgid "https://fair.pm/"
+msgstr "https://fair.pm/"
+
+#: inc/dashboard-widgets/namespace.php:184
+msgid "Events (by The WP World)"
+msgstr "Tapahtumat (lähteenä The WP World)"
+
+#: inc/version-check/namespace.php:100
+msgctxt "browser version check"
+msgid "your platform"
+msgstr "alustasi"
+
+#. 1) Fair PM URL, 2) AspirePress URL.
+#: inc/user-notification/namespace.php:27
+#, php-format
+msgid ""
+"Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a "
+"href=\"%2$s\">AspirePress</a>"
+msgstr ""
+"Päivitykset toimitetaan <a href=\"%1$s\">FAIR-paketinhallinnasta</a> ja <a "
+"href=\"%2$s\">AspirePressistä</a>"
+
+#: inc/settings/namespace.php:46 inc/settings/namespace.php:47
+#: inc/settings/namespace.php:71
+msgid "FAIR Settings"
+msgstr "FAIR-asetukset"
+
+#: inc/settings/namespace.php:60
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Sinulla ei ole riittäviä oikeuksia käyttää tätä sivua."
+
+#: inc/settings/namespace.php:75
+msgid "Save Settings"
+msgstr "Tallenna asetukset"
+
+#: inc/settings/namespace.php:96
+msgid "Avatar Settings"
+msgstr "Avatarin asetukset"
+
+#: inc/settings/namespace.php:101
+msgid "Avatar Source"
+msgstr "Avatarin lähde"
+
+#: inc/settings/namespace.php:113
+msgid "Avatars will be loaded from the selected source."
+msgstr "Avatarit ladataan valitusta lähteestä."
+
+#: inc/settings/namespace.php:156
+msgid "FAIR Avatars"
+msgstr "FAIR-avatarit"
+
+#: inc/settings/namespace.php:157
+msgid "Gravatar"
+msgstr "Gravatar"
+
+#: inc/settings/namespace.php:171
+msgid "Settings saved successfully."
+msgstr "Asetukset tallennettu onnistuneesti."
+
+#. Name of the plugin
+msgid "FAIR - Federated and Independent Repositories"
+msgstr "FAIR - Federated and Independent Repositories"
+
+#. Description of the plugin
+msgid "Make your site more FAIR."
+msgstr "Tee sivustostasi enemmän FAIR:n avulla."
+
+#. Author of the plugin
+msgid "FAIR Contributors"
+msgstr "FAIR-kontribuutiot"
