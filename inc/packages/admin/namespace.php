@@ -2,6 +2,7 @@
 
 namespace FAIR\Packages\Admin;
 
+use FAIR;
 use FAIR\Packages;
 
 const TAB_DIRECT = 'fair_direct';
@@ -29,6 +30,8 @@ function add_direct_tab( $tabs ) {
 }
 
 function load_plugin_install() {
+	enqueue_assets();
+
 	// Is this our page?
 	if ( empty( $_POST['tab'] ) || $_POST['tab'] !== TAB_DIRECT ) {
 		return;
@@ -40,15 +43,30 @@ function load_plugin_install() {
 	}
 }
 
+/**
+ * Enqueue assets.
+ *
+ * @param string $hook_suffix Hook suffix for the current admin page.
+ * @return void
+ */
+function enqueue_assets() {
+	wp_enqueue_style(
+		'fair-admin',
+		esc_url( plugin_dir_url( FAIR\PLUGIN_FILE ) . 'assets/css/packages.css' ),
+		[],
+		FAIR\VERSION
+	);
+}
+
 function render_tab_direct() {
 	?>
-	<div class="fair-direct">
-		<p class="install-help">
-			<?php _e( "If you have a plugin's ID, you may install it here.", 'fair' ); ?>
+	<div class="fair-direct-install">
+		<p class="fair-direct-install__help">
+			<?= __( "If you have a plugin's ID, enter it here to view the details<br />and install it.", 'fair' ); ?>
 		</p>
 		<form
 			action=""
-			class=""
+			class="fair-direct-install__form"
 			method="post"
 		>
 			<input
@@ -62,14 +80,54 @@ function render_tab_direct() {
 				for="plugin_id"
 			>Plugin ID</label>
 			<input
-				type="name"
+				type="text"
 				id="plugin_id"
 				name="plugin_id"
 				pattern="did:(web|plc):.+"
+				placeholder="did:..."
 			/>
-			<?php submit_button( _x( 'Install Now', 'plugin' ), '', '', false ); ?>
+			<?php submit_button( _x( 'View Details', 'fair' ), '', '', false ); ?>
 		</form>
+		<p class="fair-direct-install__note">
+			<?= __( 'Plugin IDs should be in the format <code>did:web:...</code> or <code>did:plc:...</code>', 'fair' ); ?>
+		</p>
 	</div>
+	<script>
+		// On submit, trigger the thickbox with the plugin information.
+		document.querySelector( '.fair-direct-install__form' ).addEventListener( 'submit', function ( e ) {
+			e.preventDefault();
+			e.stopPropagation();
+			const id = document.getElementById( 'plugin_id' ).value;
+
+			// Get the current URL without the query string.
+			const currentUrl = new URL( window.location.href );
+
+			// Construct the URL for the plugin information page.
+			const baseUrl = currentUrl.origin + currentUrl.pathname;
+			const params = new URLSearchParams( {
+				tab: 'plugin-information',
+				plugin: id,
+				TB_iframe: 'true',
+				width: '600',
+				height: '550'
+			} );
+
+			const url = baseUrl + '?' + params.toString();
+			tb_show( null, url, false );
+
+			// Set ARIA role, ARIA label, and add a CSS class.
+			const tbWindow = jQuery( '#TB_window' );
+			tbWindow
+				.attr({
+					'role': 'dialog',
+					'aria-label': wp.i18n.__( 'Plugin details' )
+				})
+				.addClass( 'plugin-details-modal' );
+
+			// Set title attribute on the iframe.
+			tbWindow.find( '#TB_iframeContent' ).attr( 'title', wp.i18n.__( 'Plugin details' ) );
+		} );
+	</script>
 	<?php
 }
 
