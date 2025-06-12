@@ -106,7 +106,12 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 	usort( $releases, fn ( $a, $b ) => version_compare( $b->version, $a->version ) );
 	$latest = ! empty( $releases ) ? reset( $releases ) : null;
 
+	// Add banners, if available.
 	$_with_banner = '';
+	if ( ! empty( $latest->artifacts->banner ) ) {
+		$_with_banner = 'with-banner';
+		render_banner( $latest );
+	}
 
 	?>
 	<div id="plugin-information-scrollable">
@@ -170,6 +175,33 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 		}
 		?>
 	</div>
+	<?php
+}
+
+function render_banner( ReleaseDocument $release ) {
+	if ( empty( $release->artifacts->banner ) ) {
+		return;
+	}
+
+	$banners = $release->artifacts->banner;
+
+	$regular = array_find( $banners, fn ( $banner ) => $banner->width === 772 && $banner->height === 250 );
+	$high_res = array_find( $banners, fn ( $banner ) => $banner->width === 1544 && $banner->height === 500 );
+	if ( empty( $regular ) && empty( $high_res ) ) {
+		return;
+	}
+
+	?>
+	<style type="text/css">
+		#plugin-information-title.with-banner {
+			background-image: url( <?php echo esc_url( $regular->url ?? $high_res->url ); ?> );
+		}
+		@media only screen and ( -webkit-min-device-pixel-ratio: 1.5 ) {
+			#plugin-information-title.with-banner {
+				background-image: url( <?php echo esc_url( $high_res->url ?? $regular->url ); ?> );
+			}
+		}
+	</style>
 	<?php
 }
 
