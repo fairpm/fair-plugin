@@ -17,6 +17,8 @@ define( 'WP_TESTS_CONFIG_FILE_PATH', dirname( __DIR__, 2 ) . '/wp-tests-config.p
 $_phpunit_polyfills_path = getenv( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH' );
 if ( false !== $_phpunit_polyfills_path ) {
 	define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', $_phpunit_polyfills_path );
+} else {
+	define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', dirname( __DIR__, 2 ) . '/vendor/yoast/phpunit-polyfills' );
 }
 
 if ( ! file_exists( "{$_tests_dir}/includes/functions.php" ) ) {
