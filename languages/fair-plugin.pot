@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-11T19:50:41+00:00\n"
+"POT-Creation-Date: 2025-06-12T16:35:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -41,13 +41,14 @@ msgstr ""
 msgid "Upload a custom profile picture for your account."
 msgstr ""
 
-#: inc/avatars/namespace.php:243
-#: inc/avatars/namespace.php:258
+#. translators: %s: Name of person in profile picture
+#: inc/avatars/namespace.php:244
+#: inc/avatars/namespace.php:260
 #, php-format
 msgid "profile picture for %s"
 msgstr ""
 
-#: inc/avatars/namespace.php:255
+#: inc/avatars/namespace.php:256
 msgctxt "alt for unknown avatar user"
 msgid "profile picture for user"
 msgstr ""
@@ -62,22 +63,22 @@ msgstr ""
 msgid "No credits could be found."
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:90
+#: inc/dashboard-widgets/namespace.php:94
 msgid "Unable to fetch events (parse error)."
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:97
+#: inc/dashboard-widgets/namespace.php:101
 msgctxt "default event location"
 msgid "Online"
 msgstr ""
 
 #. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
-#: inc/dashboard-widgets/namespace.php:169
+#: inc/dashboard-widgets/namespace.php:173
 msgctxt "Events and News dashboard widget"
 msgid "https://fair.pm/"
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:182
+#: inc/dashboard-widgets/namespace.php:186
 msgid "Events (by The WP World)"
 msgstr ""
 
@@ -91,31 +92,43 @@ msgstr ""
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: inc/settings/namespace.php:75
+#. translators: %s: AspirePress website URL
+#: inc/settings/namespace.php:74
+#, php-format
+msgid "Your site is now disconnected from WordPress.org managed servers and uses a dedicated mirror from %s. In the coming weeks and months, we'll be making the mirror configurable and add in the ability to add your own."
+msgstr ""
+
+#. translators: %1$s: FAIR GitHub URL, %2$s: FAQ URL
+#: inc/settings/namespace.php:79
+#, php-format
+msgid "If you want to learn more, check out the %1$s and our %2$s."
+msgstr ""
+
+#: inc/settings/namespace.php:86
 msgid "Save Settings"
 msgstr ""
 
-#: inc/settings/namespace.php:96
+#: inc/settings/namespace.php:107
 msgid "Avatar Settings"
 msgstr ""
 
-#: inc/settings/namespace.php:101
+#: inc/settings/namespace.php:112
 msgid "Avatar Source"
 msgstr ""
 
-#: inc/settings/namespace.php:113
+#: inc/settings/namespace.php:124
 msgid "Avatars will be loaded from the selected source."
 msgstr ""
 
-#: inc/settings/namespace.php:156
+#: inc/settings/namespace.php:167
 msgid "FAIR Avatars"
 msgstr ""
 
-#: inc/settings/namespace.php:157
+#: inc/settings/namespace.php:168
 msgid "Gravatar"
 msgstr ""
 
-#: inc/settings/namespace.php:171
+#: inc/settings/namespace.php:182
 msgid "Settings saved successfully."
 msgstr ""
 
