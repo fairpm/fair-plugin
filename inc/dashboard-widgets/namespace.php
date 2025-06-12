@@ -10,6 +10,7 @@ const EVENTS_API = 'https://api.fair.pm/fair/v1/events';
  * Bootstrap.
  */
 function bootstrap() {
+	// Support existing software like ClassicPress, which removes this feature.
 	if ( ! function_exists( 'wp_print_community_events_markup' ) ) {
 		return;
 	}
