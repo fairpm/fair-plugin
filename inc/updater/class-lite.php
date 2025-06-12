@@ -404,7 +404,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 							'</a>',
 							sprintf(
 							/* translators: %s: theme name */
-								'<a aria-label="' . esc_html__( 'Update %s now', 'fair' ) . '" id="update-theme" data-slug="' . esc_attr( $theme->slug ) . '" href="' . esc_url( $nonced_update_url ) . '">',
+								'<a aria-label="' . esc_attr__( '%s: update now', 'fair' ) . '" id="update-theme" data-slug="' . esc_attr( $theme->slug ) . '" href="' . esc_url( $nonced_update_url ) . '">',
 								esc_attr( $theme->name )
 							)
 						);
