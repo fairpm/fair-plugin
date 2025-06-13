@@ -1,7 +1,11 @@
 <?php
 
-/* Path to the WordPress codebase you'd like to test. Add a backslash in the end. */
-define( 'ABSPATH', dirname( __DIR__, 3 ) . '/');
+/* Path to the WordPress Core codebase. */
+if ( file_exists( dirname( __DIR__, 2 ) . '/wp-load.php' ) ) {
+	define( 'ABSPATH', dirname( __DIR__, 2 ) . '/');
+} elseif ( file_exists( dirname( __DIR__, 3 ) . '/wp-load.php' ) ) {
+	define( 'ABSPATH', dirname( __DIR__, 3 ) . '/');
+}
 
 // Test with multisite enabled: (previously -m)
 // define( 'WP_TESTS_MULTISITE', true );
