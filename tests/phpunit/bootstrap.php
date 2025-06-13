@@ -11,14 +11,16 @@ if ( ! $_tests_dir ) {
 	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
 }
 
-define( 'WP_TESTS_CONFIG_FILE_PATH', dirname( __DIR__, 2 ) . '/wp-tests-config.php' );
+if ( ! defined( 'WP_TESTS_CONFIG_FILE_PATH' ) && file_exists( dirname( __DIR__, 2 ) . '/wp-tests-config.php' ) ) {
+	define( 'WP_TESTS_CONFIG_FILE_PATH', dirname( __DIR__, 2 ) . '/wp-tests-config.php' );
+}
 
 // Forward custom PHPUnit Polyfills configuration to PHPUnit bootstrap file.
 $_phpunit_polyfills_path = getenv( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH' );
 if ( false !== $_phpunit_polyfills_path ) {
 	define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', $_phpunit_polyfills_path );
 } else {
-	define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', dirname( __DIR__, 2 ) . '/vendor/yoast/phpunit-polyfills' );
+	define( 'WP_TESTS_PHPUNIT_POLYFILLS_PATH', dirname( __DIR__, 2 ) . '/vendor/yoast/phpunit-polyfills/' );
 }
 
 if ( ! file_exists( "{$_tests_dir}/includes/functions.php" ) ) {
