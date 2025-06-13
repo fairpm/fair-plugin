@@ -167,7 +167,6 @@ jobs:
 
       - name: Run PHPUnit tests
         run: |
-          echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> ${{ runner.temp }}/wordpress-tests-lib/wp-tests-config.php
           phpunit
 
       - name: Ensure version-controlled files are not modified or deleted
