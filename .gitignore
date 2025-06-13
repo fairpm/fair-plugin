@@ -6,3 +6,4 @@
 phpunit.xml
 /tests/phpunit/cache
 /tests/phpunit/coverage
+wp-tests-config.php
