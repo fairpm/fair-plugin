@@ -6,5 +6,8 @@
 	],
 	"mappings": {
 		"wp-content/plugins/plugin": "."
+	},
+	"config": {
+		"WP_TESTS_PHPUNIT_POLYFILLS_PATH": "./vendor/yoast/phpunit-polyfills"
 	}
 }
