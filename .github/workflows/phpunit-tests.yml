@@ -167,6 +167,7 @@ jobs:
 
       - name: Run PHPUnit tests
         run: |
+          echo "WP_TESTS_PHPUNIT_POLYFILLS_PATH=$HOME/.composer/vendor/yoast/phpunit-polyfills" >> $GITHUB_ENV
           phpunit
 
       - name: Ensure version-controlled files are not modified or deleted
