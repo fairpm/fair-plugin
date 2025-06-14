@@ -1,0 +1,174 @@
+name: Run PHPUnit Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Runs the PHPUnit tests for FAIR.
+  #
+  # Performs the following steps:
+  # - Checks out the repository.
+  # - Sets up PHP.
+  # - Installs Composer dependencies.
+  # - Installs SVN.
+  # - Installs the test suite.
+  # - Runs the PHPUnit tests.
+  # - Ensures version-controlled files are not modified.
+  phpunit:
+    name: Run tests (WP ${{ matrix.wp-version }}, PHP ${{ matrix.php-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [ '7.4', '8.0', '8.1', '8.2', '8.3', '8.4' ]
+        wp-version: [ '5.4', '5.5', '5.6', '5.7', '5.8', '5.9', '6.0', '6.1', '6.2', '6.3', '6.4', '6.5', '6.6', '6.7' ]
+        exclude:
+          # PHP 8.4 exclusions
+          - wp-version: '6.6'
+            php-version: '8.4'
+          - wp-version: '6.5'
+            php-version: '8.4'
+          - wp-version: '6.4'
+            php-version: '8.4'
+          - wp-version: '6.3'
+            php-version: '8.4'
+          - wp-version: '6.2'
+            php-version: '8.4'
+          - wp-version: '6.1'
+            php-version: '8.4'
+          - wp-version: '6.0'
+            php-version: '8.4'
+          - wp-version: '5.9'
+            php-version: '8.4'
+          - wp-version: '5.8'
+            php-version: '8.4'
+          - wp-version: '5.7'
+            php-version: '8.4'
+          - wp-version: '5.6'
+            php-version: '8.4'
+          - wp-version: '5.5'
+            php-version: '8.4'
+          - wp-version: '5.4'
+            php-version: '8.4'
+
+          # PHP 8.3 exclusions
+          - wp-version: '6.3'
+            php-version: '8.3'
+          - wp-version: '6.2'
+            php-version: '8.3'
+          - wp-version: '6.1'
+            php-version: '8.3'
+          - wp-version: '6.0'
+            php-version: '8.3'
+          - wp-version: '5.9'
+            php-version: '8.3'
+          - wp-version: '5.8'
+            php-version: '8.3'
+          - wp-version: '5.7'
+            php-version: '8.3'
+          - wp-version: '5.6'
+            php-version: '8.3'
+          - wp-version: '5.5'
+            php-version: '8.3'
+          - wp-version: '5.4'
+            php-version: '8.3'
+
+          # PHP 8.2 exclusions
+          - wp-version: '6.0'
+            php-version: '8.2'
+          - wp-version: '5.9'
+            php-version: '8.2'
+          - wp-version: '5.8'
+            php-version: '8.2'
+          - wp-version: '5.7'
+            php-version: '8.2'
+          - wp-version: '5.6'
+            php-version: '8.2'
+          - wp-version: '5.5'
+            php-version: '8.2'
+          - wp-version: '5.4'
+            php-version: '8.2'
+
+          # PHP 8.1 exclusions
+          - wp-version: '5.8'
+            php-version: '8.1'
+          - wp-version: '5.7'
+            php-version: '8.1'
+          - wp-version: '5.6'
+            php-version: '8.1'
+          - wp-version: '5.5'
+            php-version: '8.1'
+          - wp-version: '5.4'
+            php-version: '8.1'
+
+          # PHP 8 exclusions
+          - wp-version: '5.8' # Should work, currently doesn't.
+            php-version: '8.0'
+          - wp-version: '5.7' # Should work, currently doesn't.
+            php-version: '8.0'
+          - wp-version: '5.6' # Introduced PHP 8 beta support. Should work, currently doesn't.
+            php-version: '8.0'
+          - wp-version: '5.5'
+            php-version: '8.0'
+          - wp-version: '5.4'
+            php-version: '8.0'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Setup MySQL with mysql_native_password
+        uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: ${{ matrix.wp-version >= '5.0' && '8.0' || '5.6' }}
+          my-cnf: |
+            bind_address=127.0.0.1
+            default-authentication-plugin=mysql_native_password
+          root-password: root
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+          extensions: mysql, mysqli
+          tools: composer, wp-cli, phpunit:${{ matrix.wp-version < '5.1' && '6' || ( matrix.wp-version < '5.9' || matrix.php-version < '8.0' ) && '7' || '9' }}, phpunit-polyfills:^1.1.0
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Composer dependencies
+        run: composer install --optimize-autoloader --prefer-dist
+
+      - name: Install SVN
+        run: sudo apt-get update && sudo apt-get install -y subversion
+
+      - name: Install test suite
+        run: |
+          echo "WP_VERSION=${{ matrix.wp-version }}" >> $GITHUB_ENV
+          echo "TMPDIR=${{ runner.temp }}" >> $GITHUB_ENV
+          echo "WP_TESTS_DIR=${{ runner.temp }}/wordpress-tests-lib" >> $GITHUB_ENV
+          echo "WP_CORE_DIR=${{ runner.temp }}/wordpress" >> $GITHUB_ENV
+          TMPDIR=${{ runner.temp }} bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 ${{ matrix.wp-version }}
+
+      - name: Run PHPUnit tests
+        run: |
+          echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> ${{ runner.temp }}/wordpress-tests-lib/wp-tests-config.php
+          phpunit
+
+      - name: Ensure version-controlled files are not modified or deleted
+        run: git diff --exit-code

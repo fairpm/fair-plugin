@@ -3,5 +3,10 @@
 .github/
 bin/
 node_modules/
+tests/
+phpunit.xml.dist
+wp-tests-config-sample.php
+composer.json
+composer.lock
 .gitignore
 .distignore

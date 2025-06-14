@@ -5,8 +5,8 @@
  * Version: 0.1
  * Author: FAIR Contributors
  * License: GPLv2
- * Requires at least: 4.1
- * Requires PHP: 7.2.24
+ * Requires at least: 5.4
+ * Requires PHP: 7.4
  * Text Domain: fair
  * Domain Path: /languages
  * Update URI: https://api.fair.pm
