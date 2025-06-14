@@ -10,9 +10,9 @@ Many features in WordPress rely on requests to WordPress.org services, including
 
 This plugin configures your site to use FAIR implementations of the key services that are currently centralized on WordPress.org.
 
-### Features
+## Features
 
-> [!NOTE]  
+> [!NOTE]
 > The FAIR project is brand new. This plugin is a pre-release and some features are yet to be fully implemented.
 
 The FAIR plugin implements federated or local versions of the following features in WordPress:
@@ -32,6 +32,14 @@ In addition to the key FAIR implementations, a few other features in WordPress a
 * User avatars can optionally be uploaded locally as an alternative to the Gravatar service
 * Media features provided by OpenVerse are disabled, pending discussion and work by the FAIR working group
 * Ping services are configured to use IndexNow in place of Pingomatic
+
+
+### Experimental Features
+
+As FAIR works towards our plans for full decentralized package management, some features are marked as experimental. These features must be manually opted-in to during development.
+
+* `FAIR_EXPERIMENTAL_PACKAGES` - Define as `true` to enable decentralized package installation, via direct DID input.
+
 
 ## Contributing
 

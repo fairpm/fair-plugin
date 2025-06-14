@@ -29,7 +29,9 @@ function bootstrap() {
 	Default_Repo\bootstrap();
 	Disable_Openverse\bootstrap();
 	Importers\bootstrap();
-	Packages\bootstrap();
+	if ( defined( 'FAIR_EXPERIMENTAL_PACKAGES' ) && FAIR_EXPERIMENTAL_PACKAGES ) {
+		Packages\bootstrap();
+	}
 	Pings\bootstrap();
 	Salts\bootstrap();
 	Settings\bootstrap();
