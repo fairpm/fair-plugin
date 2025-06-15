@@ -19,7 +19,7 @@ FAIR can be installed manually by downloading the latest zip from releases and i
 
 ### Uninstallation
 
-To remove the FAIR plugin and it's features, you can deactivate and delete the plugin. There are no changes made to your database outside of the plugin settings, and no external files are edited. FAIR is a self-contained plugin, using the accepted WordPress standards and practices.
+To remove the FAIR plugin and its features, you can deactivate and delete the plugin. There are no changes made to your database outside of the plugin settings, and no external files are edited. FAIR is a self-contained plugin, using the accepted WordPress standards and practices.
 
 ### Features
 
