@@ -3,11 +3,11 @@
 ## Setting up the dev environment
 
 ### Option 1: wp-env
-1. Ensure Docker is installed and running.
-2. Run `npm i`
-3. Run `npm run env start`
-4. Run `npm run test:php:install-deps`
-5. Copy `wp-tests-config-sample.php` to `wp-tests-config.php`.
+1. Copy `wp-tests-config-sample.php` to `wp-tests-config.php`.
+2. Ensure Docker is installed and running.
+3. Run `npm i`
+4. Run `npm run env start`
+5. Run `npm run test:php:install-deps`
 
 ### Option 2: Local web server and MySQL database:
 - Run `composer install`
