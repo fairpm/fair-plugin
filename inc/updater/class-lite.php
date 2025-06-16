@@ -157,7 +157,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 			$type = $this->api_data->type;
 			add_filter( 'upgrader_source_selection', array( $this, 'upgrader_source_selection' ), 10, 4 );
 			add_filter( "{$type}s_api", array( $this, 'repo_api_details' ), 99, 3 );
-			add_filter( "site_transient_update_{$type}s", array( $this, 'update_site_transient' ), 15, 1 );
+			add_filter( "site_transient_update_{$type}s", array( $this, 'update_site_transient' ), 20, 1 );
 			if ( ! is_multisite() ) {
 				add_filter( 'wp_prepare_themes_for_js', array( $this, 'customize_theme_update_html' ) );
 			}
@@ -166,7 +166,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 			add_filter(
 				'upgrader_pre_download',
 				function () {
-					add_filter( 'http_request_args', array( $this, 'add_auth_header' ), 15, 2 );
+					add_filter( 'http_request_args', array( $this, 'add_auth_header' ), 20, 2 );
 					return false; // upgrader_pre_download filter default return value.
 				}
 			);
