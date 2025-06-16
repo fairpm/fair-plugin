@@ -36,4 +36,10 @@ require_once __DIR__ . '/inc/version-check/namespace.php';
 // External dependencies.
 require_once __DIR__ . '/inc/updater/class-lite.php';
 
+// Load translations.
+function load_textdomain() {
+	load_plugin_textdomain( 'fair', false, dirname( plugin_basename( PLUGIN_FILE ) ) . '/languages' );
+}
+add_action( 'init', __NAMESPACE__ . '\load_textdomain' );
+
 bootstrap();
