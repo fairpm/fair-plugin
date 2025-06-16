@@ -10,6 +10,10 @@ const EVENTS_API = 'https://api.fair.pm/fair/v1/events';
  * Bootstrap.
  */
 function bootstrap() {
+	// Support existing software like ClassicPress, which removes this feature.
+	if ( ! function_exists( 'wp_print_community_events_markup' ) ) {
+		return;
+	}
 	add_action( 'wp_ajax_get-community-events', __NAMESPACE__ . '\\get_community_events_ajax', 0 );
 	remove_action( 'wp_ajax_get-community-events', 'wp_ajax_get_community_events', 1 );
 
@@ -20,10 +24,8 @@ function bootstrap() {
 
 	add_action( 'admin_head-index.php', __NAMESPACE__ . '\\set_help_content_fair_planet_urls' );
 
-	// Replace the Planet URL in the legacy WordPress Planet Feed Widget.
+	// Configure the WordPress Events and News widget to use FAIR.
 	add_filter( 'dashboard_secondary_link', __NAMESPACE__ . '\\get_fair_planet_url' );
-
-	// Replace the Planet feed in the legacy WordPress Planet Feed Widget.
 	add_filter( 'dashboard_secondary_feed', __NAMESPACE__ . '\\get_fair_planet_feed' );
 }
 
@@ -215,7 +217,7 @@ function get_fair_planet_feed() : string {
 }
 
 /**
- * Replace the WordPress Planet URL with the Fair Planet URL.
+ * Point the WordPress Planet URL to the Fair Planet URL in the Help -> Content tab on the Dashboard.
  * No available filter for this.
  *
  * @return void

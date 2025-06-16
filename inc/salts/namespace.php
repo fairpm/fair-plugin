@@ -1,6 +1,6 @@
 <?php
 /**
- * Prevents calls to the WordPress.org API for salt generation.
+ * Replaces calls to the WordPress.org Secret Key API with locally generated keys and salts.
  *
  * @package FAIR
  */
@@ -8,7 +8,7 @@
 namespace FAIR\Salts;
 
 /**
- * This is the character set used for various functions.
+ * This is the character set used for various functions. Refrain from using \ (backslash) to prevent errors.
  */
 const CHARACTER_SET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_ []{}<>~`+=,.;:/?|';
 
@@ -99,7 +99,7 @@ function define_salt_keynames() {
 /**
  * Generate a unique string for the salt, using multiple crypto methods.
  *
- * @return array
+ * @return string
  */
 function generate_salt_string() {
 

@@ -112,7 +112,10 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 			if ( empty( $this->update_server ) || is_wp_error( $this->update_server ) ) {
 				return new \WP_Error( 'invalid_domain', 'Invalid update server domain', $this->update_server );
 			}
-			$url      = "$this->update_server/git-updater/v1/update-api/?slug=$this->slug";
+			$url      = add_query_arg(
+				array( 'slug' => $this->slug ),
+				sprintf( '%s/wp-json/git-updater/v1/update-api/', $this->update_server )
+			);
 			$response = get_site_transient( "git-updater-lite_{$this->file}" );
 			if ( ! $response ) {
 				$response = wp_remote_post( $url );
@@ -172,7 +175,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 		/**
 		 * Correctly rename dependency for activation.
 		 *
-		 * @param string                           $source        Path fo $source.
+		 * @param string                           $source        Path of $source.
 		 * @param string                           $remote_source Path of $remote_source.
 		 * @param \Plugin_Upgrader|\Theme_Upgrader $upgrader      An Upgrader object.
 		 * @param array                            $hook_extra    Array of hook data.
@@ -385,7 +388,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 					<?php
 					printf(
 						/* translators: %s: theme name */
-						esc_html__( 'There is a new version of %s available.', 'git-updater-lite' ),
+						esc_html__( 'There is a new version of %s available.', 'fair' ),
 						esc_attr( $theme->name )
 					);
 						printf(
@@ -395,28 +398,25 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 						);
 					if ( ! empty( $current->response[ $theme->slug ]['package'] ) ) {
 						printf(
-						/* translators: 1: version number, 2: closing anchor tag, 3: update URL */
-							esc_html__( 'View version %1$s details%2$s or %3$supdate now%2$s.', 'git-updater-lite' ),
+						/* translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL */
+							esc_html__( 'View version %1$s details%2$s or %3$supdate now%2$s.', 'fair' ),
 							$theme->remote_version = isset( $theme->remote_version ) ? esc_attr( $theme->remote_version ) : null,
 							'</a>',
 							sprintf(
 							/* translators: %s: theme name */
-								'<a aria-label="' . esc_html__( 'Update %s now', 'git-updater-lite' ) . '" id="update-theme" data-slug="' . esc_attr( $theme->slug ) . '" href="' . esc_url( $nonced_update_url ) . '">',
+								'<a aria-label="' . esc_attr__( '%s: update now', 'fair' ) . '" id="update-theme" data-slug="' . esc_attr( $theme->slug ) . '" href="' . esc_url( $nonced_update_url ) . '">',
 								esc_attr( $theme->name )
 							)
 						);
 					} else {
 						printf(
-						/* translators: 1: version number, 2: closing anchor tag, 3: update URL */
-							esc_html__( 'View version %1$s details%2$s.', 'git-updater-lite' ),
+						/* translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL */
+							esc_html__( 'View version %1$s details%2$s.', 'fair' ),
 							$theme->remote_version = isset( $theme->remote_version ) ? esc_attr( $theme->remote_version ) : null,
 							'</a>'
 						);
-						printf(
-						/* translators: %s: opening/closing paragraph and italic tags */
-							esc_html__( '%1$sAutomatic update is unavailable for this theme.%2$s', 'git-updater-lite' ),
-							'<p><i>',
-							'</i></p>'
+						echo(
+							'<p><i>' . esc_html__( 'Automatic update is unavailable for this theme.', 'fair' ) . '</i></p>'
 						);
 					}
 					?>

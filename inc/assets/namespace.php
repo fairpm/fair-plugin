@@ -1,6 +1,6 @@
 <?php
 /**
- * Replaces assets normally hosted on WordPress.org or the WordPress.com CDN with FAIR hosted copies.
+ * Configures FAIR hosted assets throughout WordPress.
  *
  * @package FAIR
  */
@@ -31,20 +31,18 @@ function get_emoji_base_url() : string {
 }
 
 /**
- * Replace the CDN domain for regular Twemoji images.
+ * Configure the base URL for regular emoji images.
  *
- * @param string $url The emoji URLs from s.w.org.
- * @return string Replaced URL.
+ * @return string The base URL.
  */
 function replace_emoji_url() {
     return get_emoji_base_url() . '72x72/';
 }
 
 /**
- * Replace the CDN domain for regular Twemoji images.
+ * Configure the base URL for SVG emoji images.
  *
- * @param string $url The emoji URLs from s.w.org.
- * @return string Replaced URL.
+ * @return string The base URL.
  */
 function replace_emoji_svg_url() {
     return get_emoji_base_url() . 'svg/';
