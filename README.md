@@ -55,7 +55,7 @@ FAIR is built to reduce external dependencies and keep your site as self-contain
 
 In addition we self-host certain features that could not be properly protected on our API servers as an intermediary. All data collected from FAIR servers fall under the [Linux Foundation Policies and Terms of Use for Hosted Projects](https://lfprojects.org/policies/hosted-project-tools-terms-of-use/). These services include:
 
-* WordPress Events - sourced from [The WP World](https://thewp.world)
+* WordPress Events - Retrieved from [The WP World](https://thewp.world) hourly and then cached on our servers. No user data is sent to The WP World.
 
 ## Contributing
 
