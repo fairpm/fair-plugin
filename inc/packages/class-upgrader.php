@@ -428,7 +428,7 @@ class Upgrader extends WP_Upgrader {
 		}
 
 		// Get environmental requirements if set.
-		foreach ( $this->release->require as $pkg => $ver ) {
+		foreach ( $this->release->requires as $pkg => $ver ) {
 			switch ( true ) {
 				// WordPress requirements.
 				case ( $pkg === 'env:wp' ):
@@ -469,7 +469,7 @@ class Upgrader extends WP_Upgrader {
 					$php_ext = substr( $pkg, 8 );
 					if ( extension_loaded( $php_ext ) ) {
 						// Extension is loaded, skip.
-						continue;
+						break;
 					}
 
 					if ( $ver !== '*' ) {
