@@ -8,5 +8,8 @@ phpunit.xml.dist
 wp-tests-config-sample.php
 composer.json
 composer.lock
+.wp-env.json
 .gitignore
+.gitattributes
 .distignore
+.editorconfig

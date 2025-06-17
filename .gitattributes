@@ -9,6 +9,8 @@ phpunit.xml.dist export-ignore
 wp-tests-config-sample.php export-ignore
 composer.json export-ignore
 composer.lock export-ignore
+.wp-env.json export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
 .distignore export-ignore
+.editorconfig export-ignore
