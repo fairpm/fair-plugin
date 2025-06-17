@@ -53,7 +53,7 @@ FAIR is built to reduce external dependencies and keep your site as self-contain
 * Alerting Ping services when a post is published is handled by [IndexNow](https://www.indexnow.org).
 * Installation and updates of all WordPress Packages (core, plugins, themes) are via [AspireCloud from AspirePress](https://aspirepress.org/)
 * PHP versions are provided by [php.net](https://php.net)
-* Twemoji (emoji assets) are managed by [jsDeliver](https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/)
+* Twemoji (emoji assets) are retrieved by [jsDeliver](https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/)
 
 In addition we self-host certain features that could not be properly protected on our API servers as an intermediary. All data collected from FAIR servers fall under the [Linux Foundation Policies and Terms of Use for Hosted Projects](https://lfprojects.org/policies/hosted-project-tools-terms-of-use/). These services include:
 
