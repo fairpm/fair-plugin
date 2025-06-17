@@ -1,0 +1,204 @@
+# Copyright (C) 2025 FAIR Contributors
+# This file is distributed under the GPLv2.
+msgid ""
+msgstr ""
+"Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
+"Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
+"POT-Creation-Date: 2025-06-12T16:35:01+00:00\n"
+"PO-Revision-Date: 2025-06-16 10:22+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.6\n"
+"X-Domain: fair\n"
+
+#. Plugin Name of the plugin
+#: plugin.php
+msgid "FAIR - Federated and Independent Repositories"
+msgstr "FAIR – Föderatiivsed ja sõltumatud hoidlad"
+
+#. Description of the plugin
+#: plugin.php
+msgid "Make your site more FAIR."
+msgstr "Tee oma veebileht avatumaks ja paindlikumaks FAIRi abil."
+
+#. Author of the plugin
+#: plugin.php
+msgid "FAIR Contributors"
+msgstr "FAIR panustajad"
+
+#: inc/avatars/namespace.php:93
+msgid "Choose Profile Image"
+msgstr "Vali Profiili Pilt"
+
+#: inc/avatars/namespace.php:94
+msgid "Remove Profile Image"
+msgstr "Eemalda Profiili Pilt"
+
+#: inc/avatars/namespace.php:97
+msgid "Upload a custom profile picture for your account."
+msgstr "Laadi oma kontole üles isikupärastatud profiilipilt."
+
+#. translators: %s: Name of person in profile picture
+#: inc/avatars/namespace.php:244 inc/avatars/namespace.php:260
+#, php-format
+msgid "profile picture for %s"
+msgstr "profiilipilt kasutajale %s"
+
+#: inc/avatars/namespace.php:256
+msgctxt "alt for unknown avatar user"
+msgid "profile picture for user"
+msgstr "kasutaja profiilipilt"
+
+#. translators: %s: The version string.
+#: inc/credits/namespace.php:85
+#, php-format
+msgid "%s is not a valid version string."
+msgstr "%s ei vasta nõutud versioonivormingule."
+
+#: inc/credits/namespace.php:114
+msgid "No credits could be found."
+msgstr "Selle versiooni kohta ei leitud tunnustust."
+
+#: inc/dashboard-widgets/namespace.php:94
+msgid "Unable to fetch events (parse error)."
+msgstr "Sündmusi ei õnnestunud laadida (parsimise viga)"
+
+#: inc/dashboard-widgets/namespace.php:101
+msgctxt "default event location"
+msgid "Online"
+msgstr "Virtuaalne"
+
+#. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
+#: inc/dashboard-widgets/namespace.php:173
+msgctxt "Events and News dashboard widget"
+msgid "https://fair.pm/"
+msgstr "https://fair.pm/"
+
+#: inc/dashboard-widgets/namespace.php:186
+msgid "Events (by The WP World)"
+msgstr "Sündmused (The WP World)"
+
+#: inc/settings/namespace.php:46 inc/settings/namespace.php:47
+#: inc/settings/namespace.php:71
+msgid "FAIR Settings"
+msgstr "FAIR süsteemi seaded"
+
+#: inc/settings/namespace.php:60
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Sul ei ole piisavalt õigusi selle lehe vaatamiseks."
+
+#. translators: %s: AspirePress website URL
+#: inc/settings/namespace.php:74
+#, php-format
+msgid ""
+"Your site is now disconnected from WordPress.org managed servers and uses a "
+"dedicated mirror from %s. In the coming weeks and months, we'll be making "
+"the mirror configurable and add in the ability to add your own."
+msgstr ""
+"Teie sait on nüüd WordPress.org hallatavatest serveritest lahti ühendatud "
+"ja kasutab spetsiaalset peeglit saidilt %s. Lähikuudel muudame peegli "
+"konfigureeritavaks ning lisame võimaluse lisada oma peegel."
+
+#. translators: %1$s: FAIR GitHub URL, %2$s: FAQ URL
+#: inc/settings/namespace.php:79
+#, php-format
+msgid "If you want to learn more, check out the %1$s and our %2$s."
+msgstr "Kui soovite rohkem teada saada, vaadake %1$s ja meie %2$s."
+
+#: inc/settings/namespace.php:86
+msgid "Save Settings"
+msgstr "Salvesta sätted"
+
+#: inc/settings/namespace.php:107
+msgid "Avatar Settings"
+msgstr "Profiilipildi seaded"
+
+#: inc/settings/namespace.php:112
+msgid "Avatar Source"
+msgstr "Profiilipildi asukoht"
+
+#: inc/settings/namespace.php:124
+msgid "Avatars will be loaded from the selected source."
+msgstr "Profiilipildid laaditakse valitud allikast."
+
+#: inc/settings/namespace.php:167
+msgid "FAIR Avatars"
+msgstr "FAIR Profiilipildid"
+
+#: inc/settings/namespace.php:168
+msgid "Gravatar"
+msgstr "Gravatar"
+
+#: inc/settings/namespace.php:182
+msgid "Settings saved successfully."
+msgstr "Sätted salvestatud edukalt."
+
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:391
+#, php-format
+msgid "There is a new version of %s available."
+msgstr "Uus versioon %s on saadaval."
+
+#. translators: 1: version number, 2: closing anchor tag, 3: update URL
+#: inc/updater/class-lite.php:402
+#, php-format
+msgid "View version %1$s details%2$s or %3$supdate now%2$s."
+msgstr "Vaata versiooni %1$s üksikasju%2$s või %3$suuenda kohe%2$s."
+
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:407
+#, php-format
+msgid "Update %s now"
+msgstr "Uuenda %s kohe"
+
+#. translators: 1: version number, 2: closing anchor tag, 3: update URL
+#: inc/updater/class-lite.php:414
+#, php-format
+msgid "View version %1$s details%2$s."
+msgstr "Vaata versiooni %1$s üksikasju%2$s."
+
+#. translators: %s: opening/closing paragraph and italic tags
+#: inc/updater/class-lite.php:420
+#, php-format
+msgid "%1$sAutomatic update is unavailable for this theme.%2$s"
+msgstr "%1$sSelle teema automaatne uuendamine ei ole saadaval.%2$s"
+
+#. translators: 1) Fair PM URL, 2) AspirePress URL.
+#: inc/user-notification/namespace.php:27
+#, php-format
+msgid ""
+"Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a "
+"href=\"%2$s\">AspirePress</a>"
+msgstr ""
+"Uuendused tarnitakse <a href=\"%1$s\">FAIR Package Manager</a> ja <a "
+"href=\"%2$s\">AspirePress</a> kaudu"
+
+#: inc/version-check/namespace.php:100
+msgctxt "browser version check"
+msgid "your platform"
+msgstr "sinu platvorm"
+
+#: inc/version-check/namespace.php:101
+msgctxt "browser version check"
+msgid "your browser"
+msgstr "sinu veebilehitseja"
+
+#: assets/js/fair-avatars.js:20
+msgid "Choose Profile Picture"
+msgstr "Vali Profiili Pilt"
+
+#: assets/js/fair-avatars.js:22
+msgid "Use as Profile Picture"
+msgstr "Kasuta profiilipildina"
+
+#: assets/js/fair-avatars.js:44
+msgid "Profile Picture Assigned"
+msgstr "Profiilipilt määratud"
+
+#: assets/js/fair-avatars.js:60
+msgid "Profile Picture Removed"
+msgstr "Profiilipilt eemaldatud"

@@ -3,6 +3,12 @@
 		"@wordpress/env": "^10.22.0"
 	},
 	"scripts": {
-		"env": "wp-env"
+		"env": "wp-env",
+		"test:php:install-deps": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer install",
+		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test",
+		"test:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test:multisite",
+		"coverage:php:single": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:single",
+		"coverage:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:multisite",
+		"coverage:php:full": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:full"
 	}
 }
