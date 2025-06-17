@@ -18,7 +18,7 @@ function bootstrap() {
 /**
  * Add a notification to the site footer about FAIR/AspirePress.
  *
- * @param string $content The current version or update notification.
+ * @param string|null $content The current version or update notification.
  * @return string
  */
 function notify_users( ?string $content = null ) : string {
