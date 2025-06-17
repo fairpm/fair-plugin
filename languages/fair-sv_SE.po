@@ -1,0 +1,187 @@
+# Copyright (C) 2025 FAIR Contributors
+# This file is distributed under the GPLv2.
+msgid ""
+msgstr ""
+"Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
+"Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
+"POT-Creation-Date: 2025-06-10T04:28:22+00:00\n"
+"PO-Revision-Date: 2025-06-10 08:10+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.6\n"
+"X-Domain: fair\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#. Plugin Name of the plugin
+#: plugin.php
+msgid "FAIR - Federated and Independent Repositories"
+msgstr "FAIR – Federated and Independent Repositories"
+
+#. Description of the plugin
+#: plugin.php
+msgid "Make your site more FAIR."
+msgstr "Gör din webbplats mer rättvis och FAIR."
+
+#. Author of the plugin
+#: plugin.php
+msgid "FAIR Contributors"
+msgstr "Bidragsgivare till FAIR"
+
+#: inc/avatars/namespace.php:93
+msgid "Choose Profile Image"
+msgstr "Välj profilbild"
+
+#: inc/avatars/namespace.php:94
+msgid "Remove Profile Image"
+msgstr "Ta bort profilbild"
+
+#: inc/avatars/namespace.php:97
+msgid "Upload a custom profile picture for your account."
+msgstr "Ladda upp en anpassad profilbild för ditt konto."
+
+#: inc/avatars/namespace.php:243 inc/avatars/namespace.php:258
+#, php-format
+msgid "profile picture for %s"
+msgstr "profilbild för %s"
+
+#: inc/avatars/namespace.php:255
+msgctxt "alt for unknown avatar user"
+msgid "profile picture for user"
+msgstr "profilbild för användaren"
+
+#. translators: %s: The version string.
+#: inc/credits/namespace.php:85
+#, php-format
+msgid "%s is not a valid version string."
+msgstr "%s är inte en giltig sträng för att ange version."
+
+#: inc/credits/namespace.php:114
+msgid "No credits could be found."
+msgstr "Inga erkännanden hittades."
+
+#: inc/dashboard-widgets/namespace.php:90
+msgid "Unable to fetch events (parse error)."
+msgstr "Det gick inte att hämta händelser (tolkningsfel)."
+
+#: inc/dashboard-widgets/namespace.php:97
+msgctxt "default event location"
+msgid "Online"
+msgstr "Online"
+
+#. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
+#: inc/dashboard-widgets/namespace.php:169
+msgctxt "Events and News dashboard widget"
+msgid "https://fair.pm/"
+msgstr "https://fair.pm/"
+
+#: inc/dashboard-widgets/namespace.php:182
+msgid "Events (by The WP World)"
+msgstr "Evenemang (från The WP World)"
+
+#: inc/settings/namespace.php:46 inc/settings/namespace.php:47
+#: inc/settings/namespace.php:71
+msgid "FAIR Settings"
+msgstr "Inställningar för FAIR"
+
+#: inc/settings/namespace.php:60
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Du har inte tillräcklig behörighet för att komma åt denna sida."
+
+#: inc/settings/namespace.php:75
+msgid "Save Settings"
+msgstr "Spara inställningarna"
+
+#: inc/settings/namespace.php:96
+msgid "Avatar Settings"
+msgstr "Avatarinställningar"
+
+#: inc/settings/namespace.php:101
+msgid "Avatar Source"
+msgstr "Avatarkälla"
+
+#: inc/settings/namespace.php:113
+msgid "Avatars will be loaded from the selected source."
+msgstr "Avatarer kommer att hämtas från den valda källan."
+
+#: inc/settings/namespace.php:156
+msgid "FAIR Avatars"
+msgstr "FAIR-avatarer"
+
+#: inc/settings/namespace.php:157
+msgid "Gravatar"
+msgstr "Gravatar"
+
+#: inc/settings/namespace.php:171
+msgid "Settings saved successfully."
+msgstr "Inställningarna har sparats."
+
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:388
+#, php-format
+msgid "There is a new version of %s available."
+msgstr "En ny version av %s är tillgänglig."
+
+#. translators: 1: version number, 2: closing anchor tag, 3: update URL
+#: inc/updater/class-lite.php:399
+#, php-format
+msgid "View version %1$s details%2$s or %3$supdate now%2$s."
+msgstr "Visa versionen %1$s uppgifter%2$s eller %3$s uppdatera direkt%2$s."
+
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:404
+#, php-format
+msgid "Update %s now"
+msgstr "Uppdatera %s nu"
+
+#. translators: 1: version number, 2: closing anchor tag, 3: update URL
+#: inc/updater/class-lite.php:411
+#, php-format
+msgid "View version %1$s details%2$s."
+msgstr "Visa versionen %1$s uppgifter%2$s."
+
+#. translators: %s: opening/closing paragraph and italic tags
+#: inc/updater/class-lite.php:417
+#, php-format
+msgid "%1$sAutomatic update is unavailable for this theme.%2$s"
+msgstr ""
+"%1$sAutomatiska uppdateringar är inte tillgängliga för detta tema.%2$s"
+
+#. translators: 1) Fair PM URL, 2) AspirePress URL.
+#: inc/user-notification/namespace.php:27
+#, php-format
+msgid ""
+"Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a "
+"href=\"%2$s\">AspirePress</a>"
+msgstr ""
+"Uppdateringar hämtas från <a href=\"%1$s\">FAIR Package Manager</a> och <a "
+"href=\"%2$s\">AspirePress</a>"
+
+#: inc/version-check/namespace.php:100
+msgctxt "browser version check"
+msgid "your platform"
+msgstr "din plattform"
+
+#: inc/version-check/namespace.php:101
+msgctxt "browser version check"
+msgid "your browser"
+msgstr "din webbläsare"
+
+#: assets/js/fair-avatars.js:20
+msgid "Choose Profile Picture"
+msgstr "Välj profilbild"
+
+#: assets/js/fair-avatars.js:22
+msgid "Use as Profile Picture"
+msgstr "Använd som profilbild"
+
+#: assets/js/fair-avatars.js:44
+msgid "Profile Picture Assigned"
+msgstr "Profilbild har tilldelats"
+
+#: assets/js/fair-avatars.js:60
+msgid "Profile Picture Removed"
+msgstr "Profilbilden har tagits bort"

@@ -2,9 +2,12 @@
 	"phpVersion": "7.4",
 	"plugins": [
 		"norcross/airplane-mode",
-		"johnbillion/query-monitor#3.17.2"
+		"johnbillion/query-monitor#3.18.0"
 	],
 	"mappings": {
 		"wp-content/plugins/plugin": "."
+	},
+	"config": {
+		"WP_TESTS_PHPUNIT_POLYFILLS_PATH": "./vendor/yoast/phpunit-polyfills"
 	}
 }

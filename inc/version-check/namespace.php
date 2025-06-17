@@ -224,9 +224,9 @@ function check_php_version( string $version ) {
 
 	$cur_branch_data = $branches[ $cur_branch ];
 
-	if ( $cur_branch_data['state'] === 'stable' || $cur_branch_data['state'] === 'security' ) {
+	if ( $cur_branch_data['state'] === 'security' ) {
 		return [
-			// If we're on the stable or secure branches, the recommended version
+			// If we're on the security branches, the recommended version
 			// should be the latest version of this branch.
 			'recommended_version' => $cur_branch_data['latest'],
 			'minimum_version'     => MINIMUM_PHP,

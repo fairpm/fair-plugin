@@ -8,7 +8,7 @@
 namespace FAIR\Salts;
 
 /**
- * This is the character set used for various functions.
+ * This is the character set used for various functions. Refrain from using \ (backslash) to prevent errors.
  */
 const CHARACTER_SET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_ []{}<>~`+=,.;:/?|';
 

@@ -1,0 +1,193 @@
+# Copyright (C) 2025 FAIR Contributors
+# This file is distributed under the GPLv2.
+msgid ""
+msgstr ""
+"Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
+"Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-06-16T16:26:12+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: fair\n"
+
+#. Plugin Name of the plugin
+#: plugin.php
+msgid "FAIR - Federated and Independent Repositories"
+msgstr ""
+
+#. Description of the plugin
+#: plugin.php
+msgid "Make your site more FAIR."
+msgstr ""
+
+#. Author of the plugin
+#: plugin.php
+msgid "FAIR Contributors"
+msgstr ""
+
+#: inc/avatars/namespace.php:93
+msgid "Choose Profile Image"
+msgstr ""
+
+#: inc/avatars/namespace.php:94
+msgid "Remove Profile Image"
+msgstr ""
+
+#: inc/avatars/namespace.php:97
+msgid "Upload a custom profile picture for your account."
+msgstr ""
+
+#. translators: %s: Name of person in profile picture
+#: inc/avatars/namespace.php:244
+#: inc/avatars/namespace.php:260
+#, php-format
+msgid "profile picture for %s"
+msgstr ""
+
+#: inc/avatars/namespace.php:256
+msgctxt "alt for unknown avatar user"
+msgid "profile picture for user"
+msgstr ""
+
+#. translators: %s: The version string.
+#: inc/credits/namespace.php:85
+#, php-format
+msgid "%s is not a valid version string."
+msgstr ""
+
+#: inc/credits/namespace.php:114
+msgid "No credits could be found."
+msgstr ""
+
+#: inc/dashboard-widgets/namespace.php:94
+msgid "Unable to fetch events (parse error)."
+msgstr ""
+
+#: inc/dashboard-widgets/namespace.php:101
+msgctxt "default event location"
+msgid "Online"
+msgstr ""
+
+#. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
+#: inc/dashboard-widgets/namespace.php:173
+msgctxt "Events and News dashboard widget"
+msgid "https://fair.pm/"
+msgstr ""
+
+#: inc/dashboard-widgets/namespace.php:186
+msgid "Events (by The WP World)"
+msgstr ""
+
+#: inc/settings/namespace.php:46
+#: inc/settings/namespace.php:47
+#: inc/settings/namespace.php:71
+msgid "FAIR Settings"
+msgstr ""
+
+#: inc/settings/namespace.php:60
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#. translators: %s: AspirePress website URL
+#: inc/settings/namespace.php:74
+#, php-format
+msgid "Your site is now disconnected from WordPress.org managed servers and uses a dedicated mirror from %s. In the coming weeks and months, we'll be making the mirror configurable and add in the ability to add your own."
+msgstr ""
+
+#. translators: %1$s: FAIR GitHub URL, %2$s: FAQ URL
+#: inc/settings/namespace.php:79
+#, php-format
+msgid "If you want to learn more, check out the %1$s and our %2$s."
+msgstr ""
+
+#: inc/settings/namespace.php:86
+msgid "Save Settings"
+msgstr ""
+
+#: inc/settings/namespace.php:107
+msgid "Avatar Settings"
+msgstr ""
+
+#: inc/settings/namespace.php:112
+msgid "Avatar Source"
+msgstr ""
+
+#: inc/settings/namespace.php:124
+msgid "Avatars will be loaded from the selected source."
+msgstr ""
+
+#: inc/settings/namespace.php:167
+msgid "FAIR Avatars"
+msgstr ""
+
+#: inc/settings/namespace.php:168
+msgid "Gravatar"
+msgstr ""
+
+#: inc/settings/namespace.php:182
+msgid "Settings saved successfully."
+msgstr ""
+
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:391
+#, php-format
+msgid "There is a new version of %s available."
+msgstr ""
+
+#. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
+#: inc/updater/class-lite.php:402
+#, php-format
+msgid "View version %1$s details%2$s or %3$supdate now%2$s."
+msgstr ""
+
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:407
+#, php-format
+msgid "%s: update now"
+msgstr ""
+
+#. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
+#: inc/updater/class-lite.php:414
+#, php-format
+msgid "View version %1$s details%2$s."
+msgstr ""
+
+#: inc/updater/class-lite.php:419
+msgid "Automatic update is unavailable for this theme."
+msgstr ""
+
+#. translators: 1) Fair PM URL, 2) AspirePress URL.
+#: inc/user-notification/namespace.php:27
+#, php-format
+msgid "Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a href=\"%2$s\">AspirePress</a>"
+msgstr ""
+
+#: inc/version-check/namespace.php:100
+msgctxt "browser version check"
+msgid "your platform"
+msgstr ""
+
+#: inc/version-check/namespace.php:101
+msgctxt "browser version check"
+msgid "your browser"
+msgstr ""
+
+#: assets/js/fair-avatars.js:20
+msgid "Choose Profile Picture"
+msgstr ""
+
+#: assets/js/fair-avatars.js:22
+msgid "Use as Profile Picture"
+msgstr ""
+
+#: assets/js/fair-avatars.js:44
+msgid "Profile Picture Assigned"
+msgstr ""
+
+#: assets/js/fair-avatars.js:60
+msgid "Profile Picture Removed"
+msgstr ""

@@ -11,6 +11,19 @@ Many features in WordPress rely on requests to WordPress.org services, including
 This plugin configures your site to use FAIR implementations of the key services that are currently centralized on WordPress.org.
 
 ## Features
+=======
+### Installation
+
+FAIR can be installed manually by downloading the latest zip from releases and install it via your WordPress admin dashboard.
+
+* [FAIR Releases](https://github.com/fairpm/fair-plugin/releases)
+* [How To Manually Install a Plugin](https://wordpress.org/documentation/article/manage-plugins/#manual-plugin-installation-1)
+
+### Uninstallation
+
+To remove the FAIR plugin and its features, you can deactivate and delete the plugin. There are no changes made to your database outside of the plugin settings, and no external files are edited. FAIR is a self-contained plugin, using the accepted WordPress standards and practices.
+
+### Features
 
 > [!NOTE]
 > The FAIR project is brand new. This plugin is a pre-release and some features are yet to be fully implemented.

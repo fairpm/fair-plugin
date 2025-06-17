@@ -219,7 +219,7 @@ function get_avatar_url( $id_or_email, $args ) {
 	$switched = false;
 	if ( is_multisite() ) {
 		$switched = true;
-		$user_site = get_user_meta( $user->ID, 'fair_avatar_site_id', true );	
+		$user_site = get_user_meta( $user->ID, 'fair_avatar_site_id', true );
 		switch_to_blog( $user_site );
 	}
 	$avatar_url = wp_get_attachment_image_url( $avatar_id, [ $size, $size ] );
@@ -240,6 +240,7 @@ function get_avatar_url( $id_or_email, $args ) {
 function get_avatar_alt( $id_or_email ) {
 	// Comments use the author name, rather than the user's display name.
 	if ( $id_or_email instanceof \WP_Comment ) {
+		/* translators: %s: Name of person in profile picture */
 		return sprintf( __( 'profile picture for %s', 'fair' ), $id_or_email->comment_author );
 	}
 
@@ -255,6 +256,7 @@ function get_avatar_alt( $id_or_email ) {
 		return _x( 'profile picture for user', 'alt for unknown avatar user', 'fair' );
 	}
 
+	/* translators: %s: Name of person in profile picture */
 	return sprintf( __( 'profile picture for %s', 'fair' ), $user->display_name );
 }
 

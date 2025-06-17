@@ -1,0 +1,60 @@
+{
+    "name": "fair/fair-plugin",
+    "description": "Make your site more FAIR.",
+    "type": "wordpress-plugin",
+    "license": "gpl-2.0-only",
+    "authors": [
+        {
+            "name": "FAIR Contributors"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "yoast/phpunit-polyfills": "*",
+        "nimut/phpunit-merger": "*"
+    },
+    "config": {
+        "lock": false
+    },
+    "scripts": {
+        "test": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php ./vendor/phpunit/phpunit/phpunit"
+        ],
+        "test:multisite": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php ./vendor/phpunit/phpunit/phpunit -c tests/phpunit/multisite.xml"
+        ],
+        "coverage:merge": [
+            "Composer\\Config::disableProcessTimeout",
+            "@putenv XDEBUG_MODE=coverage",
+            "@php ./vendor/bin/phpunit-merger coverage tests/phpunit/coverage/php --html tests/phpunit/coverage/html/full tests/phpunit/cache/full-cache.xml"
+        ],
+        "coverage:single": [
+            "Composer\\Config::disableProcessTimeout",
+            "@putenv XDEBUG_MODE=off",
+            "@putenv WP_TESTS_SKIP_INSTALL=0",
+            "@test --filter prime_test_suite",
+            "@putenv XDEBUG_MODE=coverage",
+            "@putenv WP_TESTS_SKIP_INSTALL=1",
+            "@test"
+        ],
+        "coverage:multisite": [
+            "Composer\\Config::disableProcessTimeout",
+            "@putenv XDEBUG_MODE=off",
+            "@putenv WP_TESTS_SKIP_INSTALL=0",
+            "@test:multisite --filter prime_test_suite",
+            "@putenv XDEBUG_MODE=coverage",
+            "@putenv WP_TESTS_SKIP_INSTALL=1",
+            "@test:multisite"
+        ],
+        "coverage:full": [
+            "Composer\\Config::disableProcessTimeout",
+            "@coverage:single",
+            "@coverage:multisite",
+            "@coverage:merge"
+        ]
+    }
+}
