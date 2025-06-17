@@ -1,0 +1,14 @@
+* text=auto
+
+/.git export-ignore
+/.github export-ignore
+/bin export-ignore
+/node_modules export-ignore
+/tests export-ignore
+phpunit.xml.dist export-ignore
+wp-tests-config-sample.php export-ignore
+composer.json export-ignore
+composer.lock export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+.distignore export-ignore
