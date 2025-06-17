@@ -218,10 +218,12 @@ class Upgrader extends WP_Upgrader {
 
 		// With the given options, this installs it to the destination directory.
 		add_filter( 'upgrader_source_selection', [ $this, 'check_requirements' ] );
+		add_filter( 'upgrader_source_selection', [ $this, 'rename_source_selection' ], 10, 2 );
 		$result = $this->install_package( array_merge( $options, [
 			'source' => $working_dir,
 		] ) );
 		remove_filter( 'upgrader_source_selection', [ $this, 'check_requirements' ] );
+		remove_filter( 'upgrade_source_selection', [ $this, 'rename_source_selection' ], 10 );
 
 		/**
 		 * Filters the result of WP_Upgrader::install_package().
@@ -573,4 +575,28 @@ class Upgrader extends WP_Upgrader {
 
 		$this->new_theme_data = $info;
 	}
+
+	/**
+	 * Correctly rename dependency from git host download name.
+	 *
+	 * @param string $source        Path of $source.
+	 * @param string $remote_source Path of $remote_source.
+	 *
+	 * @return string
+	 */
+	public function rename_source_selection( string $source, string $remote_source ) {
+			global $wp_filesystem;
+
+			$new_source = trailingslashit( $remote_source ) . $this->package->slug;
+
+			if ( basename( $source ) === $this->package->slug ) {
+				return $source;
+			}
+
+			if ( trailingslashit( strtolower( $source ) ) !== trailingslashit( strtolower( $new_source ) ) ) {
+				$wp_filesystem->move( $source, $new_source, true );
+			}
+
+			return trailingslashit( $new_source );
+		}
 }
