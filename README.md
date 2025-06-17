@@ -44,6 +44,14 @@ In addition to the key FAIR implementations, a few other features in WordPress a
 * Media features provided by OpenVerse are disabled, pending discussion and work by the FAIR working group
 * Ping services are configured to use IndexNow in place of Pingomatic
 
+### Data Privacy
+
+FAIR is built to reduce external dependencies and keep your site as self-contained as possible. However, some essential features require connecting to remote services in order to function correctly. This section details which features involve remote requests, what data may be transmitted, and the specific third-party providers involved. Review the list below to understand exactly where and why your site may communicate with external endpoints.
+
+* Ping Services when a post is published is handled by [IndexNow](https://www.indexnow.org).
+* The list of WordPress Events shown on your WP Admin Dashboard is powered by [The WP World](https://thewp.world)
+* Installation and updates of all WordPress Packages (core, plugins, themes) are via [AspireCloud from AspirePress](https://aspirepress.org/)
+
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for information on contributing.
