@@ -1,0 +1,192 @@
+# Blank Plugin POT Template
+# Copyright 2025 ...
+# This file is distributed under the GNU General Public License v3 or later.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: FAIR - Federated and Independent Repositories\n"
+"Report-Msgid-Bugs-To: Alex Lion <learnwithalex@gmail.com>\n"
+"POT-Creation-Date: 2025-06-11 01:46-0700\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Alex Lion <learnwithalex@gmail.com>\n"
+"Language-Team: Alex Lion <learnwithalex@gmail.com>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-WPHeader: plugin.php\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: "
+"__;_e;esc_html_e;esc_html_x:1,2c;esc_html__;esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Bookmarks: \n"
+"X-Generator: Poedit 3.6\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: assets/js/fair-avatars.js:20
+msgid "Choose Profile Picture"
+msgstr "選取個人資料圖片"
+
+#: assets/js/fair-avatars.js:22
+msgid "Use as Profile Picture"
+msgstr "設定為個人資料圖片"
+
+#: assets/js/fair-avatars.js:44
+msgid "Profile Picture Assigned"
+msgstr "個人資料圖片已指派。"
+
+#: assets/js/fair-avatars.js:60
+msgid "Profile Picture Removed"
+msgstr "個人資料圖片已移除。"
+
+#: inc/avatars/namespace.php:93
+msgid "Choose Profile Image"
+msgstr "選取個人資料圖片"
+
+#: inc/avatars/namespace.php:94
+msgid "Remove Profile Image"
+msgstr "移除個人資料圖片"
+
+#: inc/avatars/namespace.php:97
+msgid "Upload a custom profile picture for your account."
+msgstr "為個人帳號上傳自訂個人資料圖片。"
+
+#: inc/avatars/namespace.php:244 inc/avatars/namespace.php:259
+#, php-format
+msgid "profile picture for %s"
+msgstr "「%s」的個人資料圖片"
+
+#: inc/avatars/namespace.php:256
+msgctxt "alt for unknown avatar user"
+msgid "profile picture for user"
+msgstr "使用者的個人資料圖片"
+
+#: inc/credits/namespace.php:84
+#, php-format
+msgid "%s is not a valid version string."
+msgstr "%s 是無效的版本字串。"
+
+#: inc/credits/namespace.php:113
+msgid "No credits could be found."
+msgstr "找不到任何信用額度。"
+
+#: inc/dashboard-widgets/namespace.php:92
+msgid "Unable to fetch events (parse error)."
+msgstr "無法擷取活動 (剖析錯誤)。"
+
+#: inc/dashboard-widgets/namespace.php:99
+msgctxt "default event location"
+msgid "Online"
+msgstr "線上"
+
+#: inc/dashboard-widgets/namespace.php:171
+msgctxt "Events and News dashboard widget"
+msgid "https://fair.pm/"
+msgstr "https://fair.pm/"
+
+#: inc/dashboard-widgets/namespace.php:172
+msgid "News"
+msgstr "最新消息"
+
+#: inc/dashboard-widgets/namespace.php:174
+#: inc/dashboard-widgets/namespace.php:186
+msgid "(opens in a new tab)"
+msgstr "(在新分頁中開啟)"
+
+#: inc/dashboard-widgets/namespace.php:184
+msgid "Events (by The WP World)"
+msgstr "活動 (資料來源: The WP World)"
+
+#: inc/settings/namespace.php:46 inc/settings/namespace.php:47
+#: inc/settings/namespace.php:71
+msgid "FAIR Settings"
+msgstr "FAIR 設定"
+
+#: inc/settings/namespace.php:60
+msgid "You do not have sufficient permissions to access this page."
+msgstr "目前的登入身分沒有存取這個頁面的權限。"
+
+#: inc/settings/namespace.php:75
+msgid "Save Settings"
+msgstr "儲存設定"
+
+#: inc/settings/namespace.php:96
+msgid "Avatar Settings"
+msgstr "個人頭像設定"
+
+#: inc/settings/namespace.php:101
+msgid "Avatar Source"
+msgstr "個人頭像來源"
+
+#: inc/settings/namespace.php:113
+msgid "Avatars will be loaded from the selected source."
+msgstr "個人頭像會從選取的來源載入。"
+
+#: inc/settings/namespace.php:156
+msgid "FAIR Avatars"
+msgstr "FAIR 個人頭像"
+
+#: inc/settings/namespace.php:157
+msgid "Gravatar"
+msgstr "Gravatar"
+
+#: inc/settings/namespace.php:171
+msgid "Settings saved successfully."
+msgstr "設定已儲存。"
+
+#: inc/updater/class-lite.php:388
+#, php-format
+msgid "There is a new version of %s available."
+msgstr "%s 有新版本可供下載安裝。"
+
+#: inc/updater/class-lite.php:399
+#, php-format
+msgid "View version %1$s details%2$s or %3$supdate now%2$s."
+msgstr "檢視 %1$s 版的詳細資料%2$s或%3$s立即更新%2$s。"
+
+#: inc/updater/class-lite.php:404
+#, php-format
+msgid "Update %s now"
+msgstr "立即更新 %s"
+
+#: inc/updater/class-lite.php:411
+#, php-format
+msgid "View version %1$s details%2$s."
+msgstr "檢視 %1$s 版的詳細資料%2$s"
+
+#: inc/updater/class-lite.php:417
+#, php-format
+msgid "%1$sAutomatic update is unavailable for this theme.%2$s"
+msgstr "%1$s這個佈景主題不提供自動更新。%2$s"
+
+#: inc/user-notification/namespace.php:27
+#, php-format
+msgid ""
+"Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a "
+"href=\"%2$s\">AspirePress</a>"
+msgstr ""
+"由 <a href=\"%1$s\" target=\"_blank\">FAIR Package Manager</a> 及 <a "
+"href=\"%2$s\" target=\"_blank\">AspirePress</a> 提供更新"
+
+#: inc/version-check/namespace.php:100
+msgctxt "browser version check"
+msgid "your platform"
+msgstr "使用的平台"
+
+#: inc/version-check/namespace.php:101
+msgid "your browser"
+msgstr "使用的瀏覽器"
+
+#. Plugin Name of the plugin/theme
+msgid "FAIR - Federated and Independent Repositories"
+msgstr "FAIR - 分散式獨立存放庫"
+
+#. Description of the plugin/theme
+msgid "Make your site more FAIR."
+msgstr "讓網站更加平等。"
+
+#. Author of the plugin/theme
+msgid "FAIR Contributors"
+msgstr "FAIR 專案參與者"

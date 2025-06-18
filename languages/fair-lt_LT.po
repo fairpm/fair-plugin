@@ -1,0 +1,168 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: FAIR - Federated and Independent Repositories\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-07 07:13+0000\n"
+"PO-Revision-Date: 2025-06-10 07:25+0000\n"
+"Last-Translator: \n"
+"Language-Team: Lietuvių kalba\n"
+"Language: lt_LT\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 "
+"&&(n%100<10||n%100 >= 20)? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.8.0; wp-6.8.1; php-8.2.27\n"
+"X-Domain: fair"
+
+#. %s: opening/closing paragraph and italic tags
+#: inc/updater/class-lite.php:417
+#, php-format
+msgid "%1$sAutomatic update is unavailable for this theme.%2$s"
+msgstr "%1$sAutomatinis šios išvaizdos temos atnaujinimas negalimas.%2$s"
+
+#. %s: The version string.
+#: inc/credits/namespace.php:85
+#, php-format
+msgid "%s is not a valid version string."
+msgstr "%s nėra tinkamas versijos pavadinimas"
+
+#: inc/avatars/namespace.php:255
+msgctxt "alt for unknown avatar user"
+msgid "profile picture for user"
+msgstr "vartotojo profilio nuotrauka"
+
+#: inc/settings/namespace.php:96
+msgid "Avatar Settings"
+msgstr "Avatarų nustatymai"
+
+#: inc/settings/namespace.php:101
+msgid "Avatar Source"
+msgstr "Avatarų šaltinis"
+
+#: inc/settings/namespace.php:113
+msgid "Avatars will be loaded from the selected source."
+msgstr "Avatarai bus naudojami iš pasirinkto šaltinio."
+
+#: inc/version-check/namespace.php:101
+msgctxt "browser version check"
+msgid "your browser"
+msgstr "jūsų naršyklė"
+
+#: inc/version-check/namespace.php:100
+msgctxt "browser version check"
+msgid "your platform"
+msgstr "jūsų platforma"
+
+#: inc/avatars/namespace.php:93
+msgid "Choose Profile Image"
+msgstr "Pasirinkite profilio paveikslėlį"
+
+#: inc/dashboard-widgets/namespace.php:97
+msgctxt "default event location"
+msgid "Online"
+msgstr "Internete"
+
+#: inc/dashboard-widgets/namespace.php:182
+msgid "Events (by The WP World)"
+msgstr "Renginiai (iš The WP World)"
+
+#. If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
+#: inc/dashboard-widgets/namespace.php:169
+msgctxt "Events and News dashboard widget"
+msgid "https://fair.pm/"
+msgstr "https://fair.pm/"
+
+#. Name of the plugin
+msgid "FAIR - Federated and Independent Repositories"
+msgstr "FAIR - Federuotos ir nepriklausomos repozitorijos"
+
+#: inc/settings/namespace.php:156
+msgid "FAIR Avatars"
+msgstr "FAIR avatarai"
+
+#. Author of the plugin
+msgid "FAIR Contributors"
+msgstr "FAIR kūrėjai"
+
+#: inc/settings/namespace.php:46 inc/settings/namespace.php:47
+#: inc/settings/namespace.php:71
+msgid "FAIR Settings"
+msgstr "FAIR nustatymai"
+
+#: inc/settings/namespace.php:157
+msgid "Gravatar"
+msgstr "Gravatar"
+
+#. Description of the plugin
+msgid "Make your site more FAIR."
+msgstr "Padarykite savo svetainę labiau FAIR."
+
+#: inc/credits/namespace.php:114
+msgid "No credits could be found."
+msgstr "Kūrėjų informacija nerasta."
+
+#: inc/avatars/namespace.php:243 inc/avatars/namespace.php:258
+#, php-format
+msgid "profile picture for %s"
+msgstr "%s profilio nuotrauka"
+
+#: inc/avatars/namespace.php:94
+msgid "Remove Profile Image"
+msgstr "Pašaliniti profilio nuotrauką"
+
+#: inc/settings/namespace.php:75
+msgid "Save Settings"
+msgstr "Išsaugoti nustatymus"
+
+#: inc/settings/namespace.php:171
+msgid "Settings saved successfully."
+msgstr "Nustatymai išsaugotiu sėkmingai"
+
+#. %s: theme name
+#: inc/updater/class-lite.php:388
+#, php-format
+msgid "There is a new version of %s available."
+msgstr "Yra nauja %s versija."
+
+#: inc/dashboard-widgets/namespace.php:90
+msgid "Unable to fetch events (parse error)."
+msgstr "Nepavyko gauti renginių informacijos (skaitymo klaida)."
+
+#. %s: theme name
+#: inc/updater/class-lite.php:404
+#, php-format
+msgid "Update %s now"
+msgstr "Atnaujinti %s dabar"
+
+#. 1) Fair PM URL, 2) AspirePress URL.
+#: inc/user-notification/namespace.php:27
+#, php-format
+msgid ""
+"Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a "
+"href=\"%2$s\">AspirePress</a>"
+msgstr ""
+"Atnaujinimai pasiekiami iš <a href=\"%1$s\">FAIR paketų valdyklės</a> ir <a "
+"href=\"%2$s\">AspirePress</a>"
+
+#: inc/avatars/namespace.php:97
+msgid "Upload a custom profile picture for your account."
+msgstr "Įkelkite savo profilio nutrauką"
+
+#. 1: version number, 2: closing anchor tag, 3: update URL
+#: inc/updater/class-lite.php:399
+#, php-format
+msgid "View version %1$s details%2$s or %3$supdate now%2$s."
+msgstr ""
+"Peržiūrėkite %1$s versijos informaciją%2$s arba %3$satnaujinkite dabar%2$s."
+
+#. 1: version number, 2: closing anchor tag, 3: update URL
+#: inc/updater/class-lite.php:411
+#, php-format
+msgid "View version %1$s details%2$s."
+msgstr "Peržiūrėkite %1$s versijos informaciją%2$s."
+
+#: inc/settings/namespace.php:60
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Neturite teisės pasiekti šį puslapį."
