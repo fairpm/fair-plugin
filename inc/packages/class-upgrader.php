@@ -577,7 +577,9 @@ class Upgrader extends WP_Upgrader {
 	}
 
 	/**
-	 * Correctly rename dependency from git host download name.
+	 * Renames a package's directory when it doesn't match the slug.
+	 *
+	 * This is commonly required for packages from Git hosts.
 	 *
 	 * @param string $source        Path of $source.
 	 * @param string $remote_source Path of $remote_source.
@@ -585,13 +587,13 @@ class Upgrader extends WP_Upgrader {
 	 * @return string
 	 */
 	public function rename_source_selection( string $source, string $remote_source ) {
-			global $wp_filesystem;
-
-			$new_source = trailingslashit( $remote_source ) . $this->package->slug . '-' . explode( ':', $this->package->id )[2];
-
 			if ( basename( $source ) === $this->package->slug ) {
 				return $source;
 			}
+
+			global $wp_filesystem;
+
+			$new_source = trailingslashit( $remote_source ) . $this->package->slug . '-' . explode( ':', $this->package->id )[2];
 
 			if ( trailingslashit( strtolower( $source ) ) !== trailingslashit( strtolower( $new_source ) ) ) {
 				$wp_filesystem->move( $source, $new_source, true );
