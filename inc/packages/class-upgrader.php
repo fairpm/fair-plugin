@@ -587,11 +587,11 @@ class Upgrader extends WP_Upgrader {
 	 * @return string
 	 */
 	public function rename_source_selection( string $source, string $remote_source ) {
+			global $wp_filesystem;
+
 			if ( basename( $source ) === $this->package->slug ) {
 				return $source;
 			}
-
-			global $wp_filesystem;
 
 			$new_source = trailingslashit( $remote_source ) . $this->package->slug . '-' . explode( ':', $this->package->id )[2];
 
