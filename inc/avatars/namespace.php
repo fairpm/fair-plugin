@@ -84,6 +84,17 @@ function add_avatar_upload_field( $description, $profile_user ) {
 		return $description;
 	}
 
+	// Display a message regarding network settings on a multisite.
+	if ( defined( 'MULTISITE' ) && false !== MULTISITE && ! is_network_admin() ) {
+		echo '<span class="fair-avatar-desc">';
+			echo sprintf(
+				esc_html__( 'Avatars are managed at the network level. %s to make changes.', 'fair' ),
+				'<a href="' . network_admin_url( 'profile.php' ) . '">Click here</a>',
+			);
+		echo '</span>';
+		return;
+	}
+
 	$avatar_id = get_user_meta( $profile_user->ID, 'fair_avatar_id', true );
 
 	// Set a class based on an avatar being there right now.
