@@ -5,7 +5,9 @@
     "license": "gpl-2.0-only",
     "authors": [
         {
-            "name": "FAIR Contributors"
+            "name": "FAIR Contributors",
+			"email": "operations@fair.pm",
+			"homepage": "https://fair.pm"
         }
     ],
     "require": {
@@ -56,5 +58,10 @@
             "@coverage:multisite",
             "@coverage:merge"
         ]
-    }
+    },
+	"support": {
+		"issues": "https://github.com/fairpm/fair-plugin/issues",
+		"source": "https://github.com/fairpm/fair-plugin/issues",
+		"docs": "https://github.com/fairpm/fair-plugin/blob/main/README.md"
+	}
 }
