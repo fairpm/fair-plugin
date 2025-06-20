@@ -10,8 +10,16 @@ function bootstrap(){
 
 function set_default_icon( $transient ) {
 	foreach( $transient->response as $updates){
-		$updates->icons['default'] = plugin_dir_url( FAIR\PLUGIN_FILE ). 'inc/icons/svg.php';
+		$url = plugin_dir_url( FAIR\PLUGIN_FILE ). 'inc/icons/svg.php';
+		$url = add_query_arg( 'color', set_random_color(), $url );
+		$updates->icons['default'] = $url;
 	}
 
 	return $transient;
+}
+
+function set_random_color() {
+	$rand = str_pad( dechex( rand( 0x000000, 0xFFFFFF ) ), 6, 0, STR_PAD_LEFT );
+
+	return $rand;
 }
