@@ -28,6 +28,7 @@ function bootstrap() {
 	Dashboard_Widgets\bootstrap();
 	Default_Repo\bootstrap();
 	Disable_Openverse\bootstrap();
+	Icons\bootstrap();
 	Importers\bootstrap();
 	Pings\bootstrap();
 	Salts\bootstrap();
