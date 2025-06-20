@@ -2,7 +2,18 @@
 
 namespace FAIR\Icons;
 
-$color = '#' . $_GET['color'];
+$color = sanitize_hex_color( '#' . $_GET['color'] );
+
+function sanitize_hex_color( $color ) {
+	if ( '' === $color ) {
+		return '';
+	}
+
+	// 3 or 6 hex digits, or the empty string.
+	if ( preg_match( '|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ) {
+		return $color;
+	}
+}
 
 // Add the proper header
 header( 'Content-Type: image/svg+xml' );
