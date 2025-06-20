@@ -11,10 +11,35 @@ namespace FAIR\Settings;
  * Bootstrap.
  */
 function bootstrap() {
+	/*
 	add_action( 'admin_menu', __NAMESPACE__ . '\\create_settings_menu' );
 	add_action( 'admin_notices', __NAMESPACE__ . '\\display_settings_saved_notice' );
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_scripts_and_styles' );
+	*/
+	add_action( 'admin_init', __NAMESPACE__ . '\\load_single_site_avatar_settings' );
 }
+
+/**
+ * Register the single site settings fields.
+ *
+ * @return void
+ */
+function load_single_site_avatar_settings() {
+
+	// First register our setting section.
+	add_settings_section(
+		'srs-pr-sync-settings-section',
+		__( 'Press Release Sync Settings', 'srs-pr-sync' ),
+		__NAMESPACE__ . '\register_settings_section',
+		'writing',
+	);
+
+	// Begin handling our individual fields.
+	register_sync_sitename_field();
+	register_sync_username_field();
+	register_sync_password_field();
+}
+
 
 /**
  * Enqueue assets.
