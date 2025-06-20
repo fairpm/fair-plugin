@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
 "Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
 "POT-Creation-Date: 2025-06-16T16:26:12+00:00\n"
-"PO-Revision-Date: 2025-06-18 10:23+0200\n"
+"PO-Revision-Date: 2025-06-20 17:22+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -65,7 +65,7 @@ msgstr "Nessun credito trovato."
 
 #: inc/dashboard-widgets/namespace.php:94
 msgid "Unable to fetch events (parse error)."
-msgstr "Impossibile recuperare gli eventi (errore di parking)."
+msgstr "Impossibile recuperare gli eventi (errore di parsing)."
 
 #: inc/dashboard-widgets/namespace.php:101
 msgctxt "default event location"
