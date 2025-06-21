@@ -262,7 +262,7 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 					if ( empty( $author->name ) ) {
 						continue;
 					}
-					$url = $author->url ?? ( $author->email ? 'mailto:' . $author->email : null );
+					$url = $author->url ?? ( isset( $author->email ) ? 'mailto:' . $author->email : null );
 					printf(
 						'<a href="%s" target="_blank">%s</a>',
 						esc_url( $url ),

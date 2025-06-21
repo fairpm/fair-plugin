@@ -36,6 +36,11 @@ class ReleaseDocument {
 	 */
 	public $auth;
 
+	/**
+	 * @var ReleaseDocument
+	 */
+	public $release;
+
 	public static function from_data( stdClass $data ) {
 		$doc = new static();
 		$mandatory = [
