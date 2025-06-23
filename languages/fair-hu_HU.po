@@ -1,0 +1,197 @@
+# Copyright (C) 2025 FAIR Contributors
+# This file is distributed under the GPLv2.
+msgid ""
+msgstr ""
+"Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
+"Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: hu_HU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-06-13T12:35:01+00:00\n"
+"PO-Revision-Date: 2025-06-12T17:00:00+00:00\n"
+"X-Generator: Manual\n"
+"X-Domain: fair\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Plugin Name of the plugin
+#: plugin.php
+msgid "FAIR - Federated and Independent Repositories"
+msgstr "FAIR - Federated and Independent Repositories"
+
+#. Description of the plugin
+#: plugin.php
+msgid "Make your site more FAIR."
+msgstr "Tedd az oldaladat FAIR-ré."
+
+#. Author of the plugin
+#: plugin.php
+msgid "FAIR Contributors"
+msgstr "FAIR Közreműködők"
+
+#: inc/avatars/namespace.php:93
+msgid "Choose Profile Image"
+msgstr "Profilkép kiválasztása"
+
+#: inc/avatars/namespace.php:94
+msgid "Remove Profile Image"
+msgstr "Profilkép eltávolítása"
+
+#: inc/avatars/namespace.php:97
+msgid "Upload a custom profile picture for your account."
+msgstr "Tölts fel egyéni profilképet a fiókodhoz."
+
+#. translators: %s: Name of person in profile picture
+#: inc/avatars/namespace.php:244
+#: inc/avatars/namespace.php:260
+#, php-format
+msgid "profile picture for %s"
+msgstr "%s profilképe"
+
+#: inc/avatars/namespace.php:256
+msgctxt "alt for unknown avatar user"
+msgid "profile picture for user"
+msgstr "felhasználó profilképe"
+
+#. translators: %s: The version string.
+#: inc/credits/namespace.php:85
+#, php-format
+msgid "%s is not a valid version string."
+msgstr "%s nem érvényes verzió karakterlánc."
+
+#: inc/credits/namespace.php:114
+msgid "No credits could be found."
+msgstr "Nem találhatók közreműködők."
+
+#: inc/dashboard-widgets/namespace.php:94
+msgid "Unable to fetch events (parse error)."
+msgstr "Nem sikerült lekérni az eseményeket (elemzési hiba)."
+
+#: inc/dashboard-widgets/namespace.php:101
+msgctxt "default event location"
+msgid "Online"
+msgstr "Online"
+
+#. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
+#: inc/dashboard-widgets/namespace.php:173
+msgctxt "Events and News dashboard widget"
+msgid "https://fair.pm/"
+msgstr "https://fair.pm/"
+
+#: inc/dashboard-widgets/namespace.php:186
+msgid "Events (by The WP World)"
+msgstr "Események (The WP World)"
+
+#: inc/settings/namespace.php:46
+#: inc/settings/namespace.php:47
+#: inc/settings/namespace.php:71
+msgid "FAIR Settings"
+msgstr "FAIR beállítások"
+
+#: inc/settings/namespace.php:60
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Nincs megfelelő jogosultságod az oldal eléréséhez."
+
+#. translators: %s: AspirePress website URL
+#: inc/settings/namespace.php:74
+#, php-format
+msgid "Your site is now disconnected from WordPress.org managed servers and uses a dedicated mirror from %s. In the coming weeks and months, we'll be making the mirror configurable and add in the ability to add your own."
+msgstr "Az oldalad most le van választva a WordPress.org által kezelt szerverekről és egy dedikált tükrözést használ %s-től. Az elkövetkező hetekben és hónapokban konfigurálhatóvá tesszük a tükrözést és hozzáadjuk a saját tükrözés hozzáadásának lehetőségét."
+
+#. translators: %1$s: FAIR GitHub URL, %2$s: FAQ URL
+#: inc/settings/namespace.php:79
+#, php-format
+msgid "If you want to learn more, check out the %1$s and our %2$s."
+msgstr "Ha többet szeretnél megtudni, nézd meg a %1$s-t és a %2$s-ünket."
+
+#: inc/settings/namespace.php:86
+msgid "Save Settings"
+msgstr "Beállítások mentése"
+
+#: inc/settings/namespace.php:107
+msgid "Avatar Settings"
+msgstr "Avatar beállítások"
+
+#: inc/settings/namespace.php:112
+msgid "Avatar Source"
+msgstr "Avatar forrása"
+
+#: inc/settings/namespace.php:124
+msgid "Avatars will be loaded from the selected source."
+msgstr "Az avatarok a kiválasztott forrásból lesznek betöltve."
+
+#: inc/settings/namespace.php:167
+msgid "FAIR Avatars"
+msgstr "FAIR avatarok"
+
+#: inc/settings/namespace.php:168
+msgid "Gravatar"
+msgstr "Gravatar"
+
+#: inc/settings/namespace.php:182
+msgid "Settings saved successfully."
+msgstr "Beállítások sikeresen mentve."
+
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:391
+#, php-format
+msgid "There is a new version of %s available."
+msgstr "Elérhető a(z) %s új verziója."
+
+#. translators: 1: version number, 2: closing anchor tag, 3: update URL
+#: inc/updater/class-lite.php:402
+#, php-format
+msgid "View version %1$s details%2$s or %3$supdate now%2$s."
+msgstr "Nézd meg a %1$s verzió részleteit%2$s vagy %3$sfrissítsd most%2$s."
+
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:407
+#, php-format
+msgid "Update %s now"
+msgstr "%s azonnali frissítése"
+
+#. translators: 1: version number, 2: closing anchor tag, 3: update URL
+#: inc/updater/class-lite.php:414
+#, php-format
+msgid "View version %1$s details%2$s."
+msgstr "Nézd meg a %1$s verzió részleteit%2$s."
+
+#. translators: %s: opening/closing paragraph and italic tags
+#: inc/updater/class-lite.php:420
+#, php-format
+msgid "%1$sAutomatic update is unavailable for this theme.%2$s"
+msgstr "%1$sAutomatikus frissítés nem érhető el ehhez a témához.%2$s"
+
+#. translators: 1) Fair PM URL, 2) AspirePress URL.
+#: inc/user-notification/namespace.php:27
+#, php-format
+msgid "Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a href=\"%2$s\">AspirePress</a>"
+msgstr "Frissítések a <a href=\"%1$s\">FAIR Package Manager</a>-től és az <a href=\"%2$s\">AspirePress</a>-től"
+
+#: inc/version-check/namespace.php:100
+msgctxt "browser version check"
+msgid "your platform"
+msgstr "platformod"
+
+#: inc/version-check/namespace.php:101
+msgctxt "browser version check"
+msgid "your browser"
+msgstr "böngésződ"
+
+#: assets/js/fair-avatars.js:20
+msgid "Choose Profile Picture"
+msgstr "Profilkép kiválasztása"
+
+#: assets/js/fair-avatars.js:22
+msgid "Use as Profile Picture"
+msgstr "Használat profilképként"
+
+#: assets/js/fair-avatars.js:44
+msgid "Profile Picture Assigned"
+msgstr "Profilkép hozzárendelve"
+
+#: assets/js/fair-avatars.js:60
+msgid "Profile Picture Removed"
+msgstr "Profilkép eltávolítva" 

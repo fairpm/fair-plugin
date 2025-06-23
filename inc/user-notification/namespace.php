@@ -18,10 +18,10 @@ function bootstrap() {
 /**
  * Add a notification to the site footer about FAIR/AspirePress.
  *
- * @param string $content The current version or update notification.
+ * @param string|null $content The current version or update notification.
  * @return string
  */
-function notify_users( string $content = '' ) : string {
+function notify_users( ?string $content = null ) : string {
 	$message = sprintf(
 		// translators: 1) Fair PM URL, 2) AspirePress URL.
 		__( 'Updates served from the <a href="%1$s">FAIR Package Manager</a> and <a href="%2$s">AspirePress</a>', 'fair' ),
