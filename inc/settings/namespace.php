@@ -7,7 +7,7 @@
 
 namespace FAIR\Settings;
 
-const AVATAR_SRC_SETTING_KEY = 'fair_avatar_source';
+use const FAIR\Avatars\AVATAR_SRC_SETTING_KEY;
 
 /**
  * Bootstrap.
