@@ -179,7 +179,7 @@ function generate_string_via_mt_rand() {
 	for ( $i = 0; $i < 64; $i++ ) {
 
 		// Randomly select an index from the character set using mt_rand().
-		$set_index = mt_rand( 0, strlen( CHARACTER_SET ) - 1 );
+		$set_index = wp_rand( 0, strlen( CHARACTER_SET ) - 1 );
 
 		// Append the character to the string.
 		$saltgrain .= CHARACTER_SET[ $set_index ];
@@ -218,7 +218,7 @@ function generate_string_via_substr() {
 	for ( $i = 0; $i < 64; $i++ ) {
 
 		// Append the character to the string.
-		$saltgrain .= substr( CHARACTER_SET, mt_rand( 0, strlen( CHARACTER_SET ) - 1 ), 1 );
+		$saltgrain .= substr( CHARACTER_SET, wp_rand( 0, strlen( CHARACTER_SET ) - 1 ), 1 );
 	}
 
 	return esc_attr( $saltgrain );
