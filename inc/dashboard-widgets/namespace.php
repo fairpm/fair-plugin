@@ -111,7 +111,7 @@ function get_community_events() {
 
 		$url = add_query_arg( 'ref', 'fair-dashboard', $event['camp_website_url'] ?? $event['link'] );
 
-		$events[] = array(
+		$events[] = [
 			'type' => 'event',
 			'title' => $event['title']['rendered'],
 			'url' => $url,
@@ -127,7 +127,7 @@ function get_community_events() {
 				'latitude' => $event['camp_lat'] ?? 0,
 				'longitude' => $event['camp_lng'] ?? 0,
 			],
-		);
+		];
 	}
 
 	// Resort events by start date.

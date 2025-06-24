@@ -137,7 +137,7 @@ function save_avatar_upload( $user_id ) {
 function filter_avatar( $avatar, $id_or_email, $size, $default, $alt, $args ) {
 	$avatar_url = get_avatar_url( $id_or_email, $args );
 
-	$class = array( 'avatar', 'avatar-' . (int) $size, 'photo' );
+	$class = [ 'avatar', 'avatar-' . (int) $size, 'photo' ];
 	if ( ! empty( $args['class'] ) ) {
 		$class = array_merge( $class, (array) $args['class'] );
 	}
