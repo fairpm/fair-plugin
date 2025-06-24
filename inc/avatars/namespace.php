@@ -1,4 +1,9 @@
 <?php
+/**
+ * Adds a local source for avatars.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Avatars;
 

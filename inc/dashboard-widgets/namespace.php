@@ -1,4 +1,9 @@
 <?php
+/**
+ * Changes events to use The WP World, and news to use FAIR Planet.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Dashboard_Widgets;
 

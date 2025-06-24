@@ -1,4 +1,9 @@
 <?php
+/**
+ * Replaces Pingomatic with IndexNow.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Pings;
 
