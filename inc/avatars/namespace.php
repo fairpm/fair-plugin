@@ -41,7 +41,7 @@ function enqueue_media_scripts( $hook_suffix ) {
 	}
 
 	// Grab the user ID to pass along for alt text.
-	$user_id = 'profile.php' === $hook_suffix ? get_current_user_id() : absint( $_GET['user_id'] );
+	$user_id = 'profile.php' === $hook_suffix ? get_current_user_id() : absint( $_GET['user_id'] ?? 0 );
 	$display_name = get_user( $user_id )->display_name;
 
 	wp_enqueue_media();
