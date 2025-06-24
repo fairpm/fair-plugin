@@ -13,10 +13,14 @@
     },
     "require-dev": {
         "yoast/phpunit-polyfills": "*",
-        "nimut/phpunit-merger": "*"
+        "nimut/phpunit-merger": "*",
+        "humanmade/coding-standards": "^1.2"
     },
     "config": {
-        "lock": false
+        "lock": false,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "scripts": {
         "test": [
