@@ -148,7 +148,7 @@ function save_settings() : bool {
 		return false;
 	}
 
-	$raw = is_array( $_POST['fair_settings'] ) ? $_POST['fair_settings'] : [];
+	$raw = is_array( $_POST['fair_settings'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fair_settings'] ) ) : [];
 
 	$settings = get_option( 'fair_settings', [] );
 
