@@ -37,8 +37,9 @@ function get_default_repo_domain() : string {
  * and themes APIs. Only these get passed to the chosen FAIR repo, as the others are
  * handled in other modules.
  *
- * @param array $args
- * @param string $url
+ * @param bool|array $status Filtered value, or false to proceed.
+ * @param array $args HTTP request arguments.
+ * @param string $url The request URL.
  * @return bool|array Replaced value, or false to proceed.
  */
 function replace_repo_api_urls( $status, $args, $url ) {
@@ -74,7 +75,7 @@ function replace_repo_api_urls( $status, $args, $url ) {
  * This tab only makes sense for WordPress.org, so is not supported by
  * other repositories.
  *
- * @param array $tabs
+ * @param array $tabs Tabs in the plugin browser.
  */
 function remove_favorites_tab( array $tabs ) : array {
 	unset( $tabs['favorites'] );

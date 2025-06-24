@@ -23,8 +23,8 @@ function bootstrap() {
  * Replace the call to retrieve generated salt values.
  *
  * @param bool|array $value Filtered value, or false to proceed.
- * @param array $args
- * @param string $url
+ * @param array $args HTTP request arguments.
+ * @param string $url The request URL.
  * @return bool|array Replaced value, or false to proceed.
  */
 function replace_salt_generation_via_api( $value, $args, $url ) {
