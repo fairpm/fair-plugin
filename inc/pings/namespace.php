@@ -158,12 +158,14 @@ function ping_indexnow( $new_status, $old_status, $post ) : void {
 
 	// Log the response for debugging. As per https://www.indexnow.org/documentation#response, either 200 or 202 is acceptable.
 	if ( is_wp_error( $response ) ) {
+		/* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r */
 		error_log( 'IndexNow ping failed: ' . $response->get_error_message() . print_r( $request, true ) );
 		return;
 	}
 
 	$status = wp_remote_retrieve_response_code( $response );
 	if ( ! in_array( $status, [ 200, 202 ], true ) ) {
+		/* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r */
 		error_log( 'IndexNow ping failed: ' . $status . print_r( $request, true ) );
 	}
 }
