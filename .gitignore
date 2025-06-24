@@ -1,6 +1,5 @@
 /node_modules/
 *.bak
-.cache/*
 /.vscode
 /vendor/
 .phpunit.result.cache
