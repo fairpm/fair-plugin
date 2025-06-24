@@ -81,7 +81,8 @@ function handle_key_file_request() {
 
 	$key = get_indexnow_key();
 	if ( ! $key || $key !== get_query_var( 'fair_indexnow_key' ) ) {
-		wp_die( 'Invalid key: ' . get_query_var( 'fair_indexnow_key' ), 'IndexNow Key Error', [ 'response' => 403 ] );
+		$error = 'Invalid key: ' . get_query_var( 'fair_indexnow_key' );
+		wp_die( esc_html( $error ), 'IndexNow Key Error', [ 'response' => 403 ] );
 		return;
 	}
 
@@ -91,7 +92,7 @@ function handle_key_file_request() {
 	header( 'Cache-Control: public, max-age=' . YEAR_IN_SECONDS );
 
 	// Output the key.
-	echo $key;
+	echo esc_html( $key );
 	exit;
 }
 
