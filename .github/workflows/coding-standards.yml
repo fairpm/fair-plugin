@@ -77,7 +77,7 @@ jobs:
 
       - name: Run PHPCS on all files
         id: phpcs-files
-        run: phpcs -n --report-full --cache=./.cache/phpcs-src.json --report-checkstyle=./.cache/phpcs-report.xml
+        run: phpcs . -n --report-full --cache=./.cache/phpcs-src.json --report-checkstyle=./.cache/phpcs-report.xml
 
       - name: Show PHPCS results in PR
         if: ${{ always() && steps.phpcs-files.outcome == 'failure' }}
@@ -85,7 +85,7 @@ jobs:
 
       - name: Check test suite files for warnings
         id: phpcs-tests
-        run: phpcs tests --report-full --cache=./.cache/phpcs-tests.json --report-checkstyle=./.cache/phpcs-tests-report.xml
+        run: phpcs tests . --report-full --cache=./.cache/phpcs-tests.json --report-checkstyle=./.cache/phpcs-tests-report.xml
 
       - name: Show test suite scan results in PR
         if: ${{ always() && steps.phpcs-tests.outcome == 'failure' }}
