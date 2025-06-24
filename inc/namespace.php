@@ -11,6 +11,9 @@ use Fragen\Git_Updater;
 
 const NS_SEPARATOR = '\\';
 
+/**
+ * Bootstrap.
+ */
 function bootstrap() {
 	// Prevent accidental re-initialization of the plugin.
 	static $did_init = false;

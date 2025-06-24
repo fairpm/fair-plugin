@@ -7,5 +7,8 @@
 
 namespace FAIR\Repositories;
 
+/**
+ * Bootstrap.
+ */
 function bootstrap() {
 }
