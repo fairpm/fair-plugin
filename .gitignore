@@ -1,9 +1,11 @@
 /node_modules/
 *.bak
+.cache/*
 /.vscode
 /vendor/
 .phpunit.result.cache
 phpunit.xml
+phpcs.xml
 /tests/phpunit/cache
 /tests/phpunit/coverage
 wp-tests-config.php
