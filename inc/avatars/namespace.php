@@ -105,6 +105,8 @@ function add_avatar_upload_field( $description, $profile_user ) {
  * @param int $user_id User ID.
  */
 function save_avatar_upload( $user_id ) {
+	check_admin_referer( 'update-user_' . $user_id );
+
 	if ( ! current_user_can( 'edit_user', $user_id ) ) {
 		return;
 	}
