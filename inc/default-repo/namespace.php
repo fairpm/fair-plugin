@@ -7,8 +7,6 @@
 
 namespace FAIR\Default_Repo;
 
-use WP_Error;
-
 /**
  * Bootstrap.
  */
