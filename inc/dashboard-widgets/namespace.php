@@ -239,6 +239,7 @@ function set_help_content_fair_planet_urls() : void {
 	$planet_fair_url = rtrim( $planet_fair_url, '/' );
 
 	$new_tab_content = preg_replace(
+		/* phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled */
 		'/https?:\/\/planet\.wordpress\.org/',
 		$planet_fair_url,
 		$tab['content'],
