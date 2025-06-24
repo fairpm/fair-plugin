@@ -14,6 +14,8 @@ $ git commit -s -m 'My commit message.'
 
 **Please Note:** This is adding a _sign-off_ to the commit, which is not the same as *signing* your commits (which involves GPG keys).
 
+Alternatively, run `composer run setup` to install a git hook which will automatically reject your commits if they are not signed off.
+
 ## Development Environment
 
 This plugin is ready to use with wp-env for local development, with a default configuration included in the repository. `npm run env` is an alias for `wp-env`:
