@@ -30,8 +30,7 @@ function bootstrap() {
 }
 
 /**
- * Fires after core widgets for the admin dashboard have been registered.
- *
+ * Fires after core widgets for the admin dashboard have been registered.d
  */
 function on_dashboard_setup() : void {
 	// Swap the "Primary" dashboard widget's callback.

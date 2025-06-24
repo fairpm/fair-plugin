@@ -45,7 +45,7 @@ function enqueue_media_scripts( $hook_suffix ) {
 	$display_name = get_user( $user_id )->display_name;
 
 	wp_enqueue_media();
-	wp_enqueue_script( 'fair-avatars', esc_url( plugin_dir_url( \FAIR\PLUGIN_FILE ) . 'assets/js/fair-avatars.js' ), ['jquery','wp-a11y','wp-i18n'], \FAIR\VERSION, true );
+	wp_enqueue_script( 'fair-avatars', esc_url( plugin_dir_url( \FAIR\PLUGIN_FILE ) . 'assets/js/fair-avatars.js' ), [ 'jquery', 'wp-a11y', 'wp-i18n' ], \FAIR\VERSION, true );
 	wp_localize_script( 'fair-avatars', 'fairAvatars',
 		[
 			'defaultImg' => generate_default_avatar( $display_name ),
@@ -54,7 +54,7 @@ function enqueue_media_scripts( $hook_suffix ) {
 	);
 
 	// Some inline CSS for our fields.
-	$setup_css  = '
+	$setup_css = '
 		span.fair-avatar-desc {
 			display: block;
 			margin-top: 5px;

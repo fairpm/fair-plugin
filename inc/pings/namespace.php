@@ -136,16 +136,16 @@ function ping_indexnow( $new_status, $old_status, $post ) : void {
 
 	// The "false" on the end of the x-source-info header determines whether this is a manual submission or not.
 	$data = [
-			'host'        => wp_parse_url( home_url(), PHP_URL_HOST ),
-			'key'         => $key,
-			'keyLocation' => $key_location,
-			'urlList'     => $url_list,
+		'host'        => wp_parse_url( home_url(), PHP_URL_HOST ),
+		'key'         => $key,
+		'keyLocation' => $key_location,
+		'urlList'     => $url_list,
 	];
 	$request = [
-		'body' => wp_json_encode( $data, JSON_UNESCAPED_SLASHES ),
+		'body'    => wp_json_encode( $data, JSON_UNESCAPED_SLASHES ),
 		'headers' => [
 			'Content-Type'  => 'application/json; charset=utf-8',
-			'x-source-info' => 'https://example.com/fair-wp/indexnow/false', // TODO: replace example.com with the domain we end up using.
+			'x-source-info' => 'https://example.com/fair-wp/indexnow/false',   // TODO: replace example.com with the domain we end up using.
 		],
 	];
 

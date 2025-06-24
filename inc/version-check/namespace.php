@@ -139,7 +139,7 @@ function get_php_branches() {
 	// Index data by branch.
 	$indexed = [];
 	foreach ( $data as $ver ) {
-		if ( empty( $ver['branch' ] ) ) {
+		if ( empty( $ver['branch'] ) ) {
 			continue;
 		}
 
