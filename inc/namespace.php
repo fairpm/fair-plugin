@@ -22,7 +22,7 @@ function bootstrap() {
 
 	register_class_path( __NAMESPACE__, __DIR__ . '/inc' );
 
-	// Modules:
+	// Modules.
 	Avatars\bootstrap();
 	Credits\bootstrap();
 	Dashboard_Widgets\bootstrap();
