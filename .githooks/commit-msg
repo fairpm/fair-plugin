@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Ensure the commit is signed-off by the author.
+if ! grep -q '^Signed-off-by: ' "$1"; then
+	echo >&2 "Commit message must be signed off by the author."
+	exit 1
+fi
+
+# Catch duplicate Signed-off-by lines.
+test "" = "$(grep '^Signed-off-by: ' "$1" |
+	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
+	echo >&2 Duplicate Signed-off-by lines.
+	exit 1
+}
