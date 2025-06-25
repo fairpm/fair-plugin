@@ -23,7 +23,7 @@ function bootstrap() {
  */
 function init() {
 	/** @var array */
-	$package_arr = array();
+	$package_arr = [];
 
 	// Seems to be required for PHPUnit testing on GitHub workflow.
 	if ( ! function_exists( 'get_plugins' ) ) {
@@ -34,7 +34,7 @@ function init() {
 	$plugins     = get_plugins();
 	foreach ( $plugins as $file => $plugin ) {
 		$update_uri = $plugin['UpdateURI'];
-		$plugin_id  = get_file_data( $plugin_path . $file, array( 'PluginID' => 'Plugin ID' ) )['PluginID'];
+		$plugin_id  = get_file_data( $plugin_path . $file, [ 'PluginID' => 'Plugin ID' ] )['PluginID'];
 
 		if ( ! empty( $update_uri ) && ! empty( $plugin_id ) ) {
 			$package_arr[] = $plugin_path . $file;
@@ -45,7 +45,7 @@ function init() {
 	$themes     = wp_get_themes();
 	foreach ( $themes as $file => $theme ) {
 		$update_uri = $theme->get( 'UpdateURI' );
-		$theme_id   = get_file_data( $theme_path . $file . '/style.css', array( 'ThemeID' => 'Theme ID' ) )['ThemeID'];
+		$theme_id   = get_file_data( $theme_path . $file . '/style.css', [ 'ThemeID' => 'Theme ID' ] )['ThemeID'];
 
 		if ( ! empty( $update_uri ) && ! empty( $theme_id ) ) {
 			$package_arr[] = $theme_path . $file . '/style.css';
