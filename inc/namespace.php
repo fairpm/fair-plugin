@@ -32,9 +32,7 @@ function bootstrap() {
 	Pings\bootstrap();
 	Salts\bootstrap();
 	Settings\bootstrap();
-	if ( defined( 'FAIR_EXPERIMENTAL_PACKAGES' ) && FAIR_EXPERIMENTAL_PACKAGES ) {
-		Updater\bootstrap();
-	}
+	Updater\bootstrap();
 	User_Notification\bootstrap();
 	Version_Check\bootstrap();
 
