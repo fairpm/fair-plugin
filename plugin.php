@@ -27,10 +27,10 @@ require_once __DIR__ . '/inc/dashboard-widgets/namespace.php';
 require_once __DIR__ . '/inc/default-repo/namespace.php';
 require_once __DIR__ . '/inc/disable-openverse/namespace.php';
 require_once __DIR__ . '/inc/importers/namespace.php';
-require_once __DIR__ . '/inc/packages/upgrader/namespace.php';
 require_once __DIR__ . '/inc/pings/namespace.php';
 require_once __DIR__ . '/inc/salts/namespace.php';
 require_once __DIR__ . '/inc/settings/namespace.php';
+require_once __DIR__ . '/inc/updater/namespace.php';
 require_once __DIR__ . '/inc/user-notification/namespace.php';
 require_once __DIR__ . '/inc/version-check/namespace.php';
 

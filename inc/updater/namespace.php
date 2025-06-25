@@ -1,6 +1,6 @@
 <?php
 
-namespace FAIR\Packages\Upgrader;
+namespace FAIR\Updater;
 
 use Fragen\Git_Updater;
 use stdClass;

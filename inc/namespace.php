@@ -29,12 +29,12 @@ function bootstrap() {
 	Default_Repo\bootstrap();
 	Disable_Openverse\bootstrap();
 	Importers\bootstrap();
-	if ( defined( 'FAIR_EXPERIMENTAL_PACKAGES' ) && FAIR_EXPERIMENTAL_PACKAGES ) {
-		Packages\Upgrader\bootstrap();
-	}
 	Pings\bootstrap();
 	Salts\bootstrap();
 	Settings\bootstrap();
+	if ( defined( 'FAIR_EXPERIMENTAL_PACKAGES' ) && FAIR_EXPERIMENTAL_PACKAGES ) {
+		Updater\bootstrap();
+	}
 	User_Notification\bootstrap();
 	Version_Check\bootstrap();
 
