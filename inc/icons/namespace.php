@@ -20,7 +20,7 @@ function bootstrap() {
 /**
  * Set default icon in update transient.
  *
- * @param  stdClass $transient Update transient.
+ * @param stdClass $transient Update transient.
  *
  * @return stdClass
  */
