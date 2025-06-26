@@ -30,7 +30,7 @@ function sanitize_hex_color( $color ) {
 header( 'Content-Type: image/svg+xml' );
 
 // Echo the SVG content.
-// phpcs:ignore HM.Security.EscapeOutput.OutputNotEscaped
+// phpcs:disable HM.Security.EscapeOutput.OutputNotEscaped
 echo '<?xml version="1.0" encoding="UTF-8"?>
 <svg id="a" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
 	<rect width="200" height="200" style="fill:' . $color . ';"/>
@@ -57,3 +57,4 @@ echo '<?xml version="1.0" encoding="UTF-8"?>
 	<polygon points="50 173 25 173 40.7 200 59.3 200 75 173 50 173" style="fill:rgba(255,255,255,.41);"/><polygon points="100 173 75 173 90.7 200 109.3 200 125 173 100 173" style="fill:rgba(255,255,255,.25);"/>
 	<polygon points="150 173 125 173 140.7 200 159.3 200 175 173 150 173" style="fill:rgba(255,255,255,.33);"/>
 </svg>';
+// phpcs:enable HM.Security.EscapeOutput.OutputNotEscaped
