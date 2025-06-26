@@ -10,6 +10,9 @@ namespace FAIR\Icons;
 use FAIR;
 use stdClass;
 
+/**
+ * Bootstrap
+ */
 function bootstrap() {
 	add_filter( 'site_transient_update_plugins', __NAMESPACE__ . '\\set_default_icon', 99, 1 );
 }
