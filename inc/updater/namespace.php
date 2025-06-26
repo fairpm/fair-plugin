@@ -12,6 +12,9 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+/**
+ * Bootstrap
+ */
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\init' );
 }
