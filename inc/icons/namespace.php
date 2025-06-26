@@ -7,7 +7,7 @@
 
 namespace FAIR\Icons;
 
-use FAIR;
+use const FAIR\PLUGIN_FILE;
 
 /**
  * Bootstrap
@@ -25,7 +25,7 @@ function bootstrap() {
  */
 function set_default_icon( $transient ) {
 	foreach ( $transient->response as $updates ) {
-		$url = plugin_dir_url( FAIR\PLUGIN_FILE ) . 'inc/icons/svg.php';
+		$url = plugin_dir_url( PLUGIN_FILE ) . 'inc/icons/svg.php';
 		$url = add_query_arg( 'color', set_random_color(), $url );
 		$updates->icons['default'] = $url;
 	}
