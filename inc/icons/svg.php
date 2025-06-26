@@ -7,7 +7,7 @@
 
 namespace FAIR\Icons;
 
-$color = isset( $_GET['color'] ) ? sanitize_hex_color( '#' . $_GET['color'] ) : '';
+$color = isset( $_GET['color'] ) ? sanitize_hex_color( '#' . stripslashes( $_GET['color'] ) ) : '';
 
 /**
  * Sanitize hex color, same function in WP Core.
