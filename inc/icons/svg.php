@@ -7,8 +7,15 @@
 
 namespace FAIR\Icons;
 
-$color = sanitize_hex_color( '#' . $_GET['color'] );
+$color = isset( $_GET['color'] ) ? sanitize_hex_color( '#' . $_GET['color'] ) : '';
 
+/**
+ * Sanitize hex color, same function in WP Core.
+ *
+ * @param  string $color Hex color.
+ *
+ * @return string
+ */
 function sanitize_hex_color( $color ) {
 	if ( '' === $color ) {
 		return '';

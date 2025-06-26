@@ -8,11 +8,19 @@
 namespace FAIR\Icons;
 
 use FAIR;
+use stdClass;
 
-function bootstrap(){
+function bootstrap() {
 	add_filter( 'site_transient_update_plugins', __NAMESPACE__ . '\\set_default_icon', 99, 1 );
 }
 
+/**
+ * Set default icon in update transient.
+ *
+ * @param  stdClass $transient Update transient.
+ *
+ * @return stdClass
+ */
 function set_default_icon( $transient ) {
 	foreach ( $transient->response as $updates ) {
 		$url = plugin_dir_url( FAIR\PLUGIN_FILE ) . 'inc/icons/svg.php';
@@ -23,6 +31,11 @@ function set_default_icon( $transient ) {
 	return $transient;
 }
 
+/**
+ * Set random color.
+ *
+ * @return string
+ */
 function set_random_color() {
 	$rand = str_pad( dechex( rand( 0x000000, 0xFFFFFF ) ), 6, 0, STR_PAD_LEFT );
 
