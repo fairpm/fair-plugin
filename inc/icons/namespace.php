@@ -1,4 +1,9 @@
 <?php
+/**
+ * Adds a local source for default icon SVG.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Icons;
 
