@@ -8,7 +8,6 @@
 namespace FAIR\Icons;
 
 use FAIR;
-use stdClass;
 
 /**
  * Bootstrap
