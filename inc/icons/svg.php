@@ -5,6 +5,7 @@
  * @package FAIR
  */
 
+// phpcs:ignore HM.Security.ValidatedSanitizedInput.MissingUnslash, HM.Security.ValidatedSanitizedInput.InputNotSanitized
 $color = isset( $_GET['color'] ) ? sanitize_hex_color( '#' . stripslashes( $_GET['color'] ) ) : '';
 
 /**
