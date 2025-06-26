@@ -11,6 +11,9 @@ use Fragen\Git_Updater;
 
 const NS_SEPARATOR = '\\';
 
+/**
+ * Bootstrap.
+ */
 function bootstrap() {
 	// Prevent accidental re-initialization of the plugin.
 	static $did_init = false;
@@ -22,12 +25,13 @@ function bootstrap() {
 
 	register_class_path( __NAMESPACE__, __DIR__ . '/inc' );
 
-	// Modules:
+	// Modules.
 	Avatars\bootstrap();
 	Credits\bootstrap();
 	Dashboard_Widgets\bootstrap();
 	Default_Repo\bootstrap();
 	Disable_Openverse\bootstrap();
+	Icons\bootstrap();
 	Importers\bootstrap();
 	Pings\bootstrap();
 	Salts\bootstrap();

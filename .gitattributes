@@ -3,10 +3,12 @@
 /.git export-ignore
 /.github export-ignore
 /bin export-ignore
+/.cache export-ignore
 /node_modules export-ignore
 /tests export-ignore
 phpunit.xml.dist export-ignore
 wp-tests-config-sample.php export-ignore
+phpcs.xml.dist export-ignore
 composer.json export-ignore
 composer.lock export-ignore
 package.json export-ignore

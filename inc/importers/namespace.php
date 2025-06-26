@@ -7,8 +7,6 @@
 
 namespace FAIR\Importers;
 
-use WP_Error;
-
 /**
  * Bootstrap.
  */
@@ -84,50 +82,50 @@ function get_popular_importers_gte_46() {
 	return [
 		// slug => name, description, plugin slug, and register_importer() slug.
 		'blogger' => [
-			'name' => 'Blogger' ,
-			'description' => 'Import posts, comments, and users from a Blogger blog.' ,
+			'name' => 'Blogger',
+			'description' => 'Import posts, comments, and users from a Blogger blog.',
 			'plugin-slug' => 'blogger-importer',
 			'importer-id' => 'blogger',
 		],
 		'wpcat2tag' => [
-			'name' => 'Categories and Tags Converter' ,
-			'description' => 'Convert existing categories to tags or tags to categories, selectively.' ,
+			'name' => 'Categories and Tags Converter',
+			'description' => 'Convert existing categories to tags or tags to categories, selectively.',
 			'plugin-slug' => 'wpcat2tag-importer',
 			'importer-id' => 'wp-cat2tag',
 		],
 		'livejournal' => [
-			'name' => 'LiveJournal' ,
-			'description' => 'Import posts from LiveJournal using their API.' ,
+			'name' => 'LiveJournal',
+			'description' => 'Import posts from LiveJournal using their API.',
 			'plugin-slug' => 'livejournal-importer',
 			'importer-id' => 'livejournal',
 		],
 		'movabletype' => [
-			'name' => 'Movable Type and TypePad' ,
-			'description' => 'Import posts and comments from a Movable Type or TypePad blog.' ,
+			'name' => 'Movable Type and TypePad',
+			'description' => 'Import posts and comments from a Movable Type or TypePad blog.',
 			'plugin-slug' => 'movabletype-importer',
 			'importer-id' => 'mt',
 		],
 		'opml' => [
-			'name' => 'Blogroll' ,
-			'description' => 'Import links in OPML format.' ,
+			'name' => 'Blogroll',
+			'description' => 'Import links in OPML format.',
 			'plugin-slug' => 'opml-importer',
 			'importer-id' => 'opml',
 		],
 		'rss' => [
-			'name' => 'RSS' ,
-			'description' => 'Import posts from an RSS feed.' ,
+			'name' => 'RSS',
+			'description' => 'Import posts from an RSS feed.',
 			'plugin-slug' => 'rss-importer',
 			'importer-id' => 'rss',
 		],
 		'tumblr' => [
-			'name' => 'Tumblr' ,
-			'description' => 'Import posts &amp; media from Tumblr using their API.' ,
+			'name' => 'Tumblr',
+			'description' => 'Import posts &amp; media from Tumblr using their API.',
 			'plugin-slug' => 'tumblr-importer',
 			'importer-id' => 'tumblr',
 		],
 		'wordpress' => [
 			'name' => 'WordPress',
-			'description' => 'Import posts, pages, comments, custom fields, categories, and tags from a WordPress export file.' ,
+			'description' => 'Import posts, pages, comments, custom fields, categories, and tags from a WordPress export file.',
 			'plugin-slug' => 'wordpress-importer',
 			'importer-id' => 'wordpress',
 		],
@@ -147,50 +145,50 @@ function get_popular_importers_lt_46() {
 	return [
 		// slug => name, description, plugin slug, and register_importer() slug.
 		'blogger' => [
-			'name' => 'Blogger' ,
-			'description' => 'Install the Blogger importer to import posts, comments, and users from a Blogger blog.' ,
+			'name' => 'Blogger',
+			'description' => 'Install the Blogger importer to import posts, comments, and users from a Blogger blog.',
 			'plugin-slug' => 'blogger-importer',
 			'importer-id' => 'blogger',
 		],
 		'wpcat2tag' => [
-			'name' => 'Categories and Tags Converter' ,
-			'description' => 'Install the category/tag converter to convert existing categories to tags or tags to categories, selectively.' ,
+			'name' => 'Categories and Tags Converter',
+			'description' => 'Install the category/tag converter to convert existing categories to tags or tags to categories, selectively.',
 			'plugin-slug' => 'wpcat2tag-importer',
 			'importer-id' => 'wpcat2tag',
 		],
 		'livejournal' => [
-			'name' => 'LiveJournal' ,
-			'description' => 'Install the LiveJournal importer to import posts from LiveJournal using their API.' ,
+			'name' => 'LiveJournal',
+			'description' => 'Install the LiveJournal importer to import posts from LiveJournal using their API.',
 			'plugin-slug' => 'livejournal-importer',
 			'importer-id' => 'livejournal',
 		],
 		'movabletype' => [
-			'name' => 'Movable Type and TypePad' ,
-			'description' => 'Install the Movable Type importer to import posts and comments from a Movable Type or TypePad blog.' ,
+			'name' => 'Movable Type and TypePad',
+			'description' => 'Install the Movable Type importer to import posts and comments from a Movable Type or TypePad blog.',
 			'plugin-slug' => 'movabletype-importer',
 			'importer-id' => 'mt',
 		],
 		'opml' => [
-			'name' => 'Blogroll' ,
-			'description' => 'Install the blogroll importer to import links in OPML format.' ,
+			'name' => 'Blogroll',
+			'description' => 'Install the blogroll importer to import links in OPML format.',
 			'plugin-slug' => 'opml-importer',
 			'importer-id' => 'opml',
 		],
 		'rss' => [
-			'name' => 'RSS' ,
-			'description' => 'Install the RSS importer to import posts from an RSS feed.' ,
+			'name' => 'RSS',
+			'description' => 'Install the RSS importer to import posts from an RSS feed.',
 			'plugin-slug' => 'rss-importer',
 			'importer-id' => 'rss',
 		],
 		'tumblr' => [
-			'name' => 'Tumblr' ,
-			'description' => 'Install the Tumblr importer to import posts &amp; media from Tumblr using their API.' ,
+			'name' => 'Tumblr',
+			'description' => 'Install the Tumblr importer to import posts &amp; media from Tumblr using their API.',
 			'plugin-slug' => 'tumblr-importer',
 			'importer-id' => 'tumblr',
 		],
 		'wordpress' => [
 			'name' => 'WordPress',
-			'description' => 'Install the WordPress importer to import posts, pages, comments, custom fields, categories, and tags from a WordPress export file.' ,
+			'description' => 'Install the WordPress importer to import posts, pages, comments, custom fields, categories, and tags from a WordPress export file.',
 			'plugin-slug' => 'wordpress-importer',
 			'importer-id' => 'wordpress',
 		],
