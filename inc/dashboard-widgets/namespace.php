@@ -175,9 +175,9 @@ function render_news_widget() : void {
 				'<a href="%1$s" target="_blank">%2$s <span class="screen-reader-text"> %3$s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a>',
 				/* translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated. */
 				esc_url( _x( 'https://fair.pm/', 'Events and News dashboard widget', 'fair' ) ),
-				__( 'News' ),
+				__( 'News', 'fair' ),
 				/* translators: Hidden accessibility text. */
-				__( '(opens in a new tab)' )
+				__( '(opens in a new tab)', 'fair' )
 			);
 		?>
 
@@ -189,7 +189,7 @@ function render_news_widget() : void {
 				'https://thewp.world/events/',
 				__( 'Events (by The WP World)', 'fair' ),
 				/* translators: Hidden accessibility text. */
-				__( '(opens in a new tab)' )
+				__( '(opens in a new tab)', 'fair' )
 			);
 		?>
 	</p>
