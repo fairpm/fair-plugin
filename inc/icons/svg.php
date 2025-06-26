@@ -15,25 +15,33 @@ function sanitize_hex_color( $color ) {
 	}
 }
 
-// Add the proper header
+// Add the proper header.
 header( 'Content-Type: image/svg+xml' );
 
-// Echo the SVG content
-/* echo '<?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100" height="100">
-	<rect x="0" y="0" width="128" height="128" style="fill: ' . $color . '"/>
-</svg>'; */
-
-// From https://heropatterns.com.
-echo '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="84px" height="48px" viewBox="0 0 84 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 40 (33762) - http://www.bohemiancoding.com/sketch -->
-    <title>signal</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="signal" fill="' . $color . '">
-            <path d="M0,0 L12,0 L12,6 L0,6 L0,0 Z M28,8 L40,8 L40,14 L28,14 L28,8 Z M42,0 L54,0 L54,6 L42,6 L42,0 Z M56,0 L68,0 L68,6 L56,6 L56,0 Z M56,8 L68,8 L68,14 L56,14 L56,8 Z M42,8 L54,8 L54,14 L42,14 L42,8 Z M42,24 L54,24 L54,30 L42,30 L42,24 Z M56,16 L68,16 L68,22 L56,22 L56,16 Z M70,16 L82,16 L82,22 L70,22 L70,16 Z M70,0 L82,0 L82,6 L70,6 L70,0 Z M28,32 L40,32 L40,38 L28,38 L28,32 Z M14,16 L26,16 L26,22 L14,22 L14,16 Z M0,24 L12,24 L12,30 L0,30 L0,24 Z M0,32 L12,32 L12,38 L0,38 L0,32 Z M14,32 L26,32 L26,38 L14,38 L14,32 Z M28,40 L40,40 L40,46 L28,46 L28,40 Z M14,40 L26,40 L26,46 L14,46 L14,40 Z M42,40 L54,40 L54,46 L42,46 L42,40 Z M56,32 L68,32 L68,38 L56,38 L56,32 Z M56,24 L68,24 L68,30 L56,30 L56,24 Z M70,32 L82,32 L82,38 L70,38 L70,32 Z M70,40 L82,40 L82,46 L70,46 L70,40 Z M14,24 L26,24 L26,30 L14,30 L14,24 Z M28,16 L40,16 L40,22 L28,22 L28,16 Z M14,8 L26,8 L26,14 L14,14 L14,8 Z M0,8 L12,8 L12,14 L0,14 L0,8 Z" id="Combined-Shape"></path>
-        </g>
-    </g>
+// Echo the SVG content.
+echo '<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+	<rect width="200" height="200" style="fill:' . $color . ';"/>
+	<polygon points="0 0 0 43.3 25 0 0 0" style="fill:rgba(255,255,255,.43);"/><polygon points="75 0 25 0 50 43.3 75 0" style="fill:rgba(255,255,255,.43); opacity:.75;"/>
+	<polygon points="59.3 200 90.7 200 75 173 59.3 200" style="fill:rgba(255,255,255,.43); opacity:.75;"/><polygon points="109.3 200 140.7 200 125 173 109.3 200" style="fill:rgba(255,255,255,.43); opacity:.22;"/>
+	<polygon points="159.3 200 200 200 200 173 175 173 159.3 200" style="fill:rgba(255,255,255,.43); opacity:.17;"/><polygon points="0 173 0 200 40.7 200 25 173 0 173" style="fill:rgba(255,255,255,.43); opacity:.85;"/>
+	<polygon points="0 130 0 173 25 130 0 130" style="fill:rgba(255,255,255,.43); opacity:.08;"/><polygon points="0 43.3 0 86.6 25 43.3 0 43.3" style="fill:rgba(255,255,255,.43); opacity:.25;"/>
+	<polygon points="0 86.6 0 130 25 86.6 0 86.6" style="fill:rgba(255,255,255,.43); opacity:.36;"/><polygon points="175 0 125 0 150 43.3 175 0" style="fill:rgba(255,255,255,.43); opacity:.81;"/>
+	<polygon points="200 86.6 200 43.3 175 43.3 200 86.6" style="fill:rgba(255,255,255,.43); opacity:.95;"/><polygon points="200 130 200 86.6 175 86.6 200 130" style="fill:rgba(255,255,255,.43); opacity:.32;"/>
+	<polygon points="125 0 75 0 100 43.3 125 0" style="fill:rgba(255,255,255,.43); opacity:.22;"/><polygon points="175 0 200 43.3 200 0 175 0" style="fill:rgba(255,255,255,.43); opacity:.69;"/>
+	<polygon points="200 173 200 130 175 130 200 173" style="fill:rgba(255,255,255,.43); opacity:.64;"/><polygon points="50 43.3 25 0 0 43.3 25 43.3 50 43.3" style="fill:rgba(255,255,255,.17);"/>
+	<polygon points="75 43.3 100 43.3 75 0 50 43.3 75 43.3" style="fill:rgba(255,255,255,.43);"/><polygon points="125 43.3 150 43.3 125 0 100 43.3 125 43.3" style="fill:rgba(255,255,255,.49);"/>
+	<polygon points="150 43.3 175 43.3 200 43.3 175 0 150 43.3" style="fill:rgba(255,255,255,.36);"/><polygon points="50 43.3 25 43.3 50 86.6 75 43.3 50 43.3" style="fill:rgba(255,255,255,.39);"/>
+	<polygon points="125 43.3 100 43.3 75 43.3 100 86.6 125 43.3" style="fill:rgba(255,255,255,.39);"/><polygon points="150 86.6 175 43.3 150 43.3 125 43.3 150 86.6" style="fill:rgba(255,255,255,.43); opacity:.58;"/>
+	<polygon points="50 86.6 25 43.3 0 86.6 25 86.6 50 86.6" style="fill:rgba(255,255,255,.43); opacity:.69;"/><polygon points="100 86.6 75 43.3 50 86.6 75 86.6 100 86.6" style="fill:rgba(255,255,255,.15);"/>
+	<polygon points="100 86.6 125 86.6 150 86.6 125 43.3 100 86.6" style="fill:rgba(255,255,255,.31);"/><polygon points="150 86.6 175 86.6 200 86.6 175 43.3 150 86.6" style="fill:rgba(255,255,255,.19);"/>
+	<polygon points="50 86.6 25 86.6 50 130 75 86.6 50 86.6" style="fill:rgba(255,255,255,.43); opacity:.58;"/><polygon points="100 130 125 86.6 100 86.6 75 86.6 100 130" style="fill:rgba(255,255,255,.43); opacity:.95;"/>
+	<polygon points="150 130 175 86.6 150 86.6 125 86.6 150 130" style="fill:rgba(255,255,255,.25);"/><polygon points="50 130 25 86.6 0 130 25 130 50 130" style="fill:rgba(255,255,255,.43); opacity:.95;"/>
+	<polygon points="100 130 75 86.6 50 130 75 130 100 130" style="fill:rgba(255,255,255,.34);"/><polygon points="100 130 125 130 150 130 125 86.6 100 130" style="fill:rgba(255,255,255,.27);"/>
+	<polygon points="150 130 175 130 200 130 175 86.6 150 130" style="fill:rgba(255,255,255,.38);"/><polygon points="50 130 25 130 50 173 75 130 50 130" style="fill:rgba(255,255,255,.27);"/>
+	<polygon points="100 130 75 130 100 173 125 130 100 130" style="fill:rgba(255,255,255,.44);"/><polygon points="150 173 175 130 150 130 125 130 150 173" style="fill:rgba(255,255,255,.12);"/>
+	<polygon points="50 173 25 130 0 173 25 173 50 173" style="fill:rgba(255,255,255,.16);"/><polygon points="50 173 75 173 100 173 75 130 50 173" style="fill:rgba(255,255,255,.35);"/>
+	<polygon points="100 173 125 173 150 173 125 130 100 173" style="fill:rgba(255,255,255,.22);"/><polygon points="150 173 175 173 200 173 175 130 150 173" style="fill:rgba(255,255,255,.29);"/>
+	<polygon points="50 173 25 173 40.7 200 59.3 200 75 173 50 173" style="fill:rgba(255,255,255,.41);"/><polygon points="100 173 75 173 90.7 200 109.3 200 125 173 100 173" style="fill:rgba(255,255,255,.25);"/>
+	<polygon points="150 173 125 173 140.7 200 159.3 200 175 173 150 173" style="fill:rgba(255,255,255,.33);"/>
 </svg>';
