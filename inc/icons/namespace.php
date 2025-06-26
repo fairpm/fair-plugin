@@ -39,7 +39,7 @@ function set_default_icon( $transient ) {
  * @return string
  */
 function set_random_color() {
-	$rand = str_pad( dechex( rand( 0x000000, 0xFFFFFF ) ), 6, 0, STR_PAD_LEFT );
+	$rand = str_pad( dechex( wp_rand( 0x000000, 0xFFFFFF ) ), 6, 0, STR_PAD_LEFT );
 
 	return $rand;
 }
