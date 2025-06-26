@@ -5,8 +5,6 @@
  * @package FAIR
  */
 
-namespace FAIR\Icons;
-
 $color = isset( $_GET['color'] ) ? sanitize_hex_color( '#' . stripslashes( $_GET['color'] ) ) : '';
 
 /**
