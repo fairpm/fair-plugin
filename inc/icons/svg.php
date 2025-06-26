@@ -31,6 +31,7 @@ function sanitize_hex_color( $color ) {
 header( 'Content-Type: image/svg+xml' );
 
 // Echo the SVG content.
+// phpcs:ignore HM.Security.EscapeOutput.OutputNotEscaped
 echo '<?xml version="1.0" encoding="UTF-8"?>
 <svg id="a" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
 	<rect width="200" height="200" style="fill:' . $color . ';"/>
