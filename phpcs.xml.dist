@@ -54,6 +54,10 @@
 		<exclude-pattern>tests/phpunit/*</exclude-pattern>
 	</rule>
 
+	<rule ref="HM.Functions.NamespacedFunctions.MissingNamespace">
+		<exclude-pattern>inc/icons/svg\.php</exclude-pattern>
+	</rule>
+
 	<!-- Exclude the unit tests from the namespace rules -->
 	<rule ref="HM.Functions.NamespacedFunctions.MissingNamespace">
 		<exclude-pattern>tests/phpunit/*</exclude-pattern>
@@ -64,7 +68,8 @@
 
 	<!-- Exclude some files from the side effects rules -->
 	<rule ref="PSR1.Files.SideEffects">
-		<exclude-pattern>plugin.php</exclude-pattern>
+		<exclude-pattern>plugin\.php</exclude-pattern>
+		<exclude-pattern>inc/icons/svg\.php</exclude-pattern>
 		<exclude-pattern>tests/phpunit/bootstrap\.php</exclude-pattern>
 	</rule>
 </ruleset>
