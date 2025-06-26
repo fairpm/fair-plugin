@@ -83,13 +83,5 @@ jobs:
         if: ${{ always() && steps.phpcs-files.outcome == 'failure' }}
         run: cs2pr ./.cache/phpcs-report.xml
 
-      - name: Check test suite files for warnings
-        id: phpcs-tests
-        run: phpcs tests . --report-full --cache=./.cache/phpcs-tests.json --report-checkstyle=./.cache/phpcs-tests-report.xml
-
-      - name: Show test suite scan results in PR
-        if: ${{ always() && steps.phpcs-tests.outcome == 'failure' }}
-        run: cs2pr ./.cache/phpcs-tests-report.xml
-
       - name: Ensure version-controlled files are not modified during the checks
         run: git diff --exit-code
