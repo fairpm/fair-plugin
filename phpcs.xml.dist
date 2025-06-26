@@ -17,6 +17,20 @@
 	<!-- Set a minimum PHP version for PHPCompatibility -->
 	<config name="testVersion" value="7.4-" />
 
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="fair"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.DeprecatedFunctions">
+		<properties>
+			<property name="minimum_supported_version" value="5.4"/>
+		</properties>
+	</rule>
+
 	<!-- Use HM Coding Standards -->
 	<rule ref="vendor/humanmade/coding-standards">
 		<!-- Deprecated in PHPCS. Removal in 4.0.0 -->
