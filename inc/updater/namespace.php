@@ -35,8 +35,7 @@ function init() {
 	$plugin_path = trailingslashit( WP_PLUGIN_DIR );
 	$plugins     = get_plugins();
 	foreach ( $plugins as $file => $plugin ) {
-		$update_uri = $plugin['UpdateURI'];
-		if ( empty( $update_uri ) ) {
+		if ( empty( $plugin['UpdateURI'] ) ) {
 			continue;
 		}
 		$plugin_id = get_file_data( $plugin_path . $file, [ 'PluginID' => 'Plugin ID' ] )['PluginID'];
@@ -49,8 +48,7 @@ function init() {
 	$theme_path = WP_CONTENT_DIR . '/themes/';
 	$themes     = wp_get_themes();
 	foreach ( $themes as $file => $theme ) {
-		$update_uri = $theme->get( 'UpdateURI' );
-		if ( empty( $update_uri ) ) {
+		if ( empty( $theme->get( 'UpdateURI' ) ) ) {
 			continue;
 		}
 		$theme_id = get_file_data( $theme_path . $file . '/style.css', [ 'ThemeID' => 'Theme ID' ] )['ThemeID'];
