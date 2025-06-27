@@ -3,7 +3,6 @@
 namespace FAIR\Updater;
 
 use Fragen\Git_Updater;
-use stdClass;
 
 /**
  * Exit if called directly.
