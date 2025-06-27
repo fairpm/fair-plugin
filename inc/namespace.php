@@ -36,6 +36,7 @@ function bootstrap() {
 	Pings\bootstrap();
 	Salts\bootstrap();
 	Settings\bootstrap();
+	Site_Health\bootstrap();
 	User_Notification\bootstrap();
 	Version_Check\bootstrap();
 
