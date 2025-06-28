@@ -469,7 +469,7 @@ class Upgrader extends WP_Upgrader {
 					$php_ext = substr( $pkg, 8 );
 					if ( extension_loaded( $php_ext ) ) {
 						// Extension is loaded, skip.
-						continue;
+						continue 2;
 					}
 
 					if ( $ver !== '*' ) {
