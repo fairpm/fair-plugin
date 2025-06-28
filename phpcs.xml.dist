@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ruleset name="FAIR coding standards">
+	<description>Coding standards for the FAIR plugin</description>
+
+	<!-- Only scan PHP files. -->
+	<arg name="extensions" value="php" />
+
+	<!-- Whenever possible, cache the scan results and re-use those for unchanged files on the next scan. -->
+	<arg name="cache" value=".cache/phpcs.json"/>
+
+	<!-- Path to strip from the front of file paths inside reports (displays shorter paths) -->
+	<arg name="basepath" value="." />
+
+	<!-- Show sniff codes in all reports. -->
+	<arg value="ps"/>
+
+	<!-- Set a minimum PHP version for PHPCompatibility -->
+	<config name="testVersion" value="7.4-" />
+
+	<!-- Set the minimum support WordPress version -->
+	<config name="minimum_supported_wp_version" value="5.4"/>
+
+	<!-- Set the text domain -->
+	<config name="text_domain" value="fair"/>
+
+	<!-- Use HM Coding Standards -->
+	<rule ref="vendor/humanmade/coding-standards">
+		<!-- Deprecated in PHPCS. Removal in 4.0.0 -->
+		<exclude name="Generic.Functions.CallTimePassByReference" />
+
+		<!-- Scanning CSS/JS files is deprecated in PHPCS. Removal in 4.0.0 -->
+		<exclude name="HM.Debug.ESLint" />
+	</rule>
+
+	<!-- Exclude third-party dependencies -->
+	<exclude-pattern>inc/updater/*</exclude-pattern>
+
+	<!-- Exclude language files -->
+	<exclude-pattern>languages/*</exclude-pattern>
+
+	<!-- Exclude sample files -->
+	<exclude-pattern>wp-tests-config-sample\.php</exclude-pattern>
+
+	<!-- Exclude the main plugin file from namespace file rules -->
+	<rule ref="HM.Files.FunctionFileName.WrongFile">
+		<exclude-pattern>plugin\.php</exclude-pattern>
+	</rule>
+
+	<!-- Exclude the unit tests from the file name rules -->
+	<rule ref="WordPress.Files.FileName">
+		<exclude-pattern>tests/phpunit/*</exclude-pattern>
+	</rule>
+	<rule ref="HM.Files.ClassFileName">
+		<exclude-pattern>tests/phpunit/*</exclude-pattern>
+	</rule>
+
+	<rule ref="HM.Functions.NamespacedFunctions.MissingNamespace">
+		<exclude-pattern>inc/icons/svg\.php</exclude-pattern>
+	</rule>
+
+	<!-- Exclude the unit tests from the namespace rules -->
+	<rule ref="HM.Functions.NamespacedFunctions.MissingNamespace">
+		<exclude-pattern>tests/phpunit/*</exclude-pattern>
+	</rule>
+	<rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+		<exclude-pattern>tests/phpunit/*</exclude-pattern>
+	</rule>
+
+	<!-- Exclude some files from the side effects rules -->
+	<rule ref="PSR1.Files.SideEffects">
+		<exclude-pattern>plugin\.php</exclude-pattern>
+		<exclude-pattern>inc/icons/svg\.php</exclude-pattern>
+		<exclude-pattern>tests/phpunit/bootstrap\.php</exclude-pattern>
+	</rule>
+</ruleset>

@@ -12,6 +12,7 @@
  * Update URI: https://api.fair.pm
  * GitHub Plugin URI: https://github.com/fairpm/fair-plugin
  * Primary Branch: main
+ * Network: true
  */
 
 namespace FAIR;
@@ -26,6 +27,7 @@ require_once __DIR__ . '/inc/credits/namespace.php';
 require_once __DIR__ . '/inc/dashboard-widgets/namespace.php';
 require_once __DIR__ . '/inc/default-repo/namespace.php';
 require_once __DIR__ . '/inc/disable-openverse/namespace.php';
+require_once __DIR__ . '/inc/icons/namespace.php';
 require_once __DIR__ . '/inc/importers/namespace.php';
 require_once __DIR__ . '/inc/packages/namespace.php';
 require_once __DIR__ . '/inc/packages/admin/namespace.php';
@@ -33,13 +35,18 @@ require_once __DIR__ . '/inc/packages/admin/info.php';
 require_once __DIR__ . '/inc/pings/namespace.php';
 require_once __DIR__ . '/inc/salts/namespace.php';
 require_once __DIR__ . '/inc/settings/namespace.php';
+require_once __DIR__ . '/inc/updater/namespace.php';
 require_once __DIR__ . '/inc/user-notification/namespace.php';
 require_once __DIR__ . '/inc/version-check/namespace.php';
 
 // External dependencies.
 require_once __DIR__ . '/inc/updater/class-lite.php';
 
-// Load translations.
+/**
+ * Load translations.
+ *
+ * @return void
+ */
 function load_textdomain() {
 	load_plugin_textdomain( 'fair', false, dirname( plugin_basename( PLUGIN_FILE ) ) . '/languages' );
 }
