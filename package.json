@@ -4,6 +4,8 @@
 	},
 	"scripts": {
 		"env": "wp-env",
+		"lint:php": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run lint",
+		"format:php": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format",
 		"test:php:install-deps": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer install",
 		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test",
 		"test:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test:multisite",

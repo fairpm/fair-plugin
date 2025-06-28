@@ -1,4 +1,9 @@
 <?php
+/**
+ * Adds a local source for avatars.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Avatars;
 
@@ -41,11 +46,11 @@ function enqueue_media_scripts( $hook_suffix ) {
 	}
 
 	// Grab the user ID to pass along for alt text.
-	$user_id = 'profile.php' === $hook_suffix ? get_current_user_id() : absint( $_GET['user_id'] );
+	$user_id = 'profile.php' === $hook_suffix ? get_current_user_id() : absint( $_GET['user_id'] ?? 0 );
 	$display_name = get_user( $user_id )->display_name;
 
 	wp_enqueue_media();
-	wp_enqueue_script( 'fair-avatars', esc_url( plugin_dir_url( \FAIR\PLUGIN_FILE ) . 'assets/js/fair-avatars.js' ), ['jquery','wp-a11y','wp-i18n'], \FAIR\VERSION, true );
+	wp_enqueue_script( 'fair-avatars', esc_url( plugin_dir_url( \FAIR\PLUGIN_FILE ) . 'assets/js/fair-avatars.js' ), [ 'jquery', 'wp-a11y', 'wp-i18n' ], \FAIR\VERSION, true );
 	wp_localize_script( 'fair-avatars', 'fairAvatars',
 		[
 			'defaultImg' => generate_default_avatar( $display_name ),
@@ -54,7 +59,7 @@ function enqueue_media_scripts( $hook_suffix ) {
 	);
 
 	// Some inline CSS for our fields.
-	$setup_css  = '
+	$setup_css = '
 		span.fair-avatar-desc {
 			display: block;
 			margin-top: 5px;
@@ -105,6 +110,8 @@ function add_avatar_upload_field( $description, $profile_user ) {
  * @param int $user_id User ID.
  */
 function save_avatar_upload( $user_id ) {
+	check_admin_referer( 'update-user_' . $user_id );
+
 	if ( ! current_user_can( 'edit_user', $user_id ) ) {
 		return;
 	}
@@ -137,7 +144,7 @@ function save_avatar_upload( $user_id ) {
 function filter_avatar( $avatar, $id_or_email, $size, $default, $alt, $args ) {
 	$avatar_url = get_avatar_url( $id_or_email, $args );
 
-	$class = array( 'avatar', 'avatar-' . (int) $size, 'photo' );
+	$class = [ 'avatar', 'avatar-' . (int) $size, 'photo' ];
 	if ( ! empty( $args['class'] ) ) {
 		$class = array_merge( $class, (array) $args['class'] );
 	}

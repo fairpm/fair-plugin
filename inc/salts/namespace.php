@@ -23,8 +23,8 @@ function bootstrap() {
  * Replace the call to retrieve generated salt values.
  *
  * @param bool|array $value Filtered value, or false to proceed.
- * @param array $args
- * @param string $url
+ * @param array $args HTTP request arguments.
+ * @param string $url The request URL.
  * @return bool|array Replaced value, or false to proceed.
  */
 function replace_salt_generation_via_api( $value, $args, $url ) {
@@ -65,13 +65,13 @@ function get_salt_generation_response() {
 function generate_salt_response_body() {
 
 	// Grab my key names.
-	$get_key_names  = define_salt_keynames();
+	$get_key_names = define_salt_keynames();
 
-	$salt_defines   = '';
+	$salt_defines = '';
 
 	// Now loop my key names and add a salt to each one.
 	foreach ( $get_key_names as $keyname ) {
-		$salt_defines  .= 'define( \'' . $keyname . '\', \'' . generate_salt_string() . '\' );' . "\n";
+		$salt_defines .= 'define( \'' . $keyname . '\', \'' . generate_salt_string() . '\' );' . "\n";
 	}
 
 	// Send back the string.
@@ -137,7 +137,7 @@ function generate_string_via_random_int() {
 	// Set a max amount.
 	$define_max = mb_strlen( CHARACTER_SET, '8bit' ) - 1;
 
-	$saltgrain  = '';
+	$saltgrain = '';
 
 	// Loop through to generate each character of the string.
 	for ( $i = 0; $i < 64; ++$i ) {
@@ -155,13 +155,13 @@ function generate_string_via_random_int() {
 function generate_string_via_openssl_random() {
 
 	// Generate some bytes to begin.
-	$set_bytes  = openssl_random_pseudo_bytes( 138 );
+	$set_bytes = openssl_random_pseudo_bytes( 138 );
 
 	// Now encode it to make sure it's a usable string.
 	$saltshaker = base64_encode( $set_bytes );
 
 	// Establish the first 64 characters.
-	$saltgrain  = substr( $saltshaker, 0, 64 );
+	$saltgrain = substr( $saltshaker, 0, 64 );
 
 	return esc_attr( $saltgrain );
 }
@@ -173,13 +173,13 @@ function generate_string_via_openssl_random() {
  */
 function generate_string_via_mt_rand() {
 
-	$saltgrain  = '';
+	$saltgrain = '';
 
 	// Loop through to generate each character of the string.
 	for ( $i = 0; $i < 64; $i++ ) {
 
 		// Randomly select an index from the character set using mt_rand().
-		$set_index  = mt_rand( 0, strlen( CHARACTER_SET ) - 1 );
+		$set_index = wp_rand( 0, strlen( CHARACTER_SET ) - 1 );
 
 		// Append the character to the string.
 		$saltgrain .= CHARACTER_SET[ $set_index ];
@@ -212,13 +212,13 @@ function generate_string_via_str_shuffle() {
  */
 function generate_string_via_substr() {
 
-	$saltgrain  = '';
+	$saltgrain = '';
 
 	// Loop through to generate each character of the string.
 	for ( $i = 0; $i < 64; $i++ ) {
 
 		// Append the character to the string.
-		$saltgrain .= substr( CHARACTER_SET, mt_rand( 0, strlen( CHARACTER_SET ) - 1 ), 1 );
+		$saltgrain .= substr( CHARACTER_SET, wp_rand( 0, strlen( CHARACTER_SET ) - 1 ), 1 );
 	}
 
 	return esc_attr( $saltgrain );
