@@ -115,13 +115,13 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 
 	?>
 	<div id="plugin-information-scrollable">
-		<div id="<?= esc_attr( $tab ) ?>-title" class="<?= esc_attr( $_with_banner ) ?>">
+		<div id="<?= esc_attr( $tab ); ?>-title" class="<?= esc_attr( $_with_banner ); ?>">
 			<div class='vignette'></div>
-			<h2><?= esc_html( $doc->name ) ?></h2>
+			<h2><?= esc_html( $doc->name ); ?></h2>
 		</div>
-		<div id="<?= esc_attr( $tab ) ?>-tabs" class="<?= esc_attr( $_with_banner ) ?>">
+		<div id="<?= esc_attr( $tab ); ?>-tabs" class="<?= esc_attr( $_with_banner ); ?>">
 			<?php
-			foreach ( $sections as $section_id => $content ):
+			foreach ( $sections as $section_id => $content ) :
 				$class = ( $section_id === $section ) ? ' class="current"' : '';
 				$href = add_query_arg( [
 					'tab'     => $tab,
@@ -129,11 +129,11 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 				] );
 				?>
 				<a
-					name="<?= esc_attr( $section_id ) ?>"
-					href="<?= esc_url( $href ) ?>"
-					<?= $class ?>
-				><?= esc_html( get_section_title( $section_id ) ) ?></a>
-			<?php
+					name="<?= esc_attr( $section_id ); ?>"
+					href="<?= esc_url( $href ); ?>"
+					<?= $class; ?>
+				><?= esc_html( get_section_title( $section_id ) ); ?></a>
+				<?php
 			endforeach;
 			?>
 		</div>
@@ -159,7 +159,7 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 		</div>
 	</div>
 
-	<div id="<?= esc_attr( $tab ) ?>-footer">
+	<div id="<?= esc_attr( $tab ); ?>-footer">
 		<?php
 		if ( current_user_can( 'install_plugins' ) || current_user_can( 'update_plugins' ) ) {
 			$data = [];
@@ -300,21 +300,21 @@ function check_requirements( ReleaseDocument $release ) {
 
 		wp_admin_notice(
 			$compatible_php_notice_message,
-			array(
+			[
 				'type'               => 'error',
-				'additional_classes' => array( 'notice-alt' ),
+				'additional_classes' => [ 'notice-alt' ],
 				'paragraph_wrap'     => false,
-			)
+			]
 		);
 	}
 
 	if ( ! $tested_wp ) {
 		wp_admin_notice(
 			__( '<strong>Warning:</strong> This plugin <strong>has not been tested</strong> with your current version of WordPress.' ),
-			array(
+			[
 				'type'               => 'warning',
-				'additional_classes' => array( 'notice-alt' ),
-			)
+				'additional_classes' => [ 'notice-alt' ],
+			]
 		);
 	} elseif ( ! $compatible_wp ) {
 		$compatible_wp_notice_message = __( '<strong>Error:</strong> This plugin <strong>requires a newer version of WordPress</strong>.' );
@@ -328,10 +328,10 @@ function check_requirements( ReleaseDocument $release ) {
 
 		wp_admin_notice(
 			$compatible_wp_notice_message,
-			array(
+			[
 				'type'               => 'error',
-				'additional_classes' => array( 'notice-alt' ),
-			)
+				'additional_classes' => [ 'notice-alt' ],
+			]
 		);
 	}
 }

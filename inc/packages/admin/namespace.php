@@ -18,7 +18,7 @@ function bootstrap() {
 
 	add_filter( 'install_plugins_tabs', __NAMESPACE__ . '\\add_direct_tab' );
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
-	add_action( 'load-plugin-install.php', __NAMESPACE__. '\\load_plugin_install' );
+	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
 	add_action( 'update-custom_' . ACTION_INSTALL, __NAMESPACE__ . '\\handle_direct_install' );
 }
@@ -67,7 +67,7 @@ function render_tab_direct() {
 			<input
 				type="hidden"
 				name="tab"
-				value="<?= esc_attr( TAB_DIRECT ) ?>"
+				value="<?= esc_attr( TAB_DIRECT ); ?>"
 			/>
 			<?php wp_nonce_field( TAB_DIRECT ); ?>
 			<label

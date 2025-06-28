@@ -66,7 +66,7 @@ class Upgrader extends WP_Upgrader {
 			 * internally during actions, causing an error because
 			 * `WP_Upgrader::restore_temp_backup()` expects an array.
 			 */
-			add_action( 'shutdown', array( $this, 'restore_temp_backup' ), 10, 0 );
+			add_action( 'shutdown', [ $this, 'restore_temp_backup' ], 10, 0 );
 		}
 		$this->skin->error( $result );
 
@@ -171,7 +171,7 @@ class Upgrader extends WP_Upgrader {
 		$options['destination'] = $destination;
 
 		// Connect to the filesystem first.
-		$res = $this->fs_connect( array( WP_CONTENT_DIR, $options['destination'] ) );
+		$res = $this->fs_connect( [ WP_CONTENT_DIR, $options['destination'] ] );
 		// Mainly for non-connected filesystem.
 		if ( ! $res ) {
 			if ( ! $options['is_multi'] ) {
@@ -238,7 +238,7 @@ class Upgrader extends WP_Upgrader {
 		// Clean up the backup kept in the temporary backup directory.
 		if ( ! empty( $options['hook_extra']['temp_backup'] ) ) {
 			// Delete the backup on `shutdown` to avoid a PHP timeout.
-			add_action( 'shutdown', array( $this, 'delete_temp_backup' ), 100, 0 );
+			add_action( 'shutdown', [ $this, 'delete_temp_backup' ], 100, 0 );
 		}
 
 		if ( is_wp_error( $result ) ) {
@@ -256,7 +256,6 @@ class Upgrader extends WP_Upgrader {
 		if ( is_wp_error( $doc ) ) {
 			return [];
 		}
-
 
 		$valid_keys = $doc->get_fair_signing_keys();
 
@@ -400,7 +399,7 @@ class Upgrader extends WP_Upgrader {
 		global $wp_filesystem;
 
 		$wp_version = wp_get_wp_version();
-		$this->new_plugin_data = array();
+		$this->new_plugin_data = [];
 
 		if ( is_wp_error( $source ) ) {
 			return $source;
@@ -523,14 +522,14 @@ class Upgrader extends WP_Upgrader {
 		// All these headers are needed on Theme_Installer_Skin::do_overwrite().
 		$info = get_file_data(
 			$dir . 'style.css',
-			array(
+			[
 				'Name'        => 'Theme Name',
 				'Version'     => 'Version',
 				'Author'      => 'Author',
 				'Template'    => 'Template',
 				'RequiresWP'  => 'Requires at least',
 				'RequiresPHP' => 'Requires PHP',
-			)
+			]
 		);
 
 		if ( empty( $info['Name'] ) ) {

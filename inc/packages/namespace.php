@@ -1,23 +1,35 @@
 <?php
+/**
+ * Install FAIR packages.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Packages;
 
-use FAIR\Packages\DID\DID;
-use FAIR\Packages\DID\Document as DIDDocument;
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
-use Plugin_Upgrader;
 use WP_Error;
 
 const SERVICE_ID = 'FairPackageManagementRepo';
 const CONTENT_TYPE = 'application/json+fair';
 const DID_CACHE_LIFETIME = 5 * MINUTE_IN_SECONDS;
 
+// phpcs:disable WordPress.NamingConventions.ValidVariableName
+
+/**
+ * Bootstrap
+ *
+ * @return void
+ */
 function bootstrap() {
 	Admin\bootstrap();
 }
 
 /**
+ * Parse DID.
+ *
+ * @param string $id DID.
  * @return DID|WP_Error
  */
 function parse_did( string $id ) {
@@ -43,6 +55,9 @@ function parse_did( string $id ) {
 }
 
 /**
+ * Get DID document.
+ *
+ * @param string $id DID.
  * @return DIDDocument|WP_Error
  */
 function get_did_document( string $id ) {
@@ -93,6 +108,7 @@ function fetch_package_metadata( string $id ) {
  *
  * @param string $id DID of the package to install.
  * @param string|null $version Version to install. If null, the latest version is installed.
+ * @param WP_Upgrader_Skin $skin Plugin Installer Skin.
  * @return bool|WP_Error True on success, WP_Error on failure.
  */
 function install_plugin( string $id, ?string $version = null, $skin ) {
@@ -210,8 +226,10 @@ function get_language_priority_list( ?string $locale = null ) {
 		} while ( $i > 0 );
 	}
 
-	// Double the primary language code, to catch cases where the
-	// locale matches the country code. (e.g. de becomes de-DE.)
+	/*
+	 * Double the primary language code, to catch cases where the
+	 * locale matches the country code. (e.g. de becomes de-DE.)
+	 */
 	$primary = substr( $locale, 0, strpos( $locale, '-' ) );
 	$langs[] = $primary . '-' . $primary;
 
@@ -268,3 +286,5 @@ function pick_artifact_by_lang( array $artifacts, ?string $locale = null ) {
 	 */
 	return apply_filters( 'fair.packages.pick_artifact_by_lang', $selected, $artifacts, $locale, $langs );
 }
+
+// phpcs:enable

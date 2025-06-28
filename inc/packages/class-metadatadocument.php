@@ -127,7 +127,7 @@ class MetadataDocument {
 		}
 
 		$doc = static::from_data( $data );
-		if ( is_wp_error( $doc ) ){
+		if ( is_wp_error( $doc ) ) {
 			return $doc;
 		}
 
