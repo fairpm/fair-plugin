@@ -1,62 +1,92 @@
 <?php
+/**
+ * Create MetadataDocument
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Packages;
 
 use stdClass;
 use WP_Error;
 
+/**
+ * Class MetadataDocument
+ */
 class MetadataDocument {
 	/**
+	 * DID
+	 *
 	 * @var string
 	 */
 	public $id;
 
 	/**
+	 * Document type
+	 *
 	 * @var string
 	 */
 	public $type;
 
 	/**
+	 * Name
+	 *
 	 * @var string
 	 */
 	public $name;
 
 	/**
+	 * Slug
+	 *
 	 * @var string
 	 */
 	public $slug;
 
 	/**
+	 * License
+	 *
 	 * @var string
 	 */
 	public $license;
 
 	/**
+	 * Description
+	 *
 	 * @var string
 	 */
 	public $description;
 
 	/**
+	 * Keywords
+	 *
 	 * @var string[]
 	 */
 	public $keywords = [];
 
 	/**
+	 * Authors
+	 *
 	 * @var string[]
 	 */
 	public $authors = [];
 
 	/**
+	 * Security
+	 *
 	 * @var string[]
 	 */
 	public $security = [];
 
 	/**
+	 * Sections
+	 *
 	 * @var string[]
 	 */
 	public $sections = [];
 
 	/**
+	 * Releases
+	 *
 	 * @var ReleaseDocument[]
 	 */
 	public $releases = [];
@@ -69,6 +99,8 @@ class MetadataDocument {
 	public $_headers = [];
 
 	/**
+	 * Collate data.
+	 *
 	 * @param stdClass $data Data to parse.
 	 * @return static|WP_Error Instance if valid, WP_Error otherwise.
 	 */
@@ -118,6 +150,9 @@ class MetadataDocument {
 	}
 
 	/**
+	 * Collate response.
+	 *
+	 * @param array $response Response data.
 	 * @return static|WP_Error Instance if valid, WP_Error otherwise.
 	 */
 	public static function from_response( array $response ) {

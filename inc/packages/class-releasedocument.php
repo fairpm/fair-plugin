@@ -66,7 +66,7 @@ class ReleaseDocument {
 	/**
 	 * Collate data.
 	 *
-	 * @param  stdClass $data Data.
+	 * @param  stdClass $data Data to parse.
 	 *
 	 * @return ReleaseDocument|WP_Error
 	 */
