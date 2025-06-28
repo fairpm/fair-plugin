@@ -146,7 +146,7 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 		<div id="<?= esc_attr( $tab ); ?>-tabs" class="<?= esc_attr( $_with_banner ); ?>">
 			<?php
 			foreach ( $sections as $section_id => $content ) :
-				$class = ( $section_id === $section ) ? ' class="current"' : '';
+				// $class = ( $section_id === $section ) ? ' class="current"' : '';
 				$href = add_query_arg( [
 					'tab'     => $tab,
 					'section' => $section_id,
@@ -155,7 +155,9 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 				<a
 					name="<?= esc_attr( $section_id ); ?>"
 					href="<?= esc_url( $href ); ?>"
-					<?= sanitize_text_field( $class ); ?>
+					<?php if ( $section_id === $section ) : ?>
+						class="current"
+					<?php endif; ?>
 				><?= esc_html( get_section_title( $section_id ) ); ?></a>
 				<?php
 			endforeach;
