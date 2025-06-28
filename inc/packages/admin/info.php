@@ -175,7 +175,7 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 					'<div id="section-%s" class="section" style="display: %s;">%s</div>',
 					esc_attr( $section_id ),
 					( $section_id === $section ) ? 'block' : 'none',
-					esc_html( $prepared )
+					sanitize_html( $prepared )
 				);
 			}
 			?>
