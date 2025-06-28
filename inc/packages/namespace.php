@@ -140,6 +140,7 @@ function fetch_metadata_doc( string $url ) {
 		'headers' => [
 			'Accept' => sprintf( '%s;q=1.0, application/json;q=0.8', CONTENT_TYPE ),
 		],
+		'timeout' => 7,
 	] );
 	if ( is_wp_error( $response ) ) {
 		return $response;
