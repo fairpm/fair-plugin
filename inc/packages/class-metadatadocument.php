@@ -1,6 +1,6 @@
 <?php
 /**
- * Create MetadataDocument
+ * Create MetadataDocument.
  *
  * @package FAIR
  */
@@ -11,81 +11,81 @@ use stdClass;
 use WP_Error;
 
 /**
- * Class MetadataDocument
+ * Class MetadataDocument.
  */
 class MetadataDocument {
 	/**
-	 * DID
+	 * DID.
 	 *
 	 * @var string
 	 */
 	public $id;
 
 	/**
-	 * Document type
+	 * Document type.
 	 *
 	 * @var string
 	 */
 	public $type;
 
 	/**
-	 * Name
+	 * Name.
 	 *
 	 * @var string
 	 */
 	public $name;
 
 	/**
-	 * Slug
+	 * Slug.
 	 *
 	 * @var string
 	 */
 	public $slug;
 
 	/**
-	 * License
+	 * License.
 	 *
 	 * @var string
 	 */
 	public $license;
 
 	/**
-	 * Description
+	 * Description.
 	 *
 	 * @var string
 	 */
 	public $description;
 
 	/**
-	 * Keywords
+	 * Keywords.
 	 *
 	 * @var string[]
 	 */
 	public $keywords = [];
 
 	/**
-	 * Authors
+	 * Authors.
 	 *
 	 * @var string[]
 	 */
 	public $authors = [];
 
 	/**
-	 * Security
+	 * Security.
 	 *
 	 * @var string[]
 	 */
 	public $security = [];
 
 	/**
-	 * Sections
+	 * Sections.
 	 *
 	 * @var string[]
 	 */
 	public $sections = [];
 
 	/**
-	 * Releases
+	 * Releases.
 	 *
 	 * @var ReleaseDocument[]
 	 */

@@ -18,7 +18,7 @@ const DID_CACHE_LIFETIME = 5 * MINUTE_IN_SECONDS;
 // phpcs:disable WordPress.NamingConventions.ValidVariableName
 
 /**
- * Bootstrap
+ * Bootstrap.
  *
  * @return void
  */

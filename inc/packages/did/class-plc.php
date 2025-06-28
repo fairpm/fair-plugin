@@ -10,7 +10,7 @@ namespace FAIR\Packages\DID;
 use WP_Error;
 
 /**
- * Class PLC
+ * Class PLC.
  */
 class PLC implements DID {
 	// phpcs:disable WordPress.NamingConventions.ValidVariableName

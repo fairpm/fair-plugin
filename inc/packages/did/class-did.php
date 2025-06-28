@@ -1,6 +1,6 @@
 <?php
 /**
- * DID Interface
+ * DID Interface.
  *
  * @package FAIR
  */

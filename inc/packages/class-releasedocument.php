@@ -1,6 +1,6 @@
 <?php
 /**
- * Create Release Document
+ * Create Release Document.
  *
  * @package FAIR
  */
@@ -11,53 +11,53 @@ use stdClass;
 use WP_Error;
 
 /**
- * Class ReleaseDocument
+ * Class ReleaseDocument.
  */
 class ReleaseDocument {
 	/**
-	 * Version
+	 * Version.
 	 *
 	 * @var string
 	 */
 	public $version;
 
 	/**
-	 * Artifacts
+	 * Artifacts.
 	 *
 	 * @var stdClass
 	 */
 	public $artifacts;
 
 	/**
-	 * Provides
+	 * Provides.
 	 *
 	 * @var array
 	 */
 	public $provides;
 
 	/**
-	 * Requires
+	 * Requires.
 	 *
 	 * @var array
 	 */
 	public $requires;
 
 	/**
-	 * Suggests
+	 * Suggests.
 	 *
 	 * @var array
 	 */
 	public $suggests;
 
 	/**
-	 * Authorization
+	 * Authorization.
 	 *
 	 * @var array
 	 */
 	public $auth;
 
 	/**
-	 * Release
+	 * Release.
 	 *
 	 * @var ReleaseDocument
 	 */

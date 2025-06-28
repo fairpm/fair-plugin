@@ -1,6 +1,6 @@
 <?php
 /**
- * DID Installer
+ * DID Installer.
  *
  * @package FAIR
  */
@@ -11,18 +11,18 @@ use WP_Error;
 use WP_Upgrader;
 
 /**
- * Class Upgrader
+ * Class Upgrader.
  */
 class Upgrader extends WP_Upgrader {
 	/**
-	 * Metadata document
+	 * Metadata document.
 	 *
 	 * @var MetadataDocument
 	 */
 	protected $package;
 
 	/**
-	 * Release document
+	 * Release document.
 	 *
 	 * @var ReleaseDocument
 	 */
@@ -36,14 +36,14 @@ class Upgrader extends WP_Upgrader {
 	protected $is_upgrade = false;
 
 	/**
-	 * New plugin data
+	 * New plugin data.
 	 *
 	 * @var array
 	 */
 	protected $new_plugin_data = [];
 
 	/**
-	 * New theme data
+	 * New theme data.
 	 *
 	 * @var array
 	 */
