@@ -218,7 +218,7 @@ function maybe_hijack_plugin_info() {
 
 	$metadata = Packages\fetch_package_metadata( $id );
 	if ( is_wp_error( $metadata ) ) {
-		wp_die( esc_attr( $metadata->get_error_message() ) );
+		wp_die( esc_html( $metadata->get_error_message() ) );
 	}
 
 	$tab = esc_attr( $GLOBALS['tab'] ?? 'plugin-information' );

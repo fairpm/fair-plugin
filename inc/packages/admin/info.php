@@ -64,7 +64,7 @@ function sanitize_html( string $html ) : string {
 }
 
 /**
- * Get seciton title.
+ * Get section title.
  *
  * @param  string $id DID.
  *
