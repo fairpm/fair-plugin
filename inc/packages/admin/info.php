@@ -175,6 +175,7 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 					'<div id="section-%s" class="section" style="display: %s;">%s</div>',
 					esc_attr( $section_id ),
 					( $section_id === $section ) ? 'block' : 'none',
+					// phpcs:ignore HM.Security.EscapeOutput.OutputNotEscaped -- sanitize_html() is a custom wrapper for wp_kses().
 					sanitize_html( $prepared )
 				);
 			}
