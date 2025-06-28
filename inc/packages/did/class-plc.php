@@ -53,7 +53,7 @@ class PLC implements DID {
 	/**
 	 * Fetch PLC document.
 	 *
-	 * @return stdClass|Document
+	 * @return Document|WP_Error
 	 */
 	public function fetch_document() {
 		$url = static::DIRECTORY_URL . $this->id;
