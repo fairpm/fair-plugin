@@ -155,7 +155,7 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 				<a
 					name="<?= esc_attr( $section_id ); ?>"
 					href="<?= esc_url( $href ); ?>"
-					<?= esc_attr( $class ); ?>
+					<?= sanitize_text_field( $class ); ?>
 				><?= esc_html( get_section_title( $section_id ) ); ?></a>
 				<?php
 			endforeach;
