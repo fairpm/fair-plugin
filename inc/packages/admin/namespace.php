@@ -182,7 +182,7 @@ function handle_direct_install() {
 }
 
 /**
- * Hijack embedded inof page.
+ * Hijack embedded info page.
  *
  * @return void
  */
