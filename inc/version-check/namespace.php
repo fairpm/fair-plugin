@@ -12,7 +12,7 @@ namespace FAIR\Version_Check;
  *
  * DO NOT EDIT THIS CONSTANT MANUALLY.
  */
-const BROWSER_REGEX = '/Edge?\/13[5-7]\.0(\.\d+|)|Firefox\/(128\.0|1(3[89]|4[0-2])\.0)(\.\d+|)|Chrom(ium|e)\/(109\.0|131\.0|1(3[4-9]|40)\.0)(\.\d+|)|(Maci|X1{2}).+ Version\/(18\.[45]|26\.0)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/1{2}[67]\.0\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(16[._][67]|17[._][67]|18[._][3-5]|26[._]0)([._]\d+|)|Opera Mini|Android:?[ /-]137(\.0|)(\.\d+|)|Mobile Safari.+OPR\/8(0\.){2}\d+|Android.+Firefox\/139\.0(\.\d+|)|Android.+Chrom(ium|e)\/137\.0(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?1(5\.){2}\d+|SamsungBrowser\/2[78]\.0|Android.+MQ{2}Browser\/14(\.9|)(\.\d+|)|K[Aa][Ii]OS\/(2\.5|3\.[01])(\.\d+|)/';
+const BROWSER_REGEX = '/Edge?\/13[5-7]\.0(\.\d+|)|Firefox\/(128\.0|1(3[89]|4[0-3])\.0)(\.\d+|)|Chrom(ium|e)\/(109\.0|131\.0|1(3[4-9]|4[01])\.0)(\.\d+|)|(Maci|X1{2}).+ Version\/(18\.[45]|26\.0)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/1{2}[67]\.0\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(16[._][67]|17[._][67]|18[._][3-5]|26[._]0)([._]\d+|)|Opera Mini|Android:?[ /-]137(\.0|)(\.\d+|)|Mobile Safari.+OPR\/8(0\.){2}\d+|Android.+Firefox\/139\.0(\.\d+|)|Android.+Chrom(ium|e)\/137\.0(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?1(5\.){2}\d+|SamsungBrowser\/2[78]\.0|Android.+MQ{2}Browser\/14(\.9|)(\.\d+|)|K[Aa][Ii]OS\/(2\.5|3\.[01])(\.\d+|)/';
 
 /**
  * The latest branch of PHP which WordPress.org recommends.
