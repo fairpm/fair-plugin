@@ -1,20 +1,34 @@
 <?php
+/**
+ * Get PLC document.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Packages\DID;
 
 use WP_Error;
 
+/**
+ * Class PLC.
+ */
 class PLC implements DID {
+	// phpcs:disable WordPress.NamingConventions.ValidVariableName
+
 	const DIRECTORY_URL = 'https://plc.directory/';
 	const TYPE = 'plc';
 
 	/**
 	 * Decentralized ID.
+	 *
+	 * @var string
 	 */
 	protected string $id;
 
 	/**
 	 * Constructor.
+	 *
+	 * @param string $id DID.
 	 */
 	public function __construct( string $id ) {
 		$this->id = $id;
@@ -36,6 +50,11 @@ class PLC implements DID {
 		return $this->id;
 	}
 
+	/**
+	 * Fetch PLC document.
+	 *
+	 * @return Document|WP_Error
+	 */
 	public function fetch_document() {
 		$url = static::DIRECTORY_URL . $this->id;
 		$response = wp_remote_get( $url );
@@ -56,4 +75,5 @@ class PLC implements DID {
 		);
 		return $document;
 	}
+	// phpcs:enable
 }

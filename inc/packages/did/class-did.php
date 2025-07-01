@@ -1,4 +1,9 @@
 <?php
+/**
+ * DID Interface.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Packages\DID;
 
