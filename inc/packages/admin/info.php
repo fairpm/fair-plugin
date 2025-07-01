@@ -342,7 +342,9 @@ function version_requirements( ReleaseDocument $release ) {
 	}
 	foreach ( $release->suggests as $pkg => $vers ) {
 		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
-		$required_versions['tested_to'] = $pkg === 'env:wp' ? $vers : null;
+		if ( $pkg === 'env:wp' ) {
+			$required_versions['tested_to'] = $vers;
+		}
 	}
 
 	return $required_versions;
