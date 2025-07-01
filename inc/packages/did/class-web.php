@@ -1,17 +1,29 @@
 <?php
+/**
+ * Get PLC Web document.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Packages\DID;
 
+/**
+ * Class Web.
+ */
 class Web implements DID {
 	const TYPE = 'web';
 
 	/**
 	 * Decentralized ID.
+	 *
+	 * @var string
 	 */
 	protected string $id;
 
 	/**
 	 * Constructor.
+	 *
+	 * @param string $id DID.
 	 */
 	public function __construct( string $id ) {
 		$this->id = $id;
@@ -33,7 +45,12 @@ class Web implements DID {
 		return $this->id;
 	}
 
+	/**
+	 * Fetch PLC Web document.
+	 *
+	 * @return void|null
+	 */
 	public function fetch_document() {
-		return null; // todo
+		return null; // todo.
 	}
 }
