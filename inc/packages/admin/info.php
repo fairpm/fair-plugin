@@ -332,7 +332,7 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 function version_requirements( ReleaseDocument $release ) {
 	$required_versions = [];
 	foreach ( $release->requires as $pkg => $vers ) {
-		$vers = preg_replace('/^[^0-9]+/', '', $vers);
+		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
 		if ( $pkg === 'env:php' ) {
 			$required_versions['requires_php'] = $vers;
 		}
@@ -341,7 +341,7 @@ function version_requirements( ReleaseDocument $release ) {
 		}
 	}
 	foreach ( $release->suggests as $pkg => $vers ) {
-		$vers = preg_replace('/^[^0-9]+/', '', $vers);
+		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
 		$required_versions['tested_to'] = $pkg === 'env:wp' ? $vers : null;
 	}
 
