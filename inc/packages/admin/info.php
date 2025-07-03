@@ -192,6 +192,7 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 
 			if ( ! str_contains( $button, _x( 'Activate', 'plugin', 'fair' ) ) ) {
 				// todo: requires changes to the JS to catch the DID.
+				// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar
 				// $button = str_replace( 'class="', 'id="plugin_install_from_iframe" class="', $button );
 			}
 
