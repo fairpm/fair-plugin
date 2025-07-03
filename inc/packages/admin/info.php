@@ -238,7 +238,7 @@ function render_banner( ReleaseDocument $release ) {
 }
 
 /**
- * Name requirement
+ * Name requirement.
  *
  * @param  string $requirement The requirement.
  *
