@@ -437,7 +437,6 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 
 	// Do we actually meet the requirements?
 	$compatible = check_requirements( $release );
-	$compatible = true;
 
 	$status = 'install'; // todo.
 	switch ( $status ) {
