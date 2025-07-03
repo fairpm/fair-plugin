@@ -356,7 +356,7 @@ function version_requirements( ReleaseDocument $release ) {
  *
  * @param  ReleaseDocument $release Release document.
  *
- * @return void
+ * @return bool
  */
 function check_requirements( ReleaseDocument $release ) {
 	$required_versions = version_requirements( $release );
@@ -418,6 +418,8 @@ function check_requirements( ReleaseDocument $release ) {
 			]
 		);
 	}
+
+	return $compatible_php && $compatible_wp && $tested_to;
 }
 
 /**
@@ -435,8 +437,7 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 	}
 
 	// Do we actually meet the requirements?
-	// $compatible = check_requirements( $release );
-	$compatible = true;
+	$compatible = check_requirements( $release );
 
 	$status = 'install'; // todo.
 	switch ( $status ) {
