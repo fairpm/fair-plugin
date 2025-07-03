@@ -165,7 +165,7 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 
 			<div id="section-holder">
 			<?php
-			// check_requirements( $latest );
+			check_requirements( $latest );
 			foreach ( $sections as $section_id => $content ) {
 				$prepared = sanitize_html( $content );
 				$prepared = links_add_target( $prepared, '_blank' );
@@ -323,6 +323,34 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 }
 
 /**
+ * Get version requirements.
+ *
+ * @param ReleaseDocument $release Release document.
+ *
+ * @return array
+ */
+function version_requirements( ReleaseDocument $release ) {
+	$required_versions = [];
+	foreach ( $release->requires as $pkg => $vers ) {
+		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
+		if ( $pkg === 'env:php' ) {
+			$required_versions['requires_php'] = $vers;
+		}
+		if ( $pkg === 'env:wp' ) {
+			$required_versions['requires_wp'] = $vers;
+		}
+	}
+	foreach ( $release->suggests as $pkg => $vers ) {
+		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
+		if ( $pkg === 'env:wp' ) {
+			$required_versions['tested_to'] = $vers;
+		}
+	}
+
+	return $required_versions;
+}
+
+/**
  * Check requirements.
  *
  * @param  ReleaseDocument $release Release document.
@@ -330,12 +358,14 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
  * @return void
  */
 function check_requirements( ReleaseDocument $release ) {
-	$requires_php = isset( $api->requires_php ) ? $api->requires_php : null;
-	$requires_wp  = isset( $api->requires ) ? $api->requires : null;
+	$required_versions = version_requirements( $release );
+	$requires_php = $required_versions['requires_php'] ?? null;
+	$requires_wp = $required_versions['requires_wp'] ?? null;
+	$tested_to = $required_versions['tested_to'] ?? null;
 
 	$compatible_php = is_php_version_compatible( $requires_php );
 	$compatible_wp  = is_wp_version_compatible( $requires_wp );
-	$tested_wp      = ( empty( $api->tested ) || version_compare( get_bloginfo( 'version' ), $api->tested, '<=' ) );
+	$tested_wp      = ( empty( $tested_to ) || version_compare( get_bloginfo( 'version' ), $tested_to, '<=' ) );
 
 	if ( ! $compatible_php ) {
 		$compatible_php_notice_message  = '<p>';
