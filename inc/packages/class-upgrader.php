@@ -318,6 +318,7 @@ class Upgrader extends WP_Upgrader {
 		$valid_keys = $doc->get_fair_signing_keys();
 
 		// todo: re-encode from multibase to base64.
+		// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar
 		// return $valid_keys;
 		return [];
 	}

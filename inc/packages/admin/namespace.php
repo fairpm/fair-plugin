@@ -177,7 +177,7 @@ function handle_direct_install() {
 
 	$skin = new \WP_Upgrader_Skin();
 	$res = Packages\install_plugin( $id, $version, $skin );
-	var_dump( $res );
+	var_dump( $res ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 	exit;
 }
 
