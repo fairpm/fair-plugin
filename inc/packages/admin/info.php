@@ -1,4 +1,9 @@
 <?php
+/**
+ * Packages Admin Information.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Packages\Admin\Info;
 
@@ -58,29 +63,45 @@ function sanitize_html( string $html ) : string {
 	return wp_kses( $html, $allowed );
 }
 
+/**
+ * Get section title.
+ *
+ * @param  string $id DID.
+ *
+ * @return string
+ */
 function get_section_title( string $id ) {
 	switch ( $id ) {
 		case 'description':
-			return _x( 'Description', 'Plugin installer section title' );
+			return _x( 'Description', 'Plugin installer section title', 'fair' );
 		case 'installation':
-			return _x( 'Installation', 'Plugin installer section title' );
+			return _x( 'Installation', 'Plugin installer section title', 'fair' );
 		case 'faq':
-			return _x( 'FAQ', 'Plugin installer section title' );
+			return _x( 'FAQ', 'Plugin installer section title', 'fair' );
 		case 'screenshots':
-			return _x( 'Screenshots', 'Plugin installer section title' );
+			return _x( 'Screenshots', 'Plugin installer section title', 'fair' );
 		case 'changelog':
-			return _x( 'Changelog', 'Plugin installer section title' );
+			return _x( 'Changelog', 'Plugin installer section title', 'fair' );
 		case 'reviews':
-			return _x( 'Reviews', 'Plugin installer section title' );
+			return _x( 'Reviews', 'Plugin installer section title', 'fair' );
 		case 'other_notes':
-			return _x( 'Other Notes', 'Plugin installer section title' );
+			return _x( 'Other Notes', 'Plugin installer section title', 'fair' );
 		default:
 			return ucwords( str_replace( '_', ' ', $id ) );
 	}
 }
 
+/**
+ * Render page.
+ *
+ * @param  MetadataDocument $metadata Metadata for page render.
+ * @param  string           $tab Page tab.
+ * @param  string           $section Page section.
+ *
+ * @return void
+ */
 function render_page( MetadataDocument $metadata, string $tab, string $section ) {
-	iframe_header( __( 'Plugin Installation' ) );
+	iframe_header( __( 'Plugin Installation', 'fair' ) );
 	render( $metadata, $tab, $section );
 	wp_print_request_filesystem_credentials_modal();
 	wp_print_admin_notice_templates();
@@ -94,6 +115,9 @@ function render_page( MetadataDocument $metadata, string $tab, string $section )
  * @since 2.7.0
  *
  * @global string $tab
+ * @param  MetadataDocument $doc Metadata for page render.
+ * @param  string           $tab Page tab.
+ * @param  string           $section Page section.
  */
 function render( MetadataDocument $doc, string $tab, string $section ) {
 	$sections = (array) $doc->sections;
@@ -115,34 +139,33 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 
 	?>
 	<div id="plugin-information-scrollable">
-		<div id="<?= esc_attr( $tab ) ?>-title" class="<?= esc_attr( $_with_banner ) ?>">
+		<div id="<?= esc_attr( $tab ); ?>-title" class="<?= esc_attr( $_with_banner ); ?>">
 			<div class='vignette'></div>
-			<h2><?= esc_html( $doc->name ) ?></h2>
+			<h2><?= esc_html( $doc->name ); ?></h2>
 		</div>
-		<div id="<?= esc_attr( $tab ) ?>-tabs" class="<?= esc_attr( $_with_banner ) ?>">
+		<div id="<?= esc_attr( $tab ); ?>-tabs" class="<?= esc_attr( $_with_banner ); ?>">
 			<?php
-			foreach ( $sections as $section_id => $content ):
-				$class = ( $section_id === $section ) ? ' class="current"' : '';
+			foreach ( $sections as $section_id => $content ) :
 				$href = add_query_arg( [
 					'tab'     => $tab,
 					'section' => $section_id,
 				] );
 				?>
 				<a
-					name="<?= esc_attr( $section_id ) ?>"
-					href="<?= esc_url( $href ) ?>"
-					<?= $class ?>
-				><?= esc_html( get_section_title( $section_id ) ) ?></a>
-			<?php
+					name="<?= esc_attr( $section_id ); ?>"
+					href="<?= esc_url( $href ); ?>"
+					<?= ( $section_id === $section ) ? ' class="current"' : ''; ?>
+				><?= esc_html( get_section_title( $section_id ) ); ?></a>
+				<?php
 			endforeach;
 			?>
 		</div>
-		<div id="<?= $tab; ?>-content" class="<?= esc_attr( $_with_banner ); ?>">
+		<div id="<?= esc_attr( $tab ); ?>-content" class="<?= esc_attr( $_with_banner ); ?>">
 			<?php render_fyi( $doc, $latest ) ?>
 
 			<div id="section-holder">
 			<?php
-			// check_requirements( $latest );
+			check_requirements( $latest );
 			foreach ( $sections as $section_id => $content ) {
 				$prepared = sanitize_html( $content );
 				$prepared = links_add_target( $prepared, '_blank' );
@@ -151,7 +174,8 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 					'<div id="section-%s" class="section" style="display: %s;">%s</div>',
 					esc_attr( $section_id ),
 					( $section_id === $section ) ? 'block' : 'none',
-					$prepared
+					// phpcs:ignore HM.Security.EscapeOutput.OutputNotEscaped -- sanitize_html() is a custom wrapper for wp_kses().
+					sanitize_html( $prepared )
 				);
 			}
 			?>
@@ -159,15 +183,16 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 		</div>
 	</div>
 
-	<div id="<?= esc_attr( $tab ) ?>-footer">
+	<div id="<?= esc_attr( $tab ); ?>-footer">
 		<?php
 		if ( current_user_can( 'install_plugins' ) || current_user_can( 'update_plugins' ) ) {
 			$data = [];
 			$button = get_action_button( $doc, $latest );
 			$button = str_replace( 'class="', 'class="right ', $button );
 
-			if ( ! str_contains( $button, _x( 'Activate', 'plugin' ) ) ) {
+			if ( ! str_contains( $button, _x( 'Activate', 'plugin', 'fair' ) ) ) {
 				// todo: requires changes to the JS to catch the DID.
+				// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar
 				// $button = str_replace( 'class="', 'id="plugin_install_from_iframe" class="', $button );
 			}
 
@@ -178,6 +203,13 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 	<?php
 }
 
+/**
+ * Render banner.
+ *
+ * @param  ReleaseDocument $release Release document.
+ *
+ * @return void
+ */
 function render_banner( ReleaseDocument $release ) {
 	if ( empty( $release->artifacts->banner ) ) {
 		return;
@@ -205,6 +237,13 @@ function render_banner( ReleaseDocument $release ) {
 	<?php
 }
 
+/**
+ * Name requirement.
+ *
+ * @param  string $requirement The requirement.
+ *
+ * @return string
+ */
 function name_requirement( string $requirement ) : string {
 	switch ( true ) {
 		case ( $requirement === 'env:wp' ):
@@ -221,19 +260,27 @@ function name_requirement( string $requirement ) : string {
 	}
 }
 
+/**
+ * Render FYI.
+ *
+ * @param  MetadataDocument $doc Metadata document.
+ * @param  ReleaseDocument  $release Release document.
+ *
+ * @return void
+ */
 function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 	?>
 	<div class="fyi">
 		<ul>
 			<?php if ( ! empty( $release ) ) : ?>
-				<li><strong><?= __( 'Version:' ); ?></strong> <?= $release->version; ?></li>
+				<li><strong><?= __( 'Version:', 'fair' ); ?></strong> <?= esc_attr( $release->version ); ?></li>
 			<?php endif; ?>
 			<?php if ( ! empty( $doc->slug ) ) : ?>
-				<li><strong><?= __( 'Slug:' ); ?></strong> <?= $doc->slug; ?></li>
+				<li><strong><?= __( 'Slug:', 'fair' ); ?></strong> <?= esc_attr( $doc->slug ); ?></li>
 			<?php endif; ?>
 			<?php if ( ! empty( $release->requires ) ) : ?>
 				<li>
-					<strong><?= __( 'Requires:' ); ?></strong>
+					<strong><?= __( 'Requires:', 'fair' ); ?></strong>
 					<ul>
 						<?php foreach ( (array) $release->requires as $type => $constraint ) : ?>
 							<li><?= esc_html( name_requirement( $type ) ); ?> <?= esc_html( $constraint ); ?></li>
@@ -243,7 +290,7 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 			<?php endif; ?>
 			<?php if ( ! empty( $release->suggests ) ) : ?>
 				<li>
-					<strong><?= __( 'Suggests:' ); ?></strong>
+					<strong><?= __( 'Suggests:', 'fair' ); ?></strong>
 					<ul>
 						<?php foreach ( (array) $release->suggests as $type => $constraint ) : ?>
 							<li><?= esc_html( name_requirement( $type ) ); ?> <?= esc_html( $constraint ); ?></li>
@@ -255,14 +302,14 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 		<?php
 		if ( ! empty( $doc->authors ) ) :
 			?>
-			<h3><?= __( 'Authors' ); ?></h3>
+			<h3><?= __( 'Authors', 'fair' ); ?></h3>
 			<ul class="contributors">
 				<?php
 				foreach ( (array) $doc->authors as $author ) {
 					if ( empty( $author->name ) ) {
 						continue;
 					}
-					$url = $author->url ?? ( $author->email ? 'mailto:' . $author->email : null );
+					$url = $author->url ?? ( isset( $author->email ) ? 'mailto:' . $author->email : null );
 					printf(
 						'<a href="%s" target="_blank">%s</a>',
 						esc_url( $url ),
@@ -276,22 +323,59 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 	<?php
 }
 
+/**
+ * Get version requirements.
+ *
+ * @param ReleaseDocument $release Release document.
+ *
+ * @return array
+ */
+function version_requirements( ReleaseDocument $release ) {
+	$required_versions = [];
+	foreach ( $release->requires as $pkg => $vers ) {
+		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
+		if ( $pkg === 'env:php' ) {
+			$required_versions['requires_php'] = $vers;
+		}
+		if ( $pkg === 'env:wp' ) {
+			$required_versions['requires_wp'] = $vers;
+		}
+	}
+	foreach ( $release->suggests as $pkg => $vers ) {
+		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
+		if ( $pkg === 'env:wp' ) {
+			$required_versions['tested_to'] = $vers;
+		}
+	}
+
+	return $required_versions;
+}
+
+/**
+ * Check requirements.
+ *
+ * @param  ReleaseDocument $release Release document.
+ *
+ * @return bool
+ */
 function check_requirements( ReleaseDocument $release ) {
-	$requires_php = isset( $api->requires_php ) ? $api->requires_php : null;
-	$requires_wp  = isset( $api->requires ) ? $api->requires : null;
+	$required_versions = version_requirements( $release );
+	$requires_php = $required_versions['requires_php'] ?? null;
+	$requires_wp = $required_versions['requires_wp'] ?? null;
+	$tested_to = $required_versions['tested_to'] ?? null;
 
 	$compatible_php = is_php_version_compatible( $requires_php );
 	$compatible_wp  = is_wp_version_compatible( $requires_wp );
-	$tested_wp      = ( empty( $api->tested ) || version_compare( get_bloginfo( 'version' ), $api->tested, '<=' ) );
+	$tested_wp      = ( empty( $tested_to ) || version_compare( get_bloginfo( 'version' ), $tested_to, '<=' ) );
 
 	if ( ! $compatible_php ) {
 		$compatible_php_notice_message  = '<p>';
-		$compatible_php_notice_message .= __( '<strong>Error:</strong> This plugin <strong>requires a newer version of PHP</strong>.' );
+		$compatible_php_notice_message .= __( '<strong>Error:</strong> This plugin <strong>requires a newer version of PHP</strong>.', 'fair' );
 
 		if ( current_user_can( 'update_php' ) ) {
 			$compatible_php_notice_message .= sprintf(
 				/* translators: %s: URL to Update PHP page. */
-				' ' . __( '<a href="%s" target="_blank">Click here to learn more about updating PHP</a>.' ),
+				' ' . __( '<a href="%s" target="_blank">Click here to learn more about updating PHP</a>.', 'fair' ),
 				esc_url( wp_get_update_php_url() )
 			) . wp_update_php_annotation( '</p><p><em>', '</em>', false );
 		} else {
@@ -300,44 +384,49 @@ function check_requirements( ReleaseDocument $release ) {
 
 		wp_admin_notice(
 			$compatible_php_notice_message,
-			array(
+			[
 				'type'               => 'error',
-				'additional_classes' => array( 'notice-alt' ),
+				'additional_classes' => [ 'notice-alt' ],
 				'paragraph_wrap'     => false,
-			)
+			]
 		);
 	}
 
 	if ( ! $tested_wp ) {
 		wp_admin_notice(
-			__( '<strong>Warning:</strong> This plugin <strong>has not been tested</strong> with your current version of WordPress.' ),
-			array(
+			__( '<strong>Warning:</strong> This plugin <strong>has not been tested</strong> with your current version of WordPress.', 'fair' ),
+			[
 				'type'               => 'warning',
-				'additional_classes' => array( 'notice-alt' ),
-			)
+				'additional_classes' => [ 'notice-alt' ],
+			]
 		);
 	} elseif ( ! $compatible_wp ) {
-		$compatible_wp_notice_message = __( '<strong>Error:</strong> This plugin <strong>requires a newer version of WordPress</strong>.' );
+		$compatible_wp_notice_message = __( '<strong>Error:</strong> This plugin <strong>requires a newer version of WordPress</strong>.', 'fair' );
 		if ( current_user_can( 'update_core' ) ) {
 			$compatible_wp_notice_message .= sprintf(
 				/* translators: %s: URL to WordPress Updates screen. */
-				' ' . __( '<a href="%s" target="_parent">Click here to update WordPress</a>.' ),
+				' ' . __( '<a href="%s" target="_parent">Click here to update WordPress</a>.', 'fair' ),
 				esc_url( self_admin_url( 'update-core.php' ) )
 			);
 		}
 
 		wp_admin_notice(
 			$compatible_wp_notice_message,
-			array(
+			[
 				'type'               => 'error',
-				'additional_classes' => array( 'notice-alt' ),
-			)
+				'additional_classes' => [ 'notice-alt' ],
+			]
 		);
 	}
+
+	return $compatible_php && $compatible_wp && $tested_to;
 }
 
 /**
  * Gets the markup for the plugin install action button.
+ *
+ * @param  MetadataDocument $doc Metadata document.
+ * @param  ReleaseDocument  $release Release document.
  *
  * @return string The markup for the dependency row button. An empty string if the user does not have capabilities.
  */
@@ -348,16 +437,15 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 	}
 
 	// Do we actually meet the requirements?
-	// $compatible = check_requirements( $release );
-	$compatible = true;
+	$compatible = check_requirements( $release );
 
-	$status = 'install'; // todo
+	$status = 'install'; // todo.
 	switch ( $status ) {
 		case 'install':
 			if ( ! $compatible ) {
 				return sprintf(
 					'<button type="button" class="z_install-now button button-disabled" disabled="disabled">%s</button>',
-					esc_html_x( 'Install Now', 'fair' )
+					esc_html_x( 'Install Now', 'plugin', 'fair' )
 				);
 			}
 
@@ -366,12 +454,12 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 				esc_attr( $doc->id ),
 				esc_url( Admin\get_direct_install_url( $doc, $release ) ),
 				/* translators: %s: Plugin name and version. */
-				esc_attr( sprintf( _x( 'Install %s now', 'plugin' ), $doc->name ) ),
+				esc_attr( sprintf( _x( 'Install %s now', 'plugin', 'fair' ), $doc->name ) ),
 				esc_attr( $doc->name ),
-				esc_html_x( 'Install Now', 'plugin' )
+				esc_html_x( 'Install Now', 'plugin', 'fair' )
 			);
 
 		default:
-			// todo
+			// todo.
 	}
 }

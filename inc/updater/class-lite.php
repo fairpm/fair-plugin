@@ -8,6 +8,13 @@
 
 namespace Fragen\Git_Updater;
 
+use Plugin_Upgrader;
+use stdClass;
+use Theme_Upgrader;
+use TypeError;
+use WP_Error;
+use WP_Upgrader;
+
 /**
  * Exit if called directly.
  */
@@ -31,7 +38,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 		/** @var string */
 		protected $local_version;
 
-		/** @var \stdClass */
+		/** @var stdClass */
 		protected $api_data;
 
 		/** @var string */
@@ -69,7 +76,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 		 *
 		 * @param string $updateUri Data from Update URI header.
 		 *
-		 * @return string|\WP_Error
+		 * @return string|WP_Error
 		 */
 		private function check_update_uri( $updateUri ) {
 			if ( filter_var( $updateUri, FILTER_VALIDATE_URL )
@@ -77,7 +84,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 			) {
 				$updateUri = untrailingslashit( trim( $updateUri ) );
 			} else {
-				return new \WP_Error( 'invalid_header_data', 'Invalid data from Update URI header', $updateUri );
+				return new WP_Error( 'invalid_header_data', 'Invalid data from Update URI header', $updateUri );
 			}
 
 			return $updateUri;
@@ -87,7 +94,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 		 * Get API data.
 		 *
 		 * @global string $pagenow Current page.
-		 * @return void|\WP_Error
+		 * @return void|WP_Error
 		 */
 		public function run() {
 			global $pagenow;
@@ -110,7 +117,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 			}
 
 			if ( empty( $this->update_server ) || is_wp_error( $this->update_server ) ) {
-				return new \WP_Error( 'invalid_domain', 'Invalid update server domain', $this->update_server );
+				return new WP_Error( 'invalid_domain', 'Invalid update server domain', $this->update_server );
 			}
 			$url      = add_query_arg(
 				array( 'slug' => $this->slug ),
@@ -125,7 +132,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 
 				$this->api_data = (object) json_decode( wp_remote_retrieve_body( $response ), true );
 				if ( null === $this->api_data || empty( (array) $this->api_data ) || property_exists( $this->api_data, 'error' ) ) {
-					return new \WP_Error( 'non_json_api_response', 'Poorly formed JSON', $response );
+					return new WP_Error( 'non_json_api_response', 'Poorly formed JSON', $response );
 				}
 				$this->api_data->file = $this->file;
 
@@ -140,7 +147,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 				set_site_transient( "git-updater-lite_{$this->file}", $this->api_data, 5 * \MINUTE_IN_SECONDS );
 			} else {
 				if ( property_exists( $response, 'error' ) ) {
-					return new \WP_Error( 'repo-no-exist', 'Specified repo does not exist' );
+					return new WP_Error( 'repo-no-exist', 'Specified repo does not exist' );
 				}
 				$this->api_data = $response;
 			}
@@ -175,16 +182,16 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 		/**
 		 * Correctly rename dependency for activation.
 		 *
-		 * @param string                           $source        Path of $source.
-		 * @param string                           $remote_source Path of $remote_source.
-		 * @param \Plugin_Upgrader|\Theme_Upgrader $upgrader      An Upgrader object.
-		 * @param array                            $hook_extra    Array of hook data.
+		 * @param string      $source        Path of $source.
+		 * @param string      $remote_source Path of $remote_source.
+		 * @param WP_Upgrader $upgrader      An Upgrader object.
+		 * @param array       $hook_extra    Array of hook data.
 		 *
-		 * @throws \TypeError If the type of $upgrader is not correct.
+		 * @throws TypeError If the type of $upgrader is not correct.
 		 *
-		 * @return string|\WP_Error
+		 * @return string|WP_Error
 		 */
-		public function upgrader_source_selection( string $source, string $remote_source, $upgrader, $hook_extra = null ) {
+		public function upgrader_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
 			global $wp_filesystem;
 
 			$new_source = $source;
@@ -194,13 +201,12 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 				return $source;
 			}
 
-			// TODO: add type hint for $upgrader, PHP 8 minimum due to `|`.
-			if ( ! $upgrader instanceof \Plugin_Upgrader && ! $upgrader instanceof \Theme_Upgrader ) {
-				throw new \TypeError( __METHOD__ . '(): Argument #3 ($upgrader) must be of type Plugin_Upgrader|Theme_Upgrader, ' . esc_attr( gettype( $upgrader ) ) . ' given.' );
+			if ( ! $upgrader instanceof Plugin_Upgrader && ! $upgrader instanceof Theme_Upgrader ) {
+				throw new TypeError( __METHOD__ . '(): Argument #3 ($upgrader) must be of type Plugin_Upgrader|Theme_Upgrader, ' . esc_attr( gettype( $upgrader ) ) . ' given.' );
 			}
 
 			// Rename plugins.
-			if ( $upgrader instanceof \Plugin_Upgrader ) {
+			if ( $upgrader instanceof Plugin_Upgrader ) {
 				if ( isset( $hook_extra['plugin'] ) ) {
 					$slug       = dirname( $hook_extra['plugin'] );
 					$new_source = trailingslashit( $remote_source ) . $slug;
@@ -208,7 +214,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 			}
 
 			// Rename themes.
-			if ( $upgrader instanceof \Theme_Upgrader ) {
+			if ( $upgrader instanceof Theme_Upgrader ) {
 				if ( isset( $hook_extra['theme'] ) ) {
 					$slug       = $hook_extra['theme'];
 					$new_source = trailingslashit( $remote_source ) . $slug;
@@ -229,13 +235,13 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 		/**
 		 * Put changelog in plugins_api, return WP.org data as appropriate
 		 *
-		 * @param bool      $result   Default false.
-		 * @param string    $action   The type of information being requested from the Plugin Installation API.
-		 * @param \stdClass $response Repo API arguments.
+		 * @param bool     $result   Default false.
+		 * @param string   $action   The type of information being requested from the Plugin Installation API.
+		 * @param stdClass $response Repo API arguments.
 		 *
-		 * @return \stdClass|bool
+		 * @return stdClass|bool
 		 */
-		public function repo_api_details( $result, string $action, \stdClass $response ) {
+		public function repo_api_details( $result, string $action, stdClass $response ) {
 			if ( "{$this->api_data->type}_information" !== $action ) {
 				return $result;
 			}
@@ -251,14 +257,14 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 		/**
 		 * Hook into site_transient_update_{plugins|themes} to update from GitHub.
 		 *
-		 * @param \stdClass $transient Plugin|Theme update transient.
+		 * @param stdClass $transient Plugin|Theme update transient.
 		 *
-		 * @return \stdClass
+		 * @return stdClass
 		 */
 		public function update_site_transient( $transient ) {
 			// needed to fix PHP 7.4 warning.
 			if ( ! is_object( $transient ) ) {
-				$transient = new \stdClass();
+				$transient = new stdClass();
 			}
 
 			$response = array(
@@ -345,7 +351,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 		 * @access protected
 		 * @codeCoverageIgnore
 		 *
-		 * @param \stdClass $theme Theme object.
+		 * @param stdClass $theme Theme object.
 		 *
 		 * @return string (content buffer)
 		 */

@@ -61,8 +61,8 @@ function bootstrap() {
  * Replace the browser version check.
  *
  * @param bool|array $value Filtered value, or false to proceed.
- * @param array $args
- * @param string $url
+ * @param array $args HTTP request arguments.
+ * @param string $url The request URL.
  * @return bool|array Replaced value, or false to proceed.
  */
 function replace_browser_version_check( $value, $args, $url ) {
@@ -139,7 +139,7 @@ function get_php_branches() {
 	// Index data by branch.
 	$indexed = [];
 	foreach ( $data as $ver ) {
-		if ( empty( $ver['branch' ] ) ) {
+		if ( empty( $ver['branch'] ) ) {
 			continue;
 		}
 

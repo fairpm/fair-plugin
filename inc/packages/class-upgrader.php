@@ -1,15 +1,31 @@
 <?php
+/**
+ * DID Installer.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Packages;
 
 use WP_Error;
 use WP_Upgrader;
 
+/**
+ * Class Upgrader.
+ */
 class Upgrader extends WP_Upgrader {
-	/** @var MetadataDocument */
+	/**
+	 * Metadata document.
+	 *
+	 * @var MetadataDocument
+	 */
 	protected $package;
 
-	/** @var ReleaseDocument */
+	/**
+	 * Release document.
+	 *
+	 * @var ReleaseDocument
+	 */
 	protected $release;
 
 	/**
@@ -19,27 +35,46 @@ class Upgrader extends WP_Upgrader {
 	 */
 	protected $is_upgrade = false;
 
+	/**
+	 * New plugin data.
+	 *
+	 * @var array
+	 */
 	protected $new_plugin_data = [];
+
+	/**
+	 * New theme data.
+	 *
+	 * @var array
+	 */
 	protected $new_theme_data = [];
 
 	/**
 	 * Initializes the installation strings.
 	 */
 	public function install_strings() {
-		$this->strings['no_package'] = __( 'Installation package not available.' );
+		$this->strings['no_package'] = __( 'Installation package not available.', 'fair' );
 		/* translators: %s: Package URL. */
-		$this->strings['downloading_package'] = sprintf( __( 'Downloading installation package from %s…' ), '<span class="code pre">%s</span>' );
-		$this->strings['unpack_package']      = __( 'Unpacking the package…' );
-		$this->strings['installing_package']  = __( 'Installing the package…' );
-		$this->strings['remove_old']          = __( 'Removing the current package…' );
-		$this->strings['remove_old_failed']   = __( 'Could not remove the current package.' );
-		$this->strings['no_files']            = __( 'The package contains no files.' );
-		$this->strings['process_failed']      = __( 'Package installation failed.' );
-		$this->strings['process_success']     = __( 'Package installed successfully.' );
+		$this->strings['downloading_package'] = sprintf( __( 'Downloading installation package from %s…', 'fair' ), '<span class="code pre">%s</span>' );
+		$this->strings['unpack_package']      = __( 'Unpacking the package…', 'fair' );
+		$this->strings['installing_package']  = __( 'Installing the package…', 'fair' );
+		$this->strings['remove_old']          = __( 'Removing the current package…', 'fair' );
+		$this->strings['remove_old_failed']   = __( 'Could not remove the current package.', 'fair' );
+		$this->strings['no_files']            = __( 'The package contains no files.', 'fair' );
+		$this->strings['process_failed']      = __( 'Package installation failed.', 'fair' );
+		$this->strings['process_success']     = __( 'Package installed successfully.', 'fair' );
 		/* translators: 1: package name, 2: package version. */
-		$this->strings['process_success_specific'] = __( 'Successfully installed the package <strong>%1$s %2$s</strong>.' );
+		$this->strings['process_success_specific'] = __( 'Successfully installed the package <strong>%1$s %2$s</strong>.', 'fair' );
 	}
 
+	/**
+	 * On run error.
+	 *
+	 * @param  WP_Error $error Error.
+	 * @param  array    $options Options.
+	 *
+	 * @return WP_Error
+	 */
 	protected function on_run_error( WP_Error $error, array $options ) {
 		$this->skin->error( $error );
 		$this->skin->after();
@@ -51,6 +86,14 @@ class Upgrader extends WP_Upgrader {
 		return $error;
 	}
 
+	/**
+	 * On run failure.
+	 *
+	 * @param  WP_Error $result Error.
+	 * @param  array    $options Options.
+	 *
+	 * @return void
+	 */
 	protected function on_run_fail( WP_Error $result, array $options ) {
 		// An automatic plugin update will have already performed its rollback.
 		if ( ! empty( $this->options['hook_extra']['temp_backup'] ) ) {
@@ -66,7 +109,7 @@ class Upgrader extends WP_Upgrader {
 			 * internally during actions, causing an error because
 			 * `WP_Upgrader::restore_temp_backup()` expects an array.
 			 */
-			add_action( 'shutdown', array( $this, 'restore_temp_backup' ), 10, 0 );
+			add_action( 'shutdown', [ $this, 'restore_temp_backup' ], 10, 0 );
 		}
 		$this->skin->error( $result );
 
@@ -75,6 +118,14 @@ class Upgrader extends WP_Upgrader {
 		}
 	}
 
+	/**
+	 * On run complete.
+	 *
+	 * @param  array $result Result.
+	 * @param  array $options Options.
+	 *
+	 * @return array|WP_Error
+	 */
 	protected function on_run_complete( $result, $options ) {
 		$this->skin->after();
 
@@ -122,6 +173,8 @@ class Upgrader extends WP_Upgrader {
 	 * Deprecated. Install/upgrade the package.
 	 *
 	 * @internal Provided only for compatibility with the parent class's type. Do not use.
+	 * @param array $options Options.
+	 * @return WP_Error
 	 */
 	public function run( $options ) {
 		_doing_it_wrong( get_class( $this ) . '::' . __METHOD__, 'Use run_install instead.', '' );
@@ -171,7 +224,7 @@ class Upgrader extends WP_Upgrader {
 		$options['destination'] = $destination;
 
 		// Connect to the filesystem first.
-		$res = $this->fs_connect( array( WP_CONTENT_DIR, $options['destination'] ) );
+		$res = $this->fs_connect( [ WP_CONTENT_DIR, $options['destination'] ] );
 		// Mainly for non-connected filesystem.
 		if ( ! $res ) {
 			if ( ! $options['is_multi'] ) {
@@ -240,7 +293,7 @@ class Upgrader extends WP_Upgrader {
 		// Clean up the backup kept in the temporary backup directory.
 		if ( ! empty( $options['hook_extra']['temp_backup'] ) ) {
 			// Delete the backup on `shutdown` to avoid a PHP timeout.
-			add_action( 'shutdown', array( $this, 'delete_temp_backup' ), 100, 0 );
+			add_action( 'shutdown', [ $this, 'delete_temp_backup' ], 100, 0 );
 		}
 
 		if ( is_wp_error( $result ) ) {
@@ -253,20 +306,33 @@ class Upgrader extends WP_Upgrader {
 		return $this->on_run_complete( $result, $options );
 	}
 
+	/**
+	 * Set trusted keys.
+	 *
+	 * @return array
+	 */
 	protected function set_trusted_keys() {
 		$doc = get_did_document( $this->package->id );
 		if ( is_wp_error( $doc ) ) {
 			return [];
 		}
 
-
 		$valid_keys = $doc->get_fair_signing_keys();
 
-		// todo: re-encode from multibase to base64
+		// todo: re-encode from multibase to base64.
+		// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar
 		// return $valid_keys;
 		return [];
 	}
 
+	/**
+	 * Install plugin.
+	 *
+	 * @param  bool $clear_cache Boolean to clear cache.
+	 * @param  bool $overwrite Boolean to overwrite.
+	 *
+	 * @return bool|WP_Error True if the installation was successful, false or a WP_Error object otherwise.
+	 */
 	protected function install_plugin( $clear_cache, $overwrite ) {
 		if ( $clear_cache ) {
 			// Clear cache so wp_update_plugins() knows about the new plugin.
@@ -316,6 +382,9 @@ class Upgrader extends WP_Upgrader {
 	/**
 	 * Install a theme package.
 	 *
+	 * @param  bool $clear_cache Boolean to clear cache.
+	 * @param  bool $overwrite Boolean to overwrite.
+
 	 * @return bool|WP_Error True if the installation was successful, false or a WP_Error object otherwise.
 	 */
 	public function install_theme( $clear_cache, $overwrite ) {
@@ -359,13 +428,11 @@ class Upgrader extends WP_Upgrader {
 	 * @since 3.7.0 The `$args` parameter was added, making clearing the plugin update cache optional.
 	 *
 	 * @param MetadataDocument $package The full local path or URI of the package.
-	 * @param ReleaseDocument $release
-	 * @param array  $args {
-	 *     Optional. Other arguments for installing a plugin package. Default empty array.
-	 *
-	 *     @type bool $clear_update_cache Whether to clear the plugin updates cache if successful.
+	 * @param ReleaseDocument $release Release document.
+	 * @param  bool $clear_cache Whether to clear the plugin updates cache if successful.
 	 *                                    Default true.
-	 * }
+	 * @param  bool $overwrite Whether to overwrite plugin folder.
+	 *                                    Default true.
 	 * @return bool|WP_Error True if the installation was successful, false or a WP_Error otherwise.
 	 */
 	public function install( MetadataDocument $package, ReleaseDocument $release, $clear_cache = true, $overwrite = false ) {
@@ -402,7 +469,7 @@ class Upgrader extends WP_Upgrader {
 		global $wp_filesystem;
 
 		$wp_version = wp_get_wp_version();
-		$this->new_plugin_data = array();
+		$this->new_plugin_data = [];
 
 		if ( is_wp_error( $source ) ) {
 			return $source;
@@ -430,7 +497,7 @@ class Upgrader extends WP_Upgrader {
 		}
 
 		// Get environmental requirements if set.
-		foreach ( $this->release->require as $pkg => $ver ) {
+		foreach ( $this->release->requires as $pkg => $ver ) {
 			switch ( true ) {
 				// WordPress requirements.
 				case ( $pkg === 'env:wp' ):
@@ -440,7 +507,7 @@ class Upgrader extends WP_Upgrader {
 					if ( ! is_wp_version_compatible( $ver ) ) {
 						$error = sprintf(
 							/* translators: 1: Current WordPress version, 2: Version required by the package. */
-							__( 'Your WordPress version is %1$s, however the package requires %2$s.' ),
+							__( 'Your WordPress version is %1$s, however the package requires %2$s.', 'fair' ),
 							$wp_version,
 							$ver
 						);
@@ -457,7 +524,7 @@ class Upgrader extends WP_Upgrader {
 					if ( ! is_php_version_compatible( $ver ) ) {
 						$error = sprintf(
 							/* translators: 1: Current PHP version, 2: Version required by the package. */
-							__( 'The PHP version on your server is %1$s, however the package requires %2$s.' ),
+							__( 'The PHP version on your server is %1$s, however the package requires %2$s.', 'fair' ),
 							PHP_VERSION,
 							$ver
 						);
@@ -471,7 +538,7 @@ class Upgrader extends WP_Upgrader {
 					$php_ext = substr( $pkg, 8 );
 					if ( extension_loaded( $php_ext ) ) {
 						// Extension is loaded, skip.
-						continue;
+						continue 2;
 					}
 
 					if ( $ver !== '*' ) {
@@ -490,6 +557,13 @@ class Upgrader extends WP_Upgrader {
 		return $source;
 	}
 
+	/**
+	 * Validate plugin.
+	 *
+	 * @param  string $dir Directory containing plugin files.
+	 *
+	 * @return void|WP_Error
+	 */
 	protected function validate_plugin( $dir ) {
 		// Check that the folder contains at least 1 valid plugin.
 		$files = glob( $dir . '*.php' );
@@ -505,9 +579,17 @@ class Upgrader extends WP_Upgrader {
 		}
 
 		if ( empty( $data ) ) {
-			return new WP_Error( 'incompatible_archive_no_plugins', $this->strings['incompatible_archive'], __( 'No valid plugins were found.' ) );
+			return new WP_Error( 'incompatible_archive_no_plugins', $this->strings['incompatible_archive'], __( 'No valid plugins were found.', 'fair' ) );
 		}
 	}
+
+	/**
+	 * Validate theme.
+	 *
+	 * @param  string $dir Directory containing theme files.
+	 *
+	 * @return void|WP_Error
+	 */
 	protected function validate_theme( $dir ) {
 		// A proper archive should have a style.css file in the single subdirectory.
 		if ( ! file_exists( $dir . 'style.css' ) ) {
@@ -516,7 +598,7 @@ class Upgrader extends WP_Upgrader {
 				$this->strings['incompatible_archive'],
 				sprintf(
 					/* translators: %s: style.css */
-					__( 'The theme is missing the %s stylesheet.' ),
+					__( 'The theme is missing the %s stylesheet.', 'fair' ),
 					'<code>style.css</code>'
 				)
 			);
@@ -525,14 +607,14 @@ class Upgrader extends WP_Upgrader {
 		// All these headers are needed on Theme_Installer_Skin::do_overwrite().
 		$info = get_file_data(
 			$dir . 'style.css',
-			array(
+			[
 				'Name'        => 'Theme Name',
 				'Version'     => 'Version',
 				'Author'      => 'Author',
 				'Template'    => 'Template',
 				'RequiresWP'  => 'Requires at least',
 				'RequiresPHP' => 'Requires PHP',
-			)
+			]
 		);
 
 		if ( empty( $info['Name'] ) ) {
@@ -541,7 +623,7 @@ class Upgrader extends WP_Upgrader {
 				$this->strings['incompatible_archive'],
 				sprintf(
 					/* translators: %s: style.css */
-					__( 'The %s stylesheet does not contain a valid theme header.' ),
+					__( 'The %s stylesheet does not contain a valid theme header.', 'fair' ),
 					'<code>style.css</code>'
 				)
 			);
@@ -563,10 +645,10 @@ class Upgrader extends WP_Upgrader {
 				$this->strings['incompatible_archive'],
 				sprintf(
 					/* translators: 1: templates/index.html, 2: index.php, 3: Documentation URL, 4: Template, 5: style.css */
-					__( 'Template is missing. Standalone themes need to have a %1$s or %2$s template file. <a href="%3$s">Child themes</a> need to have a %4$s header in the %5$s stylesheet.' ),
+					__( 'Template is missing. Standalone themes need to have a %1$s or %2$s template file. <a href="%3$s">Child themes</a> need to have a %4$s header in the %5$s stylesheet.', 'fair' ),
 					'<code>templates/index.html</code>',
 					'<code>index.php</code>',
-					__( 'https://developer.wordpress.org/themes/advanced-topics/child-themes/' ),
+					__( 'https://developer.wordpress.org/themes/advanced-topics/child-themes/', 'fair' ),
 					'<code>Template</code>',
 					'<code>style.css</code>'
 				)

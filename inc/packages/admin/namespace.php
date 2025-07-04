@@ -1,4 +1,9 @@
 <?php
+/**
+ * Packages admin bootstrap.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Packages\Admin;
 
@@ -11,6 +16,9 @@ const TAB_DIRECT = 'fair_direct';
 const ACTION_INSTALL = 'fair-install-plugin';
 const ACTION_INSTALL_NONCE = 'fair-install-plugin';
 
+/**
+ * Bootstrap.
+ */
 function bootstrap() {
 	if ( ! is_admin() ) {
 		return;
@@ -18,7 +26,7 @@ function bootstrap() {
 
 	add_filter( 'install_plugins_tabs', __NAMESPACE__ . '\\add_direct_tab' );
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
-	add_action( 'load-plugin-install.php', __NAMESPACE__. '\\load_plugin_install' );
+	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
 	add_action( 'update-custom_' . ACTION_INSTALL, __NAMESPACE__ . '\\handle_direct_install' );
 }
@@ -34,6 +42,11 @@ function add_direct_tab( $tabs ) {
 	return $tabs;
 }
 
+/**
+ * Enqueue assets.
+ *
+ * @return void
+ */
 function load_plugin_install() {
 	enqueue_assets();
 }
@@ -41,7 +54,6 @@ function load_plugin_install() {
 /**
  * Enqueue assets.
  *
- * @param string $hook_suffix Hook suffix for the current admin page.
  * @return void
  */
 function enqueue_assets() {
@@ -53,6 +65,11 @@ function enqueue_assets() {
 	);
 }
 
+/**
+ * Render direct installer tab.
+ *
+ * @return void
+ */
 function render_tab_direct() {
 	?>
 	<div class="fair-direct-install">
@@ -67,7 +84,7 @@ function render_tab_direct() {
 			<input
 				type="hidden"
 				name="tab"
-				value="<?= esc_attr( TAB_DIRECT ) ?>"
+				value="<?= esc_attr( TAB_DIRECT ); ?>"
 			/>
 			<?php wp_nonce_field( TAB_DIRECT ); ?>
 			<label
@@ -81,7 +98,7 @@ function render_tab_direct() {
 				pattern="did:(web|plc):.+"
 				placeholder="did:..."
 			/>
-			<?php submit_button( _x( 'View Details', 'fair' ), '', '', false ); ?>
+			<?php submit_button( _x( 'View Details', 'plugin', 'fair' ), '', '', false ); ?>
 		</form>
 		<p class="fair-direct-install__note">
 			<?= __( 'Plugin IDs should be in the format <code>did:web:...</code> or <code>did:plc:...</code>', 'fair' ); ?>
@@ -126,6 +143,14 @@ function render_tab_direct() {
 	<?php
 }
 
+/**
+ * Get direct install URL.
+ *
+ * @param  MetadataDocument $doc Metadata document.
+ * @param  ReleaseDocument  $release Release document.
+ *
+ * @return string
+ */
 function get_direct_install_url( MetadataDocument $doc, ReleaseDocument $release ) {
 	$args = [
 		'action' => ACTION_INSTALL,
@@ -136,21 +161,31 @@ function get_direct_install_url( MetadataDocument $doc, ReleaseDocument $release
 	return wp_nonce_url( $url, ACTION_INSTALL_NONCE . $doc->id );
 }
 
+/**
+ * Handle direct install.
+ *
+ * @return void
+ */
 function handle_direct_install() {
-	$id = wp_unslash( $_GET['id'] );
+	$id = sanitize_text_field( wp_unslash( $_GET['id'] ?? null ) );
 	check_admin_referer( ACTION_INSTALL_NONCE . $id );
 
-	$version = wp_unslash( $_GET['version'] ?? null );
+	$version = sanitize_text_field( wp_unslash( $_GET['version'] ?? null ) );
 	if ( empty( $version ) ) {
 		wp_die( __( 'No version specified for the plugin.', 'fair' ) );
 	}
 
 	$skin = new \WP_Upgrader_Skin();
 	$res = Packages\install_plugin( $id, $version, $skin );
-	var_dump( $res );
+	var_dump( $res ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump
 	exit;
 }
 
+/**
+ * Hijack embedded info page.
+ *
+ * @return void
+ */
 function embedded_info_page() {
 	// This is a special case for the plugin information page.
 	if ( ! isset( $_REQUEST['plugin'] ) || ! isset( $_REQUEST['tab'] ) || $_REQUEST['tab'] !== TAB_DIRECT ) {
@@ -158,31 +193,36 @@ function embedded_info_page() {
 	}
 
 	// If the plugin is not a FAIR package, do nothing.
-	if ( ! preg_match( '/^did:(web|plc):.+$/', $_REQUEST['plugin'] ) ) {
+	if ( ! preg_match( '/^did:(web|plc):.+$/', sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) ) ) {
 		return;
 	}
 
 	maybe_hijack_plugin_info();
 }
 
+/**
+ * Maybe hijack plugin info.
+ *
+ * @return void
+ */
 function maybe_hijack_plugin_info() {
 	if ( empty( $_REQUEST['plugin'] ) ) {
 		return;
 	}
 
 	// Hijack, if the plugin is a FAIR package.
-	$id = wp_unslash( $_REQUEST['plugin'] );
+	$id = sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) );
 	if ( ! preg_match( '/^did:(web|plc):.+$/', $id ) ) {
 		return;
 	}
 
 	$metadata = Packages\fetch_package_metadata( $id );
 	if ( is_wp_error( $metadata ) ) {
-		wp_die( $metadata->get_error_message() );
+		wp_die( esc_html( $metadata->get_error_message() ) );
 	}
 
 	$tab = esc_attr( $GLOBALS['tab'] ?? 'plugin-information' );
-	$section = wp_unslash( $_REQUEST['section'] ?? 'description' );
+	$section = isset( $_REQUEST['section'] ) ? sanitize_key( wp_unslash( $_REQUEST['section'] ) ) : 'description';
 
 	Info\render_page( $metadata, $tab, $section );
 	exit;
