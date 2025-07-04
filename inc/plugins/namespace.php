@@ -17,7 +17,12 @@ use function FAIR\Updater\init;
 function bootstrap() {
 	add_filter( 'option_active_plugins', __NAMESPACE__ . '\\set_as_active' );
 	add_filter( 'wp_admin_notice_markup', __NAMESPACE__ . '\\hide_notice', 10, 3 );
-	if ( \is_plugin_active( 'git-updater/git-updater.php' ) ) {
+
+	// just for testing.
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+	if ( is_plugin_active( 'git-updater/git-updater.php' ) ) {
 		wp_admin_notice( 'Git Updater is active' );
 	}
 }
