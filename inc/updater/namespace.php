@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Bootstrap.
  */
 function bootstrap() {
-	add_action( 'init', __NAMESPACE__ . '\\init' );
+	add_action( 'init', __NAMESPACE__ . '\\run' );
 }
 
 /**
@@ -23,9 +23,9 @@ function bootstrap() {
  *
  * @return stdClass
  */
-function init() {
+function get_packages() {
 	/** @var array */
-	$package_arr = [];
+	$packages = [];
 
 	// Seems to be required for PHPUnit testing on GitHub workflow.
 	if ( ! function_exists( 'get_plugins' ) ) {
@@ -41,7 +41,7 @@ function init() {
 		$plugin_id = get_file_data( $plugin_path . $file, [ 'PluginID' => 'Plugin ID' ] )['PluginID'];
 
 		if ( ! empty( $plugin_id ) ) {
-			$package_arr[] = $plugin_path . $file;
+			$packages['plugins'][] = $plugin_path . $file;
 		}
 	}
 
@@ -54,11 +54,11 @@ function init() {
 		$theme_id = get_file_data( $theme_path . $file . '/style.css', [ 'ThemeID' => 'Theme ID' ] )['ThemeID'];
 
 		if ( ! empty( $theme_id ) ) {
-			$package_arr[] = $theme_path . $file . '/style.css';
+			$packages['themes'][] = $theme_path . $file . '/style.css';
 		}
 	}
 
-	run( $package_arr );
+	return $packages;
 }
 
 /**
@@ -66,8 +66,12 @@ function init() {
  *
  * @return void
  */
-function run( $package_arr ) {
-	foreach ( $package_arr as $package ) {
+function run() {
+	$packages = get_packages();
+	$plugins = $packages['plugins'] ?? [];
+	$themes = $packages['themes'] ?? [];
+	$packages = array_merge( $plugins, $themes);
+	foreach ( $packages as $package ) {
 		( new Git_Updater\Lite( $package ) )->run();
 	}
 }
