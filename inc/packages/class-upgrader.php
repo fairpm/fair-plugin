@@ -669,18 +669,18 @@ class Upgrader extends WP_Upgrader {
 	 * @return string
 	 */
 	public function rename_source_selection( string $source, string $remote_source ) {
-			global $wp_filesystem;
+		global $wp_filesystem;
 
 		if ( basename( $source ) === $this->package->slug ) {
 			return $source;
 		}
 
-			$new_source = trailingslashit( $remote_source ) . $this->package->slug;
+		$new_source = trailingslashit( $remote_source ) . $this->package->slug;
 
 		if ( trailingslashit( strtolower( $source ) ) !== trailingslashit( strtolower( $new_source ) ) ) {
 			$wp_filesystem->move( $source, $new_source, true );
 		}
 
-			return trailingslashit( $new_source );
+		return trailingslashit( $new_source );
 	}
 }
