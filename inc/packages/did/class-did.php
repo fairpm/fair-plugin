@@ -21,6 +21,11 @@ interface DID {
 	public function get_id() : string;
 
 	/**
+	 * Get the method specific ID from DID.
+	 */
+	public function get_short_id() : string;
+
+	/**
 	 * Fetch the DID document.
 	 *
 	 * For most DIDs, this will be a remote request, so higher levels should

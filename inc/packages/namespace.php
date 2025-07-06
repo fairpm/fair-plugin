@@ -44,10 +44,10 @@ function parse_did( string $id ) {
 
 	switch ( $parts[1] ) {
 		case PLC::TYPE:
-			return new PLC( $id );
+			return new PLC( $id, $parts[2] );
 
 		case Web::TYPE:
-			return new Web( $id );
+			return new Web( $id, $parts[2] );
 
 		default:
 			return new WP_Error( 'fair.packages.validate_id.invalid_type', __( 'Unsupported DID type.', 'fair' ) );
