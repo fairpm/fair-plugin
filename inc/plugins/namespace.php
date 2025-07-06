@@ -9,6 +9,8 @@ namespace FAIR\Plugins;
 
 use function FAIR\Updater\get_packages;
 
+use WP_Error;
+
 /**
  * Bootstrap
  *
@@ -36,52 +38,58 @@ function bootstrap() {
  */
 function set_as_active( $active_plugins ) {
 	remove_filter( 'option_active_plugins', __NAMESPACE__ . '\\set_as_active' );
+	$active_without_did_id = [];
 	$packages = get_packages();
 	$plugins = $packages['plugins'] ?? [];
 	foreach ( $plugins as $plugin ) {
 		if ( is_plugin_active( plugin_basename( $plugin ) ) ) {
-			$plugins[] = get_didless_slug( $plugin );
+			$active_without_did_id[] = get_slug_without_did_id( $plugin );
 		}
 	}
-	$active_plugins = array_map( 'plugin_basename', array_merge( $active_plugins, $plugins ) );
+	$active_plugins = array_map( 'plugin_basename', array_merge( $active_plugins, $active_without_did_id ) );
 
 	return array_unique( $active_plugins );
 }
 
 /**
- * Return shortened DID withou `did:plc|web'.
+ * Return DID parts.
  *
- * @param  string $did Full DID.
+ * @param  string $id Full DID.
  *
- * @return string|void
+ * @return string|WP_Error
  */
-function get_short_did( $did ) {
-	if ( ! empty( $did ) ) {
-		if ( str_contains( $did, ':' ) ) {
-			$did = (string) explode( ':', $did )[2];
-		}
-		return $did;
+function get_did_parts( $id ) {
+	$parts = explode( ':', $id, 3 );
+	if ( count( $parts ) !== 3 ) {
+		return new WP_Error( 'fair.packages.validate_did.not_uri', __( 'DID could not be parsed as a URI.', 'fair' ) );
 	}
+
+	return [
+		'method' => $parts[1],
+		'id' => $parts[2],
+	];
 }
 
 /**
- * Return slug without DID.
+ * Return plugin file path without DID.
  *
- * @param  string $slug Current slug.
+ * @param  string $plugin Filepath or plugin basename.
  * @param  string $did  Full DID.
  *
- * @return string|void
+ * @return string
  */
-function get_didless_slug( $slug, $did = '' ) {
+function get_slug_without_did_id( $plugin, $did = '' ) {
 	if ( empty( $did ) ) {
-		$did = get_file_data( $slug, [ 'PluginID' => 'Plugin ID' ] )['PluginID'];
-		$did = get_short_did( $did );
+		$plugin = trailingslashit( WP_PLUGIN_DIR ) . plugin_basename( $plugin );
+		$did = get_file_data( $plugin, [ 'PluginID' => 'Plugin ID' ] )['PluginID'];
 	}
-	if ( ! empty( $did ) ) {
-		$slug = str_replace( '-' . get_short_did( $did ), '', $slug );
+	$did = get_did_parts( $did );
+	if ( is_wp_error( $did ) ) {
+		return $plugin;
 	}
+	$plugin = str_replace( '-' . $did['id'], '', $plugin );
 
-	return $slug;
+	return $plugin;
 }
 
 /**
