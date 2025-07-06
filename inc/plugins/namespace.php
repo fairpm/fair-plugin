@@ -94,8 +94,8 @@ function get_didless_slug( $slug, $did = '' ) {
  * @return string
  */
 function hide_notice( $markup, $message, $args ) {
-	$active = get_option( 'active_plugins' );
 	if ( $args['id'] === 'message' ) {
+		$active = get_option( 'active_plugins' );
 		foreach ( $active as $plugin ) {
 			if ( str_contains( $message, $plugin ) && str_contains( $markup, 'error' ) ) {
 				remove_filter( 'wp_admin_notice_markup', __NAMESPACE__ . '\\hide_notice' );
