@@ -23,7 +23,7 @@ interface DID {
 	/**
 	 * Get the method specific ID from DID.
 	 */
-	public function get_short_id() : string;
+	public function get_msid() : string;
 
 	/**
 	 * Fetch the DID document.

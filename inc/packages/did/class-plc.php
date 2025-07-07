@@ -30,17 +30,17 @@ class PLC implements DID {
 	 *
 	 * @var string
 	 */
-	protected string $short_id;
+	protected string $msid;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param string $id DID.
-	 * @param string $short_id Method specific ID.
+	 * @param string $msid Method specific ID.
 	 */
-	public function __construct( string $id, string $short_id ) {
+	public function __construct( string $id, string $msid ) {
 		$this->id = $id;
-		$this->short_id = $short_id;
+		$this->msid = $msid;
 	}
 
 	/**
@@ -62,8 +62,8 @@ class PLC implements DID {
 	/**
 	 * Get the method specific ID from DID.
 	 */
-	public function get_short_id() : string {
-		return $this->short_id;
+	public function get_msid() : string {
+		return $this->msid;
 	}
 
 	/**
