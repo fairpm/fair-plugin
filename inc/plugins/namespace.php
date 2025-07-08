@@ -71,25 +71,24 @@ function get_did_parts( $id ) {
 }
 
 /**
- * Return plugin file path without DID.
+ * Return plugin slug without DID hash.
+ *
+ * Assumes pattern of <slug>-<hash>.
  *
  * @param  string $plugin Filepath or plugin basename.
- * @param  string $did  Full DID.
  *
  * @return string
  */
-function get_slug_without_did_id( $plugin, $did = '' ) {
-	if ( empty( $did ) ) {
-		$plugin = trailingslashit( WP_PLUGIN_DIR ) . plugin_basename( $plugin );
-		$did = get_file_data( $plugin, [ 'PluginID' => 'Plugin ID' ] )['PluginID'];
-	}
-	$did = get_did_parts( $did );
-	if ( is_wp_error( $did ) ) {
-		return $plugin;
-	}
-	$plugin = str_replace( '-' . $did['id'], '', $plugin );
+function get_slug_without_did_id( $plugin ) : string {
+	$plugin = plugin_basename( $plugin );
+	$slug = explode( '/', $plugin, 2 )[0];
+	$slug_parts = explode( '-', $slug );
 
-	return $plugin;
+	// Remove hash.
+	array_pop( $slug_parts );
+	$slug = implode( '-', $slug_parts );
+
+	return $slug;
 }
 
 /**
