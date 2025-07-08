@@ -675,7 +675,7 @@ class Upgrader extends WP_Upgrader {
 			return $source;
 		}
 
-		$new_source = trailingslashit( $remote_source ) . $this->package->slug;
+		$new_source = trailingslashit( $remote_source ) . $this->package->slug . '-' . get_did_hash( $this->package->id );
 
 		if ( trailingslashit( strtolower( $source ) ) !== trailingslashit( strtolower( $new_source ) ) ) {
 			$wp_filesystem->move( $source, $new_source, true );

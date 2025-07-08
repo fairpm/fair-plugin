@@ -55,6 +55,19 @@ function parse_did( string $id ) {
 }
 
 /**
+ * Return hash of DID for appending to slug.
+ *
+ * @param  string $id DID
+ *
+ * @return string
+ */
+function get_did_hash( string $id ) : string {
+	$did = parse_did( $id );
+
+	return substr( hash( 'sha256', $did->get_id() ), 0, 6 );
+}
+
+/**
  * Get DID document.
  *
  * @param string $id DID.
