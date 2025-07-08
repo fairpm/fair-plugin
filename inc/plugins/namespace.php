@@ -7,9 +7,7 @@
 
 namespace FAIR\Plugins;
 
-use function FAIR\Updater\get_packages;
-
-use WP_Error;
+use function FAIR\Updater\init;
 
 /**
  * Bootstrap
@@ -38,15 +36,15 @@ function bootstrap() {
  */
 function set_as_active( $active_plugins ) {
 	remove_filter( 'option_active_plugins', __NAMESPACE__ . '\\set_as_active' );
-	$active_without_did_id = [];
-	$packages = get_packages();
+	$packages = init();
 	$plugins = $packages['plugins'] ?? [];
+	$plugins = array_map( 'plugin_basename', $plugins );
 	foreach ( $plugins as $plugin ) {
-		if ( is_plugin_active( plugin_basename( $plugin ) ) ) {
-			$active_without_did_id[] = get_slug_without_did_hash( $plugin );
+		if ( is_plugin_active( $plugin ) ) {
+			$plugins[] = get_slug_without_did_hash( $plugin );
 		}
 	}
-	$active_plugins = array_map( 'plugin_basename', array_merge( $active_plugins, $active_without_did_id ) );
+	$active_plugins = array_merge( $active_plugins, $plugins );
 
 	return array_unique( $active_plugins );
 }
@@ -61,15 +59,14 @@ function set_as_active( $active_plugins ) {
  * @return string
  */
 function get_slug_without_did_hash( $plugin ) : string {
-	$plugin = plugin_basename( $plugin );
-	$slug = explode( '/', $plugin, 2 )[0];
-	$slug_parts = explode( '-', $slug );
+	$file = explode( '/', $plugin, 2 );
+	$slug_parts = explode( '-', $file[0] );
 
 	// Remove hash.
 	array_pop( $slug_parts );
 	$slug = implode( '-', $slug_parts );
 
-	return $slug;
+	return $slug . '/' . $file[1];
 }
 
 /**
