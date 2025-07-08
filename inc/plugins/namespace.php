@@ -7,7 +7,7 @@
 
 namespace FAIR\Plugins;
 
-use function FAIR\Updater\init;
+use function FAIR\Updater\get_packages;
 
 /**
  * Bootstrap
@@ -36,7 +36,7 @@ function bootstrap() {
  */
 function set_as_active( $active_plugins ) {
 	remove_filter( 'option_active_plugins', __NAMESPACE__ . '\\set_as_active' );
-	$packages = init();
+	$packages = get_packages();
 	$plugins = $packages['plugins'] ?? [];
 	$plugins = array_map( 'plugin_basename', $plugins );
 	foreach ( $plugins as $plugin ) {
