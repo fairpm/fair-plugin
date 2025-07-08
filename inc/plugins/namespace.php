@@ -52,25 +52,6 @@ function set_as_active( $active_plugins ) {
 }
 
 /**
- * Return DID parts.
- *
- * @param  string $id Full DID.
- *
- * @return string|WP_Error
- */
-function get_did_parts( $id ) {
-	$parts = explode( ':', $id, 3 );
-	if ( count( $parts ) !== 3 ) {
-		return new WP_Error( 'fair.packages.validate_did.not_uri', __( 'DID could not be parsed as a URI.', 'fair' ) );
-	}
-
-	return [
-		'method' => $parts[1],
-		'id' => $parts[2],
-	];
-}
-
-/**
  * Return plugin slug without DID hash.
  *
  * Assumes pattern of <slug>-<hash>.
