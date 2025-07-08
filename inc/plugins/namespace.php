@@ -43,7 +43,7 @@ function set_as_active( $active_plugins ) {
 	$plugins = $packages['plugins'] ?? [];
 	foreach ( $plugins as $plugin ) {
 		if ( is_plugin_active( plugin_basename( $plugin ) ) ) {
-			$active_without_did_id[] = get_slug_without_did_id( $plugin );
+			$active_without_did_id[] = get_slug_without_did_hash( $plugin );
 		}
 	}
 	$active_plugins = array_map( 'plugin_basename', array_merge( $active_plugins, $active_without_did_id ) );
@@ -79,7 +79,7 @@ function get_did_parts( $id ) {
  *
  * @return string
  */
-function get_slug_without_did_id( $plugin ) : string {
+function get_slug_without_did_hash( $plugin ) : string {
 	$plugin = plugin_basename( $plugin );
 	$slug = explode( '/', $plugin, 2 )[0];
 	$slug_parts = explode( '-', $slug );
