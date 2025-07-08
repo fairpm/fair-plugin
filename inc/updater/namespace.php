@@ -23,7 +23,7 @@ function bootstrap() {
  *
  * @return stdClass
  */
-function get_packages() {
+function init() {
 	/** @var array */
 	$packages = [];
 
@@ -67,7 +67,7 @@ function get_packages() {
  * @return void
  */
 function run() {
-	$packages = get_packages();
+	$packages = init();
 	$plugins = $packages['plugins'] ?? [];
 	$themes = $packages['themes'] ?? [];
 	$packages = array_merge( $plugins, $themes);
