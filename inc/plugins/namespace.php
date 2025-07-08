@@ -41,7 +41,7 @@ function set_as_active( $active_plugins ) {
 	$plugins = array_map( 'plugin_basename', $plugins );
 	foreach ( $plugins as $plugin ) {
 		if ( is_plugin_active( $plugin ) ) {
-			$plugins[] = get_slug_without_did_hash( $plugin );
+			$plugins[] = get_file_without_did_hash( $plugin );
 		}
 	}
 	$active_plugins = array_merge( $active_plugins, $plugins );
@@ -50,7 +50,7 @@ function set_as_active( $active_plugins ) {
 }
 
 /**
- * Return plugin slug without DID hash.
+ * Return plugin file without DID hash.
  *
  * Assumes pattern of <slug>-<hash>.
  *
@@ -58,7 +58,7 @@ function set_as_active( $active_plugins ) {
  *
  * @return string
  */
-function get_slug_without_did_hash( $plugin ) : string {
+function get_file_without_did_hash( $plugin ) : string {
 	$file = explode( '/', $plugin, 2 );
 	$slug_parts = explode( '-', $file[0] );
 
