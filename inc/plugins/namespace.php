@@ -16,6 +16,10 @@ use function FAIR\Updater\get_packages;
  * @return void
  */
 function bootstrap() {
+	add_action( 'load-plugins.php' , __NAMESPACE__ . '\\load_filters' );
+}
+
+function load_filters() {
 	add_filter( 'option_active_plugins', __NAMESPACE__ . '\\set_as_active' );
 	add_filter( 'wp_admin_notice_markup', __NAMESPACE__ . '\\hide_notice', 10, 3 );
 
