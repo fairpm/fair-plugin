@@ -7,6 +7,7 @@
 
 namespace FAIR\Plugins;
 
+use function FAIR\Packages\get_did_hash;
 use function FAIR\Updater\get_packages;
 
 /**
@@ -39,14 +40,13 @@ function set_as_active( $active_plugins ) {
 	$packages = get_packages();
 	$plugins = $packages['plugins'] ?? [];
 	$plugins = array_map( 'plugin_basename', $plugins );
-	foreach ( $plugins as $plugin ) {
+	foreach ( $plugins as $did => $plugin ) {
 		if ( is_plugin_active( $plugin ) ) {
-			$plugins[] = get_file_without_did_hash( $plugin );
+			$active_plugins[] = get_file_without_did_hash( $did, $plugin );
 		}
 	}
-	$active_plugins = array_merge( $active_plugins, $plugins );
 
-	return array_unique( $active_plugins );
+	return array_filter( array_unique( $active_plugins ) );
 }
 
 /**
@@ -54,19 +54,18 @@ function set_as_active( $active_plugins ) {
  *
  * Assumes pattern of <slug>-<hash>.
  *
- * @param  string $plugin Filepath or plugin basename.
+ * @param string $did DID.
+ * @param string $plugin Plugin basename.
  *
  * @return string
  */
-function get_file_without_did_hash( $plugin ) : string {
+function get_file_without_did_hash( $did, $plugin ) : string {
 	$file = explode( '/', $plugin, 2 );
 	$slug_parts = explode( '-', $file[0] );
-
-	// Remove hash.
-	array_pop( $slug_parts );
+	$did_hash = array_pop( $slug_parts );
 	$slug = implode( '-', $slug_parts );
 
-	return $slug . '/' . $file[1];
+	return $did_hash === get_did_hash( $did ) ? $slug . '/' . $file[1] : '';
 }
 
 /**
