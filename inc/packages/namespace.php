@@ -55,14 +55,20 @@ function parse_did( string $id ) {
 }
 
 /**
- * Return hash of DID for appending to slug.
+ * Return hash of DID.
+ *
+ * This ensures a consistent representation of a DID
+ * regardless of its method, method-specific-id format, or length.
  *
  * @param  string $id DID
  *
- * @return string
+ * @return string|WP_Error
  */
-function get_did_hash( string $id ) : string {
+function get_did_hash( string $id ) {
 	$did = parse_did( $id );
+	if ( is_wp_error( $did ) ) {
+		return $did;
+	}
 
 	return substr( hash( 'sha256', $did->get_id() ), 0, 6 );
 }
