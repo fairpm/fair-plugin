@@ -43,6 +43,13 @@ class MetadataDocument {
 	public $slug;
 
 	/**
+	 * File name.
+	 *
+	 * @var string
+	 */
+	public $file;
+
+	/**
 	 * License.
 	 *
 	 * @var string
