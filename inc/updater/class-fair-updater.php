@@ -45,11 +45,7 @@ class FAIR_Updater {
 	/** @var string */
 	protected $type;
 
-	/**
-	 * Release document.
-	 *
-	 * @var ReleaseDocument
-	 */
+	/** @var ReleaseDocument */
 	protected $release;
 
 	// phpcs:enable
