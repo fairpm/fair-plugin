@@ -41,7 +41,7 @@ function get_packages() {
 		$plugin_id = get_file_data( $plugin_path . $file, [ 'PluginID' => 'Plugin ID' ] )['PluginID'];
 
 		if ( ! empty( $plugin_id ) ) {
-			$packages['plugins'][] = $plugin_path . $file;
+			$packages['plugins'][ $plugin_id ] = $plugin_path . $file;
 		}
 	}
 
@@ -54,7 +54,7 @@ function get_packages() {
 		$theme_id = get_file_data( $theme_path . $file . '/style.css', [ 'ThemeID' => 'Theme ID' ] )['ThemeID'];
 
 		if ( ! empty( $theme_id ) ) {
-			$packages['themes'][] = $theme_path . $file . '/style.css';
+			$packages['themes'][ $theme_id ] = $theme_path . $file . '/style.css';
 		}
 	}
 
