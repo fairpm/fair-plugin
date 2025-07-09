@@ -60,12 +60,10 @@ function set_as_active( $active_plugins ) {
  * @return string
  */
 function get_file_without_did_hash( $did, $plugin ) : string {
-	$file = explode( '/', $plugin, 2 );
-	$slug_parts = explode( '-', $file[0] );
-	$did_hash = array_pop( $slug_parts );
-	$slug = implode( '-', $slug_parts );
+	list( $slug, $file ) = explode( '/', $plugin, 2 );
+	$slug = str_replace( '-' . get_did_hash( $did ), '', $slug );
 
-	return $did_hash === get_did_hash( $did ) ? $slug . '/' . $file[1] : '';
+	return $slug . '/' . $file;
 }
 
 /**
