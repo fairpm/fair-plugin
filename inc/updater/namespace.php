@@ -5,13 +5,6 @@ namespace FAIR\Updater;
 use Fragen\Git_Updater;
 
 /**
- * Exit if called directly.
- */
-if ( ! defined( 'WPINC' ) ) {
-	die;
-}
-
-/**
  * Bootstrap.
  */
 function bootstrap() {
