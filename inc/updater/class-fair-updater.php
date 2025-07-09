@@ -23,6 +23,7 @@ use function FAIR\Packages\fetch_metadata_doc;
 use function FAIR\Packages\fetch_package_metadata;
 use function FAIR\Packages\get_did_document;
 use function FAIR\Packages\get_did_hash;
+use function FAIR\Packages\get_file_with_did_hash;
 use function FAIR\Packages\pick_release;
 
 /**
