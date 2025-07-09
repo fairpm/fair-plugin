@@ -124,6 +124,7 @@ class MetadataDocument {
 		$optional = [
 			'name',
 			'slug',
+			'file',
 			'description',
 			'keywords',
 			'sections',

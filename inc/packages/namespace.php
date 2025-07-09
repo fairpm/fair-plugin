@@ -74,6 +74,21 @@ function get_did_hash( string $id ) {
 }
 
 /**
+ * Get file with DID hash.
+ *
+ * @param string $did DID.
+ * @param string $file File name.
+ *
+ * @return string
+ */
+function get_file_with_did_hash( $did, $file ) {
+	list( $slug, $file ) = explode( '/', $file, 2 );
+	$slug = $slug . '-' . get_did_hash( $did );
+
+	return $slug . '/' . $file;
+}
+
+/**
  * Get DID document.
  *
  * @param string $id DID.
