@@ -16,7 +16,7 @@ use function FAIR\Updater\get_packages;
  * @return void
  */
 function bootstrap() {
-	add_action( 'load-plugins.php' , __NAMESPACE__ . '\\load_filters' );
+	add_action( 'load-plugins.php', __NAMESPACE__ . '\\load_filters' );
 }
 
 function load_filters() {
