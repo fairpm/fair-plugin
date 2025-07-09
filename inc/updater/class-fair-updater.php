@@ -331,6 +331,7 @@ $key = 'plugin' === $this->type ? $response->file : $response['file'];
 			'version'          => $this->release->version,
 			'remote_version'   => $this->release->version,
 			'package'          => $this->release->artifacts->package[0]->url,
+			'download_link'    => $this->release->artifacts->package[0]->url,
 			'tested'           => $required_versions['tested_to'],
 			'external'         => 'xxx',
 		);
