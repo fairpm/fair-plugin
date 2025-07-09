@@ -24,6 +24,10 @@ function bootstrap() {
  * @return stdClass
  */
 function set_default_icon( $transient ) {
+	if ( ! property_exists( $transient, 'response' ) ) {
+		return $transient;
+	}
+
 	foreach ( $transient->response as $updates ) {
 		$url = plugin_dir_url( PLUGIN_FILE ) . 'inc/icons/svg.php';
 		$url = add_query_arg( 'color', set_random_color(), $url );
