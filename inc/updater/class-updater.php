@@ -305,7 +305,7 @@ class Updater {
 	 * @param array  $args Array of http args.
 	 * @param string $url  Download URL.
 	 *
-	 * TODO: Need to test this.
+	 * TODO: Need to test this. Likely need to pass release_asset bool from mini-fair-plugin.
 	 * @return array
 	 */
 	public function add_auth_header( $args, $url ) {
