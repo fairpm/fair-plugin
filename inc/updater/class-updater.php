@@ -324,7 +324,9 @@ class Updater {
 	 */
 	public function get_update_data() {
 		$required_versions = $this->get_required_versions();
-		$file = 'plugin' === $this->type ? get_file_with_did_hash( $this->metadata->id, $this->metadata->file ) : $this->metadata->slug . '-' . get_did_hash( $this->metadata->id );
+		$file = 'plugin' === $this->type
+			? get_file_with_did_hash( $this->metadata->id, $this->metadata->file )
+			: $this->metadata->slug . '-' . get_did_hash( $this->metadata->id );
 
 		$response = [
 			'name'             => $this->metadata->name,
