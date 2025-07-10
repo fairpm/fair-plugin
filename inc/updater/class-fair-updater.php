@@ -271,8 +271,9 @@ class FAIR_Updater {
 		}
 
 		$response = $this->get_update_data();
+		$is_compatible = check_requirements( $this->release );
 
-		if ( version_compare( $this->release->version, $this->local_version, '>' ) ) {
+		if ( $is_compatible && version_compare( $this->release->version, $this->local_version, '>' ) ) {
 			$response                    = 'plugin' === $this->type ? (object) $response : $response;
 			$key                         = 'plugin' === $this->type ? $response->file : $response['file'];
 			$transient->response[ $key ] = $response;
