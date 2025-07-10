@@ -326,7 +326,7 @@ class Updater {
 			'name'             => $this->metadata->name,
 			'author'           => $this->metadata->authors[0]->name,
 			'author_uri'       => $this->metadata->authors[0]->url,
-			'slug'             => $this->metadata->slug,
+			'slug'             => $this->metadata->slug . '-' . get_did_hash( $this->metadata->id ),
 			$this->type        => $file,
 			'file'             => $file,
 			'url'              => $this->metadata->url ?? $this->metadata->slug,
