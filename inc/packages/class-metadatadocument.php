@@ -50,13 +50,6 @@ class MetadataDocument {
 	public $file;
 
 	/**
-	 * Is package binary a release asset?
-	 *
-	 * @var bool
-	 */
-	public $release_asset;
-
-	/**
 	 * License.
 	 *
 	 * @var string
@@ -139,7 +132,6 @@ class MetadataDocument {
 			'name',
 			'slug',
 			'file',
-			'release_asset',
 			'description',
 			'keywords',
 			'sections',
