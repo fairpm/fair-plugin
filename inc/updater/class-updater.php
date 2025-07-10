@@ -189,7 +189,7 @@ class Updater {
 		add_filter(
 			'upgrader_pre_download',
 			function () {
-				add_filter( 'http_request_args', [ $this, 'add_auth_header' ], 20, 2 );
+				add_filter( 'http_request_args', [ $this, 'add_accept_header' ], 20, 2 );
 				return false; // upgrader_pre_download filter default return value.
 			}
 		);
@@ -300,19 +300,19 @@ class Updater {
 	}
 
 	/**
-	 * Add auth header for download package.
+	 * Add accept header for release asset download package.
 	 *
 	 * @param array  $args Array of http args.
 	 * @param string $url  Download URL.
 	 *
-	 * TODO: Need to test this. Likely need to pass release_asset bool from mini-fair-plugin.
+	 * TODO: Need to pass release_asset bool from mini-fair-plugin.
 	 * @return array
 	 */
-	public function add_auth_header( $args, $url ) {
-		if ( property_exists( $this->metadata, 'auth_header' )
-			&& str_contains( $url, $this->metadata->slug )
-		) {
-			$args = array_merge( $args, $this->metadata->auth_header );
+	public function add_accept_header( $args, $url ) {
+		$is_release_asset = $this->metadata->release_asset ?? false;
+		$accept_header = [ 'headers' => [ 'Accept' => 'application/octet-stream' ] ];
+		if ( $is_release_asset && str_contains( $url, $this->metadata->slug ) ) {
+			$args = array_merge( $args, $accept_header );
 		}
 		return $args;
 	}
