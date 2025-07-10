@@ -366,7 +366,9 @@ function check_requirements( ReleaseDocument $release ) {
 
 	$compatible_php = is_php_version_compatible( $requires_php );
 	$compatible_wp  = is_wp_version_compatible( $requires_wp );
-	$tested_wp      = ( empty( $tested_to ) || version_compare( get_bloginfo( 'version' ), $tested_to, '<=' ) );
+
+	// Set to true if using a development release.
+	$tested_wp = preg_match( '/alpha|beta|RC/', get_bloginfo( 'version' ) ) ? true : ( empty( $tested_to ) || version_compare( get_bloginfo( 'version' ), $tested_to, '<=' ) );
 
 	if ( ! $compatible_php ) {
 		$compatible_php_notice_message  = '<p>';
