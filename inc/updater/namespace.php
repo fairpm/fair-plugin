@@ -56,18 +56,16 @@ function get_packages() {
 /**
  * Get icons.
  *
- * @param  array $icon Array of icon data.
+ * @param  array $icons Array of icon data.
  *
  * @return array
  */
-function get_icons( $icon ) {
-	if ( empty( $icon ) ) {
+function get_icons( $icons ) {
+	if ( empty( $icons ) ) {
 		return;
 	}
 
 	$icons_arr = [];
-	$icons = $icon;
-
 	$regular = array_find( $icons, fn ( $icon ) => $icon->width === 772 && $icon->height === 250 );
 	$high_res = array_find( $icons, fn ( $icon ) => $icon->width === 1544 && $icon->height === 500 );
 
@@ -96,18 +94,16 @@ function get_icons( $icon ) {
 /**
  * Get banners.
  *
- * @param  array $banner Banner data.
+ * @param  array $banners Array of banner data.
  *
  * @return array
  */
-function get_banners( $banner ) {
-	if ( empty( $banner ) ) {
+function get_banners( $banners ) {
+	if ( empty( $banners ) ) {
 		return [];
 	}
 
 	$banners_arr = [];
-	$banners = $banner;
-
 	$regular = array_find( $banners, fn ( $banner ) => $banner->width === 772 && $banner->height === 250 );
 	$high_res = array_find( $banners, fn ( $banner ) => $banner->width === 1544 && $banner->height === 500 );
 
