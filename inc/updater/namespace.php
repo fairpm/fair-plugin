@@ -102,7 +102,7 @@ function get_icons( $icon ) {
  */
 function get_banners( $banner ) {
 	if ( empty( $banner ) ) {
-		return;
+		return [];
 	}
 
 	$banners_arr = [];
