@@ -1,24 +1,13 @@
 <?php
-/*
- * @author   Andy Fragen
- * @license  MIT
- * @link     https://github.com/afragen/git-updater-lite
- * @package  git-updater-lite
+/**
+ * Update FAIR packages.
+ *
+ * @package FAIR
  */
 
 namespace FAIR\Updater;
 
-use FAIR\Packages\MetadataDocument;
-use FAIR\Packages\ReleaseDocument;
-use Plugin_Upgrader;
-use stdClass;
-use Theme_Upgrader;
-use TypeError;
-use WP_Error;
-use WP_Upgrader;
-
 use const FAIR\Packages\SERVICE_ID;
-
 use function FAIR\Packages\fetch_metadata_doc;
 use function FAIR\Packages\fetch_package_metadata;
 use function FAIR\Packages\get_did_document;
@@ -26,10 +15,17 @@ use function FAIR\Packages\get_did_hash;
 use function FAIR\Packages\get_file_with_did_hash;
 use function FAIR\Packages\pick_release;
 
+use Plugin_Upgrader;
+use stdClass;
+use Theme_Upgrader;
+use TypeError;
+use WP_Error;
+use WP_Upgrader;
+
 /**
  * Class FAIR_Updater.
  */
-class FAIR_Updater {
+class Updater {
 
 	// phpcs:disable Generic.Commenting.DocComment.MissingShort
 
@@ -53,11 +49,12 @@ class FAIR_Updater {
 	/**
 	 * Constructor.
 	 *
-	 * @param array $packages Associative array as `'DID' => Path to package`.
+	 * @param string $did DID.
+	 * @param string $filepath Absolute file path.
 	 */
 	public function __construct( string $did, string $filepath ) {
 		$this->did = $did;
-		$data  = get_file_data( $filepath, array( 'Version'   => 'Version'));
+		$data  = get_file_data( $filepath, [ 'Version' => 'Version' ] );
 		$this->local_version = $data['Version'];
 	}
 
@@ -67,24 +64,25 @@ class FAIR_Updater {
 	 * @return array
 	 */
 	protected function get_required_versions() {
-		foreach ( $this->release->requires as $pkg => $vers ){
+		$required_versions = [];
+		foreach ( $this->release->requires as $pkg => $vers ) {
 			$vers = preg_replace( '/^[^0-9]+/', '', $vers );
-		if ( $pkg === 'env:php' ) {
-			$required_versions['requires_php'] = $vers;
-		}
-		if ( $pkg === 'env:wp' ) {
-			$required_versions['requires_wp'] = $vers;
-		}
+			if ( $pkg === 'env:php' ) {
+				$required_versions['requires_php'] = $vers;
+			}
+			if ( $pkg === 'env:wp' ) {
+				$required_versions['requires_wp'] = $vers;
+			}
 		}
 		foreach ( $this->release->suggests as $pkg => $vers ) {
-		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
-		if ( $pkg === 'env:wp' ) {
-			$required_versions['tested_to'] = $vers;
-		}
+			$vers = preg_replace( '/^[^0-9]+/', '', $vers );
+			if ( $pkg === 'env:wp' ) {
+				$required_versions['tested_to'] = $vers;
+			}
 
-		return $required_versions;
+			return $required_versions;
+		}
 	}
-}
 
 	/**
 	 * Get API data.
@@ -97,6 +95,7 @@ class FAIR_Updater {
 
 		// Needed for mu-plugin.
 		if ( ! isset( $pagenow ) ) {
+			// phpcs:ignore HM.Security.ValidatedSanitizedInput.InputNotSanitized
 			$php_self = isset( $_SERVER['PHP_SELF'] ) ? sanitize_url( wp_unslash( $_SERVER['PHP_SELF'] ) ) : null;
 			if ( null !== $php_self ) {
 				// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
@@ -105,56 +104,65 @@ class FAIR_Updater {
 		}
 
 		// Only run on the following pages.
-		$pages            = array( 'update-core.php', 'update.php', 'plugins.php', 'themes.php' );
-		$view_details     = array( 'plugin-install.php', 'theme-install.php' );
-		$autoupdate_pages = array( 'admin-ajax.php', 'index.php', 'wp-cron.php' );
+		$pages            = [ 'update-core.php', 'update.php', 'plugins.php', 'themes.php' ];
+		$view_details     = [ 'plugin-install.php', 'theme-install.php' ];
+		$autoupdate_pages = [ 'admin-ajax.php', 'index.php', 'wp-cron.php' ];
 		if ( ! in_array( $pagenow, array_merge( $pages, $view_details, $autoupdate_pages ), true ) ) {
 			return;
 		}
 
 		$this->metadata = fetch_package_metadata( $this->did );
-		if ( is_wp_error( $this->metadata)){
+		if ( is_wp_error( $this->metadata ) ) {
 			return $this->metadata;
 		}
 		$this->release = $this->get_data_from_did( $this->did );
-		$this->type = str_replace('wp-', '', $this->metadata->type);
+		$this->type = str_replace( 'wp-', '', $this->metadata->type );
 
 		$this->load_hooks();
 	}
 
+	/**
+	 * Get data from DID.
+	 *
+	 * @param  string $id DID.
+	 * @param  string $version Release version.
+	 *
+	 * @return mixed
+	 */
 	protected function get_data_from_did( $id, $version = null ) {
-	$document = get_did_document( $id );
-	if ( is_wp_error( $document ) ) {
-		return $document;
-	}
+		$document = get_did_document( $id );
+		if ( is_wp_error( $document ) ) {
+			return $document;
+		}
 
-	// Fetch data from the repository.
-	$service = $document->get_service( SERVICE_ID );
-	if ( empty( $service ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_service', __( 'DID is not a valid package to install.', 'fair' ) );
-	}
-	$repo_url = $service->serviceEndpoint;
+		// Fetch data from the repository.
+		$service = $document->get_service( SERVICE_ID );
+		if ( empty( $service ) ) {
+			return new WP_Error( 'fair.packages.install_plugin.no_service', __( 'DID is not a valid package to install.', 'fair' ) );
+		}
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$repo_url = $service->serviceEndpoint;
 
-	// Filter to valid keys for signing.
-	$valid_keys = $document->get_fair_signing_keys();
-	if ( empty( $valid_keys ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
-	}
+		// Filter to valid keys for signing.
+		$valid_keys = $document->get_fair_signing_keys();
+		if ( empty( $valid_keys ) ) {
+			return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
+		}
 
-	$metadata = fetch_metadata_doc( $repo_url );
-	if ( is_wp_error( $metadata ) ) {
-		return $metadata;
-	}
+		$metadata = fetch_metadata_doc( $repo_url );
+		if ( is_wp_error( $metadata ) ) {
+			return $metadata;
+		}
 
-	// Select the latest release.
-	$releases = array_values( $metadata->releases );
-	usort( $releases, fn ( $a, $b ) => version_compare( $b->version, $a->version ) );
-	$latest = ! empty( $releases ) ? reset( $releases ) : null;
+		// Select the latest release.
+		$releases = array_values( $metadata->releases );
+		usort( $releases, fn ( $a, $b ) => version_compare( $b->version, $a->version ) );
+		$latest = ! empty( $releases ) ? reset( $releases ) : null;
 
-	$release = pick_release( $metadata->releases, $latest->version );
-	if ( empty( $release ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
-	}
+		$release = pick_release( $metadata->releases, $latest->version );
+		if ( empty( $release ) ) {
+			return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
+		}
 
 		return $release;
 	}
@@ -165,18 +173,18 @@ class FAIR_Updater {
 	 * @return void
 	 */
 	public function load_hooks() {
-		add_filter( 'upgrader_source_selection', array( $this, 'upgrader_source_selection' ), 10, 4 );
-		add_filter( "{$this->type}s_api", array( $this, 'repo_api_details' ), 99, 3 );
-		add_filter( "site_transient_update_{$this->type}s", array( $this, 'update_site_transient' ), 20, 1 );
+		add_filter( 'upgrader_source_selection', [ $this, 'upgrader_source_selection' ], 10, 4 );
+		add_filter( "{$this->type}s_api", [ $this, 'repo_api_details' ], 99, 3 );
+		add_filter( "site_transient_update_{$this->type}s", [ $this, 'update_site_transient' ], 20, 1 );
 		if ( ! is_multisite() ) {
-			add_filter( 'wp_prepare_themes_for_js', array( $this, 'customize_theme_update_html' ) );
+			add_filter( 'wp_prepare_themes_for_js', [ $this, 'customize_theme_update_html' ] );
 		}
 
 		// Load hook for adding authentication headers for download packages.
 		add_filter(
 			'upgrader_pre_download',
 			function () {
-				add_filter( 'http_request_args', array( $this, 'add_auth_header' ), 20, 2 );
+				add_filter( 'http_request_args', [ $this, 'add_auth_header' ], 20, 2 );
 				return false; // upgrader_pre_download filter default return value.
 			}
 		);
@@ -228,7 +236,7 @@ class FAIR_Updater {
 			return $source;
 		}
 
-		if ( trailingslashit( strtolower( $source ) ) !== trailingslashit( strtolower($new_source ) ) ) {
+		if ( trailingslashit( strtolower( $source ) ) !== trailingslashit( strtolower( $new_source ) ) ) {
 			$wp_filesystem->move( $source, $new_source, true );
 		}
 
@@ -279,7 +287,7 @@ class FAIR_Updater {
 			$transient->response[ $key ] = $response;
 		} else {
 			$response = 'plugin' === $this->type ? (object) $response : $response;
-$key = 'plugin' === $this->type ? $response->file : $response['file'];
+			$key = 'plugin' === $this->type ? $response->file : $response['file'];
 			// Add repo without update to $transient->no_update for 'View details' link.
 			$transient->no_update[ $key ] = $response;
 		}
@@ -311,10 +319,10 @@ $key = 'plugin' === $this->type ? $response->file : $response['file'];
 	 * @return array
 	 */
 	public function get_update_data() {
-	$required_versions = $this->get_required_versions();
+		$required_versions = $this->get_required_versions();
 		$file = 'plugin' === $this->type ? get_file_with_did_hash( $this->metadata->id, $this->metadata->file ) : $this->metadata->slug . '-' . get_did_hash( $this->metadata->id );
 
-		$response = array(
+		$response = [
 			'name'             => $this->metadata->name,
 			'author'           => $this->metadata->authors[0]->name,
 			'author_uri'       => $this->metadata->authors[0]->url,
@@ -323,8 +331,8 @@ $key = 'plugin' === $this->type ? $response->file : $response['file'];
 			'file'             => $file,
 			'url'              => isset( $this->metadata->url ) ? $this->metadata->url : $this->metadata->slug,
 			'sections'         => (array) $this->metadata->sections,
-			'icons'            => get_icons( $this->release->artifacts->icon),
-			'banners'          => get_banners($this->release->artifacts->banner),
+			'icons'            => get_icons( $this->release->artifacts->icon ),
+			'banners'          => get_banners( $this->release->artifacts->banner ),
 			'update-supported' => true,
 			'requires'         => $required_versions['requires_wp'],
 			'requires_php'     => $required_versions['requires_php'],
@@ -335,7 +343,7 @@ $key = 'plugin' === $this->type ? $response->file : $response['file'];
 			'download_link'    => $this->release->artifacts->package[0]->url,
 			'tested'           => $required_versions['tested_to'],
 			'external'         => 'xxx',
-		);
+		];
 		if ( 'theme' === $this->type ) {
 			$response['theme_uri'] = $response['url'];
 		}
@@ -383,23 +391,23 @@ $key = 'plugin' === $this->type ? $response->file : $response['file'];
 	protected function append_theme_actions_content( $theme ) {
 		$details_url       = esc_attr(
 			add_query_arg(
-				array(
+				[
 					'tab'       => 'theme-information',
 					'theme'     => $theme->slug,
 					'TB_iframe' => 'true',
 					'width'     => 270,
 					'height'    => 400,
-				),
+				],
 				self_admin_url( 'theme-install.php' )
 			)
 		);
 		$nonced_update_url = wp_nonce_url(
 			esc_attr(
 				add_query_arg(
-					array(
+					[
 						'action' => 'upgrade-theme',
 						'theme'  => rawurlencode( $theme->slug ),
-					),
+					],
 					self_admin_url( 'update.php' )
 				)
 			),

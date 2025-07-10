@@ -20,7 +20,11 @@ function bootstrap() {
  * @return stdClass
  */
 function get_packages() {
-	/** @var array */
+	/**
+	 * Packages.
+	 *
+	 * @var array
+	 */
 	$packages = [];
 
 	// Seems to be required for PHPUnit testing on GitHub workflow.
@@ -56,8 +60,8 @@ function get_packages() {
  *
  * @return array
  */
-function get_icons($icon) {
-	if ( empty($icon)){
+function get_icons( $icon ) {
+	if ( empty( $icon ) ) {
 		return;
 	}
 
@@ -67,19 +71,18 @@ function get_icons($icon) {
 	$regular = array_find( $icons, fn ( $icon ) => $icon->width === 772 && $icon->height === 250 );
 	$high_res = array_find( $icons, fn ( $icon ) => $icon->width === 1544 && $icon->height === 500 );
 
-
-	foreach($icons as $icon){
-		foreach( $icon as $mime => $type ){
-			if ( $mime === 'content-type'){
-			if ( str_contains($type,'svg+xml')){
-				$svg = $icon;
-				break;
+	foreach ( $icons as $icon ) {
+		foreach ( $icon as $mime => $type ) {
+			if ( $mime === 'content-type' ) {
+				if ( str_contains( $type, 'svg+xml' ) ) {
+					$svg = $icon;
+					break;
+				}
 			}
-		}
 		}
 	}
 
-	if ( empty( $regular ) && empty( $high_res ) && empty($svg)) {
+	if ( empty( $regular ) && empty( $high_res ) && empty( $svg ) ) {
 		return;
 	}
 
@@ -97,7 +100,7 @@ function get_icons($icon) {
  *
  * @return array
  */
-function get_banners( $banner ){
+function get_banners( $banner ) {
 	if ( empty( $banner ) ) {
 		return;
 	}
@@ -127,8 +130,8 @@ function run() {
 	$packages = get_packages();
 	$plugins = $packages['plugins'] ?? [];
 	$themes = $packages['themes'] ?? [];
-	$packages = array_merge( $plugins, $themes);
+	$packages = array_merge( $plugins, $themes );
 	foreach ( $packages as $did => $filepath ) {
-		( new FAIR_Updater( $did, $filepath ) )->run();
+		( new Updater( $did, $filepath ) )->run();
 	}
 }
