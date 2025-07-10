@@ -34,6 +34,7 @@ function bootstrap() {
 	Icons\bootstrap();
 	Importers\bootstrap();
 	Pings\bootstrap();
+	Plugins\bootstrap();
 	Salts\bootstrap();
 	Settings\bootstrap();
 	Updater\bootstrap();
