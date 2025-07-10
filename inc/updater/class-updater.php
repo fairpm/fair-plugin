@@ -260,7 +260,8 @@ class Updater {
 		}
 
 		// Exit if not our repo.
-		if ( $response->slug !== $this->metadata->slug ) {
+		$slug_arr = [ $this->metadata->slug, $this->metadata->slug . '-' . get_did_hash( $this->metadata->id ) ];
+		if ( ! in_array( $response->slug, $slug_arr, true ) ) {
 			return $result;
 		}
 
