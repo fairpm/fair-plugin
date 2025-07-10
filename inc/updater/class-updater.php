@@ -282,13 +282,12 @@ class Updater {
 
 		$response = $this->get_update_data();
 		$key = $response['file'];
+		$response = 'plugin' === $this->type ? (object) $response : $response;
 		$is_compatible = check_requirements( $this->release );
 
 		if ( $is_compatible && version_compare( $this->release->version, $this->local_version, '>' ) ) {
-			$response                    = 'plugin' === $this->type ? (object) $response : $response;
 			$transient->response[ $key ] = $response;
 		} else {
-			$response = 'plugin' === $this->type ? (object) $response : $response;
 			// Add repo without update to $transient->no_update for 'View details' link.
 			$transient->no_update[ $key ] = $response;
 		}
