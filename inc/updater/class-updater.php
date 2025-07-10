@@ -118,6 +118,9 @@ class Updater {
 			return $this->metadata;
 		}
 		$this->release = $this->get_data_from_did( $this->did );
+		if ( is_wp_error( $this->release ) ) {
+			return $this->release;
+		}
 		$this->type = str_replace( 'wp-', '', $this->metadata->type );
 
 		$this->load_hooks();
