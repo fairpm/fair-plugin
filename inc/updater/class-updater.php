@@ -281,15 +281,14 @@ class Updater {
 		}
 
 		$response = $this->get_update_data();
+		$key = $response['file'];
 		$is_compatible = check_requirements( $this->release );
 
 		if ( $is_compatible && version_compare( $this->release->version, $this->local_version, '>' ) ) {
 			$response                    = 'plugin' === $this->type ? (object) $response : $response;
-			$key                         = 'plugin' === $this->type ? $response->file : $response['file'];
 			$transient->response[ $key ] = $response;
 		} else {
 			$response = 'plugin' === $this->type ? (object) $response : $response;
-			$key = 'plugin' === $this->type ? $response->file : $response['file'];
 			// Add repo without update to $transient->no_update for 'View details' link.
 			$transient->no_update[ $key ] = $response;
 		}
@@ -331,7 +330,7 @@ class Updater {
 			'slug'             => $this->metadata->slug,
 			$this->type        => $file,
 			'file'             => $file,
-			'url'              => isset( $this->metadata->url ) ? $this->metadata->url : $this->metadata->slug,
+			'url'              => $this->metadata->url ?? $this->metadata->slug,
 			'sections'         => (array) $this->metadata->sections,
 			'icons'            => get_icons( $this->release->artifacts->icon ),
 			'banners'          => get_banners( $this->release->artifacts->banner ),
