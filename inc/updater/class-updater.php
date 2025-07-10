@@ -81,9 +81,9 @@ class Updater {
 			if ( $pkg === 'env:wp' ) {
 				$required_versions['tested_to'] = $vers;
 			}
-
-			return $required_versions;
 		}
+
+		return $required_versions;
 	}
 
 	/**
