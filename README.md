@@ -21,7 +21,7 @@ FAIR can be installed manually by downloading the latest zip from releases and i
 
 To remove the FAIR plugin and its features, you can deactivate and delete the plugin. There are no changes made to your database outside of the plugin settings, and no external files are edited. FAIR is a self-contained plugin, using the accepted WordPress standards and practices.
 
-### Features
+## Features
 
 > [!NOTE]
 > The FAIR project is brand new. This plugin is a pre-release and some features are yet to be fully implemented.
@@ -44,7 +44,15 @@ In addition to the key FAIR implementations, a few other features in WordPress a
 * Media features provided by OpenVerse are disabled, pending discussion and work by the FAIR working group
 * Ping services are configured to use IndexNow in place of Pingomatic
 
-### Data Privacy
+
+### Experimental Features
+
+As FAIR works towards our plans for full decentralized package management, some features are marked as experimental. These features must be manually opted-in to during development.
+
+* `FAIR_EXPERIMENTAL_PACKAGES` - Define as `true` to enable decentralized package installation, via direct DID input.
+
+
+## Data Privacy
 
 * See Also: [Linux Foundation Projects Privacy Policy](https://lfprojects.org/policies/privacy-policy/)
 
@@ -59,6 +67,7 @@ In addition we self-host certain features that could not be properly protected o
 
 * WordPress Events (`https://api.fair.pm/fair/v1/events`) - Retrieved from [The WP World](https://thewp.world) hourly and then cached on our servers. No user data is sent to The WP World.
 * WordPress Planet/News (`https://planet.fair.pm/atom.xml`)
+
 
 ## Contributing
 
