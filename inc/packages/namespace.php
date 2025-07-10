@@ -83,7 +83,7 @@ function get_did_hash( string $id ) {
  */
 function get_file_with_did_hash( $did, $file ) {
 	list( $slug, $file ) = explode( '/', $file, 2 );
-	$slug = $slug . '-' . get_did_hash( $did );
+	$slug .= '-' . get_did_hash( $did );
 
 	return $slug . '/' . $file;
 }
