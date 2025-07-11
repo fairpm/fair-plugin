@@ -46,6 +46,9 @@ function upgrader_pre_download() {
  * ReleaseDocument artifact package content-type will be application/octet-stream.
  * Only for GitHub release assets.
  *
+ * @global MetadataDocument $metadata
+ * @global ReleaseDocument $release
+ *
  * @param array  $args Array of http args.
  * @param string $url  Download URL.
  *

@@ -241,7 +241,6 @@ class Upgrader extends WP_Upgrader {
 		// Resolve the release artifact to a URL.
 		$artifact = pick_artifact_by_lang( $this->release->artifacts->package );
 
-
 		/**
 		 * Fires before upgrader_pre_download to use object data in filters.
 		 *
