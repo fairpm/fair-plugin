@@ -63,16 +63,15 @@ function add_accept_header( $args, $url ) {
 	}
 	foreach ( $release->artifacts->package[0] as $key => $value ) {
 		$key = str_replace( '-', '_', $key );
-		$artifact_arr[ $key ] = $value;
+		$package[ $key ] = $value;
 	}
-	if ( $artifact_arr['content_type'] === 'application/octet-stream' ) {
-		$accept_header = [ 'headers' => [ 'Accept' => 'application/octet-stream' ] ];
-	}
-	if ( ! empty( $accept_header ) && str_contains( $url, $metadata->slug ) ) {
-		$args = array_merge( $args, $accept_header );
-	}
+	if ( isset( $package['content_type'] ) && $package['content_type'] === 'application/octet-stream' ) {
+		if ( ! empty( $accept_header ) && str_contains( $url, $metadata->slug ) ) {
+			$args = array_merge( $args, $accept_header );
+		}
 
-	return $args;
+		return $args;
+	}
 }
 
 /**
