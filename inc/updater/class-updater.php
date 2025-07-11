@@ -97,7 +97,7 @@ class Updater {
 
 		// Needed for mu-plugin.
 		if ( ! isset( $pagenow ) ) {
-			// phpcs:ignore HM.Security.ValidatedSanitizedInput.InputNotSanitized
+			// phpcs:ignore HM.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.WP.DeprecatedFunctions.sanitize_urlFound
 			$php_self = isset( $_SERVER['PHP_SELF'] ) ? sanitize_url( wp_unslash( $_SERVER['PHP_SELF'] ) ) : null;
 			if ( null !== $php_self ) {
 				// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
