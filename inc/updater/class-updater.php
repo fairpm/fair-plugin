@@ -299,36 +299,6 @@ class Updater {
 	}
 
 	/**
-	 * Add accept header for release asset package binary.
-	 *
-	 * ReleaseDocument artifact package content-type will be application/octet-stream.
-	 * Only for GitHub release assets.
-	 *
-	 * @param array  $args Array of http args.
-	 * @param string $url  Download URL.
-	 *
-	 * @return array
-	 */
-	public function add_accept_header( $args, $url ) {
-		$accept_header = [];
-		if ( ! str_contains( $url, 'api.github.com' ) ) {
-			return $args;
-		}
-		foreach ( $this->release->artifacts->package[0] as $key => $value ) {
-			$key = str_replace( '-', '_', $key );
-			$artifact_arr[ $key ] = $value;
-		}
-		if ( $artifact_arr['content_type'] === 'application/octet-stream' ) {
-				$accept_header = [ 'headers' => [ 'Accept' => 'application/octet-stream' ] ];
-		}
-		if ( ! empty( $accept_header ) && str_contains( $url, $this->metadata->slug ) ) {
-			$args = array_merge( $args, $accept_header );
-		}
-
-		return $args;
-	}
-
-	/**
 	 * Get update data for use with transient and API responses.
 	 *
 	 * @return array
