@@ -41,10 +41,10 @@ class Updater {
 	protected $type;
 
 	/** @var \FAIR\Packages\MetadataDocument */
-	protected $metadata;
+	public $metadata;
 
 	/** @var \FAIR\Packages\ReleaseDocument */
-	protected $release;
+	public $release;
 
 	// phpcs:enable
 
@@ -185,14 +185,13 @@ class Updater {
 			add_filter( 'wp_prepare_themes_for_js', [ $this, 'customize_theme_update_html' ] );
 		}
 
-		// Load hook for adding authentication headers for download packages.
-		add_filter(
-			'upgrader_pre_download',
-			function () {
-				add_filter( 'http_request_args', [ $this, 'add_accept_header' ], 20, 2 );
-				return false; // upgrader_pre_download filter default return value.
-			}
-		);
+		/**
+		 * Fires before upgrader_pre_download to use object data in filters.
+		 *
+		 * @param Updater Current class object.
+		 */
+		do_action( 'get_fair_document_data', $this );
+		add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download' );
 	}
 
 	/**

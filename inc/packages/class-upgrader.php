@@ -19,14 +19,14 @@ class Upgrader extends WP_Upgrader {
 	 *
 	 * @var MetadataDocument
 	 */
-	protected $package;
+	public $package;
 
 	/**
 	 * Release document.
 	 *
 	 * @var ReleaseDocument
 	 */
-	protected $release;
+	public $release;
 
 	/**
 	 * Is this an upgrade?
@@ -240,6 +240,15 @@ class Upgrader extends WP_Upgrader {
 
 		// Resolve the release artifact to a URL.
 		$artifact = pick_artifact_by_lang( $this->release->artifacts->package );
+
+
+		/**
+		 * Fires before upgrader_pre_download to use object data in filters.
+		 *
+		 * @param Upgrader Current class object.
+		 */
+		do_action( 'get_fair_document_data', $this );
+		add_filter( 'upgrader_pre_download', 'FAIR\\Updater\\upgrader_pre_download' );
 
 		// Download the package.
 		$path = $this->download_package( $artifact->url, false, $options['hook_extra'] );

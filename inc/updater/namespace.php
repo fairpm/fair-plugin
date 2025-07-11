@@ -12,6 +12,64 @@ namespace FAIR\Updater;
  */
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\run' );
+	add_action( 'get_fair_document_data', __NAMESPACE__ . '\\get_fair_document_data', 10, 1 );
+}
+
+/**
+ * Get FAIR MetadataDocument and ReleaseDocument data.
+ *
+ * Sets global variables for use in add_accept_header().
+ *
+ * @param stdClass $obj FAIR\Packages\Upgrader | FAIR\Updater\Updater.
+ *
+ * @return void
+ */
+function get_fair_document_data( $obj ) {
+	global $metadata, $release;
+	$metadata = $obj->metadata ?? $obj->package;
+	$release = $obj->release;
+}
+
+/**
+ * Send upgrader_pre_download filter to add_accept_header().
+ *
+ * @return bool
+ */
+function upgrader_pre_download() {
+	add_filter( 'http_request_args', __NAMESPACE__ . '\\add_accept_header', 20, 2 );
+	return false; // upgrader_pre_download filter default return value.
+}
+
+/**
+ * Add accept header for release asset package binary.
+ *
+ * ReleaseDocument artifact package content-type will be application/octet-stream.
+ * Only for GitHub release assets.
+ *
+ * @param array  $args Array of http args.
+ * @param string $url  Download URL.
+ *
+ * @return array
+ */
+function add_accept_header( $args, $url ) {
+	global $metadata, $release;
+
+	$accept_header = [];
+	if ( ! str_contains( $url, 'api.github.com' ) ) {
+		return $args;
+	}
+	foreach ( $release->artifacts->package[0] as $key => $value ) {
+		$key = str_replace( '-', '_', $key );
+		$artifact_arr[ $key ] = $value;
+	}
+	if ( $artifact_arr['content_type'] === 'application/octet-stream' ) {
+		$accept_header = [ 'headers' => [ 'Accept' => 'application/octet-stream' ] ];
+	}
+	if ( ! empty( $accept_header ) && str_contains( $url, $metadata->slug ) ) {
+		$args = array_merge( $args, $accept_header );
+	}
+
+	return $args;
 }
 
 /**
