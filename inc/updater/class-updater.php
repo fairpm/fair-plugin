@@ -300,20 +300,32 @@ class Updater {
 	}
 
 	/**
-	 * Add accept header for release asset download package.
+	 * Add accept header for release asset package binary.
+	 *
+	 * ReleaseDocument artifact package content-type will be application/octet-stream.
+	 * Only for GitHub release assets.
 	 *
 	 * @param array  $args Array of http args.
 	 * @param string $url  Download URL.
 	 *
-	 * TODO: Need to pass release_asset bool from mini-fair-plugin.
 	 * @return array
 	 */
 	public function add_accept_header( $args, $url ) {
-		$is_release_asset = $this->metadata->release_asset ?? false;
-		$accept_header = [ 'headers' => [ 'Accept' => 'application/octet-stream' ] ];
-		if ( $is_release_asset && str_contains( $url, $this->metadata->slug ) ) {
+		$accept_header = [];
+		if ( ! str_contains( $url, 'api.github.com' ) ) {
+			return $args;
+		}
+		foreach ( $this->release->artifacts->package[0] as $key => $value ) {
+			$key = str_replace( '-', '_', $key );
+			$artifact_arr[ $key ] = $value;
+		}
+		if ( $artifact_arr['content_type'] === 'application/octet-stream' ) {
+				$accept_header = [ 'headers' => [ 'Accept' => 'application/octet-stream' ] ];
+		}
+		if ( ! empty( $accept_header ) && str_contains( $url, $this->metadata->slug ) ) {
 			$args = array_merge( $args, $accept_header );
 		}
+
 		return $args;
 	}
 
