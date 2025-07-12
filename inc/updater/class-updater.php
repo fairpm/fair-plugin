@@ -29,9 +29,11 @@ use WP_Upgrader;
  */
 class Updater {
 
-	// phpcs:disable Generic.Commenting.DocComment.MissingShort
-
-	/** @var string */
+	/**
+	 * DID.
+	 *
+	 * @var string
+	 */
 	protected $did;
 
 	/**
@@ -51,16 +53,26 @@ class Updater {
 	 */
 	protected $local_version;
 
-	/** @var string */
+	/**
+	 * Package type, plugin or theme.
+	 *
+	 * @var string
+	 */
 	protected $type;
 
-	/** @var \FAIR\Packages\MetadataDocument */
+	/**
+	 * Metadata document.
+	 *
+	 * @var \FAIR\Packages\MetadataDocument
+	 */
 	public $metadata;
 
-	/** @var \FAIR\Packages\ReleaseDocument */
+	/**
+	 * Release document.
+	 *
+	 * @var \FAIR\Packages\ReleaseDocument
+	 */
 	public $release;
-
-	// phpcs:enable
 
 	/**
 	 * Constructor.
