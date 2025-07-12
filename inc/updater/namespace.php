@@ -69,9 +69,9 @@ function add_accept_header( $args, $url ) {
 		if ( ! empty( $accept_header ) && str_contains( $url, $metadata->slug ) ) {
 			$args = array_merge( $args, $accept_header );
 		}
-
-		return $args;
 	}
+
+	return $args;
 }
 
 /**
