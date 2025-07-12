@@ -32,10 +32,24 @@ class Updater {
 	// phpcs:disable Generic.Commenting.DocComment.MissingShort
 
 	/** @var string */
-	protected $local_version;
-
-	/** @var string */
 	protected $did;
+
+	/**
+	 * Absolute path to the "main" file.
+	 *
+	 * For plugins, this is the PHP file with the plugin header. For themes,
+	 * this is the style.css file.
+	 *
+	 * @var string
+	 */
+	protected $filepath;
+
+	/**
+	 * Current installed version of the package.
+	 *
+	 * @var string
+	 */
+	protected $local_version;
 
 	/** @var string */
 	protected $type;
@@ -56,7 +70,9 @@ class Updater {
 	 */
 	public function __construct( string $did, string $filepath ) {
 		$this->did = $did;
-		$data  = get_file_data( $filepath, [ 'Version' => 'Version' ] );
+		$this->filepath = $filepath;
+
+		$data = get_file_data( $filepath, [ 'Version' => 'Version' ] );
 		$this->local_version = $data['Version'];
 	}
 
@@ -283,16 +299,16 @@ class Updater {
 			$transient = new stdClass();
 		}
 
+		$rel_path = plugin_basename( $this->filepath );
 		$response = $this->get_update_data();
-		$key = $response['file'];
 		$response = 'plugin' === $this->type ? (object) $response : $response;
 		$is_compatible = check_requirements( $this->release );
 
 		if ( $is_compatible && version_compare( $this->release->version, $this->local_version, '>' ) ) {
-			$transient->response[ $key ] = $response;
+			$transient->response[ $rel_path ] = $response;
 		} else {
 			// Add repo without update to $transient->no_update for 'View details' link.
-			$transient->no_update[ $key ] = $response;
+			$transient->no_update[ $rel_path ] = $response;
 		}
 
 		return $transient;
