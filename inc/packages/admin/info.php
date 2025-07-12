@@ -7,6 +7,7 @@
 
 namespace FAIR\Packages\Admin\Info;
 
+use FAIR\Packages;
 use FAIR\Packages\Admin;
 use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
@@ -165,7 +166,7 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 
 			<div id="section-holder">
 			<?php
-			check_requirements( $latest );
+			add_requirement_notices( $latest );
 			foreach ( $sections as $section_id => $content ) {
 				$prepared = sanitize_html( $content );
 				$prepared = links_add_target( $prepared, '_blank' );
@@ -324,53 +325,19 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 }
 
 /**
- * Get version requirements.
+ * Check requirements, and add notices if not met.
  *
  * @param ReleaseDocument $release Release document.
- *
- * @return array
+ * @return void
  */
-function version_requirements( ReleaseDocument $release ) {
-	$required_versions = [];
-	foreach ( $release->requires as $pkg => $vers ) {
-		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
-		if ( $pkg === 'env:php' ) {
-			$required_versions['requires_php'] = $vers;
-		}
-		if ( $pkg === 'env:wp' ) {
-			$required_versions['requires_wp'] = $vers;
-		}
-	}
-	foreach ( $release->suggests as $pkg => $vers ) {
-		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
-		if ( $pkg === 'env:wp' ) {
-			$required_versions['tested_to'] = $vers;
-		}
+function add_requirement_notices( ReleaseDocument $release ) : void {
+	$unmet_requires = Packages\get_unmet_requirements( (array) $release->requires );
+	$unmet_suggests = Packages\get_unmet_requirements( (array) $release->suggests );
+	if ( empty( $unmet_requires ) && empty( $unmet_suggests ) ) {
+		return;
 	}
 
-	return $required_versions;
-}
-
-/**
- * Check requirements.
- *
- * @param  ReleaseDocument $release Release document.
- *
- * @return bool
- */
-function check_requirements( ReleaseDocument $release ) {
-	$required_versions = version_requirements( $release );
-	$requires_php = $required_versions['requires_php'] ?? null;
-	$requires_wp = $required_versions['requires_wp'] ?? null;
-	$tested_to = $required_versions['tested_to'] ?? null;
-
-	$compatible_php = is_php_version_compatible( $requires_php );
-	$compatible_wp  = is_wp_version_compatible( $requires_wp );
-
-	// Set to true if using a development release.
-	$tested_wp = (bool) preg_match( '/alpha|beta|RC/', get_bloginfo( 'version' ) ) ?? ( empty( $tested_to ) || version_compare( get_bloginfo( 'version' ), $tested_to, '<=' ) );
-
-	if ( ! $compatible_php ) {
+	if ( isset( $unmet_requires['env:php'] ) ) {
 		$compatible_php_notice_message  = '<p>';
 		$compatible_php_notice_message .= __( '<strong>Error:</strong> This plugin <strong>requires a newer version of PHP</strong>.', 'fair' );
 
@@ -394,7 +361,8 @@ function check_requirements( ReleaseDocument $release ) {
 		);
 	}
 
-	if ( ! $tested_wp ) {
+	$is_dev = (bool) preg_match( '/alpha|beta|RC/', get_bloginfo( 'version' ) );
+	if ( isset( $unmet_suggests['env:wp'] ) && ! $is_dev ) {
 		wp_admin_notice(
 			__( '<strong>Warning:</strong> This plugin <strong>has not been tested</strong> with your current version of WordPress.', 'fair' ),
 			[
@@ -402,7 +370,7 @@ function check_requirements( ReleaseDocument $release ) {
 				'additional_classes' => [ 'notice-alt' ],
 			]
 		);
-	} elseif ( ! $compatible_wp ) {
+	} elseif ( isset( $unmet_requires['env:wp']) ) {
 		$compatible_wp_notice_message = __( '<strong>Error:</strong> This plugin <strong>requires a newer version of WordPress</strong>.', 'fair' );
 		if ( current_user_can( 'update_core' ) ) {
 			$compatible_wp_notice_message .= sprintf(
@@ -420,8 +388,6 @@ function check_requirements( ReleaseDocument $release ) {
 			]
 		);
 	}
-
-	return $compatible_php && $compatible_wp && $tested_to;
 }
 
 /**
@@ -439,7 +405,7 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 	}
 
 	// Do we actually meet the requirements?
-	$compatible = check_requirements( $release );
+	$compatible = Packages\check_requirements( $release );
 
 	$status = 'install'; // todo.
 	switch ( $status ) {

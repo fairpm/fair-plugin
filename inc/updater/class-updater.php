@@ -9,7 +9,7 @@ namespace FAIR\Updater;
 
 use const FAIR\Packages\SERVICE_ID;
 
-use function FAIR\Packages\Admin\Info\check_requirements;
+use FAIR\Packages;
 use function FAIR\Packages\fetch_metadata_doc;
 use function FAIR\Packages\fetch_package_metadata;
 use function FAIR\Packages\get_did_document;
@@ -314,7 +314,7 @@ class Updater {
 		$rel_path = plugin_basename( $this->filepath );
 		$response = $this->get_update_data();
 		$response = 'plugin' === $this->type ? (object) $response : $response;
-		$is_compatible = check_requirements( $this->release );
+		$is_compatible = Packages\check_requirements( $this->release );
 
 		if ( $is_compatible && version_compare( $this->release->version, $this->local_version, '>' ) ) {
 			$transient->response[ $rel_path ] = $response;
