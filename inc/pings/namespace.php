@@ -131,7 +131,7 @@ function ping_indexnow( $new_status, $old_status, $post ) : void {
 	}
 
 	/*
-	 * Skip if both old an new statuses are private.
+	 * Skip if both old and new statuses are private.
 	 *
 	 * The page will have been a 404 before and after.
 	 *
