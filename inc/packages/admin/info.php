@@ -370,7 +370,7 @@ function add_requirement_notices( ReleaseDocument $release ) : void {
 				'additional_classes' => [ 'notice-alt' ],
 			]
 		);
-	} elseif ( isset( $unmet_requires['env:wp']) ) {
+	} elseif ( isset( $unmet_requires['env:wp'] ) ) {
 		$compatible_wp_notice_message = __( '<strong>Error:</strong> This plugin <strong>requires a newer version of WordPress</strong>.', 'fair' );
 		if ( current_user_can( 'update_core' ) ) {
 			$compatible_wp_notice_message .= sprintf(
