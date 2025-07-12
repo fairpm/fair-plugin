@@ -358,55 +358,62 @@ function version_requirements( ReleaseDocument $release ) {
  */
 function get_unmet_requirements( array $requirements ) : array {
 	$unmet = [];
-	foreach ( $requirements as $pkg => $req ) {
-		$req = trim( $req );
-		$comp_spn = strspn( $req, '<>=!' );
-		if ( $comp_spn === 0 ) {
-			// Invalid requirement, for now.
-			continue;
+	foreach ( $requirements as $pkg => $req_list ) {
+		$req_parts = explode( ',', $req_list );
+		$req_unmet = [];
+		foreach ( $req_parts as $req ) {
+			$req = trim( $req );
+			$comp_spn = strspn( $req, '<>=!' );
+			if ( $comp_spn === 0 ) {
+				// Invalid requirement, for now.
+				continue;
+			}
+
+			$comp = trim( substr( $req, 0, $comp_spn ) );
+			$ver = trim( substr( $req, $comp_spn ) );
+
+			switch ( true ) {
+				case $pkg === 'env:wp':
+					// From is_wp_version_compatible()
+					// We use our own copy to allow passing $comp.
+					if (
+						defined( 'WP_RUN_CORE_TESTS' )
+						&& WP_RUN_CORE_TESTS
+						&& isset( $GLOBALS['_wp_tests_wp_version'] )
+					) {
+						$wp_version = $GLOBALS['_wp_tests_wp_version'];
+					} else {
+						$wp_version = wp_get_wp_version();
+					}
+
+					$valid = version_compare( $wp_version, $ver, $comp );
+					if ( ! $valid ) {
+						$req_unmet[] = $req;
+					}
+					break;
+
+				case $pkg === 'env:php':
+					$valid = version_compare( PHP_VERSION, $ver, $comp );
+					if ( ! $valid ) {
+						$req_unmet[] = $req;
+					}
+					break;
+
+				case str_starts_with( $pkg, 'env:php-' ):
+					// todo: check extensions.
+					break;
+
+				case str_starts_with( $pkg, 'env:' ):
+					// todo: check other env, or fail.
+					break;
+
+				default:
+					// todo: check packages.
+					break;
+			}
 		}
-
-		$comp = trim( substr( $req, 0, $comp_spn ) );
-		$ver = trim( substr( $req, $comp_spn ) );
-
-		switch ( true ) {
-			case $pkg === 'env:wp':
-				// From is_wp_version_compatible()
-				// We use our own copy to allow passing $comp
-				if (
-					defined( 'WP_RUN_CORE_TESTS' )
-					&& WP_RUN_CORE_TESTS
-					&& isset( $GLOBALS['_wp_tests_wp_version'] )
-				) {
-					$wp_version = $GLOBALS['_wp_tests_wp_version'];
-				} else {
-					$wp_version = wp_get_wp_version();
-				}
-
-				$valid = version_compare( $wp_version, $ver, $comp );
-				if ( ! $valid ) {
-					$unmet[ $pkg ] = $req;
-				}
-				break;
-
-			case $pkg === 'env:php':
-				$valid = version_compare( PHP_VERSION, $ver, $comp );
-				if ( ! $valid ) {
-					$unmet[ $pkg ] = $req;
-				}
-				break;
-
-			case str_starts_with( $pkg, 'env:php-' ):
-				// todo: check extensions.
-				break;
-
-			case str_starts_with( $pkg, 'env:' ):
-				// todo: check other env, or fail.
-				break;
-
-			default:
-				// todo: check packages.
-				break;
+		if ( ! empty( $req_unmet ) ) {
+			$unmet[ $pkg ] = implode( ', ', $req_unmet );
 		}
 	}
 
