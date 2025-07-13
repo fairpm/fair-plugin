@@ -88,32 +88,6 @@ class Updater {
 	}
 
 	/**
-	 * Get the required versions, (PHP, WP, Tested to).
-	 *
-	 * @return array
-	 */
-	protected function get_required_versions() {
-		$required_versions = [];
-		foreach ( $this->release->requires as $pkg => $vers ) {
-			$vers = preg_replace( '/^[^0-9]+/', '', $vers );
-			if ( $pkg === 'env:php' ) {
-				$required_versions['requires_php'] = $vers;
-			}
-			if ( $pkg === 'env:wp' ) {
-				$required_versions['requires_wp'] = $vers;
-			}
-		}
-		foreach ( $this->release->suggests as $pkg => $vers ) {
-			$vers = preg_replace( '/^[^0-9]+/', '', $vers );
-			if ( $pkg === 'env:wp' ) {
-				$required_versions['tested_to'] = $vers;
-			}
-		}
-
-		return $required_versions;
-	}
-
-	/**
 	 * Get API data.
 	 *
 	 * @global string $pagenow Current page.
@@ -332,7 +306,7 @@ class Updater {
 	 * @return array
 	 */
 	public function get_update_data() {
-		$required_versions = $this->get_required_versions();
+		$required_versions = Packages\version_requirements( $this->release );
 		if ( 'plugin' === $this->type ) {
 			list( $slug, $file ) = explode( '/', $this->metadata->filename, 2 );
 			$slug .= '-' . get_did_hash( $this->metadata->id );
