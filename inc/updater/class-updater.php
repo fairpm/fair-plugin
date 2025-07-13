@@ -14,7 +14,6 @@ use function FAIR\Packages\fetch_metadata_doc;
 use function FAIR\Packages\fetch_package_metadata;
 use function FAIR\Packages\get_did_document;
 use function FAIR\Packages\get_did_hash;
-use function FAIR\Packages\get_file_with_did_hash;
 use function FAIR\Packages\pick_release;
 
 use Plugin_Upgrader;
@@ -333,9 +332,13 @@ class Updater {
 	 */
 	public function get_update_data() {
 		$required_versions = $this->get_required_versions();
-		$filename = 'plugin' === $this->type
-			? get_file_with_did_hash( $this->metadata->id, $this->metadata->filename )
-			: $this->metadata->slug . '-' . get_did_hash( $this->metadata->id );
+		if ( $this->type === 'plugin' ) {
+			list( $slug, $file ) = explode( '/', $this->metadata->filename, 2 );
+			$slug .= '-' . get_did_hash( $this->metadata->id );
+			$filename = $slug . '/' . $file;
+		} else {
+			$filename = $this->metadata->slug . '-' . get_did_hash( $this->metadata->id );
+		}
 
 		$response = [
 			'name'             => $this->metadata->name,
