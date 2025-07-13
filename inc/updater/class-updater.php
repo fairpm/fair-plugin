@@ -332,7 +332,7 @@ class Updater {
 	 */
 	public function get_update_data() {
 		$required_versions = $this->get_required_versions();
-		if ( $this->type === 'plugin' ) {
+		if ( 'plugin' === $this->type ) {
 			list( $slug, $file ) = explode( '/', $this->metadata->filename, 2 );
 			$slug .= '-' . get_did_hash( $this->metadata->id );
 			$filename = $slug . '/' . $file;
