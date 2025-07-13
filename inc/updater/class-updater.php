@@ -311,6 +311,7 @@ class Updater {
 		}
 
 		$rel_path = plugin_basename( $this->filepath );
+		$rel_path = 'theme' === $this->type ? dirname( $rel_path ) : $rel_path;
 		$response = $this->get_update_data();
 		$response = 'plugin' === $this->type ? (object) $response : $response;
 		$is_compatible = Packages\check_requirements( $this->release );
