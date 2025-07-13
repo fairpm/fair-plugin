@@ -24,7 +24,7 @@ function bootstrap() {
  *
  * @return void
  */
-function get_fair_document_data( $obj ) {
+function get_fair_document_data( $obj ) : void {
 	global $metadata, $release;
 	$metadata = $obj->metadata ?? $obj->package;
 	$release = $obj->release;
@@ -35,7 +35,7 @@ function get_fair_document_data( $obj ) {
  *
  * @return bool
  */
-function upgrader_pre_download() {
+function upgrader_pre_download() : bool {
 	add_filter( 'http_request_args', __NAMESPACE__ . '\\add_accept_header', 20, 2 );
 	return false; // upgrader_pre_download filter default return value.
 }
@@ -54,7 +54,7 @@ function upgrader_pre_download() {
  *
  * @return array
  */
-function add_accept_header( $args, $url ) {
+function add_accept_header( $args, $url ) : array {
 	global $metadata, $release;
 
 	$accept_header = [];
@@ -77,14 +77,9 @@ function add_accept_header( $args, $url ) {
 /**
  * Gather all plugins/themes with data in Update URI and DID header.
  *
- * @return stdClass
+ * @return array
  */
-function get_packages() {
-	/**
-	 * Packages.
-	 *
-	 * @var array
-	 */
+function get_packages() : array {
 	$packages = [];
 
 	// Seems to be required for PHPUnit testing on GitHub workflow.
@@ -120,9 +115,9 @@ function get_packages() {
  *
  * @return array
  */
-function get_icons( $icons ) {
+function get_icons( $icons ) : array {
 	if ( empty( $icons ) ) {
-		return;
+		return [];
 	}
 
 	$icons_arr = [];
@@ -141,7 +136,7 @@ function get_icons( $icons ) {
 	}
 
 	if ( empty( $regular ) && empty( $high_res ) && empty( $svg ) ) {
-		return;
+		return [];
 	}
 
 	$icons_arr['1x'] = $regular->url ?? '';
@@ -158,7 +153,7 @@ function get_icons( $icons ) {
  *
  * @return array
  */
-function get_banners( $banners ) {
+function get_banners( $banners ) : array {
 	if ( empty( $banners ) ) {
 		return [];
 	}
@@ -168,7 +163,7 @@ function get_banners( $banners ) {
 	$high_res = array_find( $banners, fn ( $banner ) => $banner->width === 1544 && $banner->height === 500 );
 
 	if ( empty( $regular ) && empty( $high_res ) ) {
-		return;
+		return [];
 	}
 
 	$banners_arr['low'] = $regular->url;
