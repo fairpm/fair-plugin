@@ -205,7 +205,7 @@ class Updater {
 	 *
 	 * @throws TypeError If the type of $upgrader is not correct.
 	 *
-	 * @return string|WP_Error
+	 * @return string
 	 */
 	public function upgrader_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
 		global $wp_filesystem;
