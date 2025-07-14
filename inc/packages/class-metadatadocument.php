@@ -43,13 +43,6 @@ class MetadataDocument {
 	public $slug;
 
 	/**
-	 * File name.
-	 *
-	 * @var string
-	 */
-	public $filename;
-
-	/**
 	 * License.
 	 *
 	 * @var string
@@ -131,7 +124,6 @@ class MetadataDocument {
 		$optional = [
 			'name',
 			'slug',
-			'filename',
 			'description',
 			'keywords',
 			'sections',
