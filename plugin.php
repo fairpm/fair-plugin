@@ -37,6 +37,7 @@ require_once __DIR__ . '/inc/user-notification/namespace.php';
 require_once __DIR__ . '/inc/version-check/namespace.php';
 
 // External dependencies.
+require_once __DIR__ . '/inc/compatibility/compat.php';
 require_once __DIR__ . '/inc/updater/class-lite.php';
 
 /**
