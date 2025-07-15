@@ -59,7 +59,7 @@ if ( ! function_exists( '_wp_can_use_pcre_u' ) ) {
 }
 
 // If _is_utf8_charset is already loaded.
-if ( function_exists( '_is_utf8_charset' ) ) {
+if ( ! function_exists( '_is_utf8_charset' ) ) {
 	/**
 	 * Indicates if a given slug for a character set represents the UTF-8 text encoding.
 	 *
