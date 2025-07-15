@@ -70,7 +70,7 @@ function run() {
 	$packages = get_packages();
 	$plugins = $packages['plugins'] ?? [];
 	$themes = $packages['themes'] ?? [];
-	$packages = array_merge( $plugins, $themes);
+	$packages = array_merge( $plugins, $themes );
 	foreach ( $packages as $package ) {
 		( new Git_Updater\Lite( $package ) )->run();
 	}
