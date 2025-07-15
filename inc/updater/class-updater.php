@@ -307,7 +307,9 @@ class Updater {
 		$required_versions = Packages\version_requirements( $this->release );
 		if ( 'plugin' === $this->type ) {
 			list( $slug, $file ) = explode( '/', plugin_basename( $this->filepath ), 2 );
-			$slug .= '-' . get_did_hash( $this->metadata->id );
+			if ( ! str_contains( $slug, '-' . get_did_hash( $this->metadata->id ) ) ) {
+				$slug .= '-' . get_did_hash( $this->metadata->id );
+			}
 			$filename = $slug . '/' . $file;
 		} else {
 			$filename = $this->metadata->slug . '-' . get_did_hash( $this->metadata->id );
