@@ -82,9 +82,7 @@ class Updater {
 	public function __construct( string $did, string $filepath ) {
 		$this->did = $did;
 		$this->filepath = $filepath;
-
-		$data = get_file_data( $filepath, [ 'Version' => 'Version' ] );
-		$this->local_version = $data['Version'];
+		$this->local_version = get_file_data( $filepath, [ 'Version' => 'Version' ] )['Version'];
 	}
 
 	/**
