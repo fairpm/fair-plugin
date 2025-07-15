@@ -173,7 +173,7 @@ function get_banners( $banners ) : array {
 }
 
 /**
- * Run Git Updater Lite for potential packages.
+ * Run FAIR\Updater\Updater for potential packages.
  *
  * @return void
  */
