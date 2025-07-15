@@ -28,68 +28,74 @@ if ( ! function_exists( '_' ) ) {
 	}
 }
 
-/**
- * Returns whether PCRE/u (PCRE_UTF8 modifier) is available for use.
- *
- * @ignore
- * @since 4.2.2
- * @access private
- *
- * @param bool $set - Used for testing only
- *             null   : default - get PCRE/u capability
- *             false  : Used for testing - return false for future calls to this function
- *             'reset': Used for testing - restore default behavior of this function
- */
-function _wp_can_use_pcre_u( $set = null ) {
-	static $utf8_pcre = 'reset';
+// If _wp_can_use_pcre_u is already loaded.
+if ( ! function_exists( '_wp_can_use_pcre_u' ) ) {
+	/**
+	 * Returns whether PCRE/u (PCRE_UTF8 modifier) is available for use.
+	 *
+	 * @ignore
+	 * @since 4.2.2
+	 * @access private
+	 *
+	 * @param bool $set - Used for testing only
+	 *             null   : default - get PCRE/u capability
+	 *             false  : Used for testing - return false for future calls to this function
+	 *             'reset': Used for testing - restore default behavior of this function
+	 */
+	function _wp_can_use_pcre_u( $set = null ) {
+		static $utf8_pcre = 'reset';
 
-	if ( null !== $set ) {
-		$utf8_pcre = $set;
+		if ( null !== $set ) {
+			$utf8_pcre = $set;
+		}
+
+		if ( 'reset' === $utf8_pcre ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- intentional error generated to detect PCRE/u support.
+			$utf8_pcre = @preg_match( '/^./u', 'a' );
+		}
+
+		return $utf8_pcre;
 	}
-
-	if ( 'reset' === $utf8_pcre ) {
-		// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- intentional error generated to detect PCRE/u support.
-		$utf8_pcre = @preg_match( '/^./u', 'a' );
-	}
-
-	return $utf8_pcre;
 }
 
-/**
- * Indicates if a given slug for a character set represents the UTF-8 text encoding.
- *
- * A charset is considered to represent UTF-8 if it is a case-insensitive match
- * of "UTF-8" with or without the hyphen.
- *
- * Example:
- *
- *     true  === _is_utf8_charset( 'UTF-8' );
- *     true  === _is_utf8_charset( 'utf8' );
- *     false === _is_utf8_charset( 'latin1' );
- *     false === _is_utf8_charset( 'UTF 8' );
- *
- *     // Only strings match.
- *     false === _is_utf8_charset( [ 'charset' => 'utf-8' ] );
- *
- * `is_utf8_charset` should be used outside of this file.
- *
- * @ignore
- * @since 6.6.1
- *
- * @param string $charset_slug Slug representing a text character encoding, or "charset".
- *                             E.g. "UTF-8", "Windows-1252", "ISO-8859-1", "SJIS".
- *
- * @return bool Whether the slug represents the UTF-8 encoding.
- */
-function _is_utf8_charset( $charset_slug ) {
-	if ( ! is_string( $charset_slug ) ) {
-		return false;
-	}
+// If _is_utf8_charset is already loaded.
+if ( function_exists( '_is_utf8_charset' ) ) {
+	/**
+	 * Indicates if a given slug for a character set represents the UTF-8 text encoding.
+	 *
+	 * A charset is considered to represent UTF-8 if it is a case-insensitive match
+	 * of "UTF-8" with or without the hyphen.
+	 *
+	 * Example:
+	 *
+	 *     true  === _is_utf8_charset( 'UTF-8' );
+	 *     true  === _is_utf8_charset( 'utf8' );
+	 *     false === _is_utf8_charset( 'latin1' );
+	 *     false === _is_utf8_charset( 'UTF 8' );
+	 *
+	 *     // Only strings match.
+	 *     false === _is_utf8_charset( [ 'charset' => 'utf-8' ] );
+	 *
+	 * `is_utf8_charset` should be used outside of this file.
+	 *
+	 * @ignore
+	 * @since 6.6.1
+	 *
+	 * @param string $charset_slug Slug representing a text character encoding, or "charset".
+	 *                             E.g. "UTF-8", "Windows-1252", "ISO-8859-1", "SJIS".
+	 *
+	 * @return bool Whether the slug represents the UTF-8 encoding.
+	 */
+	function _is_utf8_charset( $charset_slug ) {
+		if ( ! is_string( $charset_slug ) ) {
+			return false;
+		}
 
-	return (
-		0 === strcasecmp( 'UTF-8', $charset_slug ) ||
-		0 === strcasecmp( 'UTF8', $charset_slug )
-	);
+		return (
+			0 === strcasecmp( 'UTF-8', $charset_slug ) ||
+			0 === strcasecmp( 'UTF8', $charset_slug )
+		);
+	}
 }
 
 if ( ! function_exists( 'mb_substr' ) ) :
@@ -113,48 +119,50 @@ if ( ! function_exists( 'mb_substr' ) ) :
 	}
 endif;
 
-/**
- * Internal compat function to mimic mb_substr().
- *
- * Only understands UTF-8 and 8bit. All other character sets will be treated as 8bit.
- * For `$encoding === UTF-8`, the `$str` input is expected to be a valid UTF-8 byte
- * sequence. The behavior of this function for invalid inputs is undefined.
- *
- * @ignore
- * @since 3.2.0
- *
- * @param string      $str      The string to extract the substring from.
- * @param int         $start    Position to being extraction from in `$str`.
- * @param int|null    $length   Optional. Maximum number of characters to extract from `$str`.
- *                              Default null.
- * @param string|null $encoding Optional. Character encoding to use. Default null.
- * @return string Extracted substring.
- */
-function _mb_substr( $str, $start, $length = null, $encoding = null ) {
-	if ( null === $str ) {
-		return '';
-	}
-
-	if ( null === $encoding ) {
-		$encoding = get_option( 'blog_charset' );
-	}
-
-	/*
-	 * The solution below works only for UTF-8, so in case of a different
-	 * charset just use built-in substr().
+// If _mb_substr already loaded.
+if ( ! function_exists( '_mb_substr' ) ) {
+	/**
+	 * Internal compat function to mimic mb_substr().
+	 *
+	 * Only understands UTF-8 and 8bit. All other character sets will be treated as 8bit.
+	 * For `$encoding === UTF-8`, the `$str` input is expected to be a valid UTF-8 byte
+	 * sequence. The behavior of this function for invalid inputs is undefined.
+	 *
+	 * @ignore
+	 * @since 3.2.0
+	 *
+	 * @param string      $str      The string to extract the substring from.
+	 * @param int         $start    Position to being extraction from in `$str`.
+	 * @param int|null    $length   Optional. Maximum number of characters to extract from `$str`.
+	 *                              Default null.
+	 * @param string|null $encoding Optional. Character encoding to use. Default null.
+	 * @return string Extracted substring.
 	 */
-	if ( ! _is_utf8_charset( $encoding ) ) {
-		return is_null( $length ) ? substr( $str, $start ) : substr( $str, $start, $length );
-	}
+	function _mb_substr( $str, $start, $length = null, $encoding = null ) {
+		if ( null === $str ) {
+			return '';
+		}
 
-	if ( _wp_can_use_pcre_u() ) {
-		// Use the regex unicode support to separate the UTF-8 characters into an array.
-		preg_match_all( '/./us', $str, $match );
-		$chars = is_null( $length ) ? array_slice( $match[0], $start ) : array_slice( $match[0], $start, $length );
-		return implode( '', $chars );
-	}
+		if ( null === $encoding ) {
+			$encoding = get_option( 'blog_charset' );
+		}
 
-	$regex = '/(
+		/*
+		 * The solution below works only for UTF-8, so in case of a different
+		 * charset just use built-in substr().
+		 */
+		if ( ! _is_utf8_charset( $encoding ) ) {
+			return is_null( $length ) ? substr( $str, $start ) : substr( $str, $start, $length );
+		}
+
+		if ( _wp_can_use_pcre_u() ) {
+			// Use the regex unicode support to separate the UTF-8 characters into an array.
+			preg_match_all( '/./us', $str, $match );
+			$chars = is_null( $length ) ? array_slice( $match[0], $start ) : array_slice( $match[0], $start, $length );
+			return implode( '', $chars );
+		}
+
+		$regex = '/(
 		[\x00-\x7F]                  # single-byte sequences   0xxxxxxx
 		| [\xC2-\xDF][\x80-\xBF]       # double-byte sequences   110xxxxx 10xxxxxx
 		| \xE0[\xA0-\xBF][\x80-\xBF]   # triple-byte sequences   1110xxxx 10xxxxxx * 2
@@ -171,20 +179,21 @@ function _mb_substr( $str, $start, $length = null, $encoding = null ) {
 
 	do {
 		// We had some string left over from the last round, but we counted it in that last round.
-		array_pop( $chars );
+			array_pop( $chars );
 
-		/*
-		 * Split by UTF-8 character, limit to 1000 characters (last array element will contain
-		 * the rest of the string).
-		 */
-		$pieces = preg_split( $regex, $str, 1000, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
+			/*
+			 * Split by UTF-8 character, limit to 1000 characters (last array element will contain
+			 * the rest of the string).
+			 */
+			$pieces = preg_split( $regex, $str, 1000, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY );
 
-		$chars = array_merge( $chars, $pieces );
+			$chars = array_merge( $chars, $pieces );
 
-		// If there's anything left over, repeat the loop.
-	} while ( count( $pieces ) > 1 && $str = array_pop( $pieces ) );
+			// If there's anything left over, repeat the loop.
+		} while ( count( $pieces ) > 1 && $str = array_pop( $pieces ) );
 
-	return implode( '', array_slice( $chars, $start, $length ) );
+		return implode( '', array_slice( $chars, $start, $length ) );
+	}
 }
 
 if ( ! function_exists( 'mb_strlen' ) ) :
@@ -205,40 +214,42 @@ if ( ! function_exists( 'mb_strlen' ) ) :
 	}
 endif;
 
-/**
- * Internal compat function to mimic mb_strlen().
- *
- * Only understands UTF-8 and 8bit. All other character sets will be treated as 8bit.
- * For `$encoding === UTF-8`, the `$str` input is expected to be a valid UTF-8 byte
- * sequence. The behavior of this function for invalid inputs is undefined.
- *
- * @ignore
- * @since 4.2.0
- *
- * @param string      $str      The string to retrieve the character length from.
- * @param string|null $encoding Optional. Character encoding to use. Default null.
- * @return int String length of `$str`.
- */
-function _mb_strlen( $str, $encoding = null ) {
-	if ( null === $encoding ) {
-		$encoding = get_option( 'blog_charset' );
-	}
-
-	/*
-	 * The solution below works only for UTF-8, so in case of a different charset
-	 * just use built-in strlen().
+// If _mb_strlen is already loaded.
+if ( ! function_exists( '_mb_strlen' ) ) {
+	/**
+	 * Internal compat function to mimic mb_strlen().
+	 *
+	 * Only understands UTF-8 and 8bit. All other character sets will be treated as 8bit.
+	 * For `$encoding === UTF-8`, the `$str` input is expected to be a valid UTF-8 byte
+	 * sequence. The behavior of this function for invalid inputs is undefined.
+	 *
+	 * @ignore
+	 * @since 4.2.0
+	 *
+	 * @param string      $str      The string to retrieve the character length from.
+	 * @param string|null $encoding Optional. Character encoding to use. Default null.
+	 * @return int String length of `$str`.
 	 */
-	if ( ! _is_utf8_charset( $encoding ) ) {
-		return strlen( $str );
-	}
+	function _mb_strlen( $str, $encoding = null ) {
+		if ( null === $encoding ) {
+			$encoding = get_option( 'blog_charset' );
+		}
 
-	if ( _wp_can_use_pcre_u() ) {
-		// Use the regex unicode support to separate the UTF-8 characters into an array.
-		preg_match_all( '/./us', $str, $match );
-		return count( $match[0] );
-	}
+		/*
+		 * The solution below works only for UTF-8, so in case of a different charset
+		 * just use built-in strlen().
+		 */
+		if ( ! _is_utf8_charset( $encoding ) ) {
+			return strlen( $str );
+		}
 
-	$regex = '/(?:
+		if ( _wp_can_use_pcre_u() ) {
+			// Use the regex unicode support to separate the UTF-8 characters into an array.
+			preg_match_all( '/./us', $str, $match );
+			return count( $match[0] );
+		}
+
+		$regex = '/(?:
 		[\x00-\x7F]                  # single-byte sequences   0xxxxxxx
 		| [\xC2-\xDF][\x80-\xBF]       # double-byte sequences   110xxxxx 10xxxxxx
 		| \xE0[\xA0-\xBF][\x80-\xBF]   # triple-byte sequences   1110xxxx 10xxxxxx * 2
@@ -250,27 +261,28 @@ function _mb_strlen( $str, $encoding = null ) {
 		| \xF4[\x80-\x8F][\x80-\xBF]{2}
 	)/x';
 
-	// Start at 1 instead of 0 since the first thing we do is decrement.
-	$count = 1;
+		// Start at 1 instead of 0 since the first thing we do is decrement.
+		$count = 1;
 
-	do {
-		// We had some string left over from the last round, but we counted it in that last round.
-		--$count;
+		do {
+			// We had some string left over from the last round, but we counted it in that last round.
+			--$count;
 
-		/*
-		 * Split by UTF-8 character, limit to 1000 characters (last array element will contain
-		 * the rest of the string).
-		 */
-		$pieces = preg_split( $regex, $str, 1000 );
+			/*
+			 * Split by UTF-8 character, limit to 1000 characters (last array element will contain
+			 * the rest of the string).
+			 */
+			$pieces = preg_split( $regex, $str, 1000 );
 
-		// Increment.
-		$count += count( $pieces );
+			// Increment.
+			$count += count( $pieces );
 
-		// If there's anything left over, repeat the loop.
-	} while ( $str = array_pop( $pieces ) );
+			// If there's anything left over, repeat the loop.
+		} while ( $str = array_pop( $pieces ) );
 
-	// Fencepost: preg_split() always returns one extra item in the array.
-	return --$count;
+		// Fencepost: preg_split() always returns one extra item in the array.
+		return --$count;
+	}
 }
 
 // sodium_crypto_box() was introduced in PHP 7.2.
@@ -334,7 +346,7 @@ if ( ! function_exists( 'array_key_last' ) ) {
 	 *
 	 * @param array $array An array.
 	 * @return string|int|null The last key of array if the array
-	 *.                        is not empty; `null` otherwise.
+	 *                         is not empty; `null` otherwise.
 	 */
 	function array_key_last( array $array ) { // phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.arrayFound
 		if ( empty( $array ) ) {
