@@ -36,7 +36,7 @@ jobs:
     strategy:
       matrix:
         php-version: [ '7.4', '8.0', '8.1', '8.2', '8.3', '8.4' ]
-        wp-version: [ '5.4', '5.5', '5.6', '5.7', '5.8', '5.9', '6.0', '6.1', '6.2', '6.3', '6.4', '6.5', '6.6', '6.7' ]
+        wp-version: [ '6.4', '6.5', '6.6', '6.7' ]
         exclude:
           # PHP 8.4 exclusions
           - wp-version: '6.6'
@@ -45,88 +45,6 @@ jobs:
             php-version: '8.4'
           - wp-version: '6.4'
             php-version: '8.4'
-          - wp-version: '6.3'
-            php-version: '8.4'
-          - wp-version: '6.2'
-            php-version: '8.4'
-          - wp-version: '6.1'
-            php-version: '8.4'
-          - wp-version: '6.0'
-            php-version: '8.4'
-          - wp-version: '5.9'
-            php-version: '8.4'
-          - wp-version: '5.8'
-            php-version: '8.4'
-          - wp-version: '5.7'
-            php-version: '8.4'
-          - wp-version: '5.6'
-            php-version: '8.4'
-          - wp-version: '5.5'
-            php-version: '8.4'
-          - wp-version: '5.4'
-            php-version: '8.4'
-
-          # PHP 8.3 exclusions
-          - wp-version: '6.3'
-            php-version: '8.3'
-          - wp-version: '6.2'
-            php-version: '8.3'
-          - wp-version: '6.1'
-            php-version: '8.3'
-          - wp-version: '6.0'
-            php-version: '8.3'
-          - wp-version: '5.9'
-            php-version: '8.3'
-          - wp-version: '5.8'
-            php-version: '8.3'
-          - wp-version: '5.7'
-            php-version: '8.3'
-          - wp-version: '5.6'
-            php-version: '8.3'
-          - wp-version: '5.5'
-            php-version: '8.3'
-          - wp-version: '5.4'
-            php-version: '8.3'
-
-          # PHP 8.2 exclusions
-          - wp-version: '6.0'
-            php-version: '8.2'
-          - wp-version: '5.9'
-            php-version: '8.2'
-          - wp-version: '5.8'
-            php-version: '8.2'
-          - wp-version: '5.7'
-            php-version: '8.2'
-          - wp-version: '5.6'
-            php-version: '8.2'
-          - wp-version: '5.5'
-            php-version: '8.2'
-          - wp-version: '5.4'
-            php-version: '8.2'
-
-          # PHP 8.1 exclusions
-          - wp-version: '5.8'
-            php-version: '8.1'
-          - wp-version: '5.7'
-            php-version: '8.1'
-          - wp-version: '5.6'
-            php-version: '8.1'
-          - wp-version: '5.5'
-            php-version: '8.1'
-          - wp-version: '5.4'
-            php-version: '8.1'
-
-          # PHP 8 exclusions
-          - wp-version: '5.8' # Should work, currently doesn't.
-            php-version: '8.0'
-          - wp-version: '5.7' # Should work, currently doesn't.
-            php-version: '8.0'
-          - wp-version: '5.6' # Introduced PHP 8 beta support. Should work, currently doesn't.
-            php-version: '8.0'
-          - wp-version: '5.5'
-            php-version: '8.0'
-          - wp-version: '5.4'
-            php-version: '8.0'
 
     steps:
       - name: Checkout
