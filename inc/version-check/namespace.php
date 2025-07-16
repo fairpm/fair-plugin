@@ -66,11 +66,11 @@ function bootstrap() {
  * @return bool|array Replaced value, or false to proceed.
  */
 function replace_browser_version_check( $value, $args, $url ) {
-	if ( strpos( $url, 'api.wordpress.org/core/browse-happy' ) !== false ) {
+	if ( str_contains( $url, 'api.wordpress.org/core/browse-happy' ) ) {
 		$agent = $args['body']['useragent'];
 		return get_browser_check_response( $agent );
 	}
-	if ( strpos( $url, 'api.wordpress.org/core/serve-happy' ) !== false ) {
+	if ( str_contains( $url, 'api.wordpress.org/core/serve-happy' ) ) {
 		$query = parse_url( $url, PHP_URL_QUERY );
 		$url_args = wp_parse_args( $query );
 		return get_server_check_response( $url_args['php_version'] ?? PHP_VERSION );

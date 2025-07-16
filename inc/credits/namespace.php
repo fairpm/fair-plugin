@@ -45,7 +45,7 @@ function replace_credits_api( $response, array $parsed_args, string $url ) {
 	}
 
 	// Credits API 1.0 returns a serialized value rather than JSON.
-	if ( strpos( $url, 'credits/1.0' ) !== false ) {
+	if ( str_contains( $url, 'credits/1.0' ) ) {
 		$credits = serialize( json_decode( $credits, true ) );
 	}
 
