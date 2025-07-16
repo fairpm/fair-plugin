@@ -54,7 +54,7 @@ function bootstrap() {
 function register_class_path( string $prefix, string $path ) : void {
 	$prefix_length = strlen( $prefix );
 	spl_autoload_register( function ( $class ) use ( $prefix, $prefix_length, $path ) {
-		if ( strpos( $class, $prefix . NS_SEPARATOR ) !== 0 ) {
+		if ( ! str_starts_with( $class, $prefix . NS_SEPARATOR ) ) {
 			return;
 		}
 
