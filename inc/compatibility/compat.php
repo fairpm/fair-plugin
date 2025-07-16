@@ -174,11 +174,11 @@ if ( ! function_exists( '_mb_substr' ) ) {
 		| \xF4[\x80-\x8F][\x80-\xBF]{2}
 	)/x';
 
-	// Start with 1 element instead of 0 since the first thing we do is pop.
-	$chars = array( '' );
+		// Start with 1 element instead of 0 since the first thing we do is pop.
+		$chars = [ '' ];
 
-	do {
-		// We had some string left over from the last round, but we counted it in that last round.
+		do {
+			// We had some string left over from the last round, but we counted it in that last round.
 			array_pop( $chars );
 
 			/*
