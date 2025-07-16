@@ -98,7 +98,7 @@ if ( ! function_exists( '_is_utf8_charset' ) ) {
 	}
 }
 
-if ( ! function_exists( 'mb_substr' ) ) :
+if ( ! function_exists( 'mb_substr' ) ) {
 	/**
 	 * Compat function to mimic mb_substr().
 	 *
@@ -117,7 +117,7 @@ if ( ! function_exists( 'mb_substr' ) ) :
 	function mb_substr( $string, $start, $length = null, $encoding = null ) { // phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.stringFound
 		return _mb_substr( $string, $start, $length, $encoding );
 	}
-endif;
+}
 
 // If _mb_substr already loaded.
 if ( ! function_exists( '_mb_substr' ) ) {
@@ -196,7 +196,7 @@ if ( ! function_exists( '_mb_substr' ) ) {
 	}
 }
 
-if ( ! function_exists( 'mb_strlen' ) ) :
+if ( ! function_exists( 'mb_strlen' ) ) {
 	/**
 	 * Compat function to mimic mb_strlen().
 	 *
@@ -212,7 +212,7 @@ if ( ! function_exists( 'mb_strlen' ) ) :
 	function mb_strlen( $string, $encoding = null ) { // phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.stringFound
 		return _mb_strlen( $string, $encoding );
 	}
-endif;
+}
 
 // If _mb_strlen is already loaded.
 if ( ! function_exists( '_mb_strlen' ) ) {
