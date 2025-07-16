@@ -18,7 +18,7 @@
 	<config name="testVersion" value="7.4-" />
 
 	<!-- Set the minimum support WordPress version -->
-	<config name="minimum_supported_wp_version" value="5.4"/>
+	<config name="minimum_supported_wp_version" value="6.4"/>
 
 	<!-- Set the text domain -->
 	<config name="text_domain" value="fair"/>

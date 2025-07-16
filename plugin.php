@@ -5,7 +5,7 @@
  * Version: 0.3.0
  * Author: FAIR Contributors
  * License: GPLv2
- * Requires at least: 5.4
+ * Requires at least: 6.4
  * Requires PHP: 7.4
  * Text Domain: fair
  * Domain Path: /languages
