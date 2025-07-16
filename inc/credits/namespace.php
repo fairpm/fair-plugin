@@ -30,7 +30,7 @@ function bootstrap() {
  * @return bool|array|WP_Error Replaced value, false to proceed, or WP_Error on failure.
  */
 function replace_credits_api( $response, array $parsed_args, string $url ) {
-	if ( strpos( $url, 'api.wordpress.org/core/credits/' ) === false ) {
+	if ( ! str_contains( $url, 'api.wordpress.org/core/credits/' ) ) {
 		return $response;
 	}
 
