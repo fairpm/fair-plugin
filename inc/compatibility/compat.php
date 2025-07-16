@@ -375,7 +375,7 @@ if ( ! function_exists( 'array_is_list' ) ) {
 	 * @return bool True if array is a list, false otherwise.
 	 */
 	function array_is_list( $arr ) {
-		if ( ( array() === $arr ) || ( array_values( $arr ) === $arr ) ) {
+		if ( ( [] === $arr ) || ( array_values( $arr ) === $arr ) ) {
 			return true;
 		}
 
