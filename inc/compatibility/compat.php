@@ -190,7 +190,7 @@ if ( ! function_exists( '_mb_substr' ) ) {
 			$chars = array_merge( $chars, $pieces );
 
 			// If there's anything left over, repeat the loop.
-		} while ( count( $pieces ) > 1 && $str = array_pop( $pieces ) );
+		} while ( count( $pieces ) > 1 && $str = array_pop( $pieces ) ); // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
 
 		return implode( '', array_slice( $chars, $start, $length ) );
 	}
@@ -278,7 +278,7 @@ if ( ! function_exists( '_mb_strlen' ) ) {
 			$count += count( $pieces );
 
 			// If there's anything left over, repeat the loop.
-		} while ( $str = array_pop( $pieces ) );
+		} while ( $str = array_pop( $pieces ) ); // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition
 
 		// Fencepost: preg_split() always returns one extra item in the array.
 		return --$count;
