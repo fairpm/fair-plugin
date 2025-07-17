@@ -56,6 +56,8 @@
 
 	<rule ref="HM.Functions.NamespacedFunctions.MissingNamespace">
 		<exclude-pattern>inc/icons/svg\.php</exclude-pattern>
+		<exclude-pattern>inc/compatibility/php-polyfill\.php</exclude-pattern>
+		<exclude-pattern>inc/compatibility/wp-polyfill\.php</exclude-pattern>
 	</rule>
 
 	<!-- Exclude the unit tests from the namespace rules -->

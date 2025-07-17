@@ -4,8 +4,6 @@
  * Requires WordPress 5.3
  */
 
-// phpcs:disable HM.Functions.NamespacedFunctions.MissingNamespace
-
 if ( ! function_exists( 'esc_xml' ) ) {
 	/**
 	 * Escaping for XML blocks.
@@ -340,5 +338,3 @@ if ( ! function_exists( 'get_user' ) ) {
 		return get_user_by( 'id', $user_id );
 	}
 }
-
-// phpcs:enable
