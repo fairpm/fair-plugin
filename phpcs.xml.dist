@@ -74,4 +74,8 @@
 		<exclude-pattern>inc/icons/svg\.php</exclude-pattern>
 		<exclude-pattern>tests/phpunit/bootstrap\.php</exclude-pattern>
 	</rule>
+
+	<rule ref="Squiz.PHP.EmbeddedPhp">
+		<exclude-pattern>inc/settings/namespace\.php</exclude-pattern>
+	</rule>
 </ruleset>
