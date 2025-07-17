@@ -55,7 +55,6 @@
 	</rule>
 
 	<rule ref="HM.Functions.NamespacedFunctions.MissingNamespace">
-		<exclude-pattern>inc/compatibility/compat\.php</exclude-pattern>
 		<exclude-pattern>inc/icons/svg\.php</exclude-pattern>
 	</rule>
 
