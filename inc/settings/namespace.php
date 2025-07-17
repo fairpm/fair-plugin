@@ -8,6 +8,7 @@
 namespace FAIR\Settings;
 
 use const FAIR\Avatars\AVATAR_SRC_SETTING_KEY;
+/* phpcs:disable Squiz.PHP.EmbeddedPhp.ContentBeforeOpen, Squiz.PHP.EmbeddedPhp.ContentAfterOpen, Squiz.PHP.EmbeddedPhp.ContentBeforeEnd */
 
 /**
  * Bootstrap.
