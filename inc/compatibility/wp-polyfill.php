@@ -215,7 +215,7 @@ if ( ! function_exists( 'wp_get_admin_notice' ) ) {
 					__FUNCTION__,
 					sprintf(
 					/* translators: %s: The "type" key. */
-						__( 'The %s key must be a string without spaces.' ),
+						__( 'The %s key must be a string without spaces.' ), // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- This intentionally uses WordPress Core's translation string.
 						'<code>type</code>'
 					),
 					'6.4.0'
