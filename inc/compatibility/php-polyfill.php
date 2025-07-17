@@ -4,6 +4,8 @@
  * Requires PHP 7.4
  */
 
+// phpcs:disable HM.Functions.NamespacedFunctions.MissingNamespace
+
 if ( ! function_exists( 'str_contains' ) ) {
 	/**
 	 * Polyfill for `str_contains()` function added in PHP 8.0.
@@ -210,3 +212,5 @@ if ( ! defined( 'IMG_AVIF' ) ) {
 if ( ! defined( 'IMAGETYPE_HEIC' ) ) {
 	define( 'IMAGETYPE_HEIC', 99 );
 }
+
+// phpcs:enable

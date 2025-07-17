@@ -4,6 +4,8 @@
  * Requires WordPress 5.3
  */
 
+// phpcs:disable HM.Functions.NamespacedFunctions.MissingNamespace
+
 if ( ! function_exists( 'esc_xml' ) ) {
 	/**
 	 * Escaping for XML blocks.
@@ -214,8 +216,8 @@ if ( ! function_exists( 'wp_get_admin_notice' ) ) {
 				_doing_it_wrong(
 					__FUNCTION__,
 					sprintf(
-					/* translators: %s: The "type" key. */
-						__( 'The %s key must be a string without spaces.' ), // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- This intentionally uses WordPress Core's translation string.
+						/* translators: %s: The "type" key. */
+						__( 'The %s key must be a string without spaces.' ),
 						'<code>type</code>'
 					),
 					'6.4.0'
@@ -338,3 +340,5 @@ if ( ! function_exists( 'get_user' ) ) {
 		return get_user_by( 'id', $user_id );
 	}
 }
+
+// phpcs:enable
