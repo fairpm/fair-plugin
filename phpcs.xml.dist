@@ -71,7 +71,6 @@
 	<!-- Exclude some files from the side effects rules -->
 	<rule ref="PSR1.Files.SideEffects">
 		<exclude-pattern>plugin\.php</exclude-pattern>
-		<exclude-pattern>inc/compatibility/compat\.php</exclude-pattern>
 		<exclude-pattern>inc/icons/svg\.php</exclude-pattern>
 		<exclude-pattern>tests/phpunit/bootstrap\.php</exclude-pattern>
 	</rule>
