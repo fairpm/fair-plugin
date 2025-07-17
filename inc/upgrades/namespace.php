@@ -7,9 +7,9 @@
 
 namespace FAIR\Upgrades;
 
-use const FAIR\VERSION;
-use const FAIR\PLUGIN_FILE;
 use const FAIR\Avatars\AVATAR_SRC_SETTING_KEY;
+use const FAIR\PLUGIN_FILE;
+use const FAIR\VERSION;
 
 /**
  * Bootstrap.
