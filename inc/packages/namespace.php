@@ -13,7 +13,7 @@ use WP_Error;
 
 const SERVICE_ID = 'FairPackageManagementRepo';
 const CONTENT_TYPE = 'application/json+fair';
-const CACHE_LIFETIME = 5 * MINUTE_IN_SECONDS;
+const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
 
 // phpcs:disable WordPress.NamingConventions.ValidVariableName
 
