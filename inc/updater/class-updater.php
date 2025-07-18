@@ -325,7 +325,7 @@ class Updater {
 			'url'              => $this->metadata->url ?? $this->metadata->slug,
 			'sections'         => (array) $this->metadata->sections,
 			'icons'            => get_icons( $this->release->artifacts->icon ),
-			'banners'          => get_banners( $this->release->artifacts->banner ),
+			'banners'          => isset( $this->release->artifacts->banner ) ? get_banners( $this->release->artifacts->banner ) : [],
 			'update-supported' => true,
 			'requires'         => $required_versions['requires_wp'],
 			'requires_php'     => $required_versions['requires_php'],
