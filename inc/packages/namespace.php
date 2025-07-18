@@ -181,8 +181,10 @@ function fetch_metadata_doc( string $url ) {
 			'timeout' => 7,
 		] );
 		$code = wp_remote_retrieve_response_code( $response );
-		if ( is_wp_error( $response ) || $code !== 200 ) {
+		if ( is_wp_error( $response ) ) {
 			return $response;
+		} elseif ( $code !== 200 ) {
+			return new WP_Error( 'fair.packages.metadata.failure', wp_remote_retrieve_body( $response ) );
 		}
 		set_site_transient( $cache_key, $response, CACHE_LIFETIME );
 	}
