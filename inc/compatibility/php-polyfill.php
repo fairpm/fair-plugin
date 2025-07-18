@@ -11,7 +11,7 @@ if ( ! function_exists( 'str_contains' ) ) {
 	 * Performs a case-sensitive check indicating if needle is
 	 * contained in haystack.
 	 *
-	 * @since 5.9.0
+	 * @since WordPress 5.9.0
 	 *
 	 * @param string $haystack The string to search in.
 	 * @param string $needle   The substring to search for in the `$haystack`.
@@ -33,7 +33,7 @@ if ( ! function_exists( 'str_starts_with' ) ) {
 	 * Performs a case-sensitive check indicating if
 	 * the haystack begins with needle.
 	 *
-	 * @since 5.9.0
+	 * @since WordPress 5.9.0
 	 *
 	 * @param string $haystack The string to search in.
 	 * @param string $needle   The substring to search for in the `$haystack`.
@@ -55,7 +55,7 @@ if ( ! function_exists( 'str_ends_with' ) ) {
 	 * Performs a case-sensitive check indicating if
 	 * the haystack ends with needle.
 	 *
-	 * @since 5.9.0
+	 * @since WordPress 5.9.0
 	 *
 	 * @param string $haystack The string to search in.
 	 * @param string $needle   The substring to search for in the `$haystack`.
@@ -82,7 +82,7 @@ if ( ! function_exists( 'array_is_list' ) ) {
 	 *
 	 * @see https://github.com/symfony/polyfill-php81/tree/main
 	 *
-	 * @since 6.5.0
+	 * @since WordPress 6.5.0
 	 *
 	 * @param array<mixed> $arr The array being evaluated.
 	 * @return bool True if array is a list, false otherwise.
@@ -110,7 +110,7 @@ if ( ! function_exists( 'array_find' ) ) {
 	 *
 	 * Searches an array for the first element that passes a given callback.
 	 *
-	 * @since 6.8.0
+	 * @since WordPress 6.8.0
 	 *
 	 * @param array    $array    The array to search.
 	 * @param callable $callback The callback to run for each element.
@@ -133,7 +133,7 @@ if ( ! function_exists( 'array_find_key' ) ) {
 	 *
 	 * Searches an array for the first key that passes a given callback.
 	 *
-	 * @since 6.8.0
+	 * @since WordPress 6.8.0
 	 *
 	 * @param array    $array    The array to search.
 	 * @param callable $callback The callback to run for each element.
@@ -156,7 +156,7 @@ if ( ! function_exists( 'array_any' ) ) {
 	 *
 	 * Checks if any element of an array passes a given callback.
 	 *
-	 * @since 6.8.0
+	 * @since WordPress 6.8.0
 	 *
 	 * @param array    $array    The array to check.
 	 * @param callable $callback The callback to run for each element.
@@ -179,7 +179,7 @@ if ( ! function_exists( 'array_all' ) ) {
 	 *
 	 * Checks if all elements of an array pass a given callback.
 	 *
-	 * @since 6.8.0
+	 * @since WordPress 6.8.0
 	 *
 	 * @param array    $array    The array to check.
 	 * @param callable $callback The callback to run for each element.
