@@ -171,7 +171,8 @@ function install_plugin( string $id, ?string $version = null, $skin ) {
  * @return MetadataDocument|WP_Error
  */
 function fetch_metadata_doc( string $url ) {
-	$response = get_site_transient( md5( $url ) );
+	$cache_key = md5( $url );
+	$response = get_site_transient( $cache_key );
 	if ( ! $response ) {
 		$response = wp_remote_get( $url, [
 			'headers' => [
@@ -183,7 +184,7 @@ function fetch_metadata_doc( string $url ) {
 		if ( is_wp_error( $response ) || $code !== 200 ) {
 			return $response;
 		}
-		set_site_transient( md5( $url ), $response, CACHE_LIFETIME );
+		set_site_transient( $cache_key, $response, CACHE_LIFETIME );
 	}
 
 	return MetadataDocument::from_response( $response );
