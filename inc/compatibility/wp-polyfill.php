@@ -86,9 +86,9 @@ if ( ! function_exists( 'is_post_status_viewable' ) ) {
 		}
 
 		if (
-		! is_object( $post_status ) ||
-		$post_status->internal ||
-		$post_status->protected
+			! is_object( $post_status )
+			|| $post_status->internal
+			|| $post_status->protected
 		) {
 			return false;
 		}
