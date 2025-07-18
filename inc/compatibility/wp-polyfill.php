@@ -8,7 +8,7 @@ if ( ! function_exists( 'esc_xml' ) ) {
 	/**
 	 * Escaping for XML blocks.
 	 *
-	 * @since 5.5.0
+	 * @since WordPress 5.5.0
 	 *
 	 * @param string $text Text to escape.
 	 * @return string Escaped text.
@@ -54,7 +54,7 @@ EOF;
 		 * before output. HTML named character references are converted to their
 		 * equivalent code points.
 		 *
-		 * @since 5.5.0
+		 * @since WordPress 5.5.0
 		 *
 		 * @param string $safe_text The text after it has been escaped.
 		 * @param string $text      The text prior to being escaped.
@@ -70,8 +70,8 @@ if ( ! function_exists( 'is_post_status_viewable' ) ) {
 	 * For built-in post statuses such as publish and private, the 'public' value will be evaluated.
 	 * For all others, the 'publicly_queryable' value will be used.
 	 *
-	 * @since 5.7.0
-	 * @since 5.9.0 Added `is_post_status_viewable` hook to filter the result.
+	 * @since WordPress 5.7.0
+	 * @since WordPress 5.9.0 Added `is_post_status_viewable` hook to filter the result.
 	 *
 	 * @param string|stdClass $post_status Post status name or object.
 	 * @return bool Whether the post status should be considered viewable.
@@ -104,7 +104,7 @@ if ( ! function_exists( 'is_post_status_viewable' ) ) {
 		 * potential type errors in PHP 8.1+. Non-boolean values (even falsey
 		 * and truthy values) will result in the function returning false.
 		 *
-		 * @since 5.9.0
+		 * @since WordPress 5.9.0
 		 *
 		 * @param bool     $is_viewable Whether the post status is "viewable" (strict type).
 		 * @param stdClass $post_status Post status object.
@@ -134,7 +134,7 @@ if ( ! function_exists( '_is_utf8_charset' ) ) {
 	 * `is_utf8_charset` should be used outside of this file.
 	 *
 	 * @ignore
-	 * @since 6.6.1
+	 * @since WordPress 6.6.1
 	 *
 	 * @param string $charset_slug Slug representing a text character encoding, or "charset".
 	 *                             E.g. "UTF-8", "Windows-1252", "ISO-8859-1", "SJIS".
@@ -157,7 +157,7 @@ if ( ! function_exists( 'wp_get_admin_notice' ) ) {
 	/**
 	 * Creates and returns the markup for an admin notice.
 	 *
-	 * @since 6.4.0
+	 * @since WordPress 6.4.0
 	 *
 	 * @param string $message The message.
 	 * @param array  $args {
@@ -189,7 +189,7 @@ if ( ! function_exists( 'wp_get_admin_notice' ) ) {
 		/**
 		 * Filters the arguments for an admin notice.
 		 *
-		 * @since 6.4.0
+		 * @since WordPress 6.4.0
 		 *
 		 * @param array  $args    The arguments for the admin notice.
 		 * @param string $message The message for the admin notice.
@@ -257,7 +257,7 @@ if ( ! function_exists( 'wp_get_admin_notice' ) ) {
 		/**
 		 * Filters the markup for an admin notice.
 		 *
-		 * @since 6.4.0
+		 * @since WordPress 6.4.0
 		 *
 		 * @param string $markup  The HTML markup for the admin notice.
 		 * @param string $message The message for the admin notice.
@@ -271,7 +271,7 @@ if ( ! function_exists( 'wp_admin_notice' ) ) {
 	/**
 	 * Outputs an admin notice.
 	 *
-	 * @since 6.4.0
+	 * @since WordPress 6.4.0
 	 *
 	 * @param string $message The message to output.
 	 * @param array  $args {
@@ -291,7 +291,7 @@ if ( ! function_exists( 'wp_admin_notice' ) ) {
 		/**
 		 * Fires before an admin notice is output.
 		 *
-		 * @since 6.4.0
+		 * @since WordPress 6.4.0
 		 *
 		 * @param string $message The message for the admin notice.
 		 * @param array  $args    The arguments for the admin notice.
@@ -309,7 +309,7 @@ if ( ! function_exists( 'wp_get_wp_version' ) ) {
 	 * in an attempt to improve security through obscurity. This practice can cause
 	 * errors in WordPress, so the ability to get an unmodified version is needed.
 	 *
-	 * @since 6.7.0
+	 * @since WordPress 6.7.0
 	 *
 	 * @return string The current WordPress version.
 	 */
@@ -328,7 +328,7 @@ if ( ! function_exists( 'get_user' ) ) {
 	/**
 	 * Retrieves user info by user ID.
 	 *
-	 * @since 6.7.0
+	 * @since WordPress 6.7.0
 	 *
 	 * @param int $user_id User ID.
 	 *
