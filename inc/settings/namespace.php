@@ -7,164 +7,121 @@
 
 namespace FAIR\Settings;
 
-/* phpcs:disable Squiz.PHP.EmbeddedPhp.ContentBeforeOpen, Squiz.PHP.EmbeddedPhp.ContentAfterOpen, Squiz.PHP.EmbeddedPhp.ContentBeforeEnd */
+use const FAIR\Avatars\AVATAR_SRC_SETTING_KEY;
 
 /**
  * Bootstrap.
  */
 function bootstrap() {
-	add_action( 'admin_menu', __NAMESPACE__ . '\\create_settings_menu' );
-	add_action( 'admin_notices', __NAMESPACE__ . '\\display_settings_saved_notice' );
-	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_scripts_and_styles' );
+	add_action( 'admin_init', __NAMESPACE__ . '\\load_single_site_avatar_settings' );
+	add_action( 'wpmu_options', __NAMESPACE__ . '\\load_multisite_avatar_settings' );
+	add_action( 'update_wpmu_options', __NAMESPACE__ . '\save_multisite_avatar_settings' );
 }
 
 /**
- * Enqueue assets.
+ * Register the single site settings fields.
  *
- * @param string $hook_suffix Hook suffix for the current admin page.
  * @return void
  */
-function enqueue_scripts_and_styles( string $hook_suffix ) {
+function load_single_site_avatar_settings() {
 
-	if ( 'toplevel_page_fair-settings' !== $hook_suffix ) {
+	// Don't set this up if we're on a multisite.
+	if ( defined( 'MULTISITE' ) && false !== MULTISITE ) {
 		return;
 	}
 
-	wp_enqueue_style(
-		'fair-admin',
-		esc_url( plugin_dir_url( \FAIR\PLUGIN_FILE ) . 'assets/css/admin.css' ),
-		[],
-		\FAIR\VERSION
-	);
+	$setup_args = [
+		'type'              => 'string',
+		'sanitize_callback' => 'sanitize_text_field',
+		'default'           => 'fair',
+		'show_in_rest'      => false,
+	];
+
+	register_setting( 'discussion', AVATAR_SRC_SETTING_KEY, $setup_args );
+
+	$field_args = get_avatar_source_field_args();
+
+	add_settings_field( AVATAR_SRC_SETTING_KEY, __( 'Avatar Source', 'fair' ), __NAMESPACE__ . '\\site_avatar_source_field', 'discussion', 'avatars', $field_args );
 }
 
 /**
- * Create the settings menu.
+ * Register the multisite settings fields.
  *
  * @return void
  */
-function create_settings_menu() {
-	add_menu_page(
-		__( 'FAIR Settings', 'fair' ),
-		__( 'FAIR Settings', 'fair' ),
-		'manage_options',
-		'fair-settings',
-		__NAMESPACE__ . '\\render_settings_page',
-	);
+function load_multisite_avatar_settings() {
+
+	$field_args = get_avatar_source_field_args();
+
+	echo '<h2>' . esc_html__( 'FAIR Settings', 'fair' ) . '</h2>';
+
+	echo '<table class="form-table" role="presentation">';
+		echo '<tr>';
+			echo '<th>';
+				echo '<label for="' . esc_attr( $field_args['label_for'] ) . '">' . esc_html( $field_args['label'] ) . '</label>';
+			echo '</th>';
+
+			echo '<td>';
+				site_avatar_source_field( $field_args );
+			echo '</td>';
+
+		echo '</tr>';
+	echo '</table>';
 }
 
 /**
- * Render the settings page.
- */
-function render_settings_page() {
-	// Check user permissions.
-	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'fair' ) );
-	}
-
-	if ( save_settings() ) {
-		set_transient( 'fair_settings_saved', true, 30 );
-	}
-
-	$settings = get_option( 'fair_settings', [] );
-
-	?>
-	<div class="wrap fair-settings">
-		<h1><?php esc_html_e( 'FAIR Settings', 'fair' ); ?></h1>
-		<p>
-			<?php
-			printf(
-				/* translators: %s: AspirePress website URL */
-				esc_html__( 'Your site is now disconnected from WordPress.org managed servers and uses a dedicated mirror from %s. In the coming weeks and months, we\'ll be making the mirror configurable and add in the ability to add your own.', 'fair' ),
-				'<a href="https://aspirepress.org/">AspirePress</a>'
-			);
-			?>
-		</p>
-		<p>
-			<?php
-			printf(
-				/* translators: %1$s: FAIR GitHub URL, %2$s: FAQ URL */
-				esc_html__( 'If you want to learn more, check out the %1$s and our %2$s.', 'fair' ),
-				'<a href="https://fair.pm/">FAIR GitHub</a>',
-				'<a href="https://github.com/fairpm/tsc/blob/main/faqs/README.md">FAQ</a>'
-			);
-			?>
-		</p>
-		<form method="post">
-			<?php wp_nonce_field( 'fair_save_settings' ); ?>
-			<?php render_avatar_setting( $settings ); ?>
-			<?php submit_button( __( 'Save Settings', 'fair' ), 'primary', 'fair_settings_submit' ); ?>
-		</form>
-	</div>
-	<?php
-}
-
-/**
- * Render the avatar source setting.
+ * Save the option being passed from the multisite settings.
  *
- * @param array $settings The current settings options.
  * @return void
  */
-function render_avatar_setting( array $settings = [] ) {
-	$available_sources = get_avatar_sources();
+function save_multisite_avatar_settings() {
 
-	$source = array_key_exists( 'avatar_source', $settings ) && array_key_exists( $settings['avatar_source'], $available_sources )
-		? $settings['avatar_source']
-		: array_key_first( $available_sources );
+	$avatar_passed  = filter_input( INPUT_POST, AVATAR_SRC_SETTING_KEY, FILTER_SANITIZE_SPECIAL_CHARS );
+	$avatar_sources = array_keys( get_avatar_sources() );
+	$avatar_source  = ! empty( $avatar_passed ) && in_array( $avatar_passed, $avatar_sources, true ) ? $avatar_passed : 'fair';
 
-	?>
-	<h2 class="title">
-		<?php esc_html_e( 'Avatar Settings', 'fair' ); ?>
-	</h2>
-	<div class="row">
-		<div class="label-wrapper">
-			<label for="fair-avatar-source">
-				<?php esc_html_e( 'Avatar Source', 'fair' ); ?>
-			</label>
-		</div>
-		<div class="field">
-			<select id="fair-avatar-source" name="fair_settings[avatar_source]" aria-describedby="fair-avatar-source-description">
-				<?php foreach ( $available_sources as $key => $label ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $source, $key ); ?>>
-						<?php echo esc_html( $label ); ?>
-					</option>
-				<?php endforeach; ?>
-			</select>
-			<p class="description" id="fair-avatar-source-description">
-				<?php esc_html_e( 'Avatars will be loaded from the selected source.', 'fair' ); ?>
-			</p>
-		</div>
-	</div>
-	<?php
+	update_site_option( AVATAR_SRC_SETTING_KEY, $avatar_source );
 }
 
 /**
- * Save settings.
+ * Our dropdown to select the avatar source on a single site.
  *
- * @return bool
+ * @param  array $args  The args passed from the `add_settings_field` call or our own.
+ *
+ * @return void
  */
-function save_settings() : bool {
-	if ( ! isset( $_POST['fair_settings'] ) || ! check_admin_referer( 'fair_save_settings' ) ) {
-		return false;
+function site_avatar_source_field( $args ) : void {
+
+	// The rest of the table markup is there, so begin with the select.
+	echo '<select id="' . esc_attr( $args['field_id'] ) . '" name="' . esc_attr( $args['field_name'] ) . '" aria-describedby="fair-avatar-source-description">';
+
+	foreach ( get_avatar_sources() as $source_key => $source_label ) {
+		echo '<option value="' . esc_attr( $source_key ) . '" ' . selected( $args['value'], $source_key, false ) . '>' . esc_html( $source_label ) . '</option>';
 	}
 
-	$raw = is_array( $_POST['fair_settings'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['fair_settings'] ) ) : [];
+	echo '</select>';
 
-	$settings = get_option( 'fair_settings', [] );
+	echo '<p class="description fair-settings-description" id="fair-avatar-source-description">' . esc_html( $args['desc'] ) . '</p>';
+}
 
-	// Avatar source.
-	$avatar_sources = get_avatar_sources();
+/**
+ * Get the pre-defined field args.
+ *
+ * @return array
+ */
+function get_avatar_source_field_args() : array {
 
-	// Ensure the 'avatar_source' key exists and is a valid option.
-	$avatar_source = $raw['avatar_source'] ?? array_key_first( $avatar_sources );
-	if ( array_key_exists( $avatar_source, $avatar_sources ) ) {
-		$settings['avatar_source'] = $avatar_source;
-	}
+	$field_args = [
+		'class'      => 'fair-settings-row fair-avatar-source-setting-row',
+		'label'      => __( 'Avatar Source', 'fair' ),
+		'label_for'  => 'fair-avatar-source',
+		'field_id'   => 'fair-avatar-source',
+		'field_name' => AVATAR_SRC_SETTING_KEY,
+		'value'      => get_site_option( AVATAR_SRC_SETTING_KEY, 'fair' ),
+		'desc'       => __( 'Avatars will be loaded from the selected source.', 'fair' ),
+	];
 
-	// Update the settings option.
-	update_option( 'fair_settings', $settings, false );
-
-	return true;
+	return apply_filters( 'fair_avatar_source_field_args', $field_args );
 }
 
 /**
@@ -173,23 +130,10 @@ function save_settings() : bool {
  * @return array
  */
 function get_avatar_sources() : array {
-	return [
+	$default_sources = [
 		'fair'     => __( 'FAIR Avatars', 'fair' ),
 		'gravatar' => __( 'Gravatar', 'fair' ),
 	];
-}
 
-/**
- * Display settings saved notice.
- *
- * @return void
- */
-function display_settings_saved_notice() {
-	if ( get_transient( 'fair_settings_saved' ) ) {
-		delete_transient( 'fair_settings_saved' );
-
-		echo '<div class="notice notice-success is-dismissible"><p>'
-			. esc_html__( 'Settings saved successfully.', 'fair' )
-			. '</p></div>';
-	}
+	return apply_filters( 'fair_avatar_sources', $default_sources );
 }

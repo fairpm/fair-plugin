@@ -28,7 +28,7 @@ function bootstrap() {
  * @return bool|array Replaced value, or false to proceed.
  */
 function replace_salt_generation_via_api( $value, $args, $url ) {
-	if ( strpos( $url, 'api.wordpress.org/secret-key/1.1/salt' ) !== false ) {
+	if ( str_contains( $url, 'api.wordpress.org/secret-key/1.1/salt' ) ) {
 		return get_salt_generation_response();
 	}
 

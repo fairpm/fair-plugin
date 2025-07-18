@@ -23,7 +23,7 @@ function bootstrap() {
  * @return bool Replaced value, or false to proceed.
  */
 function replace_popular_importers_api( $response, $parsed_args, $url ) {
-	if ( strpos( $url, 'api.wordpress.org/core/importers' ) !== false ) {
+	if ( str_contains( $url, 'api.wordpress.org/core/importers' ) ) {
 		$query = parse_url( $url, PHP_URL_QUERY );
 		parse_str( $query, $params );
 		return get_popular_importers_response( $params['version'] );

@@ -7,12 +7,13 @@
 
 namespace FAIR\Avatars;
 
+const AVATAR_SRC_SETTING_KEY = 'fair_avatar_source';
+
 /**
  * Bootstrap.
  */
 function bootstrap() {
-	$options = get_option( 'fair_settings', [] );
-	$avatar_source = array_key_exists( 'avatar_source', $options ) ? $options['avatar_source'] : 'fair';
+	$avatar_source = get_site_option( AVATAR_SRC_SETTING_KEY, 'fair' );
 
 	if ( 'fair' !== $avatar_source ) {
 		return;

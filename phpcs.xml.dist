@@ -55,6 +55,7 @@
 	</rule>
 
 	<rule ref="HM.Functions.NamespacedFunctions.MissingNamespace">
+		<exclude-pattern>inc/compatibility/compat\.php</exclude-pattern>
 		<exclude-pattern>inc/icons/svg\.php</exclude-pattern>
 	</rule>
 
@@ -69,7 +70,12 @@
 	<!-- Exclude some files from the side effects rules -->
 	<rule ref="PSR1.Files.SideEffects">
 		<exclude-pattern>plugin\.php</exclude-pattern>
+		<exclude-pattern>inc/compatibility/compat\.php</exclude-pattern>
 		<exclude-pattern>inc/icons/svg\.php</exclude-pattern>
 		<exclude-pattern>tests/phpunit/bootstrap\.php</exclude-pattern>
+	</rule>
+
+	<rule ref="Squiz.PHP.EmbeddedPhp">
+		<exclude-pattern>inc/settings/namespace\.php</exclude-pattern>
 	</rule>
 </ruleset>

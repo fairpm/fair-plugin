@@ -49,9 +49,9 @@ function replace_repo_api_urls( $status, $args, $url ) {
 	}
 
 	if (
-		strpos( $url, 'api.wordpress.org/plugins/' ) === false
-		&& strpos( $url, 'api.wordpress.org/themes/' ) === false
-		&& strpos( $url, 'api.wordpress.org/core/version-check/' ) === false
+		! str_contains( $url, 'api.wordpress.org/plugins/' )
+		&& ! str_contains( $url, 'api.wordpress.org/themes/' )
+		&& ! str_contains( $url, 'api.wordpress.org/core/version-check/' )
 	) {
 		return $status;
 	}
