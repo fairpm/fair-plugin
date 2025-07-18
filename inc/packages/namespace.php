@@ -180,7 +180,8 @@ function fetch_metadata_doc( string $url ) {
 			],
 			'timeout' => 7,
 		] );
-		if ( is_wp_error( $response ) ) {
+		$code = wp_remote_retrieve_response_code( $response );
+		if ( is_wp_error( $response ) || $code !== 200 ) {
 			return $response;
 		}
 		set_site_transient( $cache_key, $response, DID_CACHE_LIFETIME );
