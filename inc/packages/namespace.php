@@ -13,7 +13,7 @@ use WP_Error;
 
 const SERVICE_ID = 'FairPackageManagementRepo';
 const CONTENT_TYPE = 'application/json+fair';
-const DID_CACHE_LIFETIME = 5 * MINUTE_IN_SECONDS;
+const CACHE_LIFETIME = 5 * MINUTE_IN_SECONDS;
 
 // phpcs:disable WordPress.NamingConventions.ValidVariableName
 
@@ -95,7 +95,7 @@ function get_did_document( string $id ) {
 	if ( is_wp_error( $document ) ) {
 		return $document;
 	}
-	set_site_transient( $id, $document, DID_CACHE_LIFETIME );
+	set_site_transient( $id, $document, CACHE_LIFETIME );
 
 	return $document;
 }
@@ -183,7 +183,7 @@ function fetch_metadata_doc( string $url ) {
 		if ( is_wp_error( $response ) || $code !== 200 ) {
 			return $response;
 		}
-		set_site_transient( md5( $url ), $response, DID_CACHE_LIFETIME );
+		set_site_transient( md5( $url ), $response, CACHE_LIFETIME );
 	}
 
 	return MetadataDocument::from_response( $response );
