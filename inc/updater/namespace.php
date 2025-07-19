@@ -31,12 +31,14 @@ function get_fair_document_data( $obj ) : void {
 
 	$packages = [];
 	// phpcs:disable HM.Security.NonceVerification.Recommended
-	if ( $obj instanceof Upgrader ) {
-		if ( isset( $_REQUEST['action'] ) && 'fair-install-plugin' === $_REQUEST['action'] ) {
-			$did = isset( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : '';
-			if ( $did === $obj->package->id ) {
-				$release[ $did ] = $obj->release;
-			}
+	if (
+		$obj instanceof Upgrader
+		&& isset( $_REQUEST['action'], $_REQUEST['id'] )
+		&& 'fair-install-plugin' === $_REQUEST['action']
+	) {
+		$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
+		if ( $did === $obj->package->id ) {
+			$release[ $did ] = $obj->release;
 		}
 	}
 	if ( $obj instanceof Updater ) {
