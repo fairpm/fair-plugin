@@ -168,17 +168,7 @@ function get_icons( $icons ) : array {
 	$icons_arr = [];
 	$regular = array_find( $icons, fn ( $icon ) => $icon->width === 772 && $icon->height === 250 );
 	$high_res = array_find( $icons, fn ( $icon ) => $icon->width === 1544 && $icon->height === 500 );
-
-	foreach ( $icons as $icon ) {
-		foreach ( $icon as $mime => $type ) {
-			if ( $mime === 'content-type' ) {
-				if ( str_contains( $type, 'svg+xml' ) ) {
-					$svg = $icon;
-					break;
-				}
-			}
-		}
-	}
+	$svg = array_find( $icons, fn ( $icon ) => str_contains( $icon->{'content-type'}, 'svg+xml' ) );
 
 	if ( empty( $regular ) && empty( $high_res ) && empty( $svg ) ) {
 		return [];
@@ -186,7 +176,11 @@ function get_icons( $icons ) : array {
 
 	$icons_arr['1x'] = $regular->url ?? '';
 	$icons_arr['2x'] = $high_res->url ?? '';
-	$icons_arr['svg'] = $svg->url ?? '';
+	if ( str_contains( $svg->url, 's.w.org/plugins' ) ) {
+		$icons_arr['default'] = $svg->url;
+	} else {
+		$icons_arr['svg'] = $svg->url ?? '';
+	}
 
 	return $icons_arr;
 }
