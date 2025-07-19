@@ -10,6 +10,11 @@ namespace FAIR\Updater;
 use const FAIR\Packages\Admin\ACTION_INSTALL;
 
 use FAIR\Packages\Upgrader;
+use function FAIR\Packages\fetch_package_metadata;
+use function FAIR\Packages\get_did_document;
+use function FAIR\Packages\pick_release;
+
+use WP_Error;
 
 /**
  * Bootstrap.
@@ -116,6 +121,37 @@ function add_accept_header( $args, $url ) : array {
 	}
 
 	return $args;
+}
+
+/**
+ * Get data from DID.
+ *
+ * @param  string $id DID.
+ *
+ * @return mixed
+ */
+function get_release_from_did( $id ) {
+	$document = get_did_document( $id );
+	if ( is_wp_error( $document ) ) {
+		return $document;
+	}
+
+	$valid_keys = $document->get_fair_signing_keys();
+	if ( empty( $valid_keys ) ) {
+		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
+	}
+
+	$metadata = fetch_package_metadata( $id );
+	if ( is_wp_error( $metadata ) ) {
+		return $metadata;
+	}
+
+	$release = pick_release( $metadata->releases );
+	if ( empty( $release ) ) {
+		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
+	}
+
+	return $release;
 }
 
 /**
