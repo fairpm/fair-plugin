@@ -7,6 +7,8 @@
 
 namespace FAIR\Updater;
 
+use FAIR\Packages\Upgrader;
+
 /**
  * Bootstrap.
  */
@@ -25,9 +27,50 @@ function bootstrap() {
  * @return void
  */
 function get_fair_document_data( $obj ) : void {
-	global $metadata, $release;
-	$metadata = $obj->metadata ?? $obj->package;
-	$release = $obj->release;
+	global  $release;
+
+	$packages = [];
+	if ( $obj instanceof Upgrader ) {
+		// phpcs:disable HM.Security.NonceVerification.Recommended
+		if ( isset( $_REQUEST['action'] ) && 'fair-install-plugin' === $_REQUEST['action'] ) {
+			$did = isset( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) :
+			'';
+			if ( $did === $obj->package->id ) {
+				$release[ $did ] = $obj->release;
+			}
+		}
+		// phpcs:enable
+	}
+	if ( $obj instanceof Updater ) {
+		$did = get_file_data( $obj->filepath, [
+			'PluginID' => 'Plugin ID',
+			'ThemeID' => 'Theme ID',
+		] );
+		$did = $obj->type === 'plugin' ? $did['PluginID'] : $did['ThemeID'];
+		$file = $obj->type === 'plugin' ? plugin_basename( $obj->filepath ) : dirname( plugin_basename( $obj->filepath ) );
+	}
+
+		// phpcs:disable HM.Security.NonceVerification.Recommended
+	if ( isset( $_REQUEST['action'] ) ) {
+		if ( 'update-selected' === $_REQUEST['action'] ) {
+			$packages = 'plugin' === $obj->type && isset( $_REQUEST['plugins'] ) ? array_map( 'dirname', explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['plugins'] ) ) ) ) : [];
+			$packages = 'theme' === $obj->type && isset( $_REQUEST['themes'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['themes'] ) ) ) : $packages;
+		}
+		if ( 'update-plugin' === $_REQUEST['action'] && isset( $_REQUEST['plugin'] ) ) {
+			$packages[] = dirname( sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) );
+		}
+		if ( 'update-theme' === $_REQUEST['action'] && isset( $_REQUEST['theme'] ) ) {
+			$packages[] = sanitize_text_field( wp_unslash( $_REQUEST['theme'] ) );
+		}
+	}
+	// phpcs:enable
+
+	foreach ( $packages as $package ) {
+		if ( str_contains( $file, $package ) ) {
+			$release[ $did ] = $obj->release;
+			break;
+		}
+	}
 }
 
 /**
@@ -55,19 +98,23 @@ function upgrader_pre_download() : bool {
  * @return array
  */
 function add_accept_header( $args, $url ) : array {
-	global $metadata, $release;
+	global $release;
 
 	$accept_header = [];
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;
 	}
-	foreach ( $release->artifacts->package[0] as $key => $value ) {
-		$key = str_replace( '-', '_', $key );
-		$package[ $key ] = $value;
-	}
-	if ( isset( $package['content_type'] ) && $package['content_type'] === 'application/octet-stream' ) {
-		if ( ! empty( $accept_header ) && str_contains( $url, $metadata->slug ) ) {
-			$args = array_merge( $args, $accept_header );
+
+	foreach ( $release as $rel ) {
+		if ( $url === $rel->artifacts->package[0]->url ) {
+			foreach ( $rel->artifacts->package[0] as $key => $value ) {
+				$key = str_replace( '-', '_', $key );
+				$package[ $key ] = $value;
+			}
+			if ( isset( $package['content_type'] ) && $package['content_type'] === 'application/octet-stream' ) {
+				$accept_header = [ 'headers' => [ 'Accept' => 'application/octet-stream' ] ];
+				$args = array_merge( $args, $accept_header );
+			}
 		}
 	}
 

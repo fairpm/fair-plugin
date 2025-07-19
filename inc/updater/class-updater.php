@@ -43,7 +43,7 @@ class Updater {
 	 *
 	 * @var string
 	 */
-	protected $filepath;
+	public $filepath;
 
 	/**
 	 * Current installed version of the package.
@@ -57,14 +57,14 @@ class Updater {
 	 *
 	 * @var string
 	 */
-	protected $type;
+	public $type;
 
 	/**
 	 * Metadata document.
 	 *
 	 * @var \FAIR\Packages\MetadataDocument
 	 */
-	public $metadata;
+	protected $metadata;
 
 	/**
 	 * Release document.
@@ -82,7 +82,9 @@ class Updater {
 	public function __construct( string $did, string $filepath ) {
 		$this->did = $did;
 		$this->filepath = $filepath;
-		$this->local_version = get_file_data( $filepath, [ 'Version' => 'Version' ] )['Version'];
+
+		$data = get_file_data( $filepath, [ 'Version' => 'Version' ] );
+		$this->local_version = $data['Version'];
 	}
 
 	/**
@@ -203,7 +205,7 @@ class Updater {
 	 *
 	 * @throws TypeError If the type of $upgrader is not correct.
 	 *
-	 * @return string
+	 * @return string|WP_Error
 	 */
 	public function upgrader_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
 		global $wp_filesystem;
@@ -325,7 +327,7 @@ class Updater {
 			'url'              => $this->metadata->url ?? $this->metadata->slug,
 			'sections'         => (array) $this->metadata->sections,
 			'icons'            => get_icons( $this->release->artifacts->icon ),
-			'banners'          => get_banners( $this->release->artifacts->banner ),
+			'banners'          => isset( $this->release->artifacts->banner ) ? get_banners( $this->release->artifacts->banner ) : [],
 			'update-supported' => true,
 			'requires'         => $required_versions['requires_wp'],
 			'requires_php'     => $required_versions['requires_php'],
