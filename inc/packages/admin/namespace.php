@@ -187,6 +187,7 @@ function handle_direct_install() {
  * @return void
  */
 function embedded_info_page() {
+	// phpcs:disable HM.Security.NonceVerification.Recommended
 	// This is a special case for the plugin information page.
 	if ( ! isset( $_REQUEST['plugin'] ) || ! isset( $_REQUEST['tab'] ) || $_REQUEST['tab'] !== TAB_DIRECT ) {
 		return;
@@ -196,6 +197,7 @@ function embedded_info_page() {
 	if ( ! preg_match( '/^did:(web|plc):.+$/', sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) ) ) {
 		return;
 	}
+	// phpcs:enable
 
 	maybe_hijack_plugin_info();
 }
@@ -206,6 +208,7 @@ function embedded_info_page() {
  * @return void
  */
 function maybe_hijack_plugin_info() {
+	// phpcs:disable HM.Security.NonceVerification.Recommended
 	if ( empty( $_REQUEST['plugin'] ) ) {
 		return;
 	}
@@ -223,6 +226,7 @@ function maybe_hijack_plugin_info() {
 
 	$tab = esc_attr( $GLOBALS['tab'] ?? 'plugin-information' );
 	$section = isset( $_REQUEST['section'] ) ? sanitize_key( wp_unslash( $_REQUEST['section'] ) ) : 'description';
+	// phpcs:enable
 
 	Info\render_page( $metadata, $tab, $section );
 	exit;

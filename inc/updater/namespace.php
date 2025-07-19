@@ -7,6 +7,15 @@
 
 namespace FAIR\Updater;
 
+use const FAIR\Packages\Admin\ACTION_INSTALL;
+
+use FAIR\Packages\Upgrader;
+use function FAIR\Packages\fetch_package_metadata;
+use function FAIR\Packages\get_did_document;
+use function FAIR\Packages\pick_release;
+
+use WP_Error;
+
 /**
  * Bootstrap.
  */
@@ -25,9 +34,50 @@ function bootstrap() {
  * @return void
  */
 function get_fair_document_data( $obj ) : void {
-	global $metadata, $release;
-	$metadata = $obj->metadata ?? $obj->package;
-	$release = $obj->release;
+	// TODO: consider making $filepath, $type, $release protected and use get_* methods.
+	global  $release;
+
+	$packages = [];
+	// phpcs:disable HM.Security.NonceVerification.Recommended
+	if (
+		$obj instanceof Upgrader
+		&& isset( $_REQUEST['action'], $_REQUEST['id'] ) // phpcs:ignore HM.PHP.Isset.MultipleArguments
+		&& $_REQUEST['action'] === ACTION_INSTALL
+	) {
+		$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
+		if ( $did === $obj->package->id ) {
+			$release[ $did ] = $obj->release;
+		}
+	}
+	if ( $obj instanceof Updater ) {
+		$did = get_file_data( $obj->filepath, [
+			'PluginID' => 'Plugin ID',
+			'ThemeID' => 'Theme ID',
+		] );
+		$did = $obj->type === 'plugin' ? $did['PluginID'] : $did['ThemeID'];
+		$file = $obj->type === 'plugin' ? plugin_basename( $obj->filepath ) : dirname( plugin_basename( $obj->filepath ) );
+	}
+
+	if ( isset( $_REQUEST['action'] ) ) {
+		if ( 'update-selected' === $_REQUEST['action'] ) {
+			$packages = 'plugin' === $obj->type && isset( $_REQUEST['plugins'] ) ? array_map( 'dirname', explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['plugins'] ) ) ) ) : [];
+			$packages = 'theme' === $obj->type && isset( $_REQUEST['themes'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['themes'] ) ) ) : $packages;
+		}
+		if ( 'update-plugin' === $_REQUEST['action'] && isset( $_REQUEST['plugin'] ) ) {
+			$packages[] = dirname( sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) );
+		}
+		if ( 'update-theme' === $_REQUEST['action'] && isset( $_REQUEST['theme'] ) ) {
+			$packages[] = sanitize_text_field( wp_unslash( $_REQUEST['theme'] ) );
+		}
+	}
+	// phpcs:enable
+
+	foreach ( $packages as $package ) {
+		if ( str_contains( $file, $package ) ) {
+			$release[ $did ] = $obj->release;
+			break;
+		}
+	}
 }
 
 /**
@@ -46,7 +96,6 @@ function upgrader_pre_download() : bool {
  * ReleaseDocument artifact package content-type will be application/octet-stream.
  * Only for GitHub release assets.
  *
- * @global MetadataDocument $metadata
  * @global ReleaseDocument $release
  *
  * @param array  $args Array of http args.
@@ -55,23 +104,53 @@ function upgrader_pre_download() : bool {
  * @return array
  */
 function add_accept_header( $args, $url ) : array {
-	global $metadata, $release;
+	global $release;
 
-	$accept_header = [];
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;
 	}
-	foreach ( $release->artifacts->package[0] as $key => $value ) {
-		$key = str_replace( '-', '_', $key );
-		$package[ $key ] = $value;
-	}
-	if ( isset( $package['content_type'] ) && $package['content_type'] === 'application/octet-stream' ) {
-		if ( ! empty( $accept_header ) && str_contains( $url, $metadata->slug ) ) {
-			$args = array_merge( $args, $accept_header );
+
+	foreach ( $release as $rel ) {
+		if ( $url === $rel->artifacts->package[0]->url ) {
+			$content_type = $rel->artifacts->package[0]->{'content-type'};
+			if ( $content_type === 'application/octet-stream' ) {
+				$args = array_merge( $args, [ 'headers' => [ 'Accept' => $content_type ] ] );
+			}
 		}
 	}
 
 	return $args;
+}
+
+/**
+ * Get data from DID.
+ *
+ * @param  string $id DID.
+ *
+ * @return mixed
+ */
+function get_release_from_did( $id ) {
+	$document = get_did_document( $id );
+	if ( is_wp_error( $document ) ) {
+		return $document;
+	}
+
+	$valid_keys = $document->get_fair_signing_keys();
+	if ( empty( $valid_keys ) ) {
+		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
+	}
+
+	$metadata = fetch_package_metadata( $id );
+	if ( is_wp_error( $metadata ) ) {
+		return $metadata;
+	}
+
+	$release = pick_release( $metadata->releases );
+	if ( empty( $release ) ) {
+		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
+	}
+
+	return $release;
 }
 
 /**
@@ -123,17 +202,7 @@ function get_icons( $icons ) : array {
 	$icons_arr = [];
 	$regular = array_find( $icons, fn ( $icon ) => $icon->width === 772 && $icon->height === 250 );
 	$high_res = array_find( $icons, fn ( $icon ) => $icon->width === 1544 && $icon->height === 500 );
-
-	foreach ( $icons as $icon ) {
-		foreach ( $icon as $mime => $type ) {
-			if ( $mime === 'content-type' ) {
-				if ( str_contains( $type, 'svg+xml' ) ) {
-					$svg = $icon;
-					break;
-				}
-			}
-		}
-	}
+	$svg = array_find( $icons, fn ( $icon ) => str_contains( $icon->{'content-type'}, 'svg+xml' ) );
 
 	if ( empty( $regular ) && empty( $high_res ) && empty( $svg ) ) {
 		return [];
@@ -141,7 +210,11 @@ function get_icons( $icons ) : array {
 
 	$icons_arr['1x'] = $regular->url ?? '';
 	$icons_arr['2x'] = $high_res->url ?? '';
-	$icons_arr['svg'] = $svg->url ?? '';
+	if ( str_contains( $svg->url, 's.w.org/plugins' ) ) {
+		$icons_arr['default'] = $svg->url;
+	} else {
+		$icons_arr['svg'] = $svg->url ?? '';
+	}
 
 	return $icons_arr;
 }
