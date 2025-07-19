@@ -33,8 +33,7 @@ function get_fair_document_data( $obj ) : void {
 	// phpcs:disable HM.Security.NonceVerification.Recommended
 	if ( $obj instanceof Upgrader ) {
 		if ( isset( $_REQUEST['action'] ) && 'fair-install-plugin' === $_REQUEST['action'] ) {
-			$did = isset( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) :
-			'';
+			$did = isset( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) : '';
 			if ( $did === $obj->package->id ) {
 				$release[ $did ] = $obj->release;
 			}
