@@ -7,6 +7,8 @@
 
 namespace FAIR\Updater;
 
+use const FAIR\Packages\Admin\ACTION_INSTALL;
+
 use FAIR\Packages\Upgrader;
 
 /**
@@ -35,7 +37,7 @@ function get_fair_document_data( $obj ) : void {
 	if (
 		$obj instanceof Upgrader
 		&& isset( $_REQUEST['action'], $_REQUEST['id'] ) // phpcs:ignore HM.PHP.Isset.MultipleArguments
-		&& 'fair-install-plugin' === $_REQUEST['action']
+		&& $_REQUEST['action'] === ACTION_INSTALL
 	) {
 		$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
 		if ( $did === $obj->package->id ) {
