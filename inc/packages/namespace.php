@@ -13,7 +13,7 @@ use WP_Error;
 
 const SERVICE_ID = 'FairPackageManagementRepo';
 const CONTENT_TYPE = 'application/json+fair';
-const DID_CACHE_LIFETIME = 5 * MINUTE_IN_SECONDS;
+const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
 
 // phpcs:disable WordPress.NamingConventions.ValidVariableName
 
@@ -80,8 +80,8 @@ function get_did_hash( string $id ) {
  * @return DIDDocument|WP_Error
  */
 function get_did_document( string $id ) {
-	$cached = wp_cache_get( $id, 'fair_did_documents', false, $found );
-	if ( $found ) {
+	$cached = get_site_transient( $id );
+	if ( $cached ) {
 		return $cached;
 	}
 
@@ -95,8 +95,8 @@ function get_did_document( string $id ) {
 	if ( is_wp_error( $document ) ) {
 		return $document;
 	}
+	set_site_transient( $id, $document, CACHE_LIFETIME );
 
-	wp_cache_set( $id, $document, 'fair_did_documents', DID_CACHE_LIFETIME );
 	return $document;
 }
 
@@ -171,14 +171,22 @@ function install_plugin( string $id, ?string $version = null, $skin ) {
  * @return MetadataDocument|WP_Error
  */
 function fetch_metadata_doc( string $url ) {
-	$response = wp_remote_get( $url, [
-		'headers' => [
-			'Accept' => sprintf( '%s;q=1.0, application/json;q=0.8', CONTENT_TYPE ),
-		],
-		'timeout' => 7,
-	] );
-	if ( is_wp_error( $response ) ) {
-		return $response;
+	$cache_key = md5( $url );
+	$response = get_site_transient( $cache_key );
+	if ( ! $response ) {
+		$response = wp_remote_get( $url, [
+			'headers' => [
+				'Accept' => sprintf( '%s;q=1.0, application/json;q=0.8', CONTENT_TYPE ),
+			],
+			'timeout' => 7,
+		] );
+		$code = wp_remote_retrieve_response_code( $response );
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		} elseif ( $code !== 200 ) {
+			return new WP_Error( 'fair.packages.metadata.failure', wp_remote_retrieve_body( $response ) );
+		}
+		set_site_transient( $cache_key, $response, CACHE_LIFETIME );
 	}
 
 	return MetadataDocument::from_response( $response );
