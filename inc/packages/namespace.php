@@ -185,7 +185,7 @@ function fetch_metadata_doc( string $url ) {
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		} elseif ( $code !== 200 ) {
-			return new WP_Error( 'fair.packages.metadata.failure', wp_remote_retrieve_body( $response ) );
+			return new WP_Error( 'fair.packages.metadata.failure', __( 'HTTP error code received', 'fair' ) );
 		}
 		set_site_transient( $cache_key, $response, CACHE_LIFETIME );
 	}
