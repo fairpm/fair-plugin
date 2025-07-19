@@ -30,8 +30,8 @@ function get_fair_document_data( $obj ) : void {
 	global  $release;
 
 	$packages = [];
+	// phpcs:disable HM.Security.NonceVerification.Recommended
 	if ( $obj instanceof Upgrader ) {
-		// phpcs:disable HM.Security.NonceVerification.Recommended
 		if ( isset( $_REQUEST['action'] ) && 'fair-install-plugin' === $_REQUEST['action'] ) {
 			$did = isset( $_REQUEST['id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['id'] ) ) :
 			'';
@@ -39,7 +39,6 @@ function get_fair_document_data( $obj ) : void {
 				$release[ $did ] = $obj->release;
 			}
 		}
-		// phpcs:enable
 	}
 	if ( $obj instanceof Updater ) {
 		$did = get_file_data( $obj->filepath, [
@@ -50,7 +49,6 @@ function get_fair_document_data( $obj ) : void {
 		$file = $obj->type === 'plugin' ? plugin_basename( $obj->filepath ) : dirname( plugin_basename( $obj->filepath ) );
 	}
 
-		// phpcs:disable HM.Security.NonceVerification.Recommended
 	if ( isset( $_REQUEST['action'] ) ) {
 		if ( 'update-selected' === $_REQUEST['action'] ) {
 			$packages = 'plugin' === $obj->type && isset( $_REQUEST['plugins'] ) ? array_map( 'dirname', explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['plugins'] ) ) ) ) : [];
