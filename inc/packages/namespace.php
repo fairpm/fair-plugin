@@ -206,7 +206,7 @@ function pick_release( array $releases, ?string $version = null ) : ?ReleaseDocu
 
 	// If no version is specified, return the latest release.
 	if ( empty( $version ) ) {
-		return end( $releases );
+		return reset( $releases );
 	}
 
 	return array_find( $releases, fn ( $release ) => $release->version === $version );
