@@ -316,6 +316,7 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 						esc_url( $url ),
 						esc_html( $author->name )
 					);
+					break;
 				}
 				?>
 			</ul>
