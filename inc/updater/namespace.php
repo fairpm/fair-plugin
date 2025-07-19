@@ -27,6 +27,7 @@ function bootstrap() {
  * @return void
  */
 function get_fair_document_data( $obj ) : void {
+	// TODO: consider making $filepath, $type, $release protected and use get_* methods.
 	global  $release;
 
 	$packages = [];
