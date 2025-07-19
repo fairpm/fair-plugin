@@ -97,20 +97,15 @@ function upgrader_pre_download() : bool {
 function add_accept_header( $args, $url ) : array {
 	global $release;
 
-	$accept_header = [];
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;
 	}
 
 	foreach ( $release as $rel ) {
 		if ( $url === $rel->artifacts->package[0]->url ) {
-			foreach ( $rel->artifacts->package[0] as $key => $value ) {
-				$key = str_replace( '-', '_', $key );
-				$package[ $key ] = $value;
-			}
-			if ( isset( $package['content_type'] ) && $package['content_type'] === 'application/octet-stream' ) {
-				$accept_header = [ 'headers' => [ 'Accept' => 'application/octet-stream' ] ];
-				$args = array_merge( $args, $accept_header );
+			$content_type = $rel->artifacts->package[0]->{'content-type'};
+			if ( $content_type === 'application/octet-stream' ) {
+				$args = array_merge( $args, [ 'headers' => [ 'Accept' => $content_type ] ] );
 			}
 		}
 	}
