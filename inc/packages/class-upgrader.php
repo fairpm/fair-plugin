@@ -254,7 +254,7 @@ class Upgrader extends WP_Upgrader {
 		 * @param string $type plugin|theme.
 		 */
 		do_action( 'get_fair_package_data', $did, $filepath, $type );
-		add_filter( 'upgrader_pre_download', 'FAIR\\Updater\\upgrader_pre_download' );
+		add_filter( 'upgrader_pre_download', 'FAIR\\Updater\\upgrader_pre_download', 10, 1 );
 
 		// Download the package.
 		$path = $this->download_package( $artifact->url, false, $options['hook_extra'] );

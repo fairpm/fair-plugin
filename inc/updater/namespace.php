@@ -78,11 +78,13 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 /**
  * Send upgrader_pre_download filter to add_accept_header().
  *
+ * @param bool $false Whether to bail without returning the package.
+ *                    Default false.
  * @return bool
  */
-function upgrader_pre_download() : bool {
+function upgrader_pre_download( $false ) : bool {
 	add_filter( 'http_request_args', __NAMESPACE__ . '\\maybe_add_accept_header', 20, 2 );
-	return false; // upgrader_pre_download filter default return value.
+	return $false;
 }
 
 /**

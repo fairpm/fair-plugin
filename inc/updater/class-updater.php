@@ -140,7 +140,7 @@ class Updater {
 		 * @param string $type plugin|theme.
 		 */
 		do_action( 'get_fair_package_data', $this->did, $this->filepath, $this->type );
-		add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download' );
+		add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download', 10, 1 );
 	}
 
 	/**
