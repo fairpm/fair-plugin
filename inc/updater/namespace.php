@@ -15,6 +15,8 @@ use function FAIR\Packages\pick_release;
 
 use WP_Error;
 
+const UPDATE_PACKAGE = 'fair-update-package';
+
 /**
  * Bootstrap.
  */
@@ -28,8 +30,6 @@ function bootstrap() {
 /**
  * Get FAIR MetadataDocument and ReleaseDocument data.
  *
- * Sets global variables for use in add_accept_header().
- *
  * @param string $did DID.
  * @param string $filepath Absolute file path to package.
  * @param string $type plugin|theme.
@@ -37,7 +37,7 @@ function bootstrap() {
  * @return void
  */
 function get_fair_document_data( $did, $filepath, $type ) : void {
-	global  $release;
+	$release = wp_cache_get( UPDATE_PACKAGE );
 
 	$packages = [];
 	$file = $type === 'plugin' ? plugin_basename( $filepath ) : dirname( plugin_basename( $filepath ) );
@@ -49,9 +49,10 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 			if ( isset( $_REQUEST['id'] ) ) {
 				$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
 				$release[ $did ] = get_release_from_did( $did );
+				wp_cache_set( UPDATE_PACKAGE, $release );
 			}
 		}
-		$packages = isset( $_REQUEST['checked'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['checked'] ) ) : [];
+		$packages = isset( $_REQUEST['checked'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['checked'] ) ) : [];
 		if ( 'update-selected' === $_REQUEST['action'] ) {
 			$packages = 'plugin' === $type && isset( $_REQUEST['plugins'] ) ? array_map( 'dirname', explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['plugins'] ) ) ) ) : [];
 			$packages = 'theme' === $type && isset( $_REQUEST['themes'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['themes'] ) ) ) : $packages;
@@ -68,6 +69,7 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 	foreach ( $packages as $package ) {
 		if ( str_contains( $file, $package ) ) {
 			$release[ $did ] = get_release_from_did( $did );
+			wp_cache_set( UPDATE_PACKAGE, $release );
 			break;
 		}
 	}
@@ -89,15 +91,13 @@ function upgrader_pre_download() : bool {
  * ReleaseDocument artifact package content-type will be application/octet-stream.
  * Only for GitHub release assets.
  *
- * @global ReleaseDocument $release
- *
  * @param array  $args Array of http args.
  * @param string $url  Download URL.
  *
  * @return array
  */
 function add_accept_header( $args, $url ) : array {
-	global $release;
+	$release = wp_cache_get( UPDATE_PACKAGE );
 
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;
