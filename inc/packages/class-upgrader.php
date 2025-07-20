@@ -241,6 +241,11 @@ class Upgrader extends WP_Upgrader {
 		// Resolve the release artifact to a URL.
 		$artifact = pick_artifact_by_lang( $this->release->artifacts->package );
 
+		// Ensure data from DID install.
+		$did = $this->did ?? ( $this->package->id ?? '' );
+		$filepath = $this->filepath ?? '';
+		$type = $this->type ?? str_replace( 'wp-', '', ( $this->package->type ?? '' ) );
+
 		/**
 		 * Fires before upgrader_pre_download to use package data in filters.
 		 *
@@ -248,7 +253,7 @@ class Upgrader extends WP_Upgrader {
 		 * @param string $filepath Absolute file path to package.
 		 * @param string $type plugin|theme.
 		 */
-		do_action( 'get_fair_package_data', $this->did, $this->filepath, $this->type );
+		do_action( 'get_fair_package_data', $did, $filepath, $type );
 		add_filter( 'upgrader_pre_download', 'FAIR\\Updater\\upgrader_pre_download' );
 
 		// Download the package.
