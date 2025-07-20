@@ -127,7 +127,7 @@ function add_accept_header( $args, $url ) : array {
  *
  * @param  string $id DID.
  *
- * @return mixed
+ * @return ReleaseDocument|WP_Error The latest release, or a WP_Error object on failure.
  */
 function get_release_from_did( $id ) {
 	$document = get_did_document( $id );
