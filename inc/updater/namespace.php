@@ -38,7 +38,7 @@ function bootstrap() {
  */
 function get_fair_document_data( $did, $filepath, $type ) : void {
 	$packages = [];
-	$release = wp_cache_get( UPDATE_PACKAGE );
+	$releases = wp_cache_get( UPDATE_PACKAGE );
 	$file = $type === 'plugin' ? plugin_basename( $filepath ) : dirname( plugin_basename( $filepath ) );
 
 	// phpcs:disable HM.Security.NonceVerification.Recommended
@@ -47,8 +47,8 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 		if ( $_REQUEST['action'] === ACTION_INSTALL ) {
 			if ( isset( $_REQUEST['id'] ) ) {
 				$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
-				$release[ $did ] = get_release_from_did( $did );
-				wp_cache_set( UPDATE_PACKAGE, $release );
+				$releases[ $did ] = get_release_from_did( $did );
+				wp_cache_set( UPDATE_PACKAGE, $releases );
 			}
 		}
 		$packages = isset( $_REQUEST['checked'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['checked'] ) ) : [];
@@ -67,8 +67,8 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 
 	foreach ( $packages as $package ) {
 		if ( str_contains( $file, $package ) ) {
-			$release[ $did ] = get_release_from_did( $did );
-			wp_cache_set( UPDATE_PACKAGE, $release );
+			$releases[ $did ] = get_release_from_did( $did );
+			wp_cache_set( UPDATE_PACKAGE, $releases );
 			break;
 		}
 	}
@@ -80,7 +80,7 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
  * @return bool
  */
 function upgrader_pre_download() : bool {
-	add_filter( 'http_request_args', __NAMESPACE__ . '\\add_accept_header', 20, 2 );
+	add_filter( 'http_request_args', __NAMESPACE__ . '\\maybe_add_accept_header', 20, 2 );
 	return false; // upgrader_pre_download filter default return value.
 }
 
@@ -95,16 +95,16 @@ function upgrader_pre_download() : bool {
  *
  * @return array
  */
-function add_accept_header( $args, $url ) : array {
-	$release = wp_cache_get( UPDATE_PACKAGE );
+function maybe_add_accept_header( $args, $url ) : array {
+	$releases = wp_cache_get( UPDATE_PACKAGE );
 
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;
 	}
 
-	foreach ( $release as $rel ) {
-		if ( $url === $rel->artifacts->package[0]->url ) {
-			$content_type = $rel->artifacts->package[0]->{'content-type'};
+	foreach ( $releases as $release ) {
+		if ( $url === $release->artifacts->package[0]->url ) {
+			$content_type = $release->artifacts->package[0]->{'content-type'};
 			if ( $content_type === 'application/octet-stream' ) {
 				$args = array_merge( $args, [ 'headers' => [ 'Accept' => $content_type ] ] );
 			}
