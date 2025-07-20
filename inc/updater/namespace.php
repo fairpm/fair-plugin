@@ -15,7 +15,7 @@ use function FAIR\Packages\pick_release;
 
 use WP_Error;
 
-const UPDATE_PACKAGE = 'fair-update-package';
+const RELEASE_PACKAGE = 'fair-release-package';
 
 /**
  * Bootstrap.
@@ -38,7 +38,7 @@ function bootstrap() {
  */
 function get_fair_document_data( $did, $filepath, $type ) : void {
 	$packages = [];
-	$releases = wp_cache_get( UPDATE_PACKAGE );
+	$releases = wp_cache_get( RELEASE_PACKAGE );
 	$releases = $releases ? $releases : [];
 	$file = $type === 'plugin' ? plugin_basename( $filepath ) : dirname( plugin_basename( $filepath ) );
 
@@ -49,10 +49,11 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 			if ( isset( $_REQUEST['id'] ) ) {
 				$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
 				$releases[ $did ] = get_release_from_did( $did );
-				wp_cache_set( UPDATE_PACKAGE, $releases );
+				wp_cache_set( RELEASE_PACKAGE, $releases );
 			}
 		}
 		$packages = isset( $_REQUEST['checked'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['checked'] ) ) : [];
+		// TODO: Test with themes as they become available.
 		if ( 'update-selected' === $_REQUEST['action'] ) {
 			$packages = 'plugin' === $type && isset( $_REQUEST['plugins'] ) ? array_map( 'dirname', explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['plugins'] ) ) ) ) : [];
 			$packages = 'theme' === $type && isset( $_REQUEST['themes'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['themes'] ) ) ) : $packages;
@@ -69,7 +70,7 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 	foreach ( $packages as $package ) {
 		if ( str_contains( $file, $package ) ) {
 			$releases[ $did ] = get_release_from_did( $did );
-			wp_cache_set( UPDATE_PACKAGE, $releases );
+			wp_cache_set( RELEASE_PACKAGE, $releases );
 			break;
 		}
 	}
@@ -99,7 +100,7 @@ function upgrader_pre_download( $false ) : bool {
  * @return array
  */
 function maybe_add_accept_header( $args, $url ) : array {
-	$releases = wp_cache_get( UPDATE_PACKAGE );
+	$releases = wp_cache_get( RELEASE_PACKAGE );
 	$releases = $releases ? $releases : [];
 
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
