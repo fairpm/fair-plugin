@@ -242,11 +242,13 @@ class Upgrader extends WP_Upgrader {
 		$artifact = pick_artifact_by_lang( $this->release->artifacts->package );
 
 		/**
-		 * Fires before upgrader_pre_download to use object data in filters.
+		 * Fires before upgrader_pre_download to use package data in filters.
 		 *
-		 * @param Upgrader Current class object.
+		 * @param string $did DID.
+		 * @param string $filepath Absolute file path to package.
+		 * @param string $type plugin|theme.
 		 */
-		do_action( 'get_fair_document_data', $this );
+		do_action( 'get_fair_package_data', $this->did, $this->filepath, $this->type );
 		add_filter( 'upgrader_pre_download', 'FAIR\\Updater\\upgrader_pre_download' );
 
 		// Download the package.

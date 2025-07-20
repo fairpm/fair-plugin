@@ -21,7 +21,9 @@ use WP_Error;
  */
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\run' );
-	add_action( 'get_fair_document_data', __NAMESPACE__ . '\\get_fair_document_data', 10, 1 );
+	add_action( 'get_fair_package_data', __NAMESPACE__ . '\\get_fair_document_data', 10, 3 );
+	add_action( 'wp_ajax_update-plugin', __NAMESPACE__ . '\\get_fair_document_data', 10, 3 );
+	// TODO: Will need to add hooks for themes.
 }
 
 /**
