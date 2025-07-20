@@ -31,39 +31,31 @@ function bootstrap() {
  *
  * Sets global variables for use in add_accept_header().
  *
- * @param stdClass $obj FAIR\Packages\Upgrader | FAIR\Updater\Updater.
+ * @param string $did DID.
+ * @param string $filepath Absolute file path to package.
+ * @param string $type plugin|theme.
  *
  * @return void
  */
-function get_fair_document_data( $obj ) : void {
-	// TODO: consider making $filepath, $type, $release protected and use get_* methods.
+function get_fair_document_data( $did, $filepath, $type ) : void {
 	global  $release;
 
 	$packages = [];
-	// phpcs:disable HM.Security.NonceVerification.Recommended
-	if (
-		$obj instanceof Upgrader
-		&& isset( $_REQUEST['action'], $_REQUEST['id'] ) // phpcs:ignore HM.PHP.Isset.MultipleArguments
-		&& $_REQUEST['action'] === ACTION_INSTALL
-	) {
-		$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
-		if ( $did === $obj->package->id ) {
-			$release[ $did ] = $obj->release;
-		}
-	}
-	if ( $obj instanceof Updater ) {
-		$did = get_file_data( $obj->filepath, [
-			'PluginID' => 'Plugin ID',
-			'ThemeID' => 'Theme ID',
-		] );
-		$did = $obj->type === 'plugin' ? $did['PluginID'] : $did['ThemeID'];
-		$file = $obj->type === 'plugin' ? plugin_basename( $obj->filepath ) : dirname( plugin_basename( $obj->filepath ) );
-	}
+	$file = $type === 'plugin' ? plugin_basename( $filepath ) : dirname( plugin_basename( $filepath ) );
 
+	// phpcs:disable HM.Security.NonceVerification.Recommended
 	if ( isset( $_REQUEST['action'] ) ) {
+		// Runs on DID install of package.
+		if ( $_REQUEST['action'] === ACTION_INSTALL ) {
+			if ( isset( $_REQUEST['id']) ) {
+				$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
+				$release[ $did ] = get_release_from_did( $did );
+			}
+		}
+		$packages = $_REQUEST['checked'] ?? [];
 		if ( 'update-selected' === $_REQUEST['action'] ) {
-			$packages = 'plugin' === $obj->type && isset( $_REQUEST['plugins'] ) ? array_map( 'dirname', explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['plugins'] ) ) ) ) : [];
-			$packages = 'theme' === $obj->type && isset( $_REQUEST['themes'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['themes'] ) ) ) : $packages;
+			$packages = 'plugin' === $type && isset( $_REQUEST['plugins'] ) ? array_map( 'dirname', explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['plugins'] ) ) ) ) : [];
+			$packages = 'theme' === $type && isset( $_REQUEST['themes'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['themes'] ) ) ) : $packages;
 		}
 		if ( 'update-plugin' === $_REQUEST['action'] && isset( $_REQUEST['plugin'] ) ) {
 			$packages[] = dirname( sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) );
@@ -76,7 +68,7 @@ function get_fair_document_data( $obj ) : void {
 
 	foreach ( $packages as $package ) {
 		if ( str_contains( $file, $package ) ) {
-			$release[ $did ] = $obj->release;
+			$release[ $did ] = get_release_from_did( $did );
 			break;
 		}
 	}
