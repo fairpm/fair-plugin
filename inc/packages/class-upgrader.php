@@ -246,6 +246,7 @@ class Upgrader extends WP_Upgrader {
 		 *
 		 * @param string $did DID.
 		 * @param string $filepath Absolute file path to package.
+		 *                         File path not available via DID Direct Install of package.
 		 * @param string $type plugin|theme.
 		 */
 		do_action( 'get_fair_package_data', $this->package->id, '', str_replace( 'wp-', '', $this->package->type ) );
