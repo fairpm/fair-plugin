@@ -129,7 +129,7 @@ function add_accept_header( $args, $url ) : array {
  *
  * @return ReleaseDocument|WP_Error The latest release, or a WP_Error object on failure.
  */
-function get_release_from_did( $id ) {
+function get_latest_release_from_did( $id ) {
 	$document = get_did_document( $id );
 	if ( is_wp_error( $document ) ) {
 		return $document;
