@@ -85,7 +85,7 @@ function upgrader_pre_download() : bool {
 }
 
 /**
- * Add accept header for release asset package binary.
+ * Maybe add accept header for release asset package binary.
  *
  * ReleaseDocument artifact package content-type will be application/octet-stream.
  * Only for GitHub release assets.
