@@ -39,6 +39,7 @@ function bootstrap() {
 function get_fair_document_data( $did, $filepath, $type ) : void {
 	$packages = [];
 	$releases = wp_cache_get( UPDATE_PACKAGE );
+	$releases = $releases ? $releases : [];
 	$file = $type === 'plugin' ? plugin_basename( $filepath ) : dirname( plugin_basename( $filepath ) );
 
 	// phpcs:disable HM.Security.NonceVerification.Recommended
@@ -97,6 +98,7 @@ function upgrader_pre_download() : bool {
  */
 function maybe_add_accept_header( $args, $url ) : array {
 	$releases = wp_cache_get( UPDATE_PACKAGE );
+	$releases = $releases ? $releases : [];
 
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;
