@@ -9,7 +9,6 @@ namespace FAIR\Updater;
 
 use const FAIR\Packages\Admin\ACTION_INSTALL;
 
-use FAIR\Packages\Upgrader;
 use function FAIR\Packages\fetch_package_metadata;
 use function FAIR\Packages\get_did_document;
 use function FAIR\Packages\pick_release;
@@ -47,12 +46,12 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 	if ( isset( $_REQUEST['action'] ) ) {
 		// Runs on DID install of package.
 		if ( $_REQUEST['action'] === ACTION_INSTALL ) {
-			if ( isset( $_REQUEST['id']) ) {
+			if ( isset( $_REQUEST['id'] ) ) {
 				$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
 				$release[ $did ] = get_release_from_did( $did );
 			}
 		}
-		$packages = $_REQUEST['checked'] ?? [];
+		$packages = isset( $_REQUEST['checked'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['checked'] ) ) : [];
 		if ( 'update-selected' === $_REQUEST['action'] ) {
 			$packages = 'plugin' === $type && isset( $_REQUEST['plugins'] ) ? array_map( 'dirname', explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['plugins'] ) ) ) ) : [];
 			$packages = 'theme' === $type && isset( $_REQUEST['themes'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['themes'] ) ) ) : $packages;
