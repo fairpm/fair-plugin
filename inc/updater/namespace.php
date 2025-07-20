@@ -37,9 +37,8 @@ function bootstrap() {
  * @return void
  */
 function get_fair_document_data( $did, $filepath, $type ) : void {
-	$release = wp_cache_get( UPDATE_PACKAGE );
-
 	$packages = [];
+	$release = wp_cache_get( UPDATE_PACKAGE );
 	$file = $type === 'plugin' ? plugin_basename( $filepath ) : dirname( plugin_basename( $filepath ) );
 
 	// phpcs:disable HM.Security.NonceVerification.Recommended
