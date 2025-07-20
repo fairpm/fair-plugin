@@ -28,7 +28,7 @@ function bootstrap() {
 }
 
 /**
- * Get FAIR MetadataDocument and ReleaseDocument data.
+ * Get FAIR ReleaseDocument data.
  *
  * @param string $did DID.
  * @param string $filepath Absolute file path to package.
