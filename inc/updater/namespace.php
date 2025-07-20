@@ -123,7 +123,7 @@ function add_accept_header( $args, $url ) : array {
 }
 
 /**
- * Get data from DID.
+ * Get the latest release for a DID.
  *
  * @param  string $id DID.
  *
