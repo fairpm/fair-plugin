@@ -19,14 +19,14 @@ class Upgrader extends WP_Upgrader {
 	 *
 	 * @var MetadataDocument
 	 */
-	public $package;
+	protected $package;
 
 	/**
 	 * Release document.
 	 *
 	 * @var ReleaseDocument
 	 */
-	public $release;
+	protected $release;
 
 	/**
 	 * Is this an upgrade?

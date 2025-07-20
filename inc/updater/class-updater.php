@@ -37,7 +37,7 @@ class Updater {
 	 *
 	 * @var string
 	 */
-	public $filepath;
+	protected $filepath;
 
 	/**
 	 * Current installed version of the package.
@@ -51,7 +51,7 @@ class Updater {
 	 *
 	 * @var string
 	 */
-	public $type;
+	protected $type;
 
 	/**
 	 * Metadata document.
@@ -65,7 +65,7 @@ class Updater {
 	 *
 	 * @var \FAIR\Packages\ReleaseDocument
 	 */
-	public $release;
+	protected $release;
 
 	/**
 	 * Constructor.
