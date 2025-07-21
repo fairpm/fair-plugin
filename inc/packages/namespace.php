@@ -10,6 +10,7 @@ namespace FAIR\Packages;
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use WP_Error;
+use WP_Upgrader_Skin;
 
 const SERVICE_ID = 'FairPackageManagementRepo';
 const CONTENT_TYPE = 'application/json+fair';
@@ -126,11 +127,11 @@ function fetch_package_metadata( string $id ) {
  * Install a plugin from a FAIR DID.
  *
  * @param string $id DID of the package to install.
- * @param string|null $version Version to install. If null, the latest version is installed.
  * @param WP_Upgrader_Skin $skin Plugin Installer Skin.
+ * @param string|null $version Version to install. If null, the latest version is installed.
  * @return bool|WP_Error True on success, WP_Error on failure.
  */
-function install_plugin( string $id, ?string $version = null, $skin ) {
+function install_plugin( string $id, WP_Upgrader_Skin $skin, ?string $version = null ) {
 	$document = get_did_document( $id );
 	if ( is_wp_error( $document ) ) {
 		return $document;
