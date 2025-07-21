@@ -130,7 +130,8 @@ function fetch_package_metadata( string $id ) {
  * @param WP_Upgrader_Skin $skin Plugin Installer Skin.
  * @return bool|WP_Error True on success, WP_Error on failure.
  */
-function install_plugin( string $id, ?string $version = null, $skin ) {
+function install_plugin( string $id, string $version, $skin ) {
+	$version = empty( $version ) ? null : $version;
 	$document = get_did_document( $id );
 	if ( is_wp_error( $document ) ) {
 		return $document;
