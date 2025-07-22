@@ -9,6 +9,8 @@ namespace FAIR\Icons;
 
 use const FAIR\PLUGIN_FILE;
 
+use stdClass;
+
 /**
  * Bootstrap
  */
@@ -24,6 +26,11 @@ function bootstrap() {
  * @return stdClass
  */
 function set_default_icon( $transient ) {
+	// The transient may not be set yet.
+	if ( ! is_object( $transient ) ) {
+		$transient = new stdClass();
+	}
+
 	if ( ! property_exists( $transient, 'response' ) ) {
 		return $transient;
 	}

@@ -10,6 +10,7 @@ namespace FAIR\Packages;
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use WP_Error;
+use WP_Upgrader_Skin;
 
 const SERVICE_ID = 'FairPackageManagementRepo';
 const CONTENT_TYPE = 'application/json+fair';
@@ -126,11 +127,11 @@ function fetch_package_metadata( string $id ) {
  * Install a plugin from a FAIR DID.
  *
  * @param string $id DID of the package to install.
- * @param string|null $version Version to install. If null, the latest version is installed.
  * @param WP_Upgrader_Skin $skin Plugin Installer Skin.
+ * @param string|null $version Version to install. If null, the latest version is installed.
  * @return bool|WP_Error True on success, WP_Error on failure.
  */
-function install_plugin( string $id, ?string $version = null, $skin ) {
+function install_plugin( string $id, WP_Upgrader_Skin $skin, ?string $version = null ) {
 	$document = get_did_document( $id );
 	if ( is_wp_error( $document ) ) {
 		return $document;
@@ -173,6 +174,7 @@ function install_plugin( string $id, ?string $version = null, $skin ) {
 function fetch_metadata_doc( string $url ) {
 	$cache_key = md5( $url );
 	$response = get_site_transient( $cache_key );
+
 	if ( ! $response ) {
 		$response = wp_remote_get( $url, [
 			'headers' => [
@@ -184,7 +186,7 @@ function fetch_metadata_doc( string $url ) {
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		} elseif ( $code !== 200 ) {
-			return new WP_Error( 'fair.packages.metadata.failure', wp_remote_retrieve_body( $response ) );
+			return new WP_Error( 'fair.packages.metadata.failure', __( 'HTTP error code received', 'fair' ) );
 		}
 		set_site_transient( $cache_key, $response, CACHE_LIFETIME );
 	}
@@ -205,7 +207,7 @@ function pick_release( array $releases, ?string $version = null ) : ?ReleaseDocu
 
 	// If no version is specified, return the latest release.
 	if ( empty( $version ) ) {
-		return end( $releases );
+		return reset( $releases );
 	}
 
 	return array_find( $releases, fn ( $release ) => $release->version === $version );

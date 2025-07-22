@@ -7,20 +7,14 @@
 
 namespace FAIR\Updater;
 
-use const FAIR\Packages\SERVICE_ID;
-
 use FAIR\Packages;
-use function FAIR\Packages\fetch_metadata_doc;
 use function FAIR\Packages\fetch_package_metadata;
-use function FAIR\Packages\get_did_document;
 use function FAIR\Packages\get_did_hash;
-use function FAIR\Packages\pick_release;
 
 use Plugin_Upgrader;
 use stdClass;
 use Theme_Upgrader;
 use TypeError;
-use WP_Error;
 use WP_Upgrader;
 
 /**
@@ -64,14 +58,14 @@ class Updater {
 	 *
 	 * @var \FAIR\Packages\MetadataDocument
 	 */
-	public $metadata;
+	protected $metadata;
 
 	/**
 	 * Release document.
 	 *
 	 * @var \FAIR\Packages\ReleaseDocument
 	 */
-	public $release;
+	protected $release;
 
 	/**
 	 * Constructor.
@@ -116,59 +110,13 @@ class Updater {
 		if ( is_wp_error( $this->metadata ) ) {
 			return $this->metadata;
 		}
-		$this->release = $this->get_data_from_did( $this->did );
+		$this->release = get_latest_release_from_did( $this->did );
 		if ( is_wp_error( $this->release ) ) {
 			return $this->release;
 		}
 		$this->type = str_replace( 'wp-', '', $this->metadata->type );
 
 		$this->load_hooks();
-	}
-
-	/**
-	 * Get data from DID.
-	 *
-	 * @param  string $id DID.
-	 * @param  string $version Release version.
-	 *
-	 * @return mixed
-	 */
-	protected function get_data_from_did( $id, $version = null ) {
-		$document = get_did_document( $id );
-		if ( is_wp_error( $document ) ) {
-			return $document;
-		}
-
-		// Fetch data from the repository.
-		$service = $document->get_service( SERVICE_ID );
-		if ( empty( $service ) ) {
-			return new WP_Error( 'fair.packages.install_plugin.no_service', __( 'DID is not a valid package to install.', 'fair' ) );
-		}
-		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		$repo_url = $service->serviceEndpoint;
-
-		// Filter to valid keys for signing.
-		$valid_keys = $document->get_fair_signing_keys();
-		if ( empty( $valid_keys ) ) {
-			return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
-		}
-
-		$metadata = fetch_metadata_doc( $repo_url );
-		if ( is_wp_error( $metadata ) ) {
-			return $metadata;
-		}
-
-		// Select the latest release.
-		$releases = array_values( $metadata->releases );
-		usort( $releases, fn ( $a, $b ) => version_compare( $b->version, $a->version ) );
-		$latest = ! empty( $releases ) ? reset( $releases ) : null;
-
-		$release = pick_release( $metadata->releases, $latest->version );
-		if ( empty( $release ) ) {
-			return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
-		}
-
-		return $release;
 	}
 
 	/**
@@ -185,12 +133,14 @@ class Updater {
 		}
 
 		/**
-		 * Fires before upgrader_pre_download to use object data in filters.
+		 * Fires before upgrader_pre_download to use package data in filters.
 		 *
-		 * @param Updater Current class object.
+		 * @param string $did DID.
+		 * @param string $filepath Absolute file path to package.
+		 * @param string $type plugin|theme.
 		 */
-		do_action( 'get_fair_document_data', $this );
-		add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download' );
+		do_action( 'get_fair_package_data', $this->did, $this->filepath, $this->type );
+		add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download', 10, 1 );
 	}
 
 	/**
@@ -203,7 +153,7 @@ class Updater {
 	 *
 	 * @throws TypeError If the type of $upgrader is not correct.
 	 *
-	 * @return string
+	 * @return string|WP_Error
 	 */
 	public function upgrader_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
 		global $wp_filesystem;
