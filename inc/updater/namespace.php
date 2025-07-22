@@ -29,7 +29,7 @@ function bootstrap() {
  * @param string $did DID.
  * @return void
  */
-function get_fair_release_data( $did ) : void {
+function get_fair_release_data( string $did ) : void {
 	if ( empty( $did ) ) {
 		return;
 	}
