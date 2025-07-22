@@ -45,7 +45,7 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 	// phpcs:disable HM.Security.NonceVerification.Recommended
 	// During auto-update.
 	if ( wp_doing_cron() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-		$releases[ $did ] = get_release_from_did( $did );
+		$releases[ $did ] = get_latest_release_from_did( $did );
 		wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
 	}
 	if ( isset( $_REQUEST['action'] ) ) {
@@ -53,7 +53,7 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 		if ( $_REQUEST['action'] === ACTION_INSTALL ) {
 			if ( isset( $_REQUEST['id'] ) ) {
 				$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
-				$releases[ $did ] = get_release_from_did( $did );
+				$releases[ $did ] = get_latest_release_from_did( $did );
 				wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
 			}
 		}
@@ -74,7 +74,7 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 
 	foreach ( $packages as $package ) {
 		if ( str_contains( $file, $package ) ) {
-			$releases[ $did ] = get_release_from_did( $did );
+			$releases[ $did ] = get_latest_release_from_did( $did );
 			wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
 			break;
 		}
