@@ -167,8 +167,8 @@ function get_direct_install_url( MetadataDocument $doc, ReleaseDocument $release
 /**
  * Get direct update URL.
  *
- * @param string $id   Plugin or theme ID.
- * @param string $type 'plugin' or 'theme'.
+ * @param string $id   DID of the package.
+ * @param string $type Type of the package (e.g. 'plugin', 'theme').
  *
  * @return string
  */

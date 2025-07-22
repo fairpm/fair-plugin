@@ -433,6 +433,7 @@ function check_requirements( ReleaseDocument $release ) {
  *
  * @param string $id DID of the package to check.
  * @param string $type Type of the package (e.g. 'plugin', 'theme').
+ *
  * @return string|null The installed version, or null if not installed.
  */
 function get_installed_version( $id, $type ) {
