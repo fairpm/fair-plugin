@@ -20,16 +20,15 @@ const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
  */
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\run' );
-	add_action( 'get_fair_package_data', __NAMESPACE__ . '\\get_fair_release_data', 10, 1 );
 }
 
 /**
- * Get FAIR ReleaseDocument data.
+ * Add FAIR ReleaseDocument data to cache.
  *
  * @param string $did DID.
  * @return void
  */
-function get_fair_release_data( string $did ) : void {
+function add_package_to_release_cache( string $did ) : void {
 	if ( empty( $did ) ) {
 		return;
 	}

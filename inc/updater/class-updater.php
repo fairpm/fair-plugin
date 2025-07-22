@@ -132,12 +132,7 @@ class Updater {
 			add_filter( 'wp_prepare_themes_for_js', [ $this, 'customize_theme_update_html' ] );
 		}
 
-		/**
-		 * Fires before upgrader_pre_download to use package DID in filters.
-		 *
-		 * @param string $did DID.
-		 */
-		do_action( 'get_fair_package_data', $this->did );
+		add_package_to_release_cache( $this->did );
 		add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download', 10, 1 );
 	}
 
