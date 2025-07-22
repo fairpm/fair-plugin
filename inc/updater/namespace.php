@@ -43,6 +43,11 @@ function get_fair_document_data( $did, $filepath, $type ) : void {
 	$file = $type === 'plugin' ? plugin_basename( $filepath ) : dirname( plugin_basename( $filepath ) );
 
 	// phpcs:disable HM.Security.NonceVerification.Recommended
+	// During auto-update.
+	if ( wp_doing_cron() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+		$releases[ $did ] = get_release_from_did( $did );
+		wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
+	}
 	if ( isset( $_REQUEST['action'] ) ) {
 		// Runs on DID install of package.
 		if ( $_REQUEST['action'] === ACTION_INSTALL ) {
