@@ -179,7 +179,7 @@ function get_direct_update_url( string $id, string $type ): string {
 	$file = $type === 'plugin' ? plugin_basename( $file ) : basename( $file );
 	$args = [
 		'action' => $action,
-		'plugin' => $file,
+		$type => $file,
 	];
 	$url = add_query_arg( $args, self_admin_url( 'update.php' ) );
 	return wp_nonce_url( $url, "{$action}_{$file}" );
