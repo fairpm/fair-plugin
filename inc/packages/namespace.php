@@ -9,6 +9,7 @@ namespace FAIR\Packages;
 
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
+use function FAIR\Updater\get_packages;
 use WP_Error;
 use WP_Upgrader_Skin;
 
@@ -425,6 +426,26 @@ function get_unmet_requirements( array $requirements ) : array {
 function check_requirements( ReleaseDocument $release ) {
 	$requires = get_unmet_requirements( (array) $release->requires );
 	return empty( $requires );
+}
+
+/**
+ * Get the installed version of a package.
+ *
+ * @param string $id DID of the package to check.
+ * @param string $type Type of the package (e.g. 'plugin', 'theme').
+ *
+ * @return string|null The installed version, or null if not installed.
+ */
+function get_installed_version( string $id, string $type ) {
+	$type .= 's';
+	$packages = get_packages();
+
+	if ( empty( $packages[ $type ][ $id ] ) ) {
+		// Not installed.
+		return null;
+	}
+
+	return get_file_data( $packages[ $type ][ $id ], [ 'Version' => 'Version' ] )['Version'];
 }
 
 // phpcs:enable
