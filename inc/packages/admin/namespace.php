@@ -176,7 +176,7 @@ function get_direct_update_url( string $id, string $type ): string {
 	$action = "upgrade-{$type}";
 	$packages = Updater\get_packages();
 	$file = $packages[ "{$type}s" ][ $id ];
-	$file = $type === 'plugin' ? plugin_basename( $file ) : basename( $packages[ "{$type}s" ][ $id ] );
+	$file = $type === 'plugin' ? plugin_basename( $file ) : basename( $file );
 	$args = [
 		'action' => $action,
 		'plugin' => $file,
