@@ -73,6 +73,7 @@ function maybe_add_accept_header( $args, $url ) : array {
 			$content_type = $release->artifacts->package[0]->{'content-type'};
 			if ( $content_type === 'application/octet-stream' ) {
 				$args = array_merge( $args, [ 'headers' => [ 'Accept' => $content_type ] ] );
+				break;
 			}
 		}
 	}
