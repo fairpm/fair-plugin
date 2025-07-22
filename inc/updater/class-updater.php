@@ -133,13 +133,11 @@ class Updater {
 		}
 
 		/**
-		 * Fires before upgrader_pre_download to use package data in filters.
+		 * Fires before upgrader_pre_download to use package DID in filters.
 		 *
 		 * @param string $did DID.
-		 * @param string $filepath Absolute file path to package.
-		 * @param string $type plugin|theme.
 		 */
-		do_action( 'get_fair_package_data', $this->did, $this->filepath, $this->type );
+		do_action( 'get_fair_package_data', $this->did );
 		add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download', 10, 1 );
 	}
 

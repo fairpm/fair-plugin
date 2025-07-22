@@ -20,8 +20,8 @@ const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
  */
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\run' );
-	add_action( 'get_fair_package_data', __NAMESPACE__ . '\\get_fair_release_data', 10, 3 );
-	add_action( 'wp_ajax_update-plugin', __NAMESPACE__ . '\\get_fair_release_data', 10, 3 );
+	add_action( 'get_fair_package_data', __NAMESPACE__ . '\\get_fair_release_data', 10, 1 );
+	add_action( 'wp_ajax_update-plugin', __NAMESPACE__ . '\\get_fair_release_data', 10, 1 );
 	// TODO: Will need to add hooks for themes.
 }
 
@@ -29,15 +29,11 @@ function bootstrap() {
  * Get FAIR ReleaseDocument data.
  *
  * @param string $did DID.
- * @param string $filepath Absolute file path to package.
- * @param string $type plugin|theme.
- *
  * @return void
  */
-function get_fair_release_data( $did, $filepath, $type ) : void {
+function get_fair_release_data( $did ) : void {
 	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY );
 	$releases = $releases ? $releases : [];
-	$file = $type === 'plugin' ? plugin_basename( $filepath ) : dirname( plugin_basename( $filepath ) );
 
 	if ( $did ) {
 		$releases[ $did ] = get_latest_release_from_did( $did );
