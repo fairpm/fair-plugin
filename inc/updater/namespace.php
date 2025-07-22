@@ -9,59 +9,59 @@ namespace FAIR\Updater;
 
 use const FAIR\Packages\Admin\ACTION_INSTALL;
 
-use FAIR\Packages\Upgrader;
 use function FAIR\Packages\fetch_package_metadata;
 use function FAIR\Packages\get_did_document;
 use function FAIR\Packages\pick_release;
 
 use WP_Error;
 
+const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
+
 /**
  * Bootstrap.
  */
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\run' );
-	add_action( 'get_fair_document_data', __NAMESPACE__ . '\\get_fair_document_data', 10, 1 );
+	add_action( 'get_fair_package_data', __NAMESPACE__ . '\\get_fair_document_data', 10, 3 );
+	add_action( 'wp_ajax_update-plugin', __NAMESPACE__ . '\\get_fair_document_data', 10, 3 );
+	// TODO: Will need to add hooks for themes.
 }
 
 /**
- * Get FAIR MetadataDocument and ReleaseDocument data.
+ * Get FAIR ReleaseDocument data.
  *
- * Sets global variables for use in add_accept_header().
- *
- * @param stdClass $obj FAIR\Packages\Upgrader | FAIR\Updater\Updater.
+ * @param string $did DID.
+ * @param string $filepath Absolute file path to package.
+ * @param string $type plugin|theme.
  *
  * @return void
  */
-function get_fair_document_data( $obj ) : void {
-	// TODO: consider making $filepath, $type, $release protected and use get_* methods.
-	global  $release;
-
+function get_fair_document_data( $did, $filepath, $type ) : void {
 	$packages = [];
-	// phpcs:disable HM.Security.NonceVerification.Recommended
-	if (
-		$obj instanceof Upgrader
-		&& isset( $_REQUEST['action'], $_REQUEST['id'] ) // phpcs:ignore HM.PHP.Isset.MultipleArguments
-		&& $_REQUEST['action'] === ACTION_INSTALL
-	) {
-		$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
-		if ( $did === $obj->package->id ) {
-			$release[ $did ] = $obj->release;
-		}
-	}
-	if ( $obj instanceof Updater ) {
-		$did = get_file_data( $obj->filepath, [
-			'PluginID' => 'Plugin ID',
-			'ThemeID' => 'Theme ID',
-		] );
-		$did = $obj->type === 'plugin' ? $did['PluginID'] : $did['ThemeID'];
-		$file = $obj->type === 'plugin' ? plugin_basename( $obj->filepath ) : dirname( plugin_basename( $obj->filepath ) );
-	}
+	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY );
+	$releases = $releases ? $releases : [];
+	$file = $type === 'plugin' ? plugin_basename( $filepath ) : dirname( plugin_basename( $filepath ) );
 
+	// phpcs:disable HM.Security.NonceVerification.Recommended
+	// During auto-update.
+	if ( wp_doing_cron() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+		$releases[ $did ] = get_release_from_did( $did );
+		wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
+	}
 	if ( isset( $_REQUEST['action'] ) ) {
+		// Runs on DID install of package.
+		if ( $_REQUEST['action'] === ACTION_INSTALL ) {
+			if ( isset( $_REQUEST['id'] ) ) {
+				$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
+				$releases[ $did ] = get_release_from_did( $did );
+				wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
+			}
+		}
+		$packages = isset( $_REQUEST['checked'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['checked'] ) ) : [];
+		// TODO: Test with themes as they become available.
 		if ( 'update-selected' === $_REQUEST['action'] ) {
-			$packages = 'plugin' === $obj->type && isset( $_REQUEST['plugins'] ) ? array_map( 'dirname', explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['plugins'] ) ) ) ) : [];
-			$packages = 'theme' === $obj->type && isset( $_REQUEST['themes'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['themes'] ) ) ) : $packages;
+			$packages = 'plugin' === $type && isset( $_REQUEST['plugins'] ) ? array_map( 'dirname', explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['plugins'] ) ) ) ) : [];
+			$packages = 'theme' === $type && isset( $_REQUEST['themes'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['themes'] ) ) ) : $packages;
 		}
 		if ( 'update-plugin' === $_REQUEST['action'] && isset( $_REQUEST['plugin'] ) ) {
 			$packages[] = dirname( sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) );
@@ -74,7 +74,8 @@ function get_fair_document_data( $obj ) : void {
 
 	foreach ( $packages as $package ) {
 		if ( str_contains( $file, $package ) ) {
-			$release[ $did ] = $obj->release;
+			$releases[ $did ] = get_release_from_did( $did );
+			wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
 			break;
 		}
 	}
@@ -83,36 +84,37 @@ function get_fair_document_data( $obj ) : void {
 /**
  * Send upgrader_pre_download filter to add_accept_header().
  *
+ * @param bool $false Whether to bail without returning the package.
+ *                    Default false.
  * @return bool
  */
-function upgrader_pre_download() : bool {
-	add_filter( 'http_request_args', __NAMESPACE__ . '\\add_accept_header', 20, 2 );
-	return false; // upgrader_pre_download filter default return value.
+function upgrader_pre_download( $false ) : bool {
+	add_filter( 'http_request_args', __NAMESPACE__ . '\\maybe_add_accept_header', 20, 2 );
+	return $false;
 }
 
 /**
- * Add accept header for release asset package binary.
+ * Maybe add accept header for release asset package binary.
  *
  * ReleaseDocument artifact package content-type will be application/octet-stream.
  * Only for GitHub release assets.
- *
- * @global ReleaseDocument $release
  *
  * @param array  $args Array of http args.
  * @param string $url  Download URL.
  *
  * @return array
  */
-function add_accept_header( $args, $url ) : array {
-	global $release;
+function maybe_add_accept_header( $args, $url ) : array {
+	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY );
+	$releases = $releases ? $releases : [];
 
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;
 	}
 
-	foreach ( $release as $rel ) {
-		if ( $url === $rel->artifacts->package[0]->url ) {
-			$content_type = $rel->artifacts->package[0]->{'content-type'};
+	foreach ( $releases as $release ) {
+		if ( $url === $release->artifacts->package[0]->url ) {
+			$content_type = $release->artifacts->package[0]->{'content-type'};
 			if ( $content_type === 'application/octet-stream' ) {
 				$args = array_merge( $args, [ 'headers' => [ 'Accept' => $content_type ] ] );
 			}

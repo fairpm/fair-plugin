@@ -37,7 +37,7 @@ class Updater {
 	 *
 	 * @var string
 	 */
-	public $filepath;
+	protected $filepath;
 
 	/**
 	 * Current installed version of the package.
@@ -51,7 +51,7 @@ class Updater {
 	 *
 	 * @var string
 	 */
-	public $type;
+	protected $type;
 
 	/**
 	 * Metadata document.
@@ -65,7 +65,7 @@ class Updater {
 	 *
 	 * @var \FAIR\Packages\ReleaseDocument
 	 */
-	public $release;
+	protected $release;
 
 	/**
 	 * Constructor.
@@ -133,12 +133,14 @@ class Updater {
 		}
 
 		/**
-		 * Fires before upgrader_pre_download to use object data in filters.
+		 * Fires before upgrader_pre_download to use package data in filters.
 		 *
-		 * @param Updater Current class object.
+		 * @param string $did DID.
+		 * @param string $filepath Absolute file path to package.
+		 * @param string $type plugin|theme.
 		 */
-		do_action( 'get_fair_document_data', $this );
-		add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download' );
+		do_action( 'get_fair_package_data', $this->did, $this->filepath, $this->type );
+		add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download', 10, 1 );
 	}
 
 	/**
