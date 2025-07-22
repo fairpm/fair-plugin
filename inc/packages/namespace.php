@@ -444,17 +444,7 @@ function get_installed_version( $id, $type ) {
 		return null;
 	}
 
-	switch ( $type ) {
-		case 'plugins':
-			return get_plugin_data( $packages[ $type ][ $id ] )['Version'];
-
-		case 'themes':
-			$theme = wp_get_theme( $packages[ $type ][ $id ] );
-			return $theme->exists() ? $theme->Version : null;
-
-		default:
-			return null;
-	}
+	return get_file_data( $packages[ $type ][ $id ], [ 'Version' => 'Version' ] )['Version'];
 }
 
 // phpcs:enable
