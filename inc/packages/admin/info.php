@@ -447,7 +447,7 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 			return sprintf(
 				'<a class="z_update-now button" data-id="%s" href="%s" aria-label="%s" data-name="%s" role="button">%s</a>',
 				esc_attr( $doc->id ),
-				esc_url( Admin\get_direct_update_url( $doc->id, $type ) ),
+				esc_url( Admin\get_direct_update_url( $doc ) ),
 				/* translators: %s: The package's name. */
 				esc_attr( sprintf( __( 'Update %s now', 'fair' ), $doc->name ) ),
 				esc_attr( $doc->name ),

@@ -167,15 +167,15 @@ function get_direct_install_url( MetadataDocument $doc, ReleaseDocument $release
 /**
  * Get direct update URL.
  *
- * @param string $id   DID of the package.
- * @param string $type Type of the package (e.g. 'plugin', 'theme').
+ * @param  MetadataDocument $doc Metadata document.
  *
  * @return string
  */
-function get_direct_update_url( string $id, string $type ): string {
+function get_direct_update_url( MetadataDocument $doc ): string {
+	$type = str_replace( 'wp-', '', $doc->type );
 	$action = "upgrade-{$type}";
 	$packages = Updater\get_packages();
-	$file = $packages[ "{$type}s" ][ $id ];
+	$file = $packages[ "{$type}s" ][ $doc->id ];
 	$file = $type === 'plugin' ? plugin_basename( $file ) : basename( dirname( $file ) );
 	$args = [
 		'action' => $action,
