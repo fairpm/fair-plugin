@@ -30,12 +30,13 @@ function bootstrap() {
  * @return void
  */
 function get_fair_release_data( $did ) : void {
-	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
-
-	if ( $did ) {
-		$releases[ $did ] = get_latest_release_from_did( $did );
-		wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
+	if ( empty( $did ) ) {
+		return;
 	}
+	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY );
+	$releases = $releases ? $releases : [];
+	$releases[ $did ] = get_latest_release_from_did( $did );
+	wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
 }
 
 /**
