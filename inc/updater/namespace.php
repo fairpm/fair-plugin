@@ -21,8 +21,6 @@ const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\run' );
 	add_action( 'get_fair_package_data', __NAMESPACE__ . '\\get_fair_release_data', 10, 1 );
-	add_action( 'wp_ajax_update-plugin', __NAMESPACE__ . '\\get_fair_release_data', 10, 1 );
-	// TODO: Will need to add hooks for themes.
 }
 
 /**
