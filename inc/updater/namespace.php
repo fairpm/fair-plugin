@@ -33,8 +33,7 @@ function get_fair_release_data( $did ) : void {
 	if ( empty( $did ) ) {
 		return;
 	}
-	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY );
-	$releases = $releases ? $releases : [];
+	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
 	$releases[ $did ] = get_latest_release_from_did( $did );
 	wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
 }
