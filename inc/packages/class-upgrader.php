@@ -7,6 +7,8 @@
 
 namespace FAIR\Packages;
 
+use function FAIR\Updater\add_package_to_release_cache;
+
 use WP_Error;
 use WP_Upgrader;
 
@@ -241,12 +243,7 @@ class Upgrader extends WP_Upgrader {
 		// Resolve the release artifact to a URL.
 		$artifact = pick_artifact_by_lang( $this->release->artifacts->package );
 
-		/**
-		 * Fires before upgrader_pre_download to use package DID in filters.
-		 *
-		 * @param string $did DID.
-		 */
-		do_action( 'get_fair_package_data', $this->package->id );
+		add_package_to_release_cache( $this->package->id );
 		add_filter( 'upgrader_pre_download', 'FAIR\\Updater\\upgrader_pre_download', 10, 1 );
 
 		// Download the package.
