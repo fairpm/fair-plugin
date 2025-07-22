@@ -11,6 +11,7 @@ use FAIR;
 use FAIR\Packages;
 use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
+use FAIR\Updater;
 
 use WP_Upgrader_Skin;
 
@@ -161,6 +162,27 @@ function get_direct_install_url( MetadataDocument $doc, ReleaseDocument $release
 	];
 	$url = add_query_arg( $args, self_admin_url( 'update.php' ) );
 	return wp_nonce_url( $url, ACTION_INSTALL_NONCE . $doc->id );
+}
+
+/**
+ * Get direct update URL.
+ *
+ * @param string $id   Plugin or theme ID.
+ * @param string $type 'plugin' or 'theme'.
+ *
+ * @return string
+ */
+function get_direct_update_url( string $id, string $type ): string {
+	$action = "upgrade-{$type}";
+	$packages = Updater\get_packages();
+	$file = $packages[ "{$type}s" ][ $id ];
+	$file = $type === 'plugin' ? plugin_basename( $file ) : basename( $packages[ "{$type}s" ][ $id ] );
+	$args = [
+		'action' => $action,
+		'plugin' => $file,
+	];
+	$url = add_query_arg( $args, self_admin_url( 'update.php' ) );
+	return wp_nonce_url( $url, "{$action}_{$file}" );
 }
 
 /**
