@@ -12,6 +12,8 @@ use FAIR\Packages\Admin;
 use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
 
+use function FAIR\Updater\get_packages;
+
 /**
  * Sanitize HTML content for plugin information.
  *
@@ -439,14 +441,21 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 		case 'update':
 			if ( ! $compatible ) {
 				return sprintf(
-					'<button type="button" class="z_update-now button button-disabled" disabled="disabled">%s</button>',
+					'<button type="button" class="update-now button button-disabled" disabled="disabled">%s</button>',
 					esc_html__( 'Update Now', 'fair' )
 				);
 			}
 
+			$file = get_packages()[ "{$type}s" ][ $doc->id ];
+			$file = $type === 'plugin' ? plugin_basename( $file ) : basename( dirname( $file ) );
+			$slug = $type === 'plugin' ? dirname( $file ) : $file;
+
 			return sprintf(
-				'<a class="z_update-now button" data-id="%s" href="%s" aria-label="%s" data-name="%s" role="button">%s</a>',
+				'<a id="plugin_install_from_iframe" class="update-now button" data-id="%s" data-%s="%s" data-slug="%s" href="%s" aria-label="%s" data-name="%s" role="button">%s</a>',
 				esc_attr( $doc->id ),
+				esc_attr( $type ),
+				esc_attr( $file ),
+				esc_attr( $slug ),
 				esc_url( Admin\get_direct_update_url( $doc ) ),
 				/* translators: %s: The package's name. */
 				esc_attr( sprintf( __( 'Update %s now', 'fair' ), $doc->name ) ),
