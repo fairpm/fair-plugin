@@ -7,8 +7,6 @@
 
 namespace FAIR\Updater;
 
-use const FAIR\Packages\Admin\ACTION_INSTALL;
-
 use function FAIR\Packages\fetch_package_metadata;
 use function FAIR\Packages\get_did_document;
 use function FAIR\Packages\pick_release;
@@ -22,8 +20,8 @@ const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
  */
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\run' );
-	add_action( 'get_fair_package_data', __NAMESPACE__ . '\\get_fair_document_data', 10, 3 );
-	add_action( 'wp_ajax_update-plugin', __NAMESPACE__ . '\\get_fair_document_data', 10, 3 );
+	add_action( 'get_fair_package_data', __NAMESPACE__ . '\\get_fair_release_data', 10, 3 );
+	add_action( 'wp_ajax_update-plugin', __NAMESPACE__ . '\\get_fair_release_data', 10, 3 );
 	// TODO: Will need to add hooks for themes.
 }
 
@@ -36,48 +34,14 @@ function bootstrap() {
  *
  * @return void
  */
-function get_fair_document_data( $did, $filepath, $type ) : void {
-	$packages = [];
+function get_fair_release_data( $did, $filepath, $type ) : void {
 	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY );
 	$releases = $releases ? $releases : [];
 	$file = $type === 'plugin' ? plugin_basename( $filepath ) : dirname( plugin_basename( $filepath ) );
 
-	// phpcs:disable HM.Security.NonceVerification.Recommended
-	// During auto-update.
-	if ( wp_doing_cron() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+	if ( $did ) {
 		$releases[ $did ] = get_latest_release_from_did( $did );
 		wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
-	}
-	if ( isset( $_REQUEST['action'] ) ) {
-		// Runs on DID install of package.
-		if ( $_REQUEST['action'] === ACTION_INSTALL ) {
-			if ( isset( $_REQUEST['id'] ) ) {
-				$did = sanitize_text_field( wp_unslash( $_REQUEST['id'] ) );
-				$releases[ $did ] = get_latest_release_from_did( $did );
-				wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
-			}
-		}
-		$packages = isset( $_REQUEST['checked'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['checked'] ) ) : [];
-		// TODO: Test with themes as they become available.
-		if ( 'update-selected' === $_REQUEST['action'] ) {
-			$packages = 'plugin' === $type && isset( $_REQUEST['plugins'] ) ? array_map( 'dirname', explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['plugins'] ) ) ) ) : [];
-			$packages = 'theme' === $type && isset( $_REQUEST['themes'] ) ? explode( ',', sanitize_text_field( wp_unslash( $_REQUEST['themes'] ) ) ) : $packages;
-		}
-		if ( 'update-plugin' === $_REQUEST['action'] && isset( $_REQUEST['plugin'] ) ) {
-			$packages[] = dirname( sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) );
-		}
-		if ( 'update-theme' === $_REQUEST['action'] && isset( $_REQUEST['theme'] ) ) {
-			$packages[] = sanitize_text_field( wp_unslash( $_REQUEST['theme'] ) );
-		}
-	}
-	// phpcs:enable
-
-	foreach ( $packages as $package ) {
-		if ( str_contains( $file, $package ) ) {
-			$releases[ $did ] = get_latest_release_from_did( $did );
-			wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
-			break;
-		}
 	}
 }
 
