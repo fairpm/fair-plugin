@@ -132,14 +132,7 @@ class Updater {
 			add_filter( 'wp_prepare_themes_for_js', [ $this, 'customize_theme_update_html' ] );
 		}
 
-		/**
-		 * Fires before upgrader_pre_download to use package data in filters.
-		 *
-		 * @param string $did DID.
-		 * @param string $filepath Absolute file path to package.
-		 * @param string $type plugin|theme.
-		 */
-		do_action( 'get_fair_package_data', $this->did, $this->filepath, $this->type );
+		add_package_to_release_cache( $this->did );
 		add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download', 10, 1 );
 	}
 
