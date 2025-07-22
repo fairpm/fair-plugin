@@ -436,7 +436,7 @@ function check_requirements( ReleaseDocument $release ) {
  * @return string|null The installed version, or null if not installed.
  */
 function get_installed_version( $id, $type ) {
-	$type = $type . 's';
+	$type .= 's';
 	$packages = get_packages();
 
 	if ( empty( $packages[ $type ][ $id ] ) ) {
