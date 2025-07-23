@@ -9,7 +9,9 @@ namespace FAIR\Updater;
 
 use function FAIR\Packages\fetch_package_metadata;
 use function FAIR\Packages\get_did_document;
+use function FAIR\Packages\get_did_hash;
 use function FAIR\Packages\pick_release;
+use function FAIR\Packages\version_requirements;
 
 use WP_Error;
 
@@ -201,6 +203,60 @@ function get_banners( $banners ) : array {
 	$banners_arr['high'] = $high_res->url;
 
 	return $banners_arr;
+}
+
+/**
+ * Get update data for use with transient and API responses.
+ *
+ * @param string $did DID.
+ * @return array
+ */
+function get_update_data( $did ) {
+	$release = get_latest_release_from_did( $did );
+	$metadata = fetch_package_metadata( $did );
+	if ( is_wp_error( $release ) || is_wp_error( $metadata ) ) {
+		return [];
+	}
+	$filename = $metadata->filename;
+	$type = str_replace( 'wp-', '', $metadata->type );
+	$required_versions = version_requirements( $release );
+	if ( 'plugin' === $type ) {
+		list( $slug, $file ) = explode( '/', $filename, 2 );
+		if ( ! str_contains( $slug, '-' . get_did_hash( $did ) ) ) {
+			$slug .= '-' . get_did_hash( $did );
+		}
+		$filename = $slug . '/' . $file;
+	} else {
+		$filename = $metadata->slug . '-' . get_did_hash( $did );
+	}
+
+	$response = [
+		'name'             => $metadata->name,
+		'author'           => $metadata->authors[0]->name,
+		'author_uri'       => $metadata->authors[0]->url,
+		'slug'             => $metadata->slug . '-' . get_did_hash( $did ),
+		$type              => $filename,
+		'file'             => $filename,
+		'url'              => $metadata->url ?? $metadata->slug,
+		'sections'         => (array) $metadata->sections,
+		'icons'            => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
+		'banners'          => isset( $release->artifacts->banner ) ? get_banners( $release->artifacts->banner ) : [],
+		'update-supported' => true,
+		'requires'         => $required_versions['requires_wp'],
+		'requires_php'     => $required_versions['requires_php'],
+		'new_version'      => $release->version,
+		'version'          => $release->version,
+		'remote_version'   => $release->version,
+		'package'          => $release->artifacts->package[0]->url,
+		'download_link'    => $release->artifacts->package[0]->url,
+		'tested'           => $required_versions['tested_to'],
+		'external'         => 'xxx',
+	];
+	if ( 'theme' === $type ) {
+		$response['theme_uri'] = $response['url'];
+	}
+
+	return $response;
 }
 
 /**
