@@ -28,6 +28,7 @@ function bootstrap() {
 	}
 
 	add_filter( 'install_plugins_tabs', __NAMESPACE__ . '\\add_direct_tab' );
+	add_filter( 'plugins_api', __NAMESPACE__ . '\\handle_did_during_ajax', 10, 3 );
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
@@ -43,6 +44,39 @@ function bootstrap() {
 function add_direct_tab( $tabs ) {
 	$tabs[ TAB_DIRECT ] = __( 'Direct Install', 'fair' );
 	return $tabs;
+}
+
+/**
+ * Handles the AJAX request for plugin information when a DID is present.
+ *
+ * @param mixed  $result The result of the plugins_api call.
+ * @param string $action The action being performed.
+ * @param array  $args   The arguments passed to the plugins_api call.
+ * @return mixed
+ */
+function handle_did_during_ajax( $result, $action, $args ) {
+	if ( ! wp_doing_ajax() || 'plugin_information' !== $action || ! isset( $args->slug ) ) {
+		return $result;
+	}
+
+	$slug = sanitize_text_field( $args->slug );
+	if ( ! str_contains( $slug, '-did--' ) ) {
+		return $result;
+	}
+
+	$did = 'did:' . explode( '-did:', str_replace( '--', ':', $slug ), 2 )[1];
+	if ( ! preg_match( '/^did:(web|plc):.+$/', $did ) ) {
+		return $result;
+	}
+
+	$release = Updater\get_latest_release_from_did( $did );
+	if ( is_wp_error( $release ) ) {
+		return $release;
+	}
+
+	return (object) [
+		'download_link' => $release->artifacts->package[0]->url,
+	];
 }
 
 /**
