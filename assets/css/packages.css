@@ -33,10 +33,10 @@
 	margin-right: 1em;
 }
 
-.fair-direct-install__note {
+#fair-direct-install__note {
 	font-style: italic;
 	text-align: center;
 }
-.fair-direct-install__note code {
+#fair-direct-install__note code {
 	font-style: normal;
 }
