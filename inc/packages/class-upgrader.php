@@ -442,7 +442,7 @@ class Upgrader extends WP_Upgrader {
 	 */
 	public function install( MetadataDocument $package, ReleaseDocument $release, $clear_cache = true, $overwrite = false ) {
 		$this->init();
-		// $this->install_strings();
+		$this->install_strings();
 
 		$this->package = $package;
 		$this->release = $release;
