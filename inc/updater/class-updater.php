@@ -7,10 +7,7 @@
 
 namespace FAIR\Updater;
 
-use function FAIR\Packages\check_requirements;
-use function FAIR\Packages\fetch_package_metadata;
-use function FAIR\Packages\get_did_hash;
-
+use FAIR\Packages;
 use Plugin_Upgrader;
 use stdClass;
 use Theme_Upgrader;
@@ -106,7 +103,7 @@ class Updater {
 			return;
 		}
 
-		$this->metadata = fetch_package_metadata( $this->did );
+		$this->metadata = Packages\fetch_package_metadata( $this->did );
 		if ( is_wp_error( $this->metadata ) ) {
 			return $this->metadata;
 		}
@@ -204,7 +201,7 @@ class Updater {
 		}
 
 		// Exit if not our repo.
-		$slug_arr = [ $this->metadata->slug, $this->metadata->slug . '-' . get_did_hash( $this->metadata->id ) ];
+		$slug_arr = [ $this->metadata->slug, $this->metadata->slug . '-' . Packages\get_did_hash( $this->metadata->id ) ];
 		if ( ! in_array( $response->slug, $slug_arr, true ) ) {
 			return $result;
 		}
@@ -232,7 +229,7 @@ class Updater {
 			return $transient;
 		}
 		$response = 'plugin' === $this->type ? (object) $response : $response;
-		$is_compatible = check_requirements( $this->release );
+		$is_compatible = Packages\check_requirements( $this->release );
 
 		if ( $is_compatible && version_compare( $this->release->version, $this->local_version, '>' ) ) {
 			$transient->response[ $rel_path ] = $response;
