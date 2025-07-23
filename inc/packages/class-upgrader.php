@@ -458,6 +458,36 @@ class Upgrader extends WP_Upgrader {
 				return new WP_Error( 'fair.packages.upgrader.install.invalid_type', 'Invalid package type.' );
 		}
 	}
+
+	/**
+	 * Retrieves the path to the file that contains the plugin info.
+	 *
+	 * This isn't used internally in the class, but is called by the skins.
+	 *
+	 * @since WordPress 2.8.0
+	 *
+	 * @return string|false The full path to the main plugin file, or false.
+	 */
+	public function plugin_info() {
+		if ( ! is_array( $this->result ) ) {
+			return false;
+		}
+		if ( empty( $this->result['destination_name'] ) ) {
+			return false;
+		}
+
+		// Ensure to pass with leading slash.
+		$plugin = get_plugins( '/' . $this->result['destination_name'] );
+		if ( empty( $plugin ) ) {
+			return false;
+		}
+
+		// Assume the requested plugin is the first in the list.
+		$pluginfiles = array_keys( $plugin );
+
+		return $this->result['destination_name'] . '/' . $pluginfiles[0];
+	}
+
 	/**
 	 * Checks that the source package contains a valid plugin.
 	 *
