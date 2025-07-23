@@ -206,7 +206,7 @@ class Updater {
 			return $result;
 		}
 
-		return (object) get_update_data( $this->metadata->id );
+		return (object) Packages\get_update_data( $this->metadata->id );
 	}
 
 	/**
@@ -224,7 +224,7 @@ class Updater {
 
 		$rel_path = plugin_basename( $this->filepath );
 		$rel_path = 'theme' === $this->type ? dirname( $rel_path ) : $rel_path;
-		$response = get_update_data( $this->did );
+		$response = Packages\get_update_data( $this->did );
 		if ( is_wp_error( $response ) ) {
 			return $transient;
 		}

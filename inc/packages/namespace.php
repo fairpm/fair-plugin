@@ -9,7 +9,8 @@ namespace FAIR\Packages;
 
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
-use function FAIR\Updater\get_packages;
+use FAIR\Updater;
+
 use WP_Error;
 use WP_Upgrader_Skin;
 
@@ -439,7 +440,7 @@ function check_requirements( ReleaseDocument $release ) {
  */
 function get_installed_version( string $id, string $type ) {
 	$type .= 's';
-	$packages = get_packages();
+	$packages = Updater\get_packages();
 
 	if ( empty( $packages[ $type ][ $id ] ) ) {
 		// Not installed.
@@ -447,6 +448,118 @@ function get_installed_version( string $id, string $type ) {
 	}
 
 	return get_file_data( $packages[ $type ][ $id ], [ 'Version' => 'Version' ] )['Version'];
+}
+
+/**
+ * Get icons.
+ *
+ * @param  array $icons Array of icon data.
+ *
+ * @return array
+ */
+function get_icons( $icons ) : array {
+	if ( empty( $icons ) ) {
+		return [];
+	}
+
+	$icons_arr = [];
+	$regular = array_find( $icons, fn ( $icon ) => $icon->width === 772 && $icon->height === 250 );
+	$high_res = array_find( $icons, fn ( $icon ) => $icon->width === 1544 && $icon->height === 500 );
+	$svg = array_find( $icons, fn ( $icon ) => str_contains( $icon->{'content-type'}, 'svg+xml' ) );
+
+	if ( empty( $regular ) && empty( $high_res ) && empty( $svg ) ) {
+		return [];
+	}
+
+	$icons_arr['1x'] = $regular->url ?? '';
+	$icons_arr['2x'] = $high_res->url ?? '';
+	if ( str_contains( $svg->url, 's.w.org/plugins' ) ) {
+		$icons_arr['default'] = $svg->url;
+	} else {
+		$icons_arr['svg'] = $svg->url ?? '';
+	}
+
+	return $icons_arr;
+}
+
+/**
+ * Get banners.
+ *
+ * @param  array $banners Array of banner data.
+ *
+ * @return array
+ */
+function get_banners( $banners ) : array {
+	if ( empty( $banners ) ) {
+		return [];
+	}
+
+	$banners_arr = [];
+	$regular = array_find( $banners, fn ( $banner ) => $banner->width === 772 && $banner->height === 250 );
+	$high_res = array_find( $banners, fn ( $banner ) => $banner->width === 1544 && $banner->height === 500 );
+
+	if ( empty( $regular ) && empty( $high_res ) ) {
+		return [];
+	}
+
+	$banners_arr['low'] = $regular->url;
+	$banners_arr['high'] = $high_res->url;
+
+	return $banners_arr;
+}
+
+/**
+ * Get update data for use with transient and API responses.
+ *
+ * @param string $did DID.
+ * @return array
+ */
+function get_update_data( $did ) {
+	$release = Updater\get_latest_release_from_did( $did );
+	$metadata = fetch_package_metadata( $did );
+	if ( is_wp_error( $release ) || is_wp_error( $metadata ) ) {
+		return [];
+	}
+	$filename = $metadata->filename;
+	$type = str_replace( 'wp-', '', $metadata->type );
+	$required_versions = version_requirements( $release );
+	if ( 'plugin' === $type ) {
+		list( $slug, $file ) = explode( '/', $filename, 2 );
+		if ( ! str_contains( $slug, '-' . get_did_hash( $did ) ) ) {
+			$slug .= '-' . get_did_hash( $did );
+		}
+		$filename = $slug . '/' . $file;
+	} else {
+		$filename = $metadata->slug . '-' . get_did_hash( $did );
+	}
+
+	$response = [
+		'name'             => $metadata->name,
+		'author'           => $metadata->authors[0]->name,
+		'author_uri'       => $metadata->authors[0]->url,
+		'slug'             => $metadata->slug . '-' . get_did_hash( $did ),
+		$type              => $filename,
+		'file'             => $filename,
+		'url'              => $metadata->url ?? $metadata->slug,
+		'sections'         => (array) $metadata->sections,
+		'icons'            => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
+		'banners'          => isset( $release->artifacts->banner ) ? get_banners( $release->artifacts->banner ) : [],
+		'update-supported' => true,
+		'requires'         => $required_versions['requires_wp'],
+		'requires_php'     => $required_versions['requires_php'],
+		'new_version'      => $release->version,
+		'version'          => $release->version,
+		'remote_version'   => $release->version,
+		'package'          => $release->artifacts->package[0]->url,
+		'download_link'    => $release->artifacts->package[0]->url,
+		'tested'           => $required_versions['tested_to'],
+		'external'         => 'xxx',
+	];
+	if ( 'theme' === $type ) {
+		$response['theme_uri'] = $response['url'];
+	}
+
+	return $response;
 }
 
 // phpcs:enable
