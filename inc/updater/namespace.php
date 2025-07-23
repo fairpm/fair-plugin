@@ -7,12 +7,7 @@
 
 namespace FAIR\Updater;
 
-use function FAIR\Packages\fetch_package_metadata;
-use function FAIR\Packages\get_did_document;
-use function FAIR\Packages\get_did_hash;
-use function FAIR\Packages\pick_release;
-use function FAIR\Packages\version_requirements;
-
+use FAIR\Packages;
 use WP_Error;
 
 const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
@@ -90,7 +85,7 @@ function maybe_add_accept_header( $args, $url ) : array {
  * @return ReleaseDocument|WP_Error The latest release, or a WP_Error object on failure.
  */
 function get_latest_release_from_did( $id ) {
-	$document = get_did_document( $id );
+	$document = Packages\get_did_document( $id );
 	if ( is_wp_error( $document ) ) {
 		return $document;
 	}
@@ -100,12 +95,12 @@ function get_latest_release_from_did( $id ) {
 		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
 	}
 
-	$metadata = fetch_package_metadata( $id );
+	$metadata = Packages\fetch_package_metadata( $id );
 	if ( is_wp_error( $metadata ) ) {
 		return $metadata;
 	}
 
-	$release = pick_release( $metadata->releases );
+	$release = Packages\pick_release( $metadata->releases );
 	if ( empty( $release ) ) {
 		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
 	}
@@ -213,28 +208,28 @@ function get_banners( $banners ) : array {
  */
 function get_update_data( $did ) {
 	$release = get_latest_release_from_did( $did );
-	$metadata = fetch_package_metadata( $did );
+	$metadata = Packages\fetch_package_metadata( $did );
 	if ( is_wp_error( $release ) || is_wp_error( $metadata ) ) {
 		return [];
 	}
 	$filename = $metadata->filename;
 	$type = str_replace( 'wp-', '', $metadata->type );
-	$required_versions = version_requirements( $release );
+	$required_versions = Packages\version_requirements( $release );
 	if ( 'plugin' === $type ) {
 		list( $slug, $file ) = explode( '/', $filename, 2 );
-		if ( ! str_contains( $slug, '-' . get_did_hash( $did ) ) ) {
-			$slug .= '-' . get_did_hash( $did );
+		if ( ! str_contains( $slug, '-' . Packages\get_did_hash( $did ) ) ) {
+			$slug .= '-' . Packages\get_did_hash( $did );
 		}
 		$filename = $slug . '/' . $file;
 	} else {
-		$filename = $metadata->slug . '-' . get_did_hash( $did );
+		$filename = $metadata->slug . '-' . Packages\get_did_hash( $did );
 	}
 
 	$response = [
 		'name'             => $metadata->name,
 		'author'           => $metadata->authors[0]->name,
 		'author_uri'       => $metadata->authors[0]->url,
-		'slug'             => $metadata->slug . '-' . get_did_hash( $did ),
+		'slug'             => $metadata->slug . '-' . Packages\get_did_hash( $did ),
 		$type              => $filename,
 		'file'             => $filename,
 		'url'              => $metadata->url ?? $metadata->slug,
