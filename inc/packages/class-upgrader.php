@@ -489,6 +489,32 @@ class Upgrader extends WP_Upgrader {
 	}
 
 	/**
+	 * Gets the WP_Theme object for a theme.
+	 *
+	 * @since WordPress 2.8.0
+	 * @since WordPress 3.0.0 The `$theme` argument was added.
+	 *
+	 * @param string $theme The directory name of the theme. This is optional, and if not supplied,
+	 *                      the directory name from the last result will be used.
+	 * @return WP_Theme|false The theme's info object, or false `$theme` is not supplied
+	 *                        and the last result isn't set.
+	 */
+	public function theme_info( $theme = null ) {
+		if ( empty( $theme ) ) {
+			if ( ! empty( $this->result['destination_name'] ) ) {
+				$theme = $this->result['destination_name'];
+			} else {
+				return false;
+			}
+		}
+
+		$theme = wp_get_theme( $theme );
+		$theme->cache_delete();
+
+		return $theme;
+	}
+
+	/**
 	 * Checks that the source package contains a valid plugin.
 	 *
 	 * Hooked to the {@see 'upgrader_source_selection'} filter by Plugin_Upgrader::install().
