@@ -162,7 +162,8 @@ function install_plugin( string $id, WP_Upgrader_Skin $skin, ?string $version = 
 		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
 	}
 
-	$upgrader = new Upgrader( $skin );
+	$skin_class = ucwords( str_replace( 'wp-', '', $metadata->type ) ) . '_Installer_Skin';
+	$upgrader = new Upgrader( new $skin_class() );
 	return $upgrader->install( $metadata, $release );
 }
 

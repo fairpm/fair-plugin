@@ -442,7 +442,7 @@ class Upgrader extends WP_Upgrader {
 	 */
 	public function install( MetadataDocument $package, ReleaseDocument $release, $clear_cache = true, $overwrite = false ) {
 		$this->init();
-		// $this->install_strings();
+		$this->install_strings();
 
 		$this->package = $package;
 		$this->release = $release;
@@ -458,6 +458,62 @@ class Upgrader extends WP_Upgrader {
 				return new WP_Error( 'fair.packages.upgrader.install.invalid_type', 'Invalid package type.' );
 		}
 	}
+
+	/**
+	 * Retrieves the path to the file that contains the plugin info.
+	 *
+	 * This isn't used internally in the class, but is called by the skins.
+	 *
+	 * @since WordPress 2.8.0
+	 *
+	 * @return string|false The full path to the main plugin file, or false.
+	 */
+	public function plugin_info() {
+		if ( ! is_array( $this->result ) ) {
+			return false;
+		}
+		if ( empty( $this->result['destination_name'] ) ) {
+			return false;
+		}
+
+		// Ensure to pass with leading slash.
+		$plugin = get_plugins( '/' . $this->result['destination_name'] );
+		if ( empty( $plugin ) ) {
+			return false;
+		}
+
+		// Assume the requested plugin is the first in the list.
+		$pluginfiles = array_keys( $plugin );
+
+		return $this->result['destination_name'] . '/' . $pluginfiles[0];
+	}
+
+	/**
+	 * Gets the WP_Theme object for a theme.
+	 *
+	 * @since WordPress 2.8.0
+	 * @since WordPress 3.0.0 The `$theme` argument was added.
+	 *
+	 * @param string $theme The directory name of the theme. This is optional, and if not supplied,
+	 *                      the directory name from the last result will be used.
+	 * @return WP_Theme|false The theme's info object, or false `$theme` is not supplied
+	 *                        and the last result isn't set.
+	 */
+	public function theme_info( $theme = null ) {
+		if ( empty( $theme ) ) {
+			if ( ! empty( $this->result['destination_name'] ) ) {
+				$theme = $this->result['destination_name'];
+			} else {
+				return false;
+			}
+		}
+
+		$theme = wp_get_theme( $theme );
+		$theme->cache_delete();
+
+		return $theme;
+	}
+
 	/**
 	 * Checks that the source package contains a valid plugin.
 	 *
