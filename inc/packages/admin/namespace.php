@@ -103,7 +103,7 @@ function render_tab_direct() {
 			/>
 			<?php submit_button( _x( 'View Details', 'plugin', 'fair' ), '', '', false ); ?>
 		</form>
-		<p class="fair-direct-install__note">
+		<p id="fair-direct-install__note">
 			<?= __( 'Plugin IDs should be in the format <code>did:web:...</code> or <code>did:plc:...</code>', 'fair' ); ?>
 		</p>
 	</div>
