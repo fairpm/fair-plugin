@@ -201,12 +201,12 @@ class Updater {
 		}
 
 		// Exit if not our repo.
-		$slug_arr = [ $this->metadata->slug, $this->metadata->slug . '-' . Packages\get_did_hash( $this->metadata->id ) ];
+		$slug_arr = [ $this->metadata->slug, $this->metadata->slug . '-' . Packages\get_did_hash( $this->did ) ];
 		if ( ! in_array( $response->slug, $slug_arr, true ) ) {
 			return $result;
 		}
 
-		return (object) Packages\get_update_data( $this->metadata->id );
+		return (object) Packages\get_update_data( $this->did );
 	}
 
 	/**
