@@ -139,20 +139,13 @@ function install_plugin( string $id, WP_Upgrader_Skin $skin, ?string $version = 
 		return $document;
 	}
 
-	// Fetch data from the repository.
-	$service = $document->get_service( SERVICE_ID );
-	if ( empty( $service ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_service', __( 'DID is not a valid package to install.', 'fair' ) );
-	}
-	$repo_url = $service->serviceEndpoint;
-
 	// Filter to valid keys for signing.
 	$valid_keys = $document->get_fair_signing_keys();
 	if ( empty( $valid_keys ) ) {
 		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
 	}
 
-	$metadata = fetch_metadata_doc( $repo_url );
+	$metadata = fetch_package_metadata( $id );
 	if ( is_wp_error( $metadata ) ) {
 		return $metadata;
 	}
