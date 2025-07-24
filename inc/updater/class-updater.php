@@ -107,7 +107,7 @@ class Updater {
 		if ( is_wp_error( $this->metadata ) ) {
 			return $this->metadata;
 		}
-		$this->release = get_latest_release_from_did( $this->did );
+		$this->release = Packages\get_latest_release_from_did( $this->did );
 		if ( is_wp_error( $this->release ) ) {
 			return $this->release;
 		}

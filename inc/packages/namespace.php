@@ -217,6 +217,37 @@ function pick_release( array $releases, ?string $version = null ) : ?ReleaseDocu
 }
 
 /**
+ * Get the latest release for a DID.
+ *
+ * @param  string $id DID.
+ *
+ * @return ReleaseDocument|WP_Error The latest release, or a WP_Error object on failure.
+ */
+function get_latest_release_from_did( $id ) {
+	$document = get_did_document( $id );
+	if ( is_wp_error( $document ) ) {
+		return $document;
+	}
+
+	$valid_keys = $document->get_fair_signing_keys();
+	if ( empty( $valid_keys ) ) {
+		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
+	}
+
+	$metadata = fetch_package_metadata( $id );
+	if ( is_wp_error( $metadata ) ) {
+		return $metadata;
+	}
+
+	$release = pick_release( $metadata->releases );
+	if ( empty( $release ) ) {
+		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
+	}
+
+	return $release;
+}
+
+/**
  * Get viable languages for a given locale.
  *
  * Based on the RFC4647 language matching algorithm, with slight modifications.
@@ -515,7 +546,7 @@ function get_banners( $banners ) : array {
  * @return array
  */
 function get_update_data( $did ) {
-	$release = Updater\get_latest_release_from_did( $did );
+	$release = get_latest_release_from_did( $did );
 	$metadata = fetch_package_metadata( $did );
 	if ( is_wp_error( $release ) || is_wp_error( $metadata ) ) {
 		return [];

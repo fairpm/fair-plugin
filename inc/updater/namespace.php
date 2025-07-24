@@ -8,7 +8,6 @@
 namespace FAIR\Updater;
 
 use FAIR\Packages;
-use WP_Error;
 
 const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
 
@@ -30,7 +29,7 @@ function add_package_to_release_cache( string $did ) : void {
 		return;
 	}
 	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
-	$releases[ $did ] = get_latest_release_from_did( $did );
+	$releases[ $did ] = Packages\get_latest_release_from_did( $did );
 	wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
 }
 
@@ -75,37 +74,6 @@ function maybe_add_accept_header( $args, $url ) : array {
 	}
 
 	return $args;
-}
-
-/**
- * Get the latest release for a DID.
- *
- * @param  string $id DID.
- *
- * @return ReleaseDocument|WP_Error The latest release, or a WP_Error object on failure.
- */
-function get_latest_release_from_did( $id ) {
-	$document = Packages\get_did_document( $id );
-	if ( is_wp_error( $document ) ) {
-		return $document;
-	}
-
-	$valid_keys = $document->get_fair_signing_keys();
-	if ( empty( $valid_keys ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
-	}
-
-	$metadata = Packages\fetch_package_metadata( $id );
-	if ( is_wp_error( $metadata ) ) {
-		return $metadata;
-	}
-
-	$release = Packages\pick_release( $metadata->releases );
-	if ( empty( $release ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
-	}
-
-	return $release;
 }
 
 /**
