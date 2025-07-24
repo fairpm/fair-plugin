@@ -563,17 +563,17 @@ function get_hashed_filename( $metadata ) : string {
  * @return array|WP_Error
  */
 function get_update_data( $did ) {
+	$metadata = fetch_package_metadata( $did );
+	if ( is_wp_error( $metadata ) ) {
+		return $metadata;
+	}
+
 	$release = get_latest_release_from_did( $did );
 	if ( is_wp_error( $release ) ) {
 		return $release;
 	}
 
 	$required_versions = version_requirements( $release );
-	$metadata = fetch_package_metadata( $did );
-	if ( is_wp_error( $metadata ) ) {
-		return $metadata;
-	}
-
 	$filename = get_hashed_filename( $metadata );
 	$type = str_replace( 'wp-', '', $metadata->type );
 
