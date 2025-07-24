@@ -533,6 +533,30 @@ function get_banners( $banners ) : array {
 }
 
 /**
+ * Get hashed file name from MetadataDocument.
+ *
+ * @param  MetadataDocument $metadata MetadataDocument.
+ *
+ * @return string
+ */
+function get_hashed_filename( $metadata ) : string {
+	$filename = $metadata->filename;
+	$type = str_replace( 'wp-', '', $metadata->type );
+
+	list( $slug, $file ) = explode( '/', $filename, 2 );
+	if ( 'plugin' === $type ) {
+		if ( ! str_contains( $slug, '-' . get_did_hash( $metadata->id ) ) ) {
+			$slug .= '-' . get_did_hash( $metadata->id );
+		}
+		$filename = $slug . '/' . $file;
+	} else {
+		$filename = $slug . '-' . get_did_hash( $metadata->id );
+	}
+
+	return $filename;
+}
+
+/**
  * Get update data for use with transient and API responses.
  *
  * @param string $did DID.
@@ -544,23 +568,14 @@ function get_update_data( $did ) {
 		return $release;
 	}
 
+	$required_versions = version_requirements( $release );
 	$metadata = fetch_package_metadata( $did );
 	if ( is_wp_error( $metadata ) ) {
 		return $metadata;
 	}
 
-	$filename = $metadata->filename;
+	$filename = get_hashed_filename( $metadata );
 	$type = str_replace( 'wp-', '', $metadata->type );
-	$required_versions = version_requirements( $release );
-	if ( 'plugin' === $type ) {
-		list( $slug, $file ) = explode( '/', $filename, 2 );
-		if ( ! str_contains( $slug, '-' . get_did_hash( $did ) ) ) {
-			$slug .= '-' . get_did_hash( $did );
-		}
-		$filename = $slug . '/' . $file;
-	} else {
-		$filename = $metadata->slug . '-' . get_did_hash( $did );
-	}
 
 	$response = [
 		'name'             => $metadata->name,
