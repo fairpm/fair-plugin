@@ -543,14 +543,19 @@ function get_banners( $banners ) : array {
  * Get update data for use with transient and API responses.
  *
  * @param string $did DID.
- * @return array
+ * @return array|WP_Error
  */
 function get_update_data( $did ) {
 	$release = get_latest_release_from_did( $did );
-	$metadata = fetch_package_metadata( $did );
-	if ( is_wp_error( $release ) || is_wp_error( $metadata ) ) {
-		return [];
+	if ( is_wp_error( $release ) ) {
+		return $release;
 	}
+
+	$metadata = fetch_package_metadata( $did );
+	if ( is_wp_error( $metadata ) ) {
+		return $metadata;
+	}
+
 	$filename = $metadata->filename;
 	$type = str_replace( 'wp-', '', $metadata->type );
 	$required_versions = version_requirements( $release );
