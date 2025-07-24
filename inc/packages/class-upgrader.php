@@ -460,7 +460,7 @@ class Upgrader extends WP_Upgrader {
 	}
 
 	/**
-	 * Retrieves the path to the file that contains the plugin info.
+	 * Retrieves the hashed path to the file that contains the plugin info.
 	 *
 	 * This isn't used internally in the class, but is called by the skins.
 	 *
@@ -469,23 +469,11 @@ class Upgrader extends WP_Upgrader {
 	 * @return string|false The full path to the main plugin file, or false.
 	 */
 	public function plugin_info() {
-		if ( ! is_array( $this->result ) ) {
-			return false;
-		}
-		if ( empty( $this->result['destination_name'] ) ) {
+		if ( ! isset( $this->package ) ) {
 			return false;
 		}
 
-		// Ensure to pass with leading slash.
-		$plugin = get_plugins( '/' . $this->result['destination_name'] );
-		if ( empty( $plugin ) ) {
-			return false;
-		}
-
-		// Assume the requested plugin is the first in the list.
-		$pluginfiles = array_keys( $plugin );
-
-		return $this->result['destination_name'] . '/' . $pluginfiles[0];
+		return get_hashed_filename( $this->package );
 	}
 
 	/**
