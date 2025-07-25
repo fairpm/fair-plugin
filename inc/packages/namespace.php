@@ -542,15 +542,16 @@ function get_banners( $banners ) : array {
 function get_hashed_filename( $metadata ) : string {
 	$filename = $metadata->filename;
 	$type = str_replace( 'wp-', '', $metadata->type );
+	$did_hash = '-' . get_did_hash( $metadata->id );
 
 	list( $slug, $file ) = explode( '/', $filename, 2 );
 	if ( 'plugin' === $type ) {
-		if ( ! str_contains( $slug, '-' . get_did_hash( $metadata->id ) ) ) {
-			$slug .= '-' . get_did_hash( $metadata->id );
+		if ( ! str_contains( $slug, $did_hash ) ) {
+			$slug .= $did_hash;
 		}
 		$filename = $slug . '/' . $file;
 	} else {
-		$filename = $slug . '-' . get_did_hash( $metadata->id );
+		$filename = $slug . $did_hash;
 	}
 
 	return $filename;
