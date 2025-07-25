@@ -9,7 +9,8 @@ namespace FAIR\Packages;
 
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
-use function FAIR\Updater\get_packages;
+use FAIR\Updater;
+
 use WP_Error;
 use WP_Upgrader_Skin;
 
@@ -138,20 +139,13 @@ function install_plugin( string $id, WP_Upgrader_Skin $skin, ?string $version = 
 		return $document;
 	}
 
-	// Fetch data from the repository.
-	$service = $document->get_service( SERVICE_ID );
-	if ( empty( $service ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_service', __( 'DID is not a valid package to install.', 'fair' ) );
-	}
-	$repo_url = $service->serviceEndpoint;
-
 	// Filter to valid keys for signing.
 	$valid_keys = $document->get_fair_signing_keys();
 	if ( empty( $valid_keys ) ) {
 		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
 	}
 
-	$metadata = fetch_metadata_doc( $repo_url );
+	$metadata = fetch_package_metadata( $id );
 	if ( is_wp_error( $metadata ) ) {
 		return $metadata;
 	}
@@ -213,6 +207,37 @@ function pick_release( array $releases, ?string $version = null ) : ?ReleaseDocu
 	}
 
 	return array_find( $releases, fn ( $release ) => $release->version === $version );
+}
+
+/**
+ * Get the latest release for a DID.
+ *
+ * @param  string $id DID.
+ *
+ * @return ReleaseDocument|WP_Error The latest release, or a WP_Error object on failure.
+ */
+function get_latest_release_from_did( $id ) {
+	$document = get_did_document( $id );
+	if ( is_wp_error( $document ) ) {
+		return $document;
+	}
+
+	$valid_keys = $document->get_fair_signing_keys();
+	if ( empty( $valid_keys ) ) {
+		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
+	}
+
+	$metadata = fetch_package_metadata( $id );
+	if ( is_wp_error( $metadata ) ) {
+		return $metadata;
+	}
+
+	$release = pick_release( $metadata->releases );
+	if ( empty( $release ) ) {
+		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
+	}
+
+	return $release;
 }
 
 /**
@@ -439,7 +464,7 @@ function check_requirements( ReleaseDocument $release ) {
  */
 function get_installed_version( string $id, string $type ) {
 	$type .= 's';
-	$packages = get_packages();
+	$packages = Updater\get_packages();
 
 	if ( empty( $packages[ $type ][ $id ] ) ) {
 		// Not installed.
@@ -447,6 +472,139 @@ function get_installed_version( string $id, string $type ) {
 	}
 
 	return get_file_data( $packages[ $type ][ $id ], [ 'Version' => 'Version' ] )['Version'];
+}
+
+/**
+ * Get icons.
+ *
+ * @param  array $icons Array of icon data.
+ *
+ * @return array
+ */
+function get_icons( $icons ) : array {
+	if ( empty( $icons ) ) {
+		return [];
+	}
+
+	$icons_arr = [];
+	$regular = array_find( $icons, fn ( $icon ) => $icon->width === 772 && $icon->height === 250 );
+	$high_res = array_find( $icons, fn ( $icon ) => $icon->width === 1544 && $icon->height === 500 );
+	$svg = array_find( $icons, fn ( $icon ) => str_contains( $icon->{'content-type'}, 'svg+xml' ) );
+
+	if ( empty( $regular ) && empty( $high_res ) && empty( $svg ) ) {
+		return [];
+	}
+
+	$icons_arr['1x'] = $regular->url ?? '';
+	$icons_arr['2x'] = $high_res->url ?? '';
+	if ( str_contains( $svg->url, 's.w.org/plugins' ) ) {
+		$icons_arr['default'] = $svg->url;
+	} else {
+		$icons_arr['svg'] = $svg->url ?? '';
+	}
+
+	return $icons_arr;
+}
+
+/**
+ * Get banners.
+ *
+ * @param  array $banners Array of banner data.
+ *
+ * @return array
+ */
+function get_banners( $banners ) : array {
+	if ( empty( $banners ) ) {
+		return [];
+	}
+
+	$banners_arr = [];
+	$regular = array_find( $banners, fn ( $banner ) => $banner->width === 772 && $banner->height === 250 );
+	$high_res = array_find( $banners, fn ( $banner ) => $banner->width === 1544 && $banner->height === 500 );
+
+	if ( empty( $regular ) && empty( $high_res ) ) {
+		return [];
+	}
+
+	$banners_arr['low'] = $regular->url;
+	$banners_arr['high'] = $high_res->url;
+
+	return $banners_arr;
+}
+
+/**
+ * Get hashed file name from MetadataDocument.
+ *
+ * @param  MetadataDocument $metadata MetadataDocument.
+ *
+ * @return string
+ */
+function get_hashed_filename( $metadata ) : string {
+	$filename = $metadata->filename;
+	$type = str_replace( 'wp-', '', $metadata->type );
+	$did_hash = '-' . get_did_hash( $metadata->id );
+
+	list( $slug, $file ) = explode( '/', $filename, 2 );
+	if ( 'plugin' === $type ) {
+		if ( ! str_contains( $slug, $did_hash ) ) {
+			$slug .= $did_hash;
+		}
+		$filename = $slug . '/' . $file;
+	} else {
+		$filename = $slug . $did_hash;
+	}
+
+	return $filename;
+}
+
+/**
+ * Get update data for use with transient and API responses.
+ *
+ * @param string $did DID.
+ * @return array|WP_Error
+ */
+function get_update_data( $did ) {
+	$metadata = fetch_package_metadata( $did );
+	if ( is_wp_error( $metadata ) ) {
+		return $metadata;
+	}
+
+	$release = get_latest_release_from_did( $did );
+	if ( is_wp_error( $release ) ) {
+		return $release;
+	}
+
+	$required_versions = version_requirements( $release );
+	$filename = get_hashed_filename( $metadata );
+	$type = str_replace( 'wp-', '', $metadata->type );
+
+	$response = [
+		'name'             => $metadata->name,
+		'author'           => $metadata->authors[0]->name,
+		'author_uri'       => $metadata->authors[0]->url,
+		'slug'             => $metadata->slug . '-' . get_did_hash( $did ),
+		$type              => $filename,
+		'file'             => $filename,
+		'url'              => $metadata->url ?? $metadata->slug,
+		'sections'         => (array) $metadata->sections,
+		'icons'            => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
+		'banners'          => isset( $release->artifacts->banner ) ? get_banners( $release->artifacts->banner ) : [],
+		'update-supported' => true,
+		'requires'         => $required_versions['requires_wp'],
+		'requires_php'     => $required_versions['requires_php'],
+		'new_version'      => $release->version,
+		'version'          => $release->version,
+		'remote_version'   => $release->version,
+		'package'          => $release->artifacts->package[0]->url,
+		'download_link'    => $release->artifacts->package[0]->url,
+		'tested'           => $required_versions['tested_to'],
+		'external'         => 'xxx',
+	];
+	if ( 'theme' === $type ) {
+		$response['theme_uri'] = $response['url'];
+	}
+
+	return $response;
 }
 
 // phpcs:enable

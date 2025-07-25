@@ -7,11 +7,7 @@
 
 namespace FAIR\Updater;
 
-use function FAIR\Packages\fetch_package_metadata;
-use function FAIR\Packages\get_did_document;
-use function FAIR\Packages\pick_release;
-
-use WP_Error;
+use FAIR\Packages;
 
 const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
 
@@ -33,7 +29,7 @@ function add_package_to_release_cache( string $did ) : void {
 		return;
 	}
 	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
-	$releases[ $did ] = get_latest_release_from_did( $did );
+	$releases[ $did ] = Packages\get_latest_release_from_did( $did );
 	wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
 }
 
@@ -81,37 +77,6 @@ function maybe_add_accept_header( $args, $url ) : array {
 }
 
 /**
- * Get the latest release for a DID.
- *
- * @param  string $id DID.
- *
- * @return ReleaseDocument|WP_Error The latest release, or a WP_Error object on failure.
- */
-function get_latest_release_from_did( $id ) {
-	$document = get_did_document( $id );
-	if ( is_wp_error( $document ) ) {
-		return $document;
-	}
-
-	$valid_keys = $document->get_fair_signing_keys();
-	if ( empty( $valid_keys ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
-	}
-
-	$metadata = fetch_package_metadata( $id );
-	if ( is_wp_error( $metadata ) ) {
-		return $metadata;
-	}
-
-	$release = pick_release( $metadata->releases );
-	if ( empty( $release ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
-	}
-
-	return $release;
-}
-
-/**
  * Gather all plugins/themes with data in Update URI and DID header.
  *
  * @return array
@@ -143,64 +108,6 @@ function get_packages() : array {
 	}
 
 	return $packages;
-}
-
-/**
- * Get icons.
- *
- * @param  array $icons Array of icon data.
- *
- * @return array
- */
-function get_icons( $icons ) : array {
-	if ( empty( $icons ) ) {
-		return [];
-	}
-
-	$icons_arr = [];
-	$regular = array_find( $icons, fn ( $icon ) => $icon->width === 772 && $icon->height === 250 );
-	$high_res = array_find( $icons, fn ( $icon ) => $icon->width === 1544 && $icon->height === 500 );
-	$svg = array_find( $icons, fn ( $icon ) => str_contains( $icon->{'content-type'}, 'svg+xml' ) );
-
-	if ( empty( $regular ) && empty( $high_res ) && empty( $svg ) ) {
-		return [];
-	}
-
-	$icons_arr['1x'] = $regular->url ?? '';
-	$icons_arr['2x'] = $high_res->url ?? '';
-	if ( str_contains( $svg->url, 's.w.org/plugins' ) ) {
-		$icons_arr['default'] = $svg->url;
-	} else {
-		$icons_arr['svg'] = $svg->url ?? '';
-	}
-
-	return $icons_arr;
-}
-
-/**
- * Get banners.
- *
- * @param  array $banners Array of banner data.
- *
- * @return array
- */
-function get_banners( $banners ) : array {
-	if ( empty( $banners ) ) {
-		return [];
-	}
-
-	$banners_arr = [];
-	$regular = array_find( $banners, fn ( $banner ) => $banner->width === 772 && $banner->height === 250 );
-	$high_res = array_find( $banners, fn ( $banner ) => $banner->width === 1544 && $banner->height === 500 );
-
-	if ( empty( $regular ) && empty( $high_res ) ) {
-		return [];
-	}
-
-	$banners_arr['low'] = $regular->url;
-	$banners_arr['high'] = $high_res->url;
-
-	return $banners_arr;
 }
 
 /**

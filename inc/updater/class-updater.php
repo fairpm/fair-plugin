@@ -8,9 +8,6 @@
 namespace FAIR\Updater;
 
 use FAIR\Packages;
-use function FAIR\Packages\fetch_package_metadata;
-use function FAIR\Packages\get_did_hash;
-
 use Plugin_Upgrader;
 use stdClass;
 use Theme_Upgrader;
@@ -106,11 +103,11 @@ class Updater {
 			return;
 		}
 
-		$this->metadata = fetch_package_metadata( $this->did );
+		$this->metadata = Packages\fetch_package_metadata( $this->did );
 		if ( is_wp_error( $this->metadata ) ) {
 			return $this->metadata;
 		}
-		$this->release = get_latest_release_from_did( $this->did );
+		$this->release = Packages\get_latest_release_from_did( $this->did );
 		if ( is_wp_error( $this->release ) ) {
 			return $this->release;
 		}
@@ -204,12 +201,12 @@ class Updater {
 		}
 
 		// Exit if not our repo.
-		$slug_arr = [ $this->metadata->slug, $this->metadata->slug . '-' . get_did_hash( $this->metadata->id ) ];
+		$slug_arr = [ $this->metadata->slug, $this->metadata->slug . '-' . Packages\get_did_hash( $this->did ) ];
 		if ( ! in_array( $response->slug, $slug_arr, true ) ) {
 			return $result;
 		}
 
-		return (object) $this->get_update_data();
+		return (object) Packages\get_update_data( $this->did );
 	}
 
 	/**
@@ -227,7 +224,10 @@ class Updater {
 
 		$rel_path = plugin_basename( $this->filepath );
 		$rel_path = 'theme' === $this->type ? dirname( $rel_path ) : $rel_path;
-		$response = $this->get_update_data();
+		$response = Packages\get_update_data( $this->did );
+		if ( is_wp_error( $response ) ) {
+			return $transient;
+		}
 		$response = 'plugin' === $this->type ? (object) $response : $response;
 		$is_compatible = Packages\check_requirements( $this->release );
 
@@ -239,52 +239,6 @@ class Updater {
 		}
 
 		return $transient;
-	}
-
-	/**
-	 * Get update data for use with transient and API responses.
-	 *
-	 * @return array
-	 */
-	public function get_update_data() {
-		$required_versions = Packages\version_requirements( $this->release );
-		if ( 'plugin' === $this->type ) {
-			list( $slug, $file ) = explode( '/', plugin_basename( $this->filepath ), 2 );
-			if ( ! str_contains( $slug, '-' . get_did_hash( $this->metadata->id ) ) ) {
-				$slug .= '-' . get_did_hash( $this->metadata->id );
-			}
-			$filename = $slug . '/' . $file;
-		} else {
-			$filename = $this->metadata->slug . '-' . get_did_hash( $this->metadata->id );
-		}
-
-		$response = [
-			'name'             => $this->metadata->name,
-			'author'           => $this->metadata->authors[0]->name,
-			'author_uri'       => $this->metadata->authors[0]->url,
-			'slug'             => $this->metadata->slug . '-' . get_did_hash( $this->metadata->id ),
-			$this->type        => $filename,
-			'file'             => $filename,
-			'url'              => $this->metadata->url ?? $this->metadata->slug,
-			'sections'         => (array) $this->metadata->sections,
-			'icons'            => isset( $this->release->artifacts->icon ) ? get_icons( $this->release->artifacts->icon ) : [],
-			'banners'          => isset( $this->release->artifacts->banner ) ? get_banners( $this->release->artifacts->banner ) : [],
-			'update-supported' => true,
-			'requires'         => $required_versions['requires_wp'],
-			'requires_php'     => $required_versions['requires_php'],
-			'new_version'      => $this->release->version,
-			'version'          => $this->release->version,
-			'remote_version'   => $this->release->version,
-			'package'          => $this->release->artifacts->package[0]->url,
-			'download_link'    => $this->release->artifacts->package[0]->url,
-			'tested'           => $required_versions['tested_to'],
-			'external'         => 'xxx',
-		];
-		if ( 'theme' === $this->type ) {
-			$response['theme_uri'] = $response['url'];
-		}
-
-		return $response;
 	}
 
 	/**
