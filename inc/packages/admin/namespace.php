@@ -131,6 +131,7 @@ function render_tab_direct() {
 				name="plugin_id"
 				pattern="did:(web|plc):.+"
 				placeholder="did:..."
+				required
 				aria-describedby="fair-direct-install__note"
 			/>
 			<?php submit_button( _x( 'View Details', 'plugin', 'fair' ), '', '', false ); ?>
