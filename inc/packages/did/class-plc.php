@@ -67,6 +67,9 @@ class PLC implements DID {
 		if ( json_last_error() !== JSON_ERROR_NONE ) {
 			return new WP_Error( 'fair.packages.did.json_error', __( 'Unable to parse DID document response.', 'fair' ) );
 		}
+		if ( 200 !== wp_remote_retrieve_response_code( $response ) && property_exists( $data, 'message' ) ) {
+			return new WP_Error( 'fair.packages.did.fetch.error', esc_html( $data->message ) );
+		}
 
 		$document = new Document(
 			$data->id,
