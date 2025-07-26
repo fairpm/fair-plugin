@@ -13,8 +13,6 @@ use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
 use FAIR\Updater;
 
-use WP_Upgrader_Skin;
-
 const TAB_DIRECT = 'fair_direct';
 const ACTION_INSTALL = 'fair-install-plugin';
 const ACTION_INSTALL_NONCE = 'fair-install-plugin';
@@ -234,8 +232,7 @@ function handle_direct_install() {
 		wp_die( __( 'No version specified for the plugin.', 'fair' ) );
 	}
 
-	$skin = new WP_Upgrader_Skin();
-	Packages\install_package( $id, $skin, $version );
+	Packages\install_package( $id, $version );
 	exit;
 }
 
