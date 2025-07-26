@@ -619,17 +619,17 @@ function upgrader_pre_download( $false ) : bool {
 	return $false;
 }
 
-	/**
-	 * Renames a package's directory when it doesn't match the slug.
-	 *
-	 * This is commonly required for packages from Git hosts.
-	 *
-	 * @param string $source        Path of $source.
-	 * @param string $remote_source Path of $remote_source.
-	 * @param WP_Upgrader $upgrader An Upgrader object.
-	 *
-	 * @return string
-	 */
+/**
+ * Renames a package's directory when it doesn't match the slug.
+ *
+ * This is commonly required for packages from Git hosts.
+ *
+ * @param string $source        Path of $source.
+ * @param string $remote_source Path of $remote_source.
+ * @param WP_Upgrader $upgrader An Upgrader object.
+ *
+ * @return string
+ */
 function rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
 
