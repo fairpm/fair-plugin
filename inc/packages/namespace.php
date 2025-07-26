@@ -126,14 +126,14 @@ function fetch_package_metadata( string $id ) {
 }
 
 /**
- * Install a plugin from a FAIR DID.
+ * Install a package from a FAIR DID.
  *
  * @param string $id DID of the package to install.
  * @param WP_Upgrader_Skin $skin Plugin Installer Skin.
  * @param string|null $version Version to install. If null, the latest version is installed.
  * @return bool|WP_Error True on success, WP_Error on failure.
  */
-function install_plugin( string $id, WP_Upgrader_Skin $skin, ?string $version = null ) {
+function install_package( string $id, WP_Upgrader_Skin $skin, ?string $version = null ) {
 	$document = get_did_document( $id );
 	if ( is_wp_error( $document ) ) {
 		return $document;

@@ -235,7 +235,7 @@ function handle_direct_install() {
 	}
 
 	$skin = new WP_Upgrader_Skin();
-	Packages\install_plugin( $id, $skin, $version );
+	Packages\install_package( $id, $skin, $version );
 	exit;
 }
 
