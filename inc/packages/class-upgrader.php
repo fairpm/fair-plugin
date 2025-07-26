@@ -9,6 +9,8 @@ namespace FAIR\Packages;
 
 use function FAIR\Updater\add_package_to_release_cache;
 
+use Plugin_Installer_Skin;
+use Theme_Installer_Skin;
 use WP_Error;
 use WP_Upgrader;
 
@@ -338,6 +340,9 @@ class Upgrader extends WP_Upgrader {
 	 * @return bool|WP_Error True if the installation was successful, false or a WP_Error object otherwise.
 	 */
 	protected function install_plugin( $clear_cache, $overwrite ) {
+		$this->skin = new Plugin_Installer_Skin();
+		$this->init();
+
 		if ( $clear_cache ) {
 			// Clear cache so wp_update_plugins() knows about the new plugin.
 			add_action( 'upgrader_process_complete', 'wp_clean_plugins_cache', 9, 0 );
@@ -392,6 +397,9 @@ class Upgrader extends WP_Upgrader {
 	 * @return bool|WP_Error True if the installation was successful, false or a WP_Error object otherwise.
 	 */
 	public function install_theme( $clear_cache, $overwrite ) {
+		$this->skin = new Theme_Installer_Skin();
+		$this->init();
+
 		if ( $clear_cache ) {
 			// Clear cache so wp_update_themes() knows about the new theme.
 			add_action( 'upgrader_process_complete', 'wp_clean_themes_cache', 9, 0 );
@@ -440,7 +448,6 @@ class Upgrader extends WP_Upgrader {
 	 * @return bool|WP_Error True if the installation was successful, false or a WP_Error otherwise.
 	 */
 	public function install( MetadataDocument $package, ReleaseDocument $release, $clear_cache = true, $overwrite = false ) {
-		$this->init();
 		$this->install_strings();
 
 		$this->package = $package;

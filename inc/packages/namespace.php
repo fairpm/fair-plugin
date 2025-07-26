@@ -12,7 +12,6 @@ use FAIR\Packages\DID\Web;
 use FAIR\Updater;
 use WP_Error;
 use WP_Upgrader;
-use WP_Upgrader_Skin;
 
 const SERVICE_ID = 'FairPackageManagementRepo';
 const CONTENT_TYPE = 'application/json+fair';
@@ -126,14 +125,13 @@ function fetch_package_metadata( string $id ) {
 }
 
 /**
- * Install a plugin from a FAIR DID.
+ * Install a package from a FAIR DID.
  *
  * @param string $id DID of the package to install.
- * @param WP_Upgrader_Skin $skin Plugin Installer Skin.
  * @param string|null $version Version to install. If null, the latest version is installed.
  * @return bool|WP_Error True on success, WP_Error on failure.
  */
-function install_plugin( string $id, WP_Upgrader_Skin $skin, ?string $version = null ) {
+function install_package( string $id, ?string $version = null ) {
 	$document = get_did_document( $id );
 	if ( is_wp_error( $document ) ) {
 		return $document;
@@ -142,7 +140,7 @@ function install_plugin( string $id, WP_Upgrader_Skin $skin, ?string $version = 
 	// Filter to valid keys for signing.
 	$valid_keys = $document->get_fair_signing_keys();
 	if ( empty( $valid_keys ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
+		return new WP_Error( 'fair.packages.install.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
 	}
 
 	$metadata = fetch_package_metadata( $id );
@@ -153,11 +151,10 @@ function install_plugin( string $id, WP_Upgrader_Skin $skin, ?string $version = 
 	// Select the appropriate release.
 	$release = pick_release( $metadata->releases, $version );
 	if ( empty( $release ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
+		return new WP_Error( 'fair.packages.install.no_releases', __( 'No releases found in the repository.', 'fair' ) );
 	}
 
-	$skin_class = ucwords( str_replace( 'wp-', '', $metadata->type ) ) . '_Installer_Skin';
-	$upgrader = new Upgrader( new $skin_class() );
+	$upgrader = new Upgrader();
 	return $upgrader->install( $metadata, $release );
 }
 
@@ -224,7 +221,7 @@ function get_latest_release_from_did( $id ) {
 
 	$valid_keys = $document->get_fair_signing_keys();
 	if ( empty( $valid_keys ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
+		return new WP_Error( 'fair.packages.install.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
 	}
 
 	$metadata = fetch_package_metadata( $id );
@@ -234,7 +231,7 @@ function get_latest_release_from_did( $id ) {
 
 	$release = pick_release( $metadata->releases );
 	if ( empty( $release ) ) {
-		return new WP_Error( 'fair.packages.install_plugin.no_releases', __( 'No releases found in the repository.', 'fair' ) );
+		return new WP_Error( 'fair.packages.install.no_releases', __( 'No releases found in the repository.', 'fair' ) );
 	}
 
 	return $release;
