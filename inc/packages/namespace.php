@@ -11,6 +11,7 @@ use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use FAIR\Updater;
 use WP_Error;
+use WP_Upgrader;
 
 const SERVICE_ID = 'FairPackageManagementRepo';
 const CONTENT_TYPE = 'application/json+fair';
@@ -590,7 +591,7 @@ function upgrader_pre_download( $false ) : bool {
  * @param string $remote_source Path of $remote_source.
  * @param WP_Upgrader $upgrader An Upgrader object.
  *
- * @return string
+ * @return string|WP_Error
  */
 function rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
