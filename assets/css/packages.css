@@ -1,0 +1,42 @@
+.fair-direct-install {
+	max-width: 500px;
+	margin: 3em auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.fair-direct-install__help {
+	color: #50575e;
+	font-size: 18px;
+	font-style: normal;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+.fair-direct-install__form {
+	background: #f6f7f7;
+	border: 1px solid #c3c4c7;
+	padding: 30px;
+	margin: 30px auto;
+	display: inline-flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.fair-direct-install__form input[type="text"] {
+	font-size: 13px;
+	line-height: 2.15384615;
+	font-family: Consolas, Monaco, monospace;
+	width: 24em;
+	margin-right: 1em;
+}
+
+#fair-direct-install__note {
+	font-style: italic;
+	text-align: center;
+}
+#fair-direct-install__note code {
+	font-style: normal;
+}
