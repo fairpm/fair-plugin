@@ -108,7 +108,7 @@ function render_tab_direct() {
 	?>
 	<div class="fair-direct-install">
 		<p class="fair-direct-install__help">
-			<?= __( "Enter a plugin ID to view details and install.", 'fair' ); ?>
+			<?= __( 'Enter a plugin ID to view details and install.', 'fair' ); ?>
 		</p>
 		<form
 			action=""
