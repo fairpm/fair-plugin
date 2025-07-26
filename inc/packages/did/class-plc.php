@@ -70,7 +70,7 @@ class PLC implements DID {
 		if ( 200 !== wp_remote_retrieve_response_code( $response ) && property_exists( $data, 'message' ) ) {
 			return new WP_Error( 'fair.packages.did.fetch.error', esc_html( $data->message ) );
 		}
-		if ( $data->id !== $this->id ) {
+		if ( empty( $data->id ) || $data->id !== $this->id ) {
 			return new WP_Error( 'fair.packages.did.fetch.mismatch', __( 'The PLC directory did not return the DID that was sent or the DID was invalid.', 'fair' ) );
 		}
 
