@@ -244,7 +244,6 @@ class Upgrader extends WP_Upgrader {
 		$artifact = pick_artifact_by_lang( $this->release->artifacts->package );
 
 		add_package_to_release_cache( $this->package->id );
-		add_filter( 'upgrader_pre_download', 'FAIR\\Updater\\upgrader_pre_download', 10, 1 );
 
 		// Download the package.
 		$path = $this->download_package( $artifact->url, false, $options['hook_extra'] );
@@ -442,7 +441,7 @@ class Upgrader extends WP_Upgrader {
 	 */
 	public function install( MetadataDocument $package, ReleaseDocument $release, $clear_cache = true, $overwrite = false ) {
 		$this->init();
-		// $this->install_strings();
+		$this->install_strings();
 
 		$this->package = $package;
 		$this->release = $release;
@@ -458,6 +457,50 @@ class Upgrader extends WP_Upgrader {
 				return new WP_Error( 'fair.packages.upgrader.install.invalid_type', 'Invalid package type.' );
 		}
 	}
+
+	/**
+	 * Retrieves the hashed path to the file that contains the plugin info.
+	 *
+	 * This isn't used internally in the class, but is called by the skins.
+	 *
+	 * @since WordPress 2.8.0
+	 *
+	 * @return string|false The full path to the main plugin file, or false.
+	 */
+	public function plugin_info() {
+		if ( ! isset( $this->package ) ) {
+			return false;
+		}
+
+		return get_hashed_filename( $this->package );
+	}
+
+	/**
+	 * Gets the WP_Theme object for a theme.
+	 *
+	 * @since WordPress 2.8.0
+	 * @since WordPress 3.0.0 The `$theme` argument was added.
+	 *
+	 * @param string $theme The directory name of the theme. This is optional, and if not supplied,
+	 *                      the directory name from the last result will be used.
+	 * @return WP_Theme|false The theme's info object, or false `$theme` is not supplied
+	 *                        and the last result isn't set.
+	 */
+	public function theme_info( $theme = null ) {
+		if ( empty( $theme ) ) {
+			if ( ! empty( $this->result['destination_name'] ) ) {
+				$theme = $this->result['destination_name'];
+			} else {
+				return false;
+			}
+		}
+
+		$theme = wp_get_theme( $theme );
+		$theme->cache_delete();
+
+		return $theme;
+	}
+
 	/**
 	 * Checks that the source package contains a valid plugin.
 	 *
@@ -663,29 +706,4 @@ class Upgrader extends WP_Upgrader {
 		$this->new_theme_data = $info;
 	}
 
-	/**
-	 * Renames a package's directory when it doesn't match the slug.
-	 *
-	 * This is commonly required for packages from Git hosts.
-	 *
-	 * @param string $source        Path of $source.
-	 * @param string $remote_source Path of $remote_source.
-	 *
-	 * @return string
-	 */
-	public function rename_source_selection( string $source, string $remote_source ) {
-		global $wp_filesystem;
-
-		if ( str_contains( $source, get_did_hash( $this->package->id ) ) && basename( $source ) === $this->package->slug ) {
-			return $source;
-		}
-
-		$new_source = trailingslashit( $remote_source ) . $this->package->slug . '-' . get_did_hash( $this->package->id );
-
-		if ( trailingslashit( strtolower( $source ) ) !== trailingslashit( strtolower( $new_source ) ) ) {
-			$wp_filesystem->move( $source, $new_source, true );
-		}
-
-		return trailingslashit( $new_source );
-	}
 }
