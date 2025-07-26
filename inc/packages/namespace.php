@@ -125,40 +125,6 @@ function fetch_package_metadata( string $id ) {
 }
 
 /**
- * Install a package from a FAIR DID.
- *
- * @param string $id DID of the package to install.
- * @param string|null $version Version to install. If null, the latest version is installed.
- * @return bool|WP_Error True on success, WP_Error on failure.
- */
-function install_package( string $id, ?string $version = null ) {
-	$document = get_did_document( $id );
-	if ( is_wp_error( $document ) ) {
-		return $document;
-	}
-
-	// Filter to valid keys for signing.
-	$valid_keys = $document->get_fair_signing_keys();
-	if ( empty( $valid_keys ) ) {
-		return new WP_Error( 'fair.packages.install.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
-	}
-
-	$metadata = fetch_package_metadata( $id );
-	if ( is_wp_error( $metadata ) ) {
-		return $metadata;
-	}
-
-	// Select the appropriate release.
-	$release = pick_release( $metadata->releases, $version );
-	if ( empty( $release ) ) {
-		return new WP_Error( 'fair.packages.install.no_releases', __( 'No releases found in the repository.', 'fair' ) );
-	}
-
-	$upgrader = new Upgrader();
-	return $upgrader->install( $metadata, $release );
-}
-
-/**
  * Fetch the metadata document for a package.
  *
  * @param string $url URL for the metadata document.
@@ -625,7 +591,7 @@ function upgrader_pre_download( $false ) : bool {
  * @param string $remote_source Path of $remote_source.
  * @param WP_Upgrader $upgrader An Upgrader object.
  *
- * @return string
+ * @return string|WP_Error
  */
 function rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;

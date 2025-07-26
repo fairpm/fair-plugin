@@ -32,7 +32,6 @@ function bootstrap() {
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
-	add_action( 'update-custom_' . ACTION_INSTALL, __NAMESPACE__ . '\\handle_direct_install' );
 	add_action( 'wp_ajax_check_plugin_dependencies', __NAMESPACE__ . '\\set_slug_to_hashed' );
 }
 
@@ -216,24 +215,6 @@ function get_direct_update_url( MetadataDocument $doc ): string {
 	];
 	$url = add_query_arg( $args, self_admin_url( 'update.php' ) );
 	return wp_nonce_url( $url, "{$action}_{$file}" );
-}
-
-/**
- * Handle direct install.
- *
- * @return void
- */
-function handle_direct_install() {
-	$id = sanitize_text_field( wp_unslash( $_GET['id'] ?? null ) );
-	check_admin_referer( ACTION_INSTALL_NONCE . $id );
-
-	$version = sanitize_text_field( wp_unslash( $_GET['version'] ?? null ) );
-	if ( empty( $version ) ) {
-		wp_die( __( 'No version specified for the plugin.', 'fair' ) );
-	}
-
-	Packages\install_package( $id, $version );
-	exit;
 }
 
 /**
