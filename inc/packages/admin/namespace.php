@@ -18,6 +18,7 @@ use WP_Upgrader_Skin;
 const TAB_DIRECT = 'fair_direct';
 const ACTION_INSTALL = 'fair-install-plugin';
 const ACTION_INSTALL_NONCE = 'fair-install-plugin';
+const ACTION_INSTALL_DID = 'fair-install-did';
 
 /**
  * Bootstrap.
@@ -28,10 +29,13 @@ function bootstrap() {
 	}
 
 	add_filter( 'install_plugins_tabs', __NAMESPACE__ . '\\add_direct_tab' );
+	add_filter( 'plugins_api', __NAMESPACE__ . '\\handle_did_during_ajax', 10, 3 );
+	add_filter( 'upgrader_pre_download', 'FAIR\\Packages\\upgrader_pre_download', 10, 1 );
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
 	add_action( 'update-custom_' . ACTION_INSTALL, __NAMESPACE__ . '\\handle_direct_install' );
+	add_action( 'wp_ajax_check_plugin_dependencies', __NAMESPACE__ . '\\set_slug_to_hashed' );
 }
 
 /**
@@ -43,6 +47,36 @@ function bootstrap() {
 function add_direct_tab( $tabs ) {
 	$tabs[ TAB_DIRECT ] = __( 'Direct Install', 'fair' );
 	return $tabs;
+}
+
+/**
+ * Handles the AJAX request for plugin information when a DID is present.
+ *
+ * @param mixed  $result The result of the plugins_api call.
+ * @param string $action The action being performed.
+ * @param object $args   The arguments passed to the plugins_api call.
+ * @return mixed
+ */
+function handle_did_during_ajax( $result, $action, $args ) {
+	if ( ! wp_doing_ajax() || 'plugin_information' !== $action || ! isset( $args->slug ) ) {
+		return $result;
+	}
+
+	$slug = sanitize_text_field( $args->slug );
+	if ( ! str_contains( $slug, '-did--' ) ) {
+		return $result;
+	}
+
+	$did = 'did:' . explode( '-did:', str_replace( '--', ':', $slug ), 2 )[1];
+	if ( ! preg_match( '/^did:(web|plc):.+$/', $did ) ) {
+		return $result;
+	}
+
+	wp_cache_set( ACTION_INSTALL_DID, $did );
+	Updater\add_package_to_release_cache( $did );
+	add_filter( 'http_request_args', 'FAIR\\Updater\\maybe_add_accept_header', 20, 2 );
+
+	return (object) Packages\get_update_data( $did );
 }
 
 /**
@@ -203,6 +237,30 @@ function handle_direct_install() {
 	$skin = new WP_Upgrader_Skin();
 	Packages\install_plugin( $id, $skin, $version );
 	exit;
+}
+
+/**
+ * Set slug to hashed slug from escaped slug-did.
+ *
+ * Needed for check_plugin_dependencies_during_ajax().
+ *
+ * @return void
+ */
+function set_slug_to_hashed() : void {
+	check_ajax_referer( 'updates' );
+
+	if ( ! isset( $_POST['slug'] ) ) {
+		return;
+	}
+
+	$escaped_slug = sanitize_text_field( wp_unslash( $_POST['slug'] ) );
+	$did = 'did:' . explode( '-did:', str_replace( '--', ':', $escaped_slug ), 2 )[1];
+	if ( ! preg_match( '/^did:(web|plc):.+$/', $did ) ) {
+		return;
+	}
+
+	// Reset to proper hashed slug.
+	$_POST['slug'] = explode( '-did--', $escaped_slug, 2 )[0] . '-' . Packages\get_did_hash( $did );
 }
 
 /**

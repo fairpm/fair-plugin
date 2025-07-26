@@ -16,6 +16,7 @@ const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
  */
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\run' );
+	add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download', 10, 1 );
 }
 
 /**
@@ -34,7 +35,7 @@ function add_package_to_release_cache( string $did ) : void {
 }
 
 /**
- * Send upgrader_pre_download filter to add_accept_header().
+ * Send upgrader_pre_download filter to maybe_add_accept_header().
  *
  * @param bool $false Whether to bail without returning the package.
  *                    Default false.

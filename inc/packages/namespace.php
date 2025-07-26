@@ -10,8 +10,8 @@ namespace FAIR\Packages;
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use FAIR\Updater;
-
 use WP_Error;
+use WP_Upgrader;
 use WP_Upgrader_Skin;
 
 const SERVICE_ID = 'FairPackageManagementRepo';
@@ -607,4 +607,58 @@ function get_update_data( $did ) {
 	return $response;
 }
 
+/**
+ * Send upgrader_pre_download filter to hook `upgrader_source_selection` during AJAX.
+ *
+ * @param bool $false Whether to bail without returning the package.
+ *                    Default false.
+ * @return bool
+ */
+function upgrader_pre_download( $false ) : bool {
+	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\rename_source_selection', 10, 3 );
+	return $false;
+}
+
+/**
+ * Renames a package's directory when it doesn't match the slug.
+ *
+ * This is commonly required for packages from Git hosts.
+ *
+ * @param string $source        Path of $source.
+ * @param string $remote_source Path of $remote_source.
+ * @param WP_Upgrader $upgrader An Upgrader object.
+ *
+ * @return string
+ */
+function rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
+	global $wp_filesystem;
+
+	$did = wp_cache_get( Admin\ACTION_INSTALL_DID );
+
+	if ( ! $did ) {
+		return $source;
+	}
+
+	$metadata = fetch_package_metadata( $did );
+	if ( is_wp_error( $metadata ) ) {
+		return $metadata;
+	}
+
+	// Sanity check.
+	if ( $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
+		return $source;
+	}
+
+	if ( str_contains( $source, get_did_hash( $did ) ) && basename( $source ) === $metadata->slug ) {
+		return $source;
+	}
+
+	$new_source = trailingslashit( $remote_source ) . $metadata->slug . '-' . get_did_hash( $did );
+
+	if ( trailingslashit( strtolower( $source ) ) !== trailingslashit( strtolower( $new_source ) ) ) {
+		$wp_filesystem->move( $source, $new_source, true );
+	}
+
+	return trailingslashit( $new_source );
+}
 // phpcs:enable

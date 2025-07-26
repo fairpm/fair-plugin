@@ -130,7 +130,6 @@ class Updater {
 		}
 
 		add_package_to_release_cache( $this->did );
-		add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download', 10, 1 );
 	}
 
 	/**
