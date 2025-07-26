@@ -247,7 +247,8 @@ function handle_direct_install() {
  * @return void
  */
 function set_slug_to_hashed() : void {
-	// phpcs:disable HM.Security.NonceVerification.Missing
+	check_ajax_referer( 'updates' );
+
 	if ( ! isset( $_POST['slug'] ) ) {
 		return;
 	}
@@ -260,7 +261,6 @@ function set_slug_to_hashed() : void {
 
 	// Reset to proper hashed slug.
 	$_POST['slug'] = explode( '-did--', $escaped_slug, 2 )[0] . '-' . Packages\get_did_hash( $did );
-	// phpcs:enable
 }
 
 /**
