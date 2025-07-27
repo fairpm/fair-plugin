@@ -11,8 +11,7 @@ use FAIR\Packages;
 use FAIR\Packages\Admin;
 use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
-
-use function FAIR\Updater\get_packages;
+use FAIR\Updater;
 
 /**
  * Sanitize HTML content for plugin information.
@@ -448,7 +447,7 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 				);
 			}
 
-			$file = get_packages()[ "{$type}s" ][ $doc->id ];
+			$file = Updater\get_packages()[ "{$type}s" ][ $doc->id ];
 			$file = $type === 'plugin' ? plugin_basename( $file ) : basename( dirname( $file ) );
 			$slug = $type === 'plugin' ? dirname( $file ) : $file;
 

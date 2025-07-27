@@ -16,7 +16,7 @@ class PLC implements DID {
 	// phpcs:disable WordPress.NamingConventions.ValidVariableName
 
 	const DIRECTORY_URL = 'https://plc.directory/';
-	const TYPE = 'plc';
+	const METHOD = 'plc';
 
 	/**
 	 * Decentralized ID.
@@ -39,8 +39,8 @@ class PLC implements DID {
 	 *
 	 * One of plc, web.
 	 */
-	public function get_type() : string {
-		return static::TYPE;
+	public function get_method() : string {
+		return static::METHOD;
 	}
 
 	/**

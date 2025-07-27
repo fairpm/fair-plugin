@@ -70,8 +70,8 @@ function handle_did_during_ajax( $result, $action, $args ) {
 	}
 
 	wp_cache_set( ACTION_INSTALL_DID, $did );
-	Updater\add_package_to_release_cache( $did );
-	add_filter( 'http_request_args', 'FAIR\\Updater\\maybe_add_accept_header', 20, 2 );
+	Packages\add_package_to_release_cache( $did );
+	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
 
 	return (object) Packages\get_update_data( $did );
 }
@@ -240,27 +240,6 @@ function set_slug_to_hashed() : void {
 
 	// Reset to proper hashed slug.
 	$_POST['slug'] = explode( '-did--', $escaped_slug, 2 )[0] . '-' . Packages\get_did_hash( $did );
-}
-
-/**
- * Hijack embedded info page.
- *
- * @return void
- */
-function embedded_info_page() {
-	// phpcs:disable HM.Security.NonceVerification.Recommended
-	// This is a special case for the plugin information page.
-	if ( ! isset( $_REQUEST['plugin'] ) || ! isset( $_REQUEST['tab'] ) || $_REQUEST['tab'] !== TAB_DIRECT ) {
-		return;
-	}
-
-	// If the plugin is not a FAIR package, do nothing.
-	if ( ! preg_match( '/^did:(web|plc):.+$/', sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) ) ) {
-		return;
-	}
-	// phpcs:enable
-
-	maybe_hijack_plugin_info();
 }
 
 /**

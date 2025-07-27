@@ -9,72 +9,11 @@ namespace FAIR\Updater;
 
 use FAIR\Packages;
 
-const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
-
 /**
  * Bootstrap.
  */
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\run' );
-	add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download', 10, 1 );
-}
-
-/**
- * Add FAIR ReleaseDocument data to cache.
- *
- * @param string $did DID.
- * @return void
- */
-function add_package_to_release_cache( string $did ) : void {
-	if ( empty( $did ) ) {
-		return;
-	}
-	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
-	$releases[ $did ] = Packages\get_latest_release_from_did( $did );
-	wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
-}
-
-/**
- * Send upgrader_pre_download filter to maybe_add_accept_header().
- *
- * @param bool $false Whether to bail without returning the package.
- *                    Default false.
- * @return bool
- */
-function upgrader_pre_download( $false ) : bool {
-	add_filter( 'http_request_args', __NAMESPACE__ . '\\maybe_add_accept_header', 20, 2 );
-	return $false;
-}
-
-/**
- * Maybe add accept header for release asset package binary.
- *
- * ReleaseDocument artifact package content-type will be application/octet-stream.
- * Only for GitHub release assets.
- *
- * @param array  $args Array of http args.
- * @param string $url  Download URL.
- *
- * @return array
- */
-function maybe_add_accept_header( $args, $url ) : array {
-	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
-
-	if ( ! str_contains( $url, 'api.github.com' ) ) {
-		return $args;
-	}
-
-	foreach ( $releases as $release ) {
-		if ( $url === $release->artifacts->package[0]->url ) {
-			$content_type = $release->artifacts->package[0]->{'content-type'};
-			if ( $content_type === 'application/octet-stream' ) {
-				$args = array_merge( $args, [ 'headers' => [ 'Accept' => $content_type ] ] );
-				break;
-			}
-		}
-	}
-
-	return $args;
 }
 
 /**

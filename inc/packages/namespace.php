@@ -16,6 +16,7 @@ use WP_Upgrader;
 const SERVICE_ID = 'FairPackageManagementRepo';
 const CONTENT_TYPE = 'application/json+fair';
 const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
+const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
 
 // phpcs:disable WordPress.NamingConventions.ValidVariableName
 
@@ -45,14 +46,14 @@ function parse_did( string $id ) {
 	}
 
 	switch ( $parts[1] ) {
-		case PLC::TYPE:
+		case PLC::METHOD:
 			return new PLC( $id );
 
-		case Web::TYPE:
+		case Web::METHOD:
 			return new Web( $id );
 
 		default:
-			return new WP_Error( 'fair.packages.validate_id.invalid_type', __( 'Unsupported DID type.', 'fair' ) );
+			return new WP_Error( 'fair.packages.validate_id.invalid_method', __( 'Unsupported DID method.', 'fair' ) );
 	}
 }
 
@@ -571,13 +572,15 @@ function get_update_data( $did ) {
 }
 
 /**
- * Send upgrader_pre_download filter to hook `upgrader_source_selection` during AJAX.
+ * Send upgrader_pre_download filter to hook `upgrader_source_selection` during AJAX
+ * and send to `maybe_add_accept_header()`.
  *
  * @param bool $false Whether to bail without returning the package.
  *                    Default false.
  * @return bool
  */
 function upgrader_pre_download( $false ) : bool {
+	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
 	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\rename_source_selection', 10, 3 );
 	return $false;
 }
@@ -624,4 +627,51 @@ function rename_source_selection( string $source, string $remote_source, WP_Upgr
 
 	return trailingslashit( $new_source );
 }
+
+/**
+ * Add FAIR ReleaseDocument data to cache.
+ *
+ * @param string $did DID.
+ * @return void
+ */
+function add_package_to_release_cache( string $did ) : void {
+	if ( empty( $did ) ) {
+		return;
+	}
+	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
+	$releases[ $did ] = get_latest_release_from_did( $did );
+	wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
+}
+
+/**
+ * Maybe add accept header for release asset package binary.
+ *
+ * ReleaseDocument artifact package content-type will be application/octet-stream.
+ * Only for GitHub release assets.
+ *
+ * @param array  $args Array of http args.
+ * @param string $url  Download URL.
+ *
+ * @return array
+ */
+function maybe_add_accept_header( $args, $url ) : array {
+	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
+
+	if ( ! str_contains( $url, 'api.github.com' ) ) {
+		return $args;
+	}
+
+	foreach ( $releases as $release ) {
+		if ( $url === $release->artifacts->package[0]->url ) {
+			$content_type = $release->artifacts->package[0]->{'content-type'};
+			if ( $content_type === 'application/octet-stream' ) {
+				$args = array_merge( $args, [ 'headers' => [ 'Accept' => $content_type ] ] );
+				break;
+			}
+		}
+	}
+
+	return $args;
+}
+
 // phpcs:enable

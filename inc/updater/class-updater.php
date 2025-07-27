@@ -129,7 +129,7 @@ class Updater {
 			add_filter( 'wp_prepare_themes_for_js', [ $this, 'customize_theme_update_html' ] );
 		}
 
-		add_package_to_release_cache( $this->did );
+		Packages\add_package_to_release_cache( $this->did );
 	}
 
 	/**
