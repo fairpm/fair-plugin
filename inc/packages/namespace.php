@@ -572,13 +572,15 @@ function get_update_data( $did ) {
 }
 
 /**
- * Send upgrader_pre_download filter to hook `upgrader_source_selection` during AJAX.
+ * Send upgrader_pre_download filter to hook `upgrader_source_selection` during AJAX
+ * and send to `maybe_add_accept_header()`.
  *
  * @param bool $false Whether to bail without returning the package.
  *                    Default false.
  * @return bool
  */
 function upgrader_pre_download( $false ) : bool {
+	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
 	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\rename_source_selection', 10, 3 );
 	return $false;
 }

@@ -14,19 +14,6 @@ use FAIR\Packages;
  */
 function bootstrap() {
 	add_action( 'init', __NAMESPACE__ . '\\run' );
-	add_filter( 'upgrader_pre_download', __NAMESPACE__ . '\\upgrader_pre_download', 10, 1 );
-}
-
-/**
- * Send upgrader_pre_download filter to maybe_add_accept_header().
- *
- * @param bool $false Whether to bail without returning the package.
- *                    Default false.
- * @return bool
- */
-function upgrader_pre_download( $false ) : bool {
-	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
-	return $false;
 }
 
 /**
