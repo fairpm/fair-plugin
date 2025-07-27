@@ -243,27 +243,6 @@ function set_slug_to_hashed() : void {
 }
 
 /**
- * Hijack embedded info page.
- *
- * @return void
- */
-function embedded_info_page() {
-	// phpcs:disable HM.Security.NonceVerification.Recommended
-	// This is a special case for the plugin information page.
-	if ( ! isset( $_REQUEST['plugin'] ) || ! isset( $_REQUEST['tab'] ) || $_REQUEST['tab'] !== TAB_DIRECT ) {
-		return;
-	}
-
-	// If the plugin is not a FAIR package, do nothing.
-	if ( ! preg_match( '/^did:(web|plc):.+$/', sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ) ) ) {
-		return;
-	}
-	// phpcs:enable
-
-	maybe_hijack_plugin_info();
-}
-
-/**
  * Maybe hijack plugin info.
  *
  * @return void
