@@ -13,7 +13,7 @@ interface DID {
 	 *
 	 * One of plc, web.
 	 */
-	public function get_type() : string;
+	public function get_method() : string;
 
 	/**
 	 * Get the full decentralized ID (DID).

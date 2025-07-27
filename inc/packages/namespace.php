@@ -46,14 +46,14 @@ function parse_did( string $id ) {
 	}
 
 	switch ( $parts[1] ) {
-		case PLC::TYPE:
+		case PLC::METHOD:
 			return new PLC( $id );
 
-		case Web::TYPE:
+		case Web::METHOD:
 			return new Web( $id );
 
 		default:
-			return new WP_Error( 'fair.packages.validate_id.invalid_type', __( 'Unsupported DID type.', 'fair' ) );
+			return new WP_Error( 'fair.packages.validate_id.invalid_method', __( 'Unsupported DID method.', 'fair' ) );
 	}
 }
 
