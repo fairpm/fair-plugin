@@ -9,7 +9,7 @@ namespace FAIR\Packages\DID;
 
 interface DID {
 	/**
-	 * Get the DID type.
+	 * Get the DID method.
 	 *
 	 * One of plc, web.
 	 */
