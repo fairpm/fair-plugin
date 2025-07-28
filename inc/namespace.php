@@ -33,16 +33,17 @@ function bootstrap() {
 	Disable_Openverse\bootstrap();
 	Icons\bootstrap();
 	Importers\bootstrap();
-	if ( defined( 'FAIR_EXPERIMENTAL_PACKAGES' ) && FAIR_EXPERIMENTAL_PACKAGES ) {
-		Packages\bootstrap();
-		Updater\bootstrap();
-	}
+	Packages\bootstrap();
 	Pings\bootstrap();
 	Salts\bootstrap();
 	Settings\bootstrap();
+	Updater\bootstrap();
 	Upgrades\bootstrap();
 	User_Notification\bootstrap();
 	Version_Check\bootstrap();
+
+	if ( defined( 'FAIR_EXPERIMENTAL_PACKAGES' ) && FAIR_EXPERIMENTAL_PACKAGES ) {
+	}
 
 	// Self-update check.
 	( new Git_Updater\Lite( PLUGIN_FILE ) )->run();
