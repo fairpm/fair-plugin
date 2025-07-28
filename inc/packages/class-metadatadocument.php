@@ -87,9 +87,9 @@ class MetadataDocument {
 	/**
 	 * Sections.
 	 *
-	 * @var string[]
+	 * @var stdClass
 	 */
-	public $sections = [];
+	public $sections;
 
 	/**
 	 * Releases.
