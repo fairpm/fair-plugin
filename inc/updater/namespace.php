@@ -7,8 +7,6 @@
 
 namespace FAIR\Updater;
 
-use FAIR\Packages;
-
 /**
  * Bootstrap.
  */
