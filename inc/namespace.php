@@ -38,6 +38,7 @@ function bootstrap() {
 		Updater\bootstrap();
 	}
 	Pings\bootstrap();
+	Plugins\bootstrap();
 	Salts\bootstrap();
 	Settings\bootstrap();
 	Upgrades\bootstrap();
