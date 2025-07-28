@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
+"Project-Id-Version: FAIR - Federated and Independent Repositories 0.3.0\n"
 "Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-06-16T16:26:12+00:00\n"
+"POT-Creation-Date: 2025-07-28T13:57:15+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -29,26 +29,26 @@ msgstr ""
 msgid "FAIR Contributors"
 msgstr ""
 
-#: inc/avatars/namespace.php:93
+#: inc/avatars/namespace.php:99
 msgid "Choose Profile Image"
 msgstr ""
 
-#: inc/avatars/namespace.php:94
+#: inc/avatars/namespace.php:100
 msgid "Remove Profile Image"
 msgstr ""
 
-#: inc/avatars/namespace.php:97
+#: inc/avatars/namespace.php:103
 msgid "Upload a custom profile picture for your account."
 msgstr ""
 
 #. translators: %s: Name of person in profile picture
-#: inc/avatars/namespace.php:244
-#: inc/avatars/namespace.php:260
+#: inc/avatars/namespace.php:252
+#: inc/avatars/namespace.php:268
 #, php-format
 msgid "profile picture for %s"
 msgstr ""
 
-#: inc/avatars/namespace.php:256
+#: inc/avatars/namespace.php:264
 msgctxt "alt for unknown avatar user"
 msgid "profile picture for user"
 msgstr ""
@@ -63,100 +63,275 @@ msgstr ""
 msgid "No credits could be found."
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:94
+#: inc/dashboard-widgets/namespace.php:98
 msgid "Unable to fetch events (parse error)."
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:101
+#: inc/dashboard-widgets/namespace.php:105
 msgctxt "default event location"
 msgid "Online"
 msgstr ""
 
 #. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
-#: inc/dashboard-widgets/namespace.php:173
+#: inc/dashboard-widgets/namespace.php:177
 msgctxt "Events and News dashboard widget"
 msgid "https://fair.pm/"
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:186
+#: inc/dashboard-widgets/namespace.php:178
+msgid "News"
+msgstr ""
+
+#. translators: Hidden accessibility text.
+#: inc/dashboard-widgets/namespace.php:180
+#: inc/dashboard-widgets/namespace.php:192
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: inc/dashboard-widgets/namespace.php:190
 msgid "Events (by The WP World)"
 msgstr ""
 
-#: inc/settings/namespace.php:46
-#: inc/settings/namespace.php:47
-#: inc/settings/namespace.php:71
-msgid "FAIR Settings"
+#: inc/packages/admin/info.php:78
+msgctxt "Plugin installer section title"
+msgid "Description"
 msgstr ""
 
-#: inc/settings/namespace.php:60
-msgid "You do not have sufficient permissions to access this page."
+#: inc/packages/admin/info.php:80
+msgctxt "Plugin installer section title"
+msgid "Installation"
 msgstr ""
 
-#. translators: %s: AspirePress website URL
-#: inc/settings/namespace.php:74
+#: inc/packages/admin/info.php:82
+msgctxt "Plugin installer section title"
+msgid "FAQ"
+msgstr ""
+
+#: inc/packages/admin/info.php:84
+msgctxt "Plugin installer section title"
+msgid "Screenshots"
+msgstr ""
+
+#: inc/packages/admin/info.php:86
+msgctxt "Plugin installer section title"
+msgid "Changelog"
+msgstr ""
+
+#: inc/packages/admin/info.php:88
+msgctxt "Plugin installer section title"
+msgid "Reviews"
+msgstr ""
+
+#: inc/packages/admin/info.php:90
+msgctxt "Plugin installer section title"
+msgid "Other Notes"
+msgstr ""
+
+#: inc/packages/admin/info.php:106
+msgid "Plugin Installation"
+msgstr ""
+
+#: inc/packages/admin/info.php:195
+msgctxt "plugin"
+msgid "Activate"
+msgstr ""
+
+#: inc/packages/admin/info.php:252
+msgid "WordPress"
+msgstr ""
+
+#: inc/packages/admin/info.php:255
+msgid "PHP"
+msgstr ""
+
+#: inc/packages/admin/info.php:278
+msgid "Version:"
+msgstr ""
+
+#: inc/packages/admin/info.php:281
+msgid "Slug:"
+msgstr ""
+
+#: inc/packages/admin/info.php:285
+msgid "Requires:"
+msgstr ""
+
+#: inc/packages/admin/info.php:295
+msgid "Suggests:"
+msgstr ""
+
+#: inc/packages/admin/info.php:307
+msgid "Authors"
+msgstr ""
+
+#: inc/packages/admin/info.php:344
+msgid "<strong>Error:</strong> This plugin <strong>requires a newer version of PHP</strong>."
+msgstr ""
+
+#. translators: %s: URL to Update PHP page.
+#: inc/packages/admin/info.php:349
 #, php-format
-msgid "Your site is now disconnected from WordPress.org managed servers and uses a dedicated mirror from %s. In the coming weeks and months, we'll be making the mirror configurable and add in the ability to add your own."
+msgid "<a href=\"%s\" target=\"_blank\">Click here to learn more about updating PHP</a>."
 msgstr ""
 
-#. translators: %1$s: FAIR GitHub URL, %2$s: FAQ URL
-#: inc/settings/namespace.php:79
+#: inc/packages/admin/info.php:369
+msgid "<strong>Warning:</strong> This plugin <strong>has not been tested</strong> with your current version of WordPress."
+msgstr ""
+
+#: inc/packages/admin/info.php:376
+msgid "<strong>Error:</strong> This plugin <strong>requires a newer version of WordPress</strong>."
+msgstr ""
+
+#. translators: %s: URL to WordPress Updates screen.
+#: inc/packages/admin/info.php:380
 #, php-format
-msgid "If you want to learn more, check out the %1$s and our %2$s."
+msgid "<a href=\"%s\" target=\"_parent\">Click here to update WordPress</a>."
 msgstr ""
 
-#: inc/settings/namespace.php:86
-msgid "Save Settings"
+#: inc/packages/admin/info.php:426
+#: inc/packages/admin/info.php:439
+msgid "Install Now"
 msgstr ""
 
-#: inc/settings/namespace.php:107
-msgid "Avatar Settings"
+#. translators: %s: The package's name.
+#: inc/packages/admin/info.php:437
+#, php-format
+msgid "Install %s now"
 msgstr ""
 
-#: inc/settings/namespace.php:112
+#: inc/packages/admin/info.php:446
+#: inc/packages/admin/info.php:464
+msgid "Update Now"
+msgstr ""
+
+#. translators: %s: The package's name.
+#: inc/packages/admin/info.php:462
+#, php-format
+msgid "Update %s now"
+msgstr ""
+
+#: inc/packages/admin/info.php:470
+msgid "Installed"
+msgstr ""
+
+#: inc/packages/admin/namespace.php:45
+msgid "Direct Install"
+msgstr ""
+
+#: inc/packages/admin/namespace.php:111
+msgid "Enter a plugin ID to view details and install."
+msgstr ""
+
+#: inc/packages/admin/namespace.php:137
+msgctxt "plugin"
+msgid "View Details"
+msgstr ""
+
+#: inc/packages/admin/namespace.php:140
+msgid "Plugin IDs should be in the format <code>did:web:...</code> or <code>did:plc:...</code>"
+msgstr ""
+
+#: inc/packages/class-metadatadocument.php:125
+#: inc/packages/class-releasedocument.php:81
+#, php-format
+msgid "Missing mandatory field: %s"
+msgstr ""
+
+#: inc/packages/class-metadatadocument.php:147
+msgid "No releases found in the metadata document."
+msgstr ""
+
+#: inc/packages/class-metadatadocument.php:169
+msgid "Could not decode repository response."
+msgstr ""
+
+#: inc/packages/did/class-plc.php:68
+msgid "Unable to parse DID document response."
+msgstr ""
+
+#: inc/packages/did/class-plc.php:74
+msgid "The PLC directory did not return the DID that was sent or the DID was invalid."
+msgstr ""
+
+#: inc/packages/namespace.php:40
+msgid "ID is not a valid DID."
+msgstr ""
+
+#: inc/packages/namespace.php:45
+msgid "DID could not be parsed as a URI."
+msgstr ""
+
+#: inc/packages/namespace.php:56
+msgid "Unsupported DID method."
+msgstr ""
+
+#: inc/packages/namespace.php:121
+msgid "DID is not a valid package to fetch metadata for."
+msgstr ""
+
+#: inc/packages/namespace.php:149
+msgid "HTTP error code received"
+msgstr ""
+
+#: inc/packages/namespace.php:191
+msgid "DID does not contain valid signing keys."
+msgstr ""
+
+#: inc/packages/namespace.php:201
+msgid "No releases found in the repository."
+msgstr ""
+
+#: inc/settings/namespace.php:44
+#: inc/settings/namespace.php:116
 msgid "Avatar Source"
 msgstr ""
 
-#: inc/settings/namespace.php:124
+#: inc/settings/namespace.php:56
+msgid "FAIR Settings"
+msgstr ""
+
+#: inc/settings/namespace.php:121
 msgid "Avatars will be loaded from the selected source."
 msgstr ""
 
-#: inc/settings/namespace.php:167
+#: inc/settings/namespace.php:134
 msgid "FAIR Avatars"
 msgstr ""
 
-#: inc/settings/namespace.php:168
+#: inc/settings/namespace.php:135
 msgid "Gravatar"
 msgstr ""
 
-#: inc/settings/namespace.php:182
-msgid "Settings saved successfully."
-msgstr ""
-
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:391
+#: inc/updater/class-lite.php:397
+#: inc/updater/class-updater.php:319
 #, php-format
 msgid "There is a new version of %s available."
 msgstr ""
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
-#: inc/updater/class-lite.php:402
+#: inc/updater/class-lite.php:408
+#: inc/updater/class-updater.php:330
 #, php-format
 msgid "View version %1$s details%2$s or %3$supdate now%2$s."
 msgstr ""
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:407
+#: inc/updater/class-lite.php:413
+#: inc/updater/class-updater.php:335
 #, php-format
 msgid "%s: update now"
 msgstr ""
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
-#: inc/updater/class-lite.php:414
+#: inc/updater/class-lite.php:420
+#: inc/updater/class-updater.php:342
 #, php-format
 msgid "View version %1$s details%2$s."
 msgstr ""
 
-#: inc/updater/class-lite.php:419
+#: inc/updater/class-lite.php:425
+#: inc/updater/class-updater.php:347
 msgid "Automatic update is unavailable for this theme."
 msgstr ""
 
