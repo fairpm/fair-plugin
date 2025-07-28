@@ -53,7 +53,7 @@ function parse_did( string $id ) {
 			return new Web( $id );
 
 		default:
-			return new WP_Error( 'fair.packages.validate_id.invalid_method', __( 'Unsupported DID method.', 'fair' ) );
+			return new WP_Error( 'fair.packages.validate_did.invalid_method', __( 'Unsupported DID method.', 'fair' ) );
 	}
 }
 
