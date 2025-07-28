@@ -122,7 +122,17 @@ function fetch_package_metadata( string $id ) {
 	}
 	$repo_url = $service->serviceEndpoint;
 
-	return fetch_metadata_doc( $repo_url );
+	$metadata = fetch_metadata_doc( $repo_url );
+
+	if ( is_wp_error( $metadata ) ) {
+		return $metadata;
+	}
+
+	if ( $metadata->id !== $id ) {
+		return new WP_Error( 'fair.packages.fetch_metadata.mismatch', __( 'Fetched metadata does not match the requested DID.', 'fair' ) );
+	}
+
+	return $metadata;
 }
 
 /**
