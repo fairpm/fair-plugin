@@ -35,7 +35,7 @@ The FAIR plugin implements federated or local versions of the following features
 * Browser and server health checks
 * Other APIs such as the Credits API, Secret Keys API, and Importers API
 * Twemoji images for emojis
-* Direct installation and updating of FAIR packages using DID
+* Installation and updating of packages direct from their source repository, without talking to any centralized server
 
 The default FAIR provider in this plugin is [AspireCloud from AspirePress](https://aspirepress.org/). The AspirePress team were key in helping the FAIR project get off the ground. As the FAIR project grows and other providers come online you will be able to configure your chosen FAIR provider within the plugin.
 
