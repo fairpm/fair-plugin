@@ -45,14 +45,6 @@ In addition to the key FAIR implementations, a few other features in WordPress a
 * Media features provided by OpenVerse are disabled, pending discussion and work by the FAIR working group
 * Ping services are configured to use IndexNow in place of Pingomatic
 
-
-### Experimental Features
-
-As FAIR works towards our plans for full decentralized package management, some features are marked as experimental. These features must be manually opted-in to during development.
-
-* `FAIR_EXPERIMENTAL_PACKAGES` - Define as `true` to enable any experimental features.
-
-
 ## Data Privacy
 
 * See Also: [Linux Foundation Projects Privacy Policy](https://lfprojects.org/policies/privacy-policy/)
