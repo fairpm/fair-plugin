@@ -18,7 +18,7 @@ jobs:
       - name: Bump version
         run: |
           # Replace the "Version:" header in plugin.php
-          sed -i "s/^Version: .*/Version: ${{ inputs.version }}/" plugin.php
+          sed -i "s/^ \* Version: .*/ \* Version: ${{ inputs.version }}/" plugin.php
 
           # Replace the VERSION const in plugin.php
           sed -i "s/^const VERSION = '.*/const VERSION = '${{ inputs.version }}';/" plugin.php
