@@ -17,7 +17,7 @@
 
 namespace FAIR;
 
-const VERSION = '0.4.0';
+const VERSION = '0.4.1';
 const PLUGIN_DIR = __DIR__;
 const PLUGIN_FILE = __FILE__;
 
