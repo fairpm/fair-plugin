@@ -109,7 +109,7 @@ msgstr ""
 #: inc/settings/namespace.php:79
 #, php-format
 msgid "If you want to learn more, check out the %1$s and our %2$s."
-msgstr "Wenn du mehr erfahren möchtest, siehe dir die %1$s und unsere %2$s an."
+msgstr "Wenn du mehr erfahren möchtest, sieh dir die %1$s und unsere %2$s an."
 
 #: inc/settings/namespace.php:86
 msgid "Save Settings"
