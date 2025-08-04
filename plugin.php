@@ -12,6 +12,7 @@
  * Update URI: https://api.fair.pm
  * GitHub Plugin URI: https://github.com/fairpm/fair-plugin
  * Primary Branch: main
+ * Release Asset: true
  * Network: true
  */
 
