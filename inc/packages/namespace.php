@@ -84,7 +84,7 @@ function get_did_hash( string $id ) {
  * @return DIDDocument|WP_Error
  */
 function get_did_document( string $id ) {
-	$cached = wp_cache_get( $id );
+	$cached = wp_cache_get( $id, 'did-docs' );
 	if ( $cached ) {
 		return $cached;
 	}
@@ -99,7 +99,7 @@ function get_did_document( string $id ) {
 	if ( is_wp_error( $document ) ) {
 		return $document;
 	}
-	wp_cache_set( $id, $document, 'did', CACHE_LIFETIME );
+	wp_cache_set( $id, $document, 'did-docs', CACHE_LIFETIME );
 
 	return $document;
 }
@@ -144,7 +144,7 @@ function fetch_package_metadata( string $id ) {
  */
 function fetch_metadata_doc( string $url ) {
 	$cache_key = CACHE_KEY . md5( $url );
-	$response = wp_cache_get( $cache_key );
+	$response = wp_cache_get( $cache_key, 'metadata-docs' );
 
 	if ( ! $response ) {
 		$response = wp_remote_get( $url, [
