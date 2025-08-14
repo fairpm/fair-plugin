@@ -144,7 +144,7 @@ function fetch_package_metadata( string $id ) {
  */
 function fetch_metadata_doc( string $url ) {
 	$cache_key = CACHE_KEY . md5( $url );
-	$response = wp_cache_get( $cache_key );
+	$response = wp_cache_get( $cache_key, 'metadata-docs' );
 
 	if ( ! $response ) {
 		$response = wp_remote_get( $url, [
