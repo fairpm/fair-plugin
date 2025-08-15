@@ -181,7 +181,7 @@ function fetch_metadata_from_local( $response, $url ) {
 		if ( str_contains( $url, home_url() ) ) {
 			$did = explode( '/', parse_url( $url, PHP_URL_PATH ) );
 			$did = array_pop( $did );
-			$body = wp_cache_get( 'rest-endpoint-' . $did, 'metadata-endpoints' );
+			$body = wp_cache_get( 'fair-metadata-endpoint-' . $did, 'metadata-endpoints' );
 			$response  = [];
 			$response['headers'] = [];
 			$response['body'] = json_encode( $body );
