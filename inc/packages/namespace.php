@@ -144,6 +144,7 @@ function fetch_package_metadata( string $id ) {
 function fetch_metadata_doc( string $url ) {
 	$cache_key = md5( $url );
 	$response = get_site_transient( $cache_key );
+	$response = fetch_metadata_from_local( $response, $url );
 
 	if ( ! $response ) {
 		$response = wp_remote_get( $url, [
@@ -162,6 +163,35 @@ function fetch_metadata_doc( string $url ) {
 	}
 
 	return MetadataDocument::from_response( $response );
+}
+
+/**
+ * Fetch Metadata from local source.
+ *
+ * Solves issue where Metadata source is from same
+ * site. Mini-FAIR REST endpoint times out under these circumstances.
+ *
+ * @param  bool|array $response Response from cache.
+ * @param  string $url URI for Metadata.
+ * @return bool|array
+ */
+function fetch_metadata_from_local( $response, $url ) {
+	if ( ! $response ) {
+		if ( str_contains( $url, home_url() ) ) {
+			$did = explode( '/', parse_url( $url, PHP_URL_PATH ) );
+			$did = array_pop( $did );
+			$body = wp_cache_get( 'rest-endpoint-' . $did, 'metadata-endpoints' );
+			$response  = [];
+			$response['headers'] = [];
+			$response['body'] = json_encode( $body );
+			$response = ! $body ? false : $response;
+			if ( $response ) {
+				wp_cache_set( CACHE_KEY . md5( $url ), $response, 'metadata-docs', CACHE_LIFETIME );
+			}
+		}
+	}
+
+	return $response;
 }
 
 /**
