@@ -15,6 +15,7 @@ use WP_Upgrader;
 
 const SERVICE_ID = 'FairPackageManagementRepo';
 const CONTENT_TYPE = 'application/json+fair';
+const CACHE_KEY = 'fair-packages-';
 const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
 const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
 
@@ -83,7 +84,7 @@ function get_did_hash( string $id ) {
  * @return DIDDocument|WP_Error
  */
 function get_did_document( string $id ) {
-	$cached = get_site_transient( $id );
+	$cached = wp_cache_get( $id, 'did-docs' );
 	if ( $cached ) {
 		return $cached;
 	}
@@ -98,7 +99,7 @@ function get_did_document( string $id ) {
 	if ( is_wp_error( $document ) ) {
 		return $document;
 	}
-	set_site_transient( $id, $document, CACHE_LIFETIME );
+	wp_cache_set( $id, $document, 'did-docs', CACHE_LIFETIME );
 
 	return $document;
 }
@@ -142,8 +143,8 @@ function fetch_package_metadata( string $id ) {
  * @return MetadataDocument|WP_Error
  */
 function fetch_metadata_doc( string $url ) {
-	$cache_key = md5( $url );
-	$response = get_site_transient( $cache_key );
+	$cache_key = CACHE_KEY . md5( $url );
+	$response = wp_cache_get( $cache_key, 'metadata-docs' );
 	$response = fetch_metadata_from_local( $response, $url );
 
 	if ( ! $response ) {
@@ -159,7 +160,7 @@ function fetch_metadata_doc( string $url ) {
 		} elseif ( $code !== 200 ) {
 			return new WP_Error( 'fair.packages.metadata.failure', __( 'HTTP error code received', 'fair' ) );
 		}
-		set_site_transient( $cache_key, $response, CACHE_LIFETIME );
+		wp_cache_set( $cache_key, $response, 'metadata-docs', CACHE_LIFETIME );
 	}
 
 	return MetadataDocument::from_response( $response );
