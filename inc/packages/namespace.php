@@ -169,8 +169,8 @@ function fetch_metadata_doc( string $url ) {
 /**
  * Fetch Metadata from local source.
  *
- * Solves issue where Metadata source is from same
- * site. Mini-FAIR REST endpoint times out under these circumstances.
+ * Solves issue where Metadata source is from same site.
+ * Mini-FAIR REST endpoint may time out under these circumstances.
  *
  * @param  bool|array $response Response from cache.
  * @param  string $url URI for Metadata.
