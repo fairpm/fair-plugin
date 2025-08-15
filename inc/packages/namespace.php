@@ -564,14 +564,14 @@ function get_update_data( $did ) {
 		'icons'            => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
 		'banners'          => isset( $release->artifacts->banner ) ? get_banners( $release->artifacts->banner ) : [],
 		'update-supported' => true,
-		'requires'         => $required_versions['requires_wp'],
-		'requires_php'     => $required_versions['requires_php'],
+		'requires'         => $required_versions['requires_wp'] ?? '',
+		'requires_php'     => $required_versions['requires_php'] ?? '',
 		'new_version'      => $release->version,
 		'version'          => $release->version,
 		'remote_version'   => $release->version,
 		'package'          => $release->artifacts->package[0]->url,
 		'download_link'    => $release->artifacts->package[0]->url,
-		'tested'           => $required_versions['tested_to'],
+		'tested'           => $required_versions['tested_to'] ?? '',
 		'external'         => 'xxx',
 	];
 	if ( 'theme' === $type ) {
