@@ -7,6 +7,8 @@
 
 namespace FAIR\Dashboard_Widgets;
 
+use const FAIR\Packages\CACHE_LIFETIME;
+
 use WP_Error;
 
 const EVENTS_API = 'https://api.fair.pm/fair/v1/events';
@@ -15,10 +17,6 @@ const EVENTS_API = 'https://api.fair.pm/fair/v1/events';
  * Bootstrap.
  */
 function bootstrap() {
-	// Support existing software like ClassicPress, which removes this feature.
-	if ( ! function_exists( 'wp_print_community_events_markup' ) ) {
-		return;
-	}
 	add_action( 'wp_ajax_get-community-events', __NAMESPACE__ . '\\get_community_events_ajax', 0 );
 	remove_action( 'wp_ajax_get-community-events', 'wp_ajax_get_community_events', 1 );
 
@@ -86,9 +84,13 @@ function get_community_events_ajax() : void {
  * @return array|WP_Error List of events or WP_Error on failure.
  */
 function get_community_events() {
-	$response = wp_remote_get( EVENTS_API );
-	if ( is_wp_error( $response ) ) {
-		return $response;
+	$response = wp_cache_get( EVENTS_API );
+	if ( ! $response ) {
+		$response = wp_remote_get( EVENTS_API );
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+		wp_cache_set( EVENTS_API, $response, '', CACHE_LIFETIME );
 	}
 
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
@@ -161,6 +163,11 @@ function get_community_events() {
  *           otherwise not filterable.
  */
 function render_news_widget() : void {
+	// Support existing software like ClassicPress, which removes this feature.
+	if ( ! function_exists( 'wp_print_community_events_markup' ) ) {
+		return;
+	}
+
 	wp_print_community_events_markup();
 
 	?>
