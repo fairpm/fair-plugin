@@ -145,13 +145,13 @@ function fetch_package_metadata( string $id ) {
 function fetch_metadata_doc( string $url ) {
 	$cache_key = CACHE_KEY . md5( $url );
 	$response = wp_cache_get( $cache_key, 'metadata-docs' );
+	$response = fetch_metadata_from_local( $response, $url );
 
 	if ( ! $response ) {
 		$response = wp_remote_get( $url, [
 			'headers' => [
 				'Accept' => sprintf( '%s;q=1.0, application/json;q=0.8', CONTENT_TYPE ),
 			],
-			'timeout' => 7,
 		] );
 		$code = wp_remote_retrieve_response_code( $response );
 		if ( is_wp_error( $response ) ) {
@@ -163,6 +163,35 @@ function fetch_metadata_doc( string $url ) {
 	}
 
 	return MetadataDocument::from_response( $response );
+}
+
+/**
+ * Fetch Metadata from local source.
+ *
+ * Solves issue where Metadata source is from same site.
+ * Mini-FAIR REST endpoint may time out under these circumstances.
+ *
+ * @param  bool|array $response Response from cache.
+ * @param  string $url URI for Metadata.
+ * @return bool|array
+ */
+function fetch_metadata_from_local( $response, $url ) {
+	if ( ! $response && str_contains( $url, home_url() ) ) {
+		$did = explode( '/', parse_url( $url, PHP_URL_PATH ) );
+		$did = array_pop( $did );
+		$body = wp_cache_get( 'fair-metadata-endpoint-' . $did, 'metadata-endpoints' );
+		$response = [];
+		$response = [
+			'headers' => [],
+			'body' => json_encode( $body ),
+		];
+		$response = ! $body ? false : $response;
+		if ( $response ) {
+			wp_cache_set( CACHE_KEY . md5( $url ), $response, 'metadata-docs', CACHE_LIFETIME );
+		}
+	}
+
+	return $response;
 }
 
 /**
