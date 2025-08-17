@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: FAIR - Federated and Independent Repositories 0.3.0\n"
+"Project-Id-Version: FAIR - Federated and Independent Repositories 0.4.1\n"
 "Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-07-29T21:26:29+00:00\n"
+"POT-Creation-Date: 2025-08-17T01:17:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -63,32 +63,32 @@ msgstr ""
 msgid "No credits could be found."
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:98
+#: inc/dashboard-widgets/namespace.php:100
 msgid "Unable to fetch events (parse error)."
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:105
+#: inc/dashboard-widgets/namespace.php:107
 msgctxt "default event location"
 msgid "Online"
 msgstr ""
 
 #. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
-#: inc/dashboard-widgets/namespace.php:177
+#: inc/dashboard-widgets/namespace.php:184
 msgctxt "Events and News dashboard widget"
 msgid "https://fair.pm/"
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:178
+#: inc/dashboard-widgets/namespace.php:185
 msgid "News"
 msgstr ""
 
 #. translators: Hidden accessibility text.
-#: inc/dashboard-widgets/namespace.php:180
-#: inc/dashboard-widgets/namespace.php:192
+#: inc/dashboard-widgets/namespace.php:187
+#: inc/dashboard-widgets/namespace.php:199
 msgid "(opens in a new tab)"
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:190
+#: inc/dashboard-widgets/namespace.php:197
 msgid "Events (by The WP World)"
 msgstr ""
 
@@ -253,31 +253,35 @@ msgstr ""
 msgid "The PLC directory did not return the DID that was sent or the DID was invalid."
 msgstr ""
 
-#: inc/packages/namespace.php:40
+#: inc/packages/namespace.php:41
 msgid "ID is not a valid DID."
 msgstr ""
 
-#: inc/packages/namespace.php:45
+#: inc/packages/namespace.php:46
 msgid "DID could not be parsed as a URI."
 msgstr ""
 
-#: inc/packages/namespace.php:56
+#: inc/packages/namespace.php:57
 msgid "Unsupported DID method."
 msgstr ""
 
-#: inc/packages/namespace.php:121
+#: inc/packages/namespace.php:122
 msgid "DID is not a valid package to fetch metadata for."
 msgstr ""
 
-#: inc/packages/namespace.php:149
+#: inc/packages/namespace.php:133
+msgid "Fetched metadata does not match the requested DID."
+msgstr ""
+
+#: inc/packages/namespace.php:160
 msgid "HTTP error code received"
 msgstr ""
 
-#: inc/packages/namespace.php:191
+#: inc/packages/namespace.php:202
 msgid "DID does not contain valid signing keys."
 msgstr ""
 
-#: inc/packages/namespace.php:201
+#: inc/packages/namespace.php:212
 msgid "No releases found in the repository."
 msgstr ""
 
