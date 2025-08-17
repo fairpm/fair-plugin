@@ -84,13 +84,13 @@ function get_community_events_ajax() : void {
  * @return array|WP_Error List of events or WP_Error on failure.
  */
 function get_community_events() {
-	$response = wp_cache_get( EVENTS_API );
+	$response = get_transient( EVENTS_API );
 	if ( ! $response ) {
 		$response = wp_remote_get( EVENTS_API );
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
-		wp_cache_set( EVENTS_API, $response, '', CACHE_LIFETIME );
+		set_transient( EVENTS_API, $response, CACHE_LIFETIME );
 	}
 
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
