@@ -170,6 +170,7 @@ function fetch_metadata_doc( string $url ) {
  *
  * Solves issue where Metadata source is from same site.
  * Mini-FAIR REST endpoint may time out under these circumstances.
+ * Directly calling the WP_REST_Request does not return complete data.
  *
  * @param  bool|array $response Response from cache.
  * @param  string $url URI for Metadata.
