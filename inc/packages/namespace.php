@@ -148,11 +148,17 @@ function fetch_metadata_doc( string $url ) {
 	$response = fetch_metadata_from_local( $response, $url );
 
 	if ( ! $response ) {
-		$response = wp_remote_get( $url, [
+		$options = [
 			'headers' => [
 				'Accept' => sprintf( '%s;q=1.0, application/json;q=0.8', CONTENT_TYPE ),
 			],
-		] );
+		];
+
+		// Set low timeout for local package.
+		if ( str_contains( $url, home_url() ) ) {
+			$options['timeout'] = 1;
+		}
+		$response = wp_remote_get( $url, $options );
 		$code = wp_remote_retrieve_response_code( $response );
 		if ( is_wp_error( $response ) ) {
 			return $response;
