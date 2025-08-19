@@ -204,7 +204,6 @@ function get_trusted_keys(): array {
  * @param string      $remote_source Path of $remote_source.
  * @param WP_Upgrader $upgrader      An Upgrader object.
  * @param array       $hook_extra    Array of hook data.
- *
  * @return string|WP_Error The correct directory path for installation, or WP_Error on failure.
  */
 function move_package_during_install( $source, $remote_source, $upgrader, $hook_extra ): string {
