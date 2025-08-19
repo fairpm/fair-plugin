@@ -242,7 +242,7 @@ function move_package_during_install( $source, $remote_source, $upgrader, $hook_
 /**
  * Get a package's DID by its path.
  *
- * @param string $path The absolute path to the package's directory or main file..
+ * @param string $path The absolute path to the package's directory or main file.
  * @param string $type The type of package. Allowed types are 'plugin' or 'theme'.
  * @return DID|WP_Error The DID object on success, WP_Error on failure.
  */
