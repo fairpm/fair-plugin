@@ -29,9 +29,7 @@ function bootstrap() {
 
 	// Remove the primary feed and link to avoid showing WordPress.org news.
 	add_filter( 'dashboard_primary_link', '__return_empty_string' );
-	add_filter( 'dashboard_primary_feed', function() {
-		return [ 'url' => null ];
-	} );
+	add_filter( 'dashboard_primary_feed', fn () => [ 'url' => null ] );
 
 	// Configure the WordPress Events and News widget to use FAIR.
 	add_filter( 'dashboard_secondary_link', __NAMESPACE__ . '\\get_fair_planet_url' );
