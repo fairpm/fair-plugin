@@ -34,6 +34,7 @@ function bootstrap() {
 	// Configure the WordPress Events and News widget to use FAIR.
 	add_filter( 'dashboard_secondary_link', __NAMESPACE__ . '\\get_fair_planet_url' );
 	add_filter( 'dashboard_secondary_feed', __NAMESPACE__ . '\\get_fair_planet_feed' );
+	add_filter( 'dashboard_secondary_items', fn() => 5 );
 }
 
 /**
