@@ -12,6 +12,7 @@ use Plugin_Upgrader;
 use stdClass;
 use Theme_Upgrader;
 use TypeError;
+use WP_Error;
 use WP_Upgrader;
 
 /**
@@ -129,7 +130,84 @@ class Updater {
 			add_filter( 'wp_prepare_themes_for_js', [ $this, 'customize_theme_update_html' ] );
 		}
 
+		/**
+		 * Filter whether to verify FAIR package signatures during update.
+		 *
+		 * @param bool $verify Whether to verify signatures. Default false.
+		 * @return bool
+		 */
+		if ( apply_filters( 'fair.packages.updater.verify_signatures', false ) ) {
+			add_filter( 'upgrader_pre_download', [ $this, 'verify_signature_on_download' ], 10, 4 );
+		}
+
 		Packages\add_package_to_release_cache( $this->did );
+	}
+
+	/**
+	 * Download a package with signature verification.
+	 *
+	 * @param bool|string|WP_Error $reply      Whether to proceed with the download, the path to the downloaded package, or an existing WP_Error object. Default true.
+	 * @param string               $package    The URI of the package. If this is the full path to an existing local file, it will be returned untouched.
+	 * @param WP_Upgrader          $upgrader   The WP_Upgrader instance.
+	 * @param array                $hook_extra Extra hook data.
+	 * @return true|WP_Error True if the signature is valid, otherwise WP_Error.
+	 */
+	public function verify_signature_on_download( $reply, string $package, WP_Upgrader $upgrader, $hook_extra ) {
+		static $has_run = [];
+
+		if ( false !== $reply || ( ! $upgrader instanceof Plugin_Upgrader && ! $upgrader instanceof Theme_Upgrader ) ) {
+			return $reply;
+		}
+
+		// This method is hooked to 'upgrader_pre_download', which is used in WP_Upgrader::download_package().
+		// Bailing on subsequent runs for the same package URI prevents an infinite loop.
+		$key = md5( $package );
+		if ( isset( $has_run[ $key ] ) ) {
+			return $reply;
+		}
+		$has_run[ $key ] = true;
+
+		// Local files should be returned untouched.
+		if ( ! preg_match( '!^(http|https|ftp)://!i', $package ) && file_exists( $package ) ) {
+			return $package;
+		}
+
+		$artifact = Packages\pick_artifact_by_lang( $this->release->artifacts->package );
+		if ( ! $artifact || $package !== $artifact->url ) {
+			return $reply;
+		}
+
+		$path = $upgrader->download_package( $package, false, $hook_extra );
+		if ( is_wp_error( $path ) ) {
+			return $path;
+		}
+
+		add_filter( 'wp_trusted_keys', [ $this, 'get_trusted_keys' ], 100 );
+		$verified = verify_file_signature( $path, $artifact->signature );
+		remove_filter( 'wp_trusted_keys', [ $this, 'get_trusted_keys' ], 100 );
+
+		if ( false === $verified ) {
+			return new WP_Error( 'fair.packages.updater.signature_verification.failed', __( 'Package signature verification failed.', 'fair' ) );
+		}
+
+		return $verified;
+	}
+
+	/**
+	 * Get trusted keys for signature verification.
+	 *
+	 * @return array
+	 */
+	public function get_trusted_keys(): array {
+		$doc = Packages\get_did_document( $this->did );
+		if ( is_wp_error( $doc ) ) {
+			return [];
+		}
+
+		$valid_keys = $doc->get_fair_signing_keys();
+
+		// todo: return $valid_keys; - re-encode from multibase to base64.
+		return [];
 	}
 
 	/**
