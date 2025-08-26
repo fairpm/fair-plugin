@@ -183,14 +183,10 @@ class Updater {
 		}
 
 		add_filter( 'wp_trusted_keys', [ $this, 'get_trusted_keys' ], 100 );
-		$verified = verify_file_signature( $path, $artifact->signature );
+		$result = verify_file_signature( $path, $artifact->signature );
 		remove_filter( 'wp_trusted_keys', [ $this, 'get_trusted_keys' ], 100 );
 
-		if ( false === $verified ) {
-			return new WP_Error( 'fair.packages.updater.signature_verification.failed', __( 'Package signature verification failed.', 'fair' ) );
-		}
-
-		return $verified;
+		return $result;
 	}
 
 	/**
