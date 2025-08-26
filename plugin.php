@@ -19,9 +19,19 @@
 namespace FAIR;
 
 const VERSION = '0.4.1';
-const PLUGIN_DIR = __DIR__;
 const PLUGIN_FILE = __FILE__;
 
+// Define PLUGIN_DIR depending on whether this is copied/included as an mu-plugins/fair-plugin.php or similar file
+$fair_dir = __DIR__;
+
+if ( __DIR__ === WPMU_PLUGIN_DIR ) {
+	// mu-plugin include detected, reference the fair-plugin subdirectory for the other files.
+	$fair_dir .= '/fair-plugin';
+}
+
+define( __NAMESPACE__ . '\PLUGIN_DIR', $fair_dir );
+
+// Include core.
 require_once __DIR__ . '/inc/namespace.php';
 require_once __DIR__ . '/inc/avatars/namespace.php';
 require_once __DIR__ . '/inc/credits/namespace.php';
