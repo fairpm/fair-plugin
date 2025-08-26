@@ -32,29 +32,29 @@ if ( __DIR__ === WPMU_PLUGIN_DIR ) {
 define( __NAMESPACE__ . '\PLUGIN_DIR', $fair_dir );
 
 // Include core.
-require_once __DIR__ . '/inc/namespace.php';
-require_once __DIR__ . '/inc/avatars/namespace.php';
-require_once __DIR__ . '/inc/credits/namespace.php';
-require_once __DIR__ . '/inc/dashboard-widgets/namespace.php';
-require_once __DIR__ . '/inc/default-repo/namespace.php';
-require_once __DIR__ . '/inc/disable-openverse/namespace.php';
-require_once __DIR__ . '/inc/icons/namespace.php';
-require_once __DIR__ . '/inc/importers/namespace.php';
-require_once __DIR__ . '/inc/packages/namespace.php';
-require_once __DIR__ . '/inc/packages/admin/namespace.php';
-require_once __DIR__ . '/inc/packages/admin/info.php';
-require_once __DIR__ . '/inc/pings/namespace.php';
-require_once __DIR__ . '/inc/salts/namespace.php';
-require_once __DIR__ . '/inc/settings/namespace.php';
-require_once __DIR__ . '/inc/upgrades/namespace.php';
-require_once __DIR__ . '/inc/updater/namespace.php';
-require_once __DIR__ . '/inc/user-notification/namespace.php';
-require_once __DIR__ . '/inc/version-check/namespace.php';
+require_once PLUGIN_DIR . '/inc/namespace.php';
+require_once PLUGIN_DIR . '/inc/avatars/namespace.php';
+require_once PLUGIN_DIR . '/inc/credits/namespace.php';
+require_once PLUGIN_DIR . '/inc/dashboard-widgets/namespace.php';
+require_once PLUGIN_DIR . '/inc/default-repo/namespace.php';
+require_once PLUGIN_DIR . '/inc/disable-openverse/namespace.php';
+require_once PLUGIN_DIR . '/inc/icons/namespace.php';
+require_once PLUGIN_DIR . '/inc/importers/namespace.php';
+require_once PLUGIN_DIR . '/inc/packages/namespace.php';
+require_once PLUGIN_DIR . '/inc/packages/admin/namespace.php';
+require_once PLUGIN_DIR . '/inc/packages/admin/info.php';
+require_once PLUGIN_DIR . '/inc/pings/namespace.php';
+require_once PLUGIN_DIR . '/inc/salts/namespace.php';
+require_once PLUGIN_DIR . '/inc/settings/namespace.php';
+require_once PLUGIN_DIR . '/inc/upgrades/namespace.php';
+require_once PLUGIN_DIR . '/inc/updater/namespace.php';
+require_once PLUGIN_DIR . '/inc/user-notification/namespace.php';
+require_once PLUGIN_DIR . '/inc/version-check/namespace.php';
 
 // External dependencies.
-require_once __DIR__ . '/inc/compatibility/php-polyfill.php';
-require_once __DIR__ . '/inc/compatibility/wp-polyfill.php';
-require_once __DIR__ . '/inc/updater/class-lite.php';
+require_once PLUGIN_DIR . '/inc/compatibility/php-polyfill.php';
+require_once PLUGIN_DIR . '/inc/compatibility/wp-polyfill.php';
+require_once PLUGIN_DIR . '/inc/updater/class-lite.php';
 
 /**
  * Load translations.
