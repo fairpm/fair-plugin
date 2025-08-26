@@ -16,4 +16,9 @@
  * Network: true
  */
 
+/**
+ * This is a stub file you can use for your mu-plugins implementation of the FAIR plugin.
+ *
+ * Copy this into wp-content/mu-plugins/fair-plugin.php and modify as needed.
+ */
 require_once __DIR__ . '/fair-plugin/plugin.php';
