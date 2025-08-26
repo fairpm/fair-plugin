@@ -21,7 +21,7 @@ namespace FAIR;
 const VERSION = '0.4.1';
 const PLUGIN_FILE = __FILE__;
 
-// Define PLUGIN_DIR depending on whether this is copied/included as an mu-plugins/fair-plugin.php or similar file
+// Define PLUGIN_DIR depending on whether this is copied/included as an mu-plugins/fair-plugin.php or similar file.
 $fair_dir = __DIR__;
 
 if ( __DIR__ === WPMU_PLUGIN_DIR ) {
