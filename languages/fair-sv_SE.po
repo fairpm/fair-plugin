@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
 "Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
-"POT-Creation-Date: 2025-06-10T04:28:22+00:00\n"
-"PO-Revision-Date: 2025-06-10 08:10+0200\n"
+"POT-Creation-Date: 2025-06-16T16:26:12+00:00\n"
+"PO-Revision-Date: 2025-06-18 01:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sv_SE\n"
@@ -43,12 +43,13 @@ msgstr "Ta bort profilbild"
 msgid "Upload a custom profile picture for your account."
 msgstr "Ladda upp en anpassad profilbild för ditt konto."
 
-#: inc/avatars/namespace.php:243 inc/avatars/namespace.php:258
+#. translators: %s: Name of person in profile picture
+#: inc/avatars/namespace.php:244 inc/avatars/namespace.php:260
 #, php-format
 msgid "profile picture for %s"
 msgstr "profilbild för %s"
 
-#: inc/avatars/namespace.php:255
+#: inc/avatars/namespace.php:256
 msgctxt "alt for unknown avatar user"
 msgid "profile picture for user"
 msgstr "profilbild för användaren"
@@ -63,22 +64,22 @@ msgstr "%s är inte en giltig sträng för att ange version."
 msgid "No credits could be found."
 msgstr "Inga erkännanden hittades."
 
-#: inc/dashboard-widgets/namespace.php:90
+#: inc/dashboard-widgets/namespace.php:94
 msgid "Unable to fetch events (parse error)."
 msgstr "Det gick inte att hämta händelser (tolkningsfel)."
 
-#: inc/dashboard-widgets/namespace.php:97
+#: inc/dashboard-widgets/namespace.php:101
 msgctxt "default event location"
 msgid "Online"
 msgstr "Online"
 
 #. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
-#: inc/dashboard-widgets/namespace.php:169
+#: inc/dashboard-widgets/namespace.php:173
 msgctxt "Events and News dashboard widget"
 msgid "https://fair.pm/"
 msgstr "https://fair.pm/"
 
-#: inc/dashboard-widgets/namespace.php:182
+#: inc/dashboard-widgets/namespace.php:186
 msgid "Events (by The WP World)"
 msgstr "Evenemang (från The WP World)"
 
@@ -91,64 +92,82 @@ msgstr "Inställningar för FAIR"
 msgid "You do not have sufficient permissions to access this page."
 msgstr "Du har inte tillräcklig behörighet för att komma åt denna sida."
 
-#: inc/settings/namespace.php:75
+#. translators: %s: AspirePress website URL
+#: inc/settings/namespace.php:74
+#, php-format
+msgid ""
+"Your site is now disconnected from WordPress.org managed servers and uses a "
+"dedicated mirror from %s. In the coming weeks and months, we'll be making "
+"the mirror configurable and add in the ability to add your own."
+msgstr ""
+"Din webbplats är nu frikopplad från de servrar som hanteras av WordPress.org "
+"och använder en utvald spegling från %s. Under de närmaste veckorna och "
+"månaderna kommer vi att göra speglingen konfigurerbar och lägga till en "
+"möjlighet att lägga till din egen spegling."
+
+#. translators: %1$s: FAIR GitHub URL, %2$s: FAQ URL
+#: inc/settings/namespace.php:79
+#, php-format
+msgid "If you want to learn more, check out the %1$s and our %2$s."
+msgstr ""
+"Du kan ta reda på mer genom att kolla in GitHub %1$s och våra vanliga frågor "
+"%2$s."
+
+#: inc/settings/namespace.php:86
 msgid "Save Settings"
 msgstr "Spara inställningarna"
 
-#: inc/settings/namespace.php:96
+#: inc/settings/namespace.php:107
 msgid "Avatar Settings"
 msgstr "Avatarinställningar"
 
-#: inc/settings/namespace.php:101
+#: inc/settings/namespace.php:112
 msgid "Avatar Source"
 msgstr "Avatarkälla"
 
-#: inc/settings/namespace.php:113
+#: inc/settings/namespace.php:124
 msgid "Avatars will be loaded from the selected source."
 msgstr "Avatarer kommer att hämtas från den valda källan."
 
-#: inc/settings/namespace.php:156
+#: inc/settings/namespace.php:167
 msgid "FAIR Avatars"
 msgstr "FAIR-avatarer"
 
-#: inc/settings/namespace.php:157
+#: inc/settings/namespace.php:168
 msgid "Gravatar"
 msgstr "Gravatar"
 
-#: inc/settings/namespace.php:171
+#: inc/settings/namespace.php:182
 msgid "Settings saved successfully."
 msgstr "Inställningarna har sparats."
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:388
+#: inc/updater/class-lite.php:391
 #, php-format
 msgid "There is a new version of %s available."
 msgstr "En ny version av %s är tillgänglig."
 
-#. translators: 1: version number, 2: closing anchor tag, 3: update URL
-#: inc/updater/class-lite.php:399
+#. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
+#: inc/updater/class-lite.php:402
 #, php-format
 msgid "View version %1$s details%2$s or %3$supdate now%2$s."
 msgstr "Visa versionen %1$s uppgifter%2$s eller %3$s uppdatera direkt%2$s."
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:404
+#: inc/updater/class-lite.php:407
 #, php-format
-msgid "Update %s now"
-msgstr "Uppdatera %s nu"
+msgid "%s: update now"
+msgstr "%s: uppdatera nu"
 
-#. translators: 1: version number, 2: closing anchor tag, 3: update URL
-#: inc/updater/class-lite.php:411
+#. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
+#: inc/updater/class-lite.php:414
 #, php-format
 msgid "View version %1$s details%2$s."
 msgstr "Visa versionen %1$s uppgifter%2$s."
 
-#. translators: %s: opening/closing paragraph and italic tags
-#: inc/updater/class-lite.php:417
-#, php-format
-msgid "%1$sAutomatic update is unavailable for this theme.%2$s"
-msgstr ""
-"%1$sAutomatiska uppdateringar är inte tillgängliga för detta tema.%2$s"
+#: inc/updater/class-lite.php:419
+msgid "Automatic update is unavailable for this theme."
+msgstr "Automatiska uppdateringar är inte tillgängliga för detta tema."
 
 #. translators: 1) Fair PM URL, 2) AspirePress URL.
 #: inc/user-notification/namespace.php:27
