@@ -12,6 +12,7 @@ use FAIR\Packages\Admin;
 use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
 use FAIR\Updater;
+use WP_Error;
 
 /**
  * Sanitize HTML content for plugin information.
@@ -168,6 +169,7 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 			<div id="section-holder">
 			<?php
 			add_requirement_notices( $latest );
+			do_action( 'minifair.render.notices', $doc, $tab, $section );
 			foreach ( $sections as $section_id => $content ) {
 				$prepared = sanitize_html( $content );
 				$prepared = links_add_target( $prepared, '_blank' );
@@ -271,9 +273,11 @@ function name_requirement( string $requirement ) : string {
  * @return void
  */
 function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
+	$did = Packages\get_did_document( $doc->id );
 	?>
 	<div class="fyi">
 		<ul>
+			<li><?php render_alias_notice( $did ); ?></li>
 			<?php if ( ! empty( $release ) ) : ?>
 				<li><strong><?= __( 'Version:', 'fair' ); ?></strong> <?= esc_attr( $release->version ); ?></li>
 			<?php endif; ?>
@@ -427,6 +431,58 @@ function add_requirement_notices( ReleaseDocument $release ) : void {
 				'additional_classes' => [ 'notice-alt' ],
 			]
 		);
+	}
+}
+
+/**
+ * Render the validation notice.
+ *
+ * Renders the validation status for the package's alias. Also returns a bool
+ * indicating whether the package is "safe" to install - packages which fail
+ * validation are not safe, while those without an alias or with a valid alias
+ * are safe.
+ *
+ * @param DIDDocument
+ * @return bool True if the package is "safe" to install, false if install should be blocked.
+ */
+function render_alias_notice( $did ) : bool {
+	$validation = Packages\validate_package_alias( $did );
+	switch ( gettype( $validation ) ) {
+		case 'string':
+			printf(
+				'<strong>Validated</strong> as <a href="%s">%s</a>',
+				esc_url( 'https://' . $validation . '/' ),
+				esc_html( $validation )
+			);
+			return true;
+
+		case 'NULL':
+			esc_html_e( 'Not validated: No domain alias is set' );
+			return true;
+
+		default:
+			if ( ! is_wp_error( $validation ) ) {
+				// Invalid type, assume failure.
+				$validation = new WP_Error( 'fair.packages.admin.info.validation_notice.invalid_result', 'An unknown error occurred' );
+			}
+			printf(
+				'<strong>%s</strong>',
+				esc_html__( 'Validation failed', 'fair' )
+			);
+			add_action( 'minifair.render.notices', function () use ( $validation ) {
+				wp_admin_notice(
+					sprintf(
+						'<p><strong>Error:</strong> Failed domain alias validation, this package may be unsafe: %s</p>',
+						esc_html( $validation->get_error_message() )
+					),
+					[
+						'type'               => 'error',
+						'additional_classes' => [ 'notice-alt' ],
+						'paragraph_wrap'     => false,
+					]
+				);
+			} );
+			return false;
 	}
 }
 
