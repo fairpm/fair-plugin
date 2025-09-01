@@ -9,6 +9,7 @@ namespace FAIR\Packages;
 
 use const FAIR\CACHE_BASE;
 use const FAIR\CACHE_LIFETIME;
+use FAIR\Packages\DID\Document as DIDDocument;
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use FAIR\Updater;
@@ -722,6 +723,108 @@ function maybe_add_accept_header( $args, $url ) : array {
 	}
 
 	return $args;
+}
+
+/**
+ * Validate the package alias for a DID.
+ *
+ * Uses `fair://` aliases from the DID document to determine the alias for the
+ * package. Performs bidirectional validation using DNS to ensure the DID is
+ * valid for the given alias.
+ *
+ * Uses cached result for one hour.
+ *
+ * @return string|WP_Error|null Alias domain if successfully validated, null if no valid alias is set, or error otherwise.
+ */
+function validate_package_alias( DIDDocument $did ) {
+	$cache_key = sprintf( 'fair_did_alias_' . $did->id );
+	$cached = get_site_transient( $cache_key );
+	if ( $cached ) {
+		return $cached;
+	}
+
+	$alias = fetch_and_validate_package_alias( $did );
+	set_site_transient( $cache_key, $alias, HOUR_IN_SECONDS );
+	return $alias;
+}
+
+/**
+ * Validate the package alias for a DID.
+ *
+ * Uses `fair://` aliases from the DID document to determine the alias for the
+ * package. Performs bidirectional validation using DNS to ensure the DID is
+ * valid for the given alias.
+ *
+ * This function queries DNS directly, and is uncached.
+ *
+ * @return string|WP_Error|null Alias domain if successfully validated, null if no valid alias is set, or error otherwise.
+ */
+function fetch_and_validate_package_alias( DIDDocument $did ) {
+	$aliases = array_filter( $did->alsoKnownAs, fn ( $alias ) => is_string( $alias ) && str_starts_with( $alias, 'fair://' ) );
+
+	// Packages may only have a single alias, so ignore multiple.
+	if ( empty( $aliases ) ) {
+		return null;
+	}
+	if ( count( $aliases ) !== 1 ) {
+		return new WP_Error(
+			'fair.packages.get_package_alias.too_many_aliases',
+			'Multiple aliases set in DID; packages may only have a single alias',
+			compact( 'aliases' )
+		);
+	}
+
+	// Check the domain is valid.
+	$alias = reset( $aliases );
+	if ( ! preg_match( '#^fair://([a-z0-9][a-z0-9\-]{1,63}(\.[a-z0-9][a-z0-9\-]{1,63})+)/?$#', $alias, $domain_match ) ) {
+		return new WP_Error(
+			'fair.packages.get_package_alias.invalid_domain',
+			'Invalid FAIR alias format',
+			compact( 'alias' )
+		);
+	}
+	$domain = $domain_match[1];
+	$validation_domain = '_fairpm.' . $domain;
+	if ( strlen( $validation_domain ) > 255 ) {
+		return new WP_Error(
+			'fair.packages.get_package_alias.domain_too_long',
+			'FAIR alias format exceeds valid domain length',
+			compact( 'validation_domain' )
+		);
+	}
+
+	// Check DNS record
+	$records = dns_get_record( '_fairpm.' . $domain, DNS_TXT );
+	$validation_records = array_filter( $records, fn ( $record ) => str_starts_with( $record['txt'], 'did=' ) );
+	if ( count( $validation_records ) !== 1 ) {
+		return new WP_Error(
+			'fair.packages.get_package_alias.missing_record',
+			sprintf( 'Missing verification record for "%s"', $domain ),
+			compact( 'domain', 'records' )
+		);
+	}
+
+	$record = reset( $validation_records );
+	if ( ! preg_match( '/^did="?([^"]+)"?$/', $record['txt'], $record_match ) ) {
+		// Invalid format.
+		return new WP_Error(
+			'fair.packages.get_package_alias.invalid_record',
+			sprintf( 'Verification record for "%s" is invalid', $domain ),
+			compact( 'domain' )
+		);
+	}
+	$expected_did = $record_match[1];
+
+	if ( $expected_did !== $did->id ) {
+		return new WP_Error(
+			'fair.packages.get_package_alias.mismatched_did',
+			'DID in validation record does not match',
+			compact( 'expected_did' )
+		);
+	}
+
+	// Validated, so return the valid domain.
+	return $domain;
 }
 
 // phpcs:enable
