@@ -36,6 +36,11 @@ class Document {
 	public array $verificationMethod;
 
 	/**
+	 * Aliases for the DID.
+	 */
+	public array $alsoKnownAs = [];
+
+	/**
 	 * Constructor.
 	 *
 	 * @param  string $id DID.
@@ -45,11 +50,13 @@ class Document {
 	public function __construct(
 		string $id,
 		array $service,
-		array $verificationMethod
+		array $verificationMethod,
+		array $alsoKnownAs = []
 	) {
 		$this->id = $id;
 		$this->service = $service;
 		$this->verificationMethod = $verificationMethod;
+		$this->alsoKnownAs = $alsoKnownAs;
 	}
 
 	/**
