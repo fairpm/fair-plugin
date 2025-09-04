@@ -7,8 +7,6 @@
 
 namespace FAIR;
 
-use Fragen\Git_Updater;
-
 const NS_SEPARATOR = '\\';
 
 /**
@@ -41,9 +39,6 @@ function bootstrap() {
 	Upgrades\bootstrap();
 	User_Notification\bootstrap();
 	Version_Check\bootstrap();
-
-	// Self-update check.
-	( new Git_Updater\Lite( PLUGIN_FILE ) )->run();
 }
 
 /**
