@@ -186,7 +186,7 @@ class Updater {
 		$result = verify_file_signature( $path, $artifact->signature );
 		remove_filter( 'wp_trusted_keys', [ $this, 'get_trusted_keys' ], 100 );
 
-		return $result;
+		return is_wp_error( $result ) ? $result : $path;
 	}
 
 	/**
