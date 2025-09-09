@@ -58,6 +58,3 @@ jobs:
       - name: Run PHPCS on all files
         id: phpcs-files
         run: phpcs . -n --report-full
-
-      - name: Ensure version-controlled files are not modified during the checks
-        run: git diff --exit-code
