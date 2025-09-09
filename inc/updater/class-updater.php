@@ -12,7 +12,6 @@ use Plugin_Upgrader;
 use stdClass;
 use Theme_Upgrader;
 use TypeError;
-use WP_Error;
 use WP_Upgrader;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
