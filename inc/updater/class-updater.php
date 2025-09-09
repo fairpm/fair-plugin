@@ -12,6 +12,7 @@ use Plugin_Upgrader;
 use stdClass;
 use Theme_Upgrader;
 use TypeError;
+use WP_Error;
 use WP_Upgrader;
 use YOCLIB\Multiformats\Multibase\Multibase;
 
@@ -186,7 +187,22 @@ class Updater {
 		$result = verify_file_signature( $path, $artifact->signature );
 		remove_filter( 'wp_trusted_keys', [ $this, 'get_trusted_keys' ], 100 );
 
-		return is_wp_error( $result ) ? $result : $path;
+		if ( $result === true ) {
+			return $path;
+		}
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		return new WP_Error(
+			'fair.packages.signature_verification.failed',
+			sprintf(
+				/* translators: %s: The package's URL. */
+				__( 'Signature verification could not be performed for the package: %s', 'fair' ),
+				$package
+			)
+		);
 	}
 
 	/**
