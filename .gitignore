@@ -2,13 +2,18 @@
 /node_modules/
 *.bak
 /.vscode
-/vendor/
+/vendor/*
 .phpunit.result.cache
 phpunit.xml
 phpcs.xml
 /tests/phpunit/cache
 /tests/phpunit/coverage
 wp-tests-config.php
+
+# Track production Composer files.
+!/vendor/autoload.php
+!/vendor/composer/
+!/vendor/yocto/
 
 # Track placeholders so that empty directories stay in the repo.
 !.gitkeep
