@@ -102,6 +102,42 @@ function handle_key_file_request() {
 }
 
 /**
+ * Determines whether a post status is considered "viewable".
+ *
+ * Polyfill of `is_post_status_viewable()` for WordPress versions prior to 5.7.0.
+ *
+ * @param string|stdClass $post_status Post status name or object.
+ * @return bool Whether the post status should be considered viewable.
+ */
+function is_post_status_viewable_polyfill( $post_status ) : bool {
+	// Defer to WordPress core if available (5.7.0+).
+	if ( function_exists( 'is_post_status_viewable' ) ) {
+		return is_post_status_viewable( $post_status );
+	}
+
+	if ( is_scalar( $post_status ) ) {
+		$post_status = get_post_status_object( $post_status );
+
+		if ( ! $post_status ) {
+			return false;
+		}
+	}
+
+	if (
+		! is_object( $post_status ) ||
+		$post_status->internal ||
+		$post_status->protected
+	) {
+		return false;
+	}
+
+	$is_viewable = $post_status->publicly_queryable || ( $post_status->_builtin && $post_status->public );
+
+	/** This filter is documented in wp-includes/post.php */
+	return true === apply_filters( 'is_post_status_viewable', $is_viewable, $post_status );
+}
+
+/**
  * Ping IndexNow when a post status changes.
  *
  * @param string  $new_status New post status.
@@ -110,13 +146,11 @@ function handle_key_file_request() {
  */
 function ping_indexnow( $new_status, $old_status, $post ) : void {
 	/*
-	 * Skip if post type isn't viewable.
+	 * Skip if post isn't viewable.
 	 *
-	 * The post type shouldn't change under normal circumstances,
-	 * so it's safe to assume that both the old and new post are
-	 * not viewable.
+	 * Use the polyfill version of is_post_status_viewable() for compatibility with WP < 5.7.0.
 	 */
-	if ( ! is_post_type_viewable( $post->post_type ) ) {
+	if ( ! is_post_type_viewable( $post->post_type ) || ! is_post_status_viewable_polyfill( $new_status ) ) {
 		return;
 	}
 
@@ -127,21 +161,6 @@ function ping_indexnow( $new_status, $old_status, $post ) : void {
 	 * parent post's transition_post_status hook.
 	 */
 	if ( wp_is_post_revision( $post ) || wp_is_post_autosave( $post ) ) {
-		return;
-	}
-
-	/*
-	 * Skip if both old and new statuses are private.
-	 *
-	 * The page will have been a 404 before and after.
-	 *
-	 * For pages that are newly a 404, still ping IndexNow
-	 * to encourage removal of the URL from search engines.
-	 */
-	if (
-		! is_post_status_viewable( $new_status )
-		&& ! is_post_status_viewable( $old_status )
-	) {
 		return;
 	}
 
