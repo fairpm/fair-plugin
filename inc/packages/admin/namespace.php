@@ -69,7 +69,7 @@ function handle_did_during_ajax( $result, $action, $args ) {
 		return $result;
 	}
 
-	wp_cache_set( ACTION_INSTALL_DID, $did );
+	set_transient( ACTION_INSTALL_DID, $did );
 	Packages\add_package_to_release_cache( $did );
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
 

@@ -84,7 +84,7 @@ function get_did_hash( string $id ) {
  * @return DIDDocument|WP_Error
  */
 function get_did_document( string $id ) {
-	$cached = wp_cache_get( $id, 'did-docs' );
+	$cached = get_transient( $id );
 	if ( $cached ) {
 		return $cached;
 	}
@@ -99,7 +99,7 @@ function get_did_document( string $id ) {
 	if ( is_wp_error( $document ) ) {
 		return $document;
 	}
-	wp_cache_set( $id, $document, 'did-docs', CACHE_LIFETIME );
+	set_transient( $id, $document, CACHE_LIFETIME );
 
 	return $document;
 }
@@ -144,7 +144,7 @@ function fetch_package_metadata( string $id ) {
  */
 function fetch_metadata_doc( string $url ) {
 	$cache_key = CACHE_KEY . md5( $url );
-	$response = wp_cache_get( $cache_key, 'metadata-docs' );
+	$response = get_transient( $cache_key );
 	$response = fetch_metadata_from_local( $response, $url );
 
 	if ( ! $response ) {
@@ -165,7 +165,7 @@ function fetch_metadata_doc( string $url ) {
 		} elseif ( $code !== 200 ) {
 			return new WP_Error( 'fair.packages.metadata.failure', __( 'HTTP error code received', 'fair' ) );
 		}
-		wp_cache_set( $cache_key, $response, 'metadata-docs', CACHE_LIFETIME );
+		set_transient( $cache_key, $response, CACHE_LIFETIME );
 	}
 
 	return MetadataDocument::from_response( $response );
@@ -186,7 +186,7 @@ function fetch_metadata_from_local( $response, $url ) {
 	if ( ! $response && str_contains( $url, home_url() ) ) {
 		$did = explode( '/', parse_url( $url, PHP_URL_PATH ) );
 		$did = array_pop( $did );
-		$body = wp_cache_get( 'fair-metadata-endpoint-' . $did, 'metadata-endpoints' );
+		$body = get_transient( 'fair-metadata-endpoint-' . $did );
 		$response = [];
 		$response = [
 			'headers' => [],
@@ -194,7 +194,7 @@ function fetch_metadata_from_local( $response, $url ) {
 		];
 		$response = ! $body ? false : $response;
 		if ( $response ) {
-			wp_cache_set( CACHE_KEY . md5( $url ), $response, 'metadata-docs', CACHE_LIFETIME );
+			set_transient( CACHE_KEY . md5( $url ), $response, CACHE_LIFETIME );
 		}
 	}
 
@@ -646,7 +646,7 @@ function upgrader_pre_download( $false ) : bool {
 function rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
 
-	$did = wp_cache_get( Admin\ACTION_INSTALL_DID );
+	$did = get_transient( Admin\ACTION_INSTALL_DID );
 
 	if ( ! $did ) {
 		return $source;
@@ -685,9 +685,9 @@ function add_package_to_release_cache( string $did ) : void {
 	if ( empty( $did ) ) {
 		return;
 	}
-	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
+	$releases = get_transient( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
 	$releases[ $did ] = get_latest_release_from_did( $did );
-	wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
+	set_transient( RELEASE_PACKAGES_CACHE_KEY, $releases );
 }
 
 /**
@@ -702,7 +702,7 @@ function add_package_to_release_cache( string $did ) : void {
  * @return array
  */
 function maybe_add_accept_header( $args, $url ) : array {
-	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
+	$releases = get_transient( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
 
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;
