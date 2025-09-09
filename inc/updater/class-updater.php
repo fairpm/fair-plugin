@@ -14,6 +14,7 @@ use Theme_Upgrader;
 use TypeError;
 use WP_Error;
 use WP_Upgrader;
+use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
  * Class FAIR_Updater.
@@ -200,10 +201,14 @@ class Updater {
 			return [];
 		}
 
-		$valid_keys = $doc->get_fair_signing_keys();
-
-		// todo: return $valid_keys; - re-encode from multibase to base64.
-		return [];
+		// Core expects base64-encoded keys.
+		return array_map(
+			function ( $key ) {
+				$decoded = Multibase::decode( $key, Multibase::BASE58BTC );
+				return base64_encode( $decoded );
+			},
+			$doc->get_fair_signing_keys()
+		);
 	}
 
 	/**
