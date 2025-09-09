@@ -7,17 +7,19 @@
 
 namespace FAIR\Packages;
 
+use const FAIR\CACHE_BASE;
+use const FAIR\CACHE_LIFETIME;
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use FAIR\Updater;
 use WP_Error;
 use WP_Upgrader;
 
-const SERVICE_ID = 'FairPackageManagementRepo';
+const CACHE_KEY = CACHE_BASE . 'packages-';
+const CACHE_METADATA_DOCUMENTS = CACHE_BASE . 'metadata-documents-';
+const CACHE_RELEASE_PACKAGES = CACHE_BASE . 'release-packages';
 const CONTENT_TYPE = 'application/json+fair';
-const CACHE_KEY = 'fair-packages-';
-const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
-const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
+const SERVICE_ID = 'FairPackageManagementRepo';
 
 // phpcs:disable WordPress.NamingConventions.ValidVariableName
 
@@ -84,7 +86,7 @@ function get_did_hash( string $id ) {
  * @return DIDDocument|WP_Error
  */
 function get_did_document( string $id ) {
-	$cached = get_transient( $id );
+	$cached = get_transient( CACHE_METADATA_DOCUMENTS . $id );
 	if ( $cached ) {
 		return $cached;
 	}
@@ -99,7 +101,7 @@ function get_did_document( string $id ) {
 	if ( is_wp_error( $document ) ) {
 		return $document;
 	}
-	set_transient( $id, $document, CACHE_LIFETIME );
+	set_transient( CACHE_METADATA_DOCUMENTS . $id, $document, CACHE_LIFETIME );
 
 	return $document;
 }
@@ -685,9 +687,9 @@ function add_package_to_release_cache( string $did ) : void {
 	if ( empty( $did ) ) {
 		return;
 	}
-	$releases = get_transient( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
+	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?: [];
 	$releases[ $did ] = get_latest_release_from_did( $did );
-	set_transient( RELEASE_PACKAGES_CACHE_KEY, $releases );
+	set_transient( CACHE_RELEASE_PACKAGES, $releases );
 }
 
 /**
@@ -702,7 +704,7 @@ function add_package_to_release_cache( string $did ) : void {
  * @return array
  */
 function maybe_add_accept_header( $args, $url ) : array {
-	$releases = get_transient( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
+	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?: [];
 
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;

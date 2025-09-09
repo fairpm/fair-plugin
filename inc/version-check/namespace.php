@@ -7,6 +7,8 @@
 
 namespace FAIR\Version_Check;
 
+use const FAIR\CACHE_LIFETIME;
+
 /**
  * This constant is replaced by bin/update-browsers.sh.
  *
@@ -44,11 +46,6 @@ const SECURE_PHP = '7.4';
  * (Fallback if we can't load PHP.net.)
  */
 const ACCEPTABLE_PHP = '7.4';
-
-/**
- * Lifetime of the php.net cache.
- */
-const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
 
 /**
  * Bootstrap.
