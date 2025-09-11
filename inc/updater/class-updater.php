@@ -219,6 +219,7 @@ class Updater {
 		// Core expects base64-encoded keys.
 		return array_map(
 			function ( $key ) {
+				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				$decoded = Multibase::decode( $key->publicKeyMultibase, Multibase::BASE58BTC );
 				return base64_encode( $decoded );
 			},
