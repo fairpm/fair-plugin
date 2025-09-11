@@ -219,7 +219,7 @@ class Updater {
 		// Core expects base64-encoded keys.
 		return array_map(
 			function ( $key ) {
-				$decoded = Multibase::decode( $key, Multibase::BASE58BTC );
+				$decoded = Multibase::decode( $key->publicKeyMultibase, Multibase::BASE58BTC );
 				return base64_encode( $decoded );
 			},
 			$doc->get_fair_signing_keys()
