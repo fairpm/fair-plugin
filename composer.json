@@ -9,8 +9,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
-        "yocto/yoclib-multibase": "^1.2"
+        "php": ">=7.4"
     },
     "require-dev": {
         "yoast/phpunit-polyfills": "*",
