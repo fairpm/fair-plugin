@@ -14,7 +14,6 @@ use Theme_Upgrader;
 use TypeError;
 use WP_Error;
 use WP_Upgrader;
-use YOCLIB\Multiformats\Multibase\Multibase;
 
 /**
  * Class FAIR_Updater.
@@ -220,8 +219,7 @@ class Updater {
 		return array_map(
 			function ( $key ) {
 				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-				$decoded = Multibase::decode( $key->publicKeyMultibase, Multibase::BASE58BTC );
-				return base64_encode( $decoded );
+				return base64_encode( Base58BTC::decode( $key->publickKeyMultibase ) );
 			},
 			$doc->get_fair_signing_keys()
 		);
