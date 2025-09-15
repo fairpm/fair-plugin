@@ -183,7 +183,8 @@ class Updater {
 		}
 
 		add_filter( 'wp_trusted_keys', [ $this, 'get_trusted_keys' ], 100 );
-		$result = verify_file_signature( $path, $artifact->signature );
+		$decoded_base64url = sodium_base642bin( $artifact->signature, SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING );
+		$result = verify_file_signature( $path, base64_encode( $decoded_base64url ) );
 		remove_filter( 'wp_trusted_keys', [ $this, 'get_trusted_keys' ], 100 );
 
 		if ( $result === true ) {
