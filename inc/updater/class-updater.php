@@ -216,14 +216,28 @@ class Updater {
 			return [];
 		}
 
-		// Core expects base64-encoded keys.
-		return array_map(
-			function ( $key ) {
-				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-				return base64_encode( Base58BTC::decode( $key->publickKeyMultibase ) );
-			},
-			$doc->get_fair_signing_keys()
-		);
+		$keys = $doc->get_fair_signing_keys();
+		if ( empty( $keys ) ) {
+			return [];
+		}
+
+		/*
+		 * FAIR uses Base58BTC-encoded Ed25519 keys.
+		 * Core expects base64-encoded keys.
+		 */
+		$recoded_keys = [];
+		foreach ( $keys as $key ) {
+			$str = Base58BTC::decode( $key->publicKeyMultibase );
+
+			// Ed25519 keys only.
+			if ( substr( $str, 0, 2 ) !== "\xed\x01" ) {
+				continue;
+			}
+
+			$recoded_keys[] = base64_encode( substr( $str, 2 ) );
+		}
+
+		return $recoded_keys;
 	}
 
 	/**
