@@ -235,7 +235,8 @@ class Updater {
 				continue;
 			}
 
-			$recoded_keys[] = base64_encode( substr( $str, 2 ) );
+			$key_material = substr( $str, 2 );
+			$recoded_keys[] = base64_encode( $key_material );
 		}
 
 		return $recoded_keys;
