@@ -227,6 +227,7 @@ class Updater {
 		 */
 		$recoded_keys = [];
 		foreach ( $keys as $key ) {
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$str = Base58BTC::decode( $key->publicKeyMultibase );
 
 			// Ed25519 keys only.
