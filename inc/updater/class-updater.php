@@ -33,14 +33,14 @@ class Updater {
 	 * For plugins, this is the PHP file with the plugin header. For themes,
 	 * this is the style.css file.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	protected $filepath;
 
 	/**
 	 * Current installed version of the package.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	protected $local_version;
 
@@ -71,10 +71,10 @@ class Updater {
 	 * @param string $did DID.
 	 * @param string $filepath Absolute file path.
 	 */
-	public function __construct( string $did, string $filepath ) {
+	public function __construct( string $did, string $filepath = '' ) {
 		$this->did = $did;
 		$this->filepath = $filepath;
-		$this->local_version = get_file_data( $filepath, [ 'Version' => 'Version' ] )['Version'];
+		$this->local_version = $filepath ? get_file_data( $filepath, [ 'Version' => 'Version' ] )['Version'] : null;
 	}
 
 	/**
@@ -125,7 +125,11 @@ class Updater {
 	public function load_hooks() {
 		add_filter( 'upgrader_source_selection', [ $this, 'upgrader_source_selection' ], 10, 4 );
 		add_filter( "{$this->type}s_api", [ $this, 'repo_api_details' ], 99, 3 );
-		add_filter( "site_transient_update_{$this->type}s", [ $this, 'update_site_transient' ], 20, 1 );
+
+		if ( ! empty( $this->filepath ) && ! empty( $this->local_version ) ) {
+			add_filter( "site_transient_update_{$this->type}s", [ $this, 'update_site_transient' ], 20, 1 );
+		}
+
 		if ( ! is_multisite() ) {
 			add_filter( 'wp_prepare_themes_for_js', [ $this, 'customize_theme_update_html' ] );
 		}
