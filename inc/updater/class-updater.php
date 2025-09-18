@@ -165,7 +165,7 @@ class Updater {
 
 		// This method is hooked to 'upgrader_pre_download', which is used in WP_Upgrader::download_package().
 		// Bailing on subsequent runs for the same package URI prevents an infinite loop.
-		$key = md5( $package );
+		$key = md5( $this->did . '_' . $package );
 		if ( isset( $has_run[ $key ] ) ) {
 			return $reply;
 		}
