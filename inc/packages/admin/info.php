@@ -280,6 +280,9 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 			<?php if ( ! empty( $doc->slug ) ) : ?>
 				<li><strong><?= __( 'Slug:', 'fair' ); ?></strong> <?= esc_attr( $doc->slug ); ?></li>
 			<?php endif; ?>
+			<?php if ( ! empty( $doc->id ) ) : ?>
+				<li><strong><?= __( 'ID:', 'fair' ); ?></strong> <code><?= esc_attr( $doc->id ); ?></code></li>
+			<?php endif; ?>
 			<?php if ( ! empty( $release->requires ) ) : ?>
 				<li>
 					<strong><?= __( 'Requires:', 'fair' ); ?></strong>
@@ -322,8 +325,36 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 				?>
 			</ul>
 		<?php endif ?>
+		<?php
+		$repo_host = get_repository_hostname( $doc->id );
+		if ( $repo_host ) :
+			?>
+			<p><small>Plugin available via FAIR repository hosted at <?php echo esc_html( $repo_host ); ?></small></p>
+		<?php else: ?>
+			<p><small>Plugin available via FAIR repository</small></p>
+		<?php endif; ?>
 	</div>
 	<?php
+}
+
+/**
+ * Get the hostname for the repository hosting a package.
+ *
+ * @param string $did DID to check.
+ * @return string|null Hostname if available, null if there's an error.
+ */
+function get_repository_hostname( string $did ) : ?string {
+	$did_doc = Packages\get_did_document( $did );
+	if ( is_wp_error( $did_doc ) ) {
+		return null;
+	}
+
+	$repo = $did_doc->get_service( Packages\SERVICE_ID );
+	if ( empty( $repo ) ) {
+		return null;
+	}
+
+	return parse_url( $repo->serviceEndpoint, PHP_URL_HOST );
 }
 
 /**
