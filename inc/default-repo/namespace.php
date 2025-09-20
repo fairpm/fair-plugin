@@ -7,6 +7,8 @@
 
 namespace FAIR\Default_Repo;
 
+use FAIR;
+
 /**
  * Bootstrap.
  */
@@ -63,6 +65,10 @@ function replace_repo_api_urls( $status, $args, $url ) {
 
 	// Alter the URL, then reissue the request (with a lock to prevent loops).
 	$url = str_replace( '//api.wordpress.org/', '//' . get_default_repo_domain() . '/', $url );
+
+	// Indicate this is a FAIR install.
+	$url = add_query_arg( '_fair', FAIR\VERSION, $url );
+
 	$is_replacing = true;
 	$response = wp_remote_request( $url, $args );
 	$is_replacing = false;
