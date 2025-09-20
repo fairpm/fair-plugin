@@ -243,6 +243,30 @@ function set_slug_to_hashed() : void {
 }
 
 /**
+ * Check if this is a FAIR plugin, for legacy data.
+ *
+ * FAIR data is bridged into legacy data via the _fair property, and needs
+ * to have a valid DID. We can use this to enhance our existing metadata.
+ *
+ * @param array|stdClass $api_data Legacy dotorg-formatted data to check.
+ * @return bool
+ */
+function is_fair_plugin( $api_data ) : bool {
+	$api = (array) $api_data;
+	if ( empty( $api['_fair'] ) ) {
+		return false;
+	}
+
+	$fair_data = (array) $api['_fair'];
+	if ( empty( $fair_data['id'] ) ) {
+		return false;
+	}
+
+	// Is this a fake bridged plugin?
+	return str_starts_with( $fair_data['id'], 'did:' );
+}
+
+/**
  * Maybe hijack plugin info.
  *
  * @return void
@@ -256,6 +280,8 @@ function maybe_hijack_plugin_info() {
 	// Hijack, if the plugin is a FAIR package.
 	$id = sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) );
 	if ( ! preg_match( '/^did:(web|plc):.+$/', $id ) ) {
+		// See if this a transparently-upgraded plugin.
+		maybe_hijack_legacy_plugin_info();
 		return;
 	}
 
@@ -270,4 +296,60 @@ function maybe_hijack_plugin_info() {
 
 	Info\render_page( $metadata, $tab, $section );
 	exit;
+}
+
+/**
+ * Maybe hijack the legacy plugin info too.
+ */
+function maybe_hijack_legacy_plugin_info() {
+	$api = plugins_api(
+		'plugin_information',
+		array(
+			'slug' => wp_unslash( $_REQUEST['plugin'] ),
+		)
+	);
+
+	if ( is_wp_error( $api ) ) {
+		wp_die( $api );
+	}
+
+	// Is this a FAIR plugin, actually?
+	if ( ! is_fair_plugin( $api ) ) {
+		return;
+	}
+
+	// Neat! Upgrade it.
+	// We need to convert deeply to objects, so re-encode as JSON.
+	$reencoded = json_decode( json_encode( $api->_fair ), false );
+	$metadata = MetadataDocument::from_data( $reencoded );
+	if ( is_wp_error( $metadata ) ) {
+		wp_die( esc_html( $metadata->get_error_message() ) );
+	}
+
+	$tab = esc_attr( $GLOBALS['tab'] ?? 'plugin-information' );
+	$section = isset( $_REQUEST['section'] ) ? sanitize_key( wp_unslash( $_REQUEST['section'] ) ) : 'description';
+	Info\render_page( $metadata, $tab, $section );
+	exit;
+}
+
+/**
+ * Filters the plugin card description on the Add Plugins screen.
+ *
+ * @param string $description Plugin card description.
+ * @param array $plugin (Legacy) plugin data from the dotorg API.
+ * @return string Plugin card description.
+ */
+function maybe_add_data_to_description( $description, $plugin ) {
+	if ( ! is_fair_plugin( $plugin ) ) {
+		return $description;
+	}
+
+	$did = $plugin['_fair']['id'];
+	$repo_host = Info\get_repository_hostname( $did );
+	if ( empty( $repo_host ) ) {
+		return $description;
+	}
+
+	$description .= '</p><p class="authors"><em>' . sprintf( __( 'Hosted on %s', 'fair' ), esc_html( $repo_host ) ) . '</em>';
+	return $description;
 }
