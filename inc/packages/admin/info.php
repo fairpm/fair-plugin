@@ -354,7 +354,13 @@ function get_repository_hostname( string $did ) : ?string {
 		return null;
 	}
 
-	return parse_url( $repo->serviceEndpoint, PHP_URL_HOST );
+	$host = parse_url( $repo->serviceEndpoint, PHP_URL_HOST );
+	if ( empty( $host ) ) {
+		// Invalid URL.
+		return null;
+	}
+
+	return $host;
 }
 
 /**
