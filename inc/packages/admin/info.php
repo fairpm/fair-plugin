@@ -458,8 +458,7 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 		$file = null;
 		$slug = null;
 	} else {
-		$packages = Updater\get_packages();
-		$file = $packages[ "{$type}s" ][ $doc->id ];
+		$file = Updater\get_packages()[ "{$type}s" ][ $doc->id ];
 		$file = $type === 'plugin' ? plugin_basename( $file ) : basename( dirname( $file ) );
 		$slug = $type === 'plugin' ? dirname( $file ) : $file;
 	}
