@@ -137,10 +137,10 @@ class Updater {
 		/**
 		 * Filter whether to verify FAIR package signatures during update.
 		 *
-		 * @param bool $verify Whether to verify signatures. Default false.
+		 * @param bool $verify Whether to verify signatures. Default true.
 		 * @return bool
 		 */
-		if ( apply_filters( 'fair.packages.updater.verify_signatures', false ) ) {
+		if ( apply_filters( 'fair.packages.updater.verify_signatures', true ) ) {
 			add_filter( 'upgrader_pre_download', [ $this, 'verify_signature_on_download' ], 10, 4 );
 		}
 
