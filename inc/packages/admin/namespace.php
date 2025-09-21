@@ -351,6 +351,7 @@ function maybe_add_data_to_description( $description, $plugin ) {
 		return $description;
 	}
 
-	$description .= '</p><p class="authors"><em>' . sprintf( __( 'Hosted on %s', 'fair' ), esc_html( $repo_host ) ) . '</em>';
+	/* translators: %1$s: repository hostname */
+	$description .= '</p><p class="authors"><em>' . sprintf( __( 'Hosted on %1$s', 'fair' ), esc_html( $repo_host ) ) . '</em>';
 	return $description;
 }
