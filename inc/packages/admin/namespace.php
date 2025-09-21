@@ -36,6 +36,24 @@ function bootstrap() {
 	add_filter( 'plugin_install_action_links', __NAMESPACE__ . '\\maybe_hijack_plugin_install_button', 10, 2 );
 	add_filter( 'plugin_install_description', __NAMESPACE__ . '\\maybe_add_data_to_description', 10, 2 );
 	add_action( 'wp_ajax_check_plugin_dependencies', __NAMESPACE__ . '\\set_slug_to_hashed' );
+	add_filter( 'wp_list_table_class_name', __NAMESPACE__ . '\\maybe_override_list_table' );
+}
+
+/**
+ * Override the install list table with our own.
+ *
+ * @param string $class_name List table class name to use.
+ * @return string Overridden class name.
+ */
+function maybe_override_list_table( $class_name ) {
+	if ( $class_name !== 'WP_Plugin_Install_List_Table' ) {
+		return $class_name;
+	}
+
+	// Load list table class. (We must do this here, as WP_List_Table isn't loaded by default.)
+	require_once ABSPATH . 'wp-admin/includes/class-wp-plugin-install-list-table.php';
+	require_once __DIR__ . '/class-list-table.php';
+	return List_Table::class;
 }
 
 /**
@@ -85,13 +103,6 @@ function handle_did_during_ajax( $result, $action, $args ) {
  * @return void
  */
 function load_plugin_install() {
-	// Load list table class. (We must do this here, as WP_List_Table isn't loaded by default.)
-	require_once ABSPATH . 'wp-admin/includes/class-wp-plugin-install-list-table.php';
-	require_once __DIR__ . '/class-list-table.php';
-
-	// Override list table with ours.
-	add_filter( 'wp_list_table_class_name', fn ( $class_name ) => $class_name === 'WP_Plugin_Install_List_Table' ? List_Table::class : $class_name );
-
 	enqueue_assets();
 }
 
