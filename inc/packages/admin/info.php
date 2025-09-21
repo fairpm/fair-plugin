@@ -454,12 +454,11 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 		$status = 'installed';
 	}
 
-	$packages = Updater\get_packages();
-	if ( ! isset( $packages[ "{$type}s" ][ $doc->id ] ) ) {
-		// Not installed.
+	if ( $status === 'install' ) {
 		$file = null;
 		$slug = null;
 	} else {
+		$packages = Updater\get_packages();
 		$file = $packages[ "{$type}s" ][ $doc->id ];
 		$file = $type === 'plugin' ? plugin_basename( $file ) : basename( dirname( $file ) );
 		$slug = $type === 'plugin' ? dirname( $file ) : $file;
