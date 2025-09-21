@@ -612,6 +612,7 @@ function get_update_data( $did ) {
 		'download_link'    => $release->artifacts->package[0]->url,
 		'tested'           => $required_versions['tested_to'] ?? '',
 		'external'         => 'xxx',
+		'_fair'            => $metadata,
 	];
 	if ( 'theme' === $type ) {
 		$response['theme_uri'] = $response['url'];
