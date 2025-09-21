@@ -301,9 +301,15 @@ function maybe_hijack_plugin_info() {
 	// Hijack, if the plugin is a FAIR package.
 	$id = sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) );
 	if ( ! preg_match( '/^did:(web|plc):.+$/', $id ) ) {
-		// See if this a transparently-upgraded plugin.
-		maybe_hijack_legacy_plugin_info();
-		return;
+		if ( str_contains( $id, '-did--' ) ) {
+			// Bridged. Convert back to a DID.
+			$split = explode( '-did--', $id, 2 );
+			$id = 'did:' . str_replace( '--', ':', $split[1] );
+		} else {
+			// See if this a transparently-upgraded plugin.
+			maybe_hijack_legacy_plugin_info();
+			return;
+		}
 	}
 
 	$metadata = Packages\fetch_package_metadata( $id );
