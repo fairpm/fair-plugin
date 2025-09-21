@@ -1,10 +1,18 @@
 <?php
+/**
+ * Custom list table.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Packages\Admin;
 
 use FAIR\Packages;
 use WP_Plugin_Install_List_Table;
 
+/**
+ * Custom plugin installer list table.
+ */
 class List_Table extends WP_Plugin_Install_List_Table {
 	/**
 	 * Generates the list table rows.
@@ -29,6 +37,7 @@ class List_Table extends WP_Plugin_Install_List_Table {
 			);
 		}, $res );
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Raw HTML.
 		echo $res;
 	}
 }

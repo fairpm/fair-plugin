@@ -50,7 +50,7 @@ function maybe_override_list_table( $class_name ) {
 		return $class_name;
 	}
 
-	// Load list table class. (We must do this here, as WP_List_Table isn't loaded by default.)
+	// Load list table class. We must do this here, as WP_List_Table isn't loaded by default.
 	require_once ABSPATH . 'wp-admin/includes/class-wp-plugin-install-list-table.php';
 	require_once __DIR__ . '/class-list-table.php';
 	return List_Table::class;
