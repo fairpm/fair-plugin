@@ -192,6 +192,7 @@ class Updater {
 		remove_filter( 'wp_trusted_keys', [ $this, 'get_trusted_keys' ], 100 );
 
 		if ( $result === true ) {
+			error_log( sprintf( 'FAIR: Verified signature for package %s', $package ) );
 			return $path;
 		}
 
