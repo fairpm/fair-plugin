@@ -354,6 +354,7 @@ function get_repository_hostname( string $did ) : ?string {
 		return null;
 	}
 
+	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 	$host = parse_url( $repo->serviceEndpoint, PHP_URL_HOST );
 	if ( empty( $host ) ) {
 		// Invalid URL.

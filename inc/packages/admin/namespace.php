@@ -387,8 +387,8 @@ function alter_slugs( $res, $action, $args ) {
  * `plugin-name-didhash`. In order to show the correct button, we need to check
  * against the install slug, not the API slug.
  *
- * @param string[] $action_links List of action links
- * @param array (Legacy) plugin data from the dotorg API.
+ * @param string[] $links List of action links
+ * @param array $plugin (Legacy) plugin data from the dotorg API.
  * @return array Altered actions.
  */
 function maybe_hijack_plugin_install_button( $links, $plugin ) {
