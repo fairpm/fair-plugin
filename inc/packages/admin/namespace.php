@@ -32,6 +32,8 @@ function bootstrap() {
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
+	add_filter( 'plugins_api_result', __NAMESPACE__ . '\\alter_slugs', 10, 3 );
+	add_filter( 'plugin_install_action_links', __NAMESPACE__ . '\\maybe_hijack_plugin_install_button', 10, 2 );
 	add_filter( 'plugin_install_description', __NAMESPACE__ . '\\maybe_add_data_to_description', 10, 2 );
 	add_action( 'wp_ajax_check_plugin_dependencies', __NAMESPACE__ . '\\set_slug_to_hashed' );
 }
@@ -83,6 +85,13 @@ function handle_did_during_ajax( $result, $action, $args ) {
  * @return void
  */
 function load_plugin_install() {
+	// Load list table class. (We must do this here, as WP_List_Table isn't loaded by default.)
+	require_once ABSPATH . 'wp-admin/includes/class-wp-plugin-install-list-table.php';
+	require_once __DIR__ . '/class-list-table.php';
+
+	// Override list table with ours.
+	add_filter( 'wp_list_table_class_name', fn ( $class_name ) => $class_name === 'WP_Plugin_Install_List_Table' ? List_Table::class : $class_name );
+
 	enqueue_assets();
 }
 
@@ -337,6 +346,83 @@ function maybe_hijack_legacy_plugin_info() {
 	$section = isset( $_REQUEST['section'] ) ? sanitize_key( wp_unslash( $_REQUEST['section'] ) ) : 'description';
 	Info\render_page( $metadata, $tab, $section );
 	exit;
+}
+
+/**
+ * Filters the Plugin Installation API response results.
+ *
+ * @since 2.7.0
+ *
+ * @param object|WP_Error $res    Response object or WP_Error.
+ * @param string          $action The type of information being requested from the Plugin Installation API.
+ * @param object          $args   Plugin API arguments.
+ */
+function alter_slugs( $res, $action, $args ) {
+	if ( 'query_plugins' !== $action ) {
+		return $res;
+	}
+
+	if ( empty( $res->plugins ) ) {
+		return $res;
+	}
+
+	// Alter the slugs to our globally unique version.
+	foreach ( $res->plugins as &$plugin ) {
+		if ( ! is_fair_plugin( $plugin ) ) {
+			continue;
+		}
+
+		$did = $plugin['_fair']['id'];
+		$plugin['slug'] = esc_attr( $plugin['slug'] . '-' . str_replace( ':', '--', $did ) );
+	}
+
+	return $res;
+}
+
+/**
+ * Override the install button, for bridged plugins.
+ *
+ * Bridged plugins appear in the API (via `alter_slugs()`) with slugs like
+ * `plugin-name-did--method--msid`, however they are installed to
+ * `plugin-name-didhash`. In order to show the correct button, we need to check
+ * against the install slug, not the API slug.
+ *
+ * @param string[] $action_links List of action links
+ * @param array (Legacy) plugin data from the dotorg API.
+ * @return array Altered actions.
+ */
+function maybe_hijack_plugin_install_button( $links, $plugin ) {
+	if ( ! is_fair_plugin( $plugin ) || ! str_contains( $plugin['slug'], '-did--' ) ) {
+		return $links;
+	}
+
+	$did = $plugin['_fair']['id'];
+
+	// Find the action button(s).
+	foreach ( $links as &$link ) {
+		if ( ! str_contains( $link, 'data-slug="' ) ) {
+			continue;
+		}
+
+		// Found it. Override the install button with ours.
+		// Is the plugin actually installed?
+		$plugin_override = (array) $plugin;
+		$plugin_override['slug'] = $plugin['_fair']['slug'] . '-' . Packages\get_did_hash( $did );
+		$status = install_plugin_install_status( $plugin_override );
+		if ( $status['status'] === 'install' ) {
+			// Not installed, so don't alter anything.
+			return $links;
+		}
+
+		// Installed, regenerate the button.
+		$requires_php = isset( $plugin['requires_php'] ) ? $plugin['requires_php'] : null;
+		$requires_wp  = isset( $plugin['requires'] ) ? $plugin['requires'] : null;
+		$compatible_php = is_php_version_compatible( $requires_php );
+		$compatible_wp  = is_wp_version_compatible( $requires_wp );
+		$name = strip_tags( $plugin['name'] . ' ' . $plugin['version'] );
+		$link = wp_get_plugin_action_button( $name, $plugin_override, $compatible_php, $compatible_wp );
+	}
+	return $links;
 }
 
 /**
