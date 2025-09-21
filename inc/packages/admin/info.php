@@ -330,7 +330,7 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 		if ( $repo_host ) :
 			?>
 			<p><small>Plugin available via FAIR repository hosted at <?php echo esc_html( $repo_host ); ?></small></p>
-		<?php else: ?>
+		<?php else : ?>
 			<p><small>Plugin available via FAIR repository</small></p>
 		<?php endif; ?>
 	</div>

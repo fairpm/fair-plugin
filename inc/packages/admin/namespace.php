@@ -303,14 +303,20 @@ function maybe_hijack_plugin_info() {
  * Maybe hijack the legacy plugin info too.
  */
 function maybe_hijack_legacy_plugin_info() {
+	// phpcs:disable HM.Security.NonceVerification.Recommended
+	if ( empty( $_REQUEST['plugin'] ) ) {
+		return;
+	}
+
 	$api = plugins_api(
 		'plugin_information',
-		array(
-			'slug' => wp_unslash( $_REQUEST['plugin'] ),
-		)
+		[
+			'slug' => sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) ),
+		]
 	);
 
 	if ( is_wp_error( $api ) ) {
+		// phpcs:ignore HM.Security.EscapeOutput.OutputNotEscaped -- Escaping not necessary for WP_Error.
 		wp_die( $api );
 	}
 
