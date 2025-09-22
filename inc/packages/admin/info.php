@@ -9,6 +9,7 @@ namespace FAIR\Packages\Admin\Info;
 
 use FAIR\Packages;
 use FAIR\Packages\Admin;
+use FAIR\Packages\DID\Document as DIDDocument;
 use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
 use FAIR\Updater;
@@ -442,10 +443,10 @@ function add_requirement_notices( ReleaseDocument $release ) : void {
  * validation are not safe, while those without an alias or with a valid alias
  * are safe.
  *
- * @param DIDDocument
+ * @param DIDDocument $did DID to validate.
  * @return bool True if the package is "safe" to install, false if install should be blocked.
  */
-function render_alias_notice( $did ) : bool {
+function render_alias_notice( DIDDocument $did ) : bool {
 	$validation = Packages\validate_package_alias( $did );
 	$title = __( 'Domain Alias', 'fair' );
 	$result = false;
