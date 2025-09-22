@@ -734,6 +734,7 @@ function maybe_add_accept_header( $args, $url ) : array {
  *
  * Uses cached result for one hour.
  *
+ * @param DIDDocument $did DID to validate.
  * @return string|WP_Error|null Alias domain if successfully validated, null if no valid alias is set, or error otherwise.
  */
 function validate_package_alias( DIDDocument $did ) {
@@ -757,6 +758,7 @@ function validate_package_alias( DIDDocument $did ) {
  *
  * This function queries DNS directly, and is uncached.
  *
+ * @param DIDDocument $did DID to validate.
  * @return string|WP_Error|null Alias domain if successfully validated, null if no valid alias is set, or error otherwise.
  */
 function fetch_and_validate_package_alias( DIDDocument $did ) {
