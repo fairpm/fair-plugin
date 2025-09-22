@@ -497,6 +497,7 @@ function render_alias_notice( DIDDocument $did ) : bool {
 	printf(
 		'<strong>%s</strong>: %s',
 		esc_html( $title ),
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized.
 		sanitize_html( $message )
 	);
 	return $result;
