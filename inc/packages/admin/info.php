@@ -447,32 +447,36 @@ function add_requirement_notices( ReleaseDocument $release ) : void {
  */
 function render_alias_notice( $did ) : bool {
 	$validation = Packages\validate_package_alias( $did );
+	$title = __( 'Domain Alias', 'fair' );
+	$result = false;
 	switch ( gettype( $validation ) ) {
 		case 'string':
-			printf(
-				'<strong>Validated</strong> as <a href="%s">%s</a>',
+			$message = sprintf(
+				__( '<strong>Validated</strong> as <a href="%s">%s</a>', 'fair' ),
 				esc_url( 'https://' . $validation . '/' ),
 				esc_html( $validation )
 			);
-			return true;
+			$result = true;
+			break;
 
 		case 'NULL':
-			esc_html_e( 'Not validated: No domain alias is set' );
-			return true;
+			$message = __( 'Not validated: No domain alias is set', 'fair' );
+			$result = true;
+			break;
 
 		default:
 			if ( ! is_wp_error( $validation ) ) {
 				// Invalid type, assume failure.
 				$validation = new WP_Error( 'fair.packages.admin.info.validation_notice.invalid_result', 'An unknown error occurred' );
 			}
-			printf(
+			$message = sprintf(
 				'<strong>%s</strong>',
 				esc_html__( 'Validation failed', 'fair' )
 			);
 			add_action( 'minifair.render.notices', function () use ( $validation ) {
 				wp_admin_notice(
 					sprintf(
-						'<p><strong>Error:</strong> Failed domain alias validation, this package may be unsafe: %s</p>',
+						__( '<p><strong>Error:</strong> Failed domain alias validation, this package may be unsafe: %s</p>', 'fair' ),
 						esc_html( $validation->get_error_message() )
 					),
 					[
@@ -482,8 +486,16 @@ function render_alias_notice( $did ) : bool {
 					]
 				);
 			} );
-			return false;
+			$result = false;
+			break;
 	}
+
+	printf(
+		'<strong>%s</strong>: %s',
+		esc_html( $title ),
+		$message
+	);
+	return $result;
 }
 
 /**
