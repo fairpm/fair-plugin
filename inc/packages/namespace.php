@@ -738,7 +738,7 @@ function maybe_add_accept_header( $args, $url ) : array {
  * @return string|WP_Error|null Alias domain if successfully validated, null if no valid alias is set, or error otherwise.
  */
 function validate_package_alias( DIDDocument $did ) {
-	$cache_key = sprintf( 'fair_did_alias_' . $did->id );
+	$cache_key = sprintf( 'fair_did_alias_%s', $did->id );
 	$cached = get_site_transient( $cache_key );
 	if ( $cached ) {
 		return $cached;
