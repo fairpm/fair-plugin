@@ -28,6 +28,7 @@ function bootstrap() {
 
 	add_filter( 'install_plugins_tabs', __NAMESPACE__ . '\\add_direct_tab' );
 	add_filter( 'plugins_api', __NAMESPACE__ . '\\handle_did_during_ajax', 10, 3 );
+	add_filter( 'plugins_api', __NAMESPACE__ . '\\search_by_did', 10, 3 );
 	add_filter( 'upgrader_pre_download', 'FAIR\\Packages\\upgrader_pre_download', 10, 1 );
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
@@ -97,6 +98,43 @@ function handle_did_during_ajax( $result, $action, $args ) {
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
 
 	return (object) Packages\get_update_data( $did );
+}
+
+/**
+ * Enable searching by DID.
+ *
+ * @param mixed  $result The result of the plugins_api call.
+ * @param string $action The action being performed.
+ * @param object $args   The arguments passed to the plugins_api call.
+ * @return mixed
+ */
+function search_by_did( $result, $action, $args ) {
+	if ( 'query_plugins' !== $action || empty( $args->search ) ) {
+		return $result;
+	}
+
+	$did = sanitize_text_field( urldecode( $args->search ) );
+	if ( ! preg_match( '/^did:plc:.+$/', $did ) ) {
+		return $result;
+	}
+
+	$api_data = Packages\get_update_data( $did );
+	if ( is_wp_error( $api_data ) ) {
+		return $result;
+	}
+
+	$count = count( $api_data );
+	$result = (object) [
+		'plugins' => [ json_decode( json_encode( $api_data ), true ) ],
+		'info' => [
+			'page' => 1,
+			'pages' => 1,
+			'results' => $count,
+			'total' => $count,
+		],
+	];
+
+	return $result;
 }
 
 /**
