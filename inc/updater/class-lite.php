@@ -125,7 +125,7 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 			);
 			$response = get_site_transient( "git-updater-lite_{$this->file}" );
 			if ( ! $response ) {
-				$response = wp_remote_post( $url );
+				$response = wp_remote_get( $url );
 				if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) === 404 ) {
 					return $response;
 				}
@@ -139,10 +139,6 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 				/*
 				* Set transient for 5 minutes as AWS sets 5 minute timeout
 				* for release asset redirect.
-				*
-				* Set limited timeout so wp_remote_post() not hit as frequently.
-				* wp_remote_post() for plugin/theme check can run on every pageload
-				* for certain pages.
 				*/
 				set_site_transient( "git-updater-lite_{$this->file}", $this->api_data, 5 * \MINUTE_IN_SECONDS );
 			} else {
