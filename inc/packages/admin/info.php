@@ -453,7 +453,8 @@ function render_alias_notice( DIDDocument $did ) : bool {
 	switch ( gettype( $validation ) ) {
 		case 'string':
 			$message = sprintf(
-				__( '<strong>Validated</strong> as <a href="%s">%s</a>', 'fair' ),
+				/* translators: %1$s: full URL for validated domain, %2$s: raw domain */
+				__( '<strong>Validated</strong> as <a href="%1$s">%2$s</a>', 'fair' ),
 				esc_url( 'https://' . $validation . '/' ),
 				esc_html( $validation )
 			);
@@ -480,6 +481,7 @@ function render_alias_notice( DIDDocument $did ) : bool {
 			add_action( 'minifair.render.notices', function () use ( $validation ) {
 				wp_admin_notice(
 					sprintf(
+						/* translators: %s: validation error message */
 						__( '<p><strong>Error:</strong> Failed domain alias validation, this package may be unsafe: %s</p>', 'fair' ),
 						esc_html( $validation->get_error_message() )
 					),

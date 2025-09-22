@@ -771,7 +771,7 @@ function fetch_and_validate_package_alias( DIDDocument $did ) {
 	if ( count( $aliases ) !== 1 ) {
 		return new WP_Error(
 			'fair.packages.get_package_alias.too_many_aliases',
-			'Multiple aliases set in DID; packages may only have a single alias',
+			_x( 'Multiple aliases set in DID; packages may only have a single alias', 'alias validation error', 'fair' ),
 			compact( 'aliases' )
 		);
 	}
@@ -781,7 +781,7 @@ function fetch_and_validate_package_alias( DIDDocument $did ) {
 	if ( ! preg_match( '#^fair://([a-z0-9][a-z0-9\-]{1,63}(\.[a-z0-9][a-z0-9\-]{1,63})+)/?$#', $alias, $domain_match ) ) {
 		return new WP_Error(
 			'fair.packages.get_package_alias.invalid_domain',
-			'Invalid FAIR alias format',
+			_x( 'Invalid FAIR alias format', 'alias validation error', 'fair' ),
 			compact( 'alias' )
 		);
 	}
@@ -790,7 +790,7 @@ function fetch_and_validate_package_alias( DIDDocument $did ) {
 	if ( strlen( $validation_domain ) > 255 ) {
 		return new WP_Error(
 			'fair.packages.get_package_alias.domain_too_long',
-			'FAIR alias format exceeds valid domain length',
+			_x( 'FAIR alias format exceeds valid domain length', 'alias validation error', 'fair' ),
 			compact( 'validation_domain' )
 		);
 	}
@@ -801,7 +801,11 @@ function fetch_and_validate_package_alias( DIDDocument $did ) {
 	if ( count( $validation_records ) !== 1 ) {
 		return new WP_Error(
 			'fair.packages.get_package_alias.missing_record',
-			sprintf( 'Missing verification record for "%s"', $domain ),
+			sprintf(
+				/* translators: %s: domain */
+				_x( 'Missing verification record for "%s"', 'alias validation error', 'fair' ),
+				$domain
+			),
 			compact( 'domain', 'records' )
 		);
 	}
@@ -811,7 +815,11 @@ function fetch_and_validate_package_alias( DIDDocument $did ) {
 		// Invalid format.
 		return new WP_Error(
 			'fair.packages.get_package_alias.invalid_record',
-			sprintf( 'Verification record for "%s" is invalid', $domain ),
+			sprintf(
+				/* translators: %s: domain */
+				_x( 'Verification record for "%s" is invalid', 'alias validation error', 'fair' ),
+				$domain
+			),
 			compact( 'domain' )
 		);
 	}
@@ -820,7 +828,7 @@ function fetch_and_validate_package_alias( DIDDocument $did ) {
 	if ( $expected_did !== $did->id ) {
 		return new WP_Error(
 			'fair.packages.get_package_alias.mismatched_did',
-			'DID in validation record does not match',
+			_x( 'DID in validation record does not match', 'alias validation error', 'fair' ),
 			compact( 'expected_did' )
 		);
 	}
