@@ -123,14 +123,13 @@ function search_by_did( $result, $action, $args ) {
 		return $result;
 	}
 
-	$count = count( $api_data );
 	$result = (object) [
 		'plugins' => [ json_decode( json_encode( $api_data ), true ) ],
 		'info' => [
 			'page' => 1,
-			'pages' => ceil( $count / $args->per_page ),
-			'results' => $count,
-			'total' => $count,
+			'pages' => 1,
+			'results' => 1,
+			'total' => 1,
 		],
 	];
 
