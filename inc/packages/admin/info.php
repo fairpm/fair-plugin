@@ -494,7 +494,7 @@ function render_alias_notice( DIDDocument $did ) : bool {
 	printf(
 		'<strong>%s</strong>: %s',
 		esc_html( $title ),
-		$message
+		sanitize_html( $message )
 	);
 	return $result;
 }

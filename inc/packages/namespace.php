@@ -795,7 +795,7 @@ function fetch_and_validate_package_alias( DIDDocument $did ) {
 		);
 	}
 
-	// Check DNS record
+	// Check DNS record.
 	$records = dns_get_record( '_fairpm.' . $domain, DNS_TXT );
 	$validation_records = array_filter( $records, fn ( $record ) => str_starts_with( $record['txt'], 'did=' ) );
 	if ( count( $validation_records ) !== 1 ) {
