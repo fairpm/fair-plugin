@@ -468,7 +468,10 @@ function render_alias_notice( DIDDocument $did ) : bool {
 		default:
 			if ( ! is_wp_error( $validation ) ) {
 				// Invalid type, assume failure.
-				$validation = new WP_Error( 'fair.packages.admin.info.validation_notice.invalid_result', 'An unknown error occurred' );
+				$validation = new WP_Error(
+					'fair.packages.admin.info.validation_notice.invalid_result',
+					__( 'An unknown error occurred', 'fair' )
+				);
 			}
 			$message = sprintf(
 				'<strong>%s</strong>',
