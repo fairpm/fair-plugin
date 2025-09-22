@@ -448,7 +448,7 @@ function add_requirement_notices( ReleaseDocument $release ) : void {
  */
 function render_alias_notice( DIDDocument $did ) : bool {
 	$validation = Packages\validate_package_alias( $did );
-	$title = __( 'Domain Alias', 'fair' );
+	$title = __( 'Domain Alias:', 'fair' );
 	$result = false;
 	switch ( gettype( $validation ) ) {
 		case 'string':
@@ -497,7 +497,7 @@ function render_alias_notice( DIDDocument $did ) : bool {
 	}
 
 	printf(
-		'<strong>%s</strong>: %s',
+		'<strong>%s</strong> %s',
 		esc_html( $title ),
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized.
 		sanitize_html( $message )
