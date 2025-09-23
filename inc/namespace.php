@@ -9,8 +9,13 @@ namespace FAIR;
 
 use Fragen\Git_Updater;
 
+const CACHE_BASE = 'fair-';
+const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
 const NS_SEPARATOR = '\\';
 
+/**
+ * Bootstrap.
+ */
 function bootstrap() {
 	// Prevent accidental re-initialization of the plugin.
 	static $did_init = false;
@@ -20,18 +25,22 @@ function bootstrap() {
 
 	$did_init = true;
 
-	register_class_path( __NAMESPACE__, __DIR__ . '/inc' );
+	register_class_path( __NAMESPACE__, __DIR__ . DIRECTORY_SEPARATOR );
 
-	// Modules:
+	// Modules.
 	Avatars\bootstrap();
 	Credits\bootstrap();
 	Dashboard_Widgets\bootstrap();
 	Default_Repo\bootstrap();
 	Disable_Openverse\bootstrap();
+	Icons\bootstrap();
 	Importers\bootstrap();
+	Packages\bootstrap();
 	Pings\bootstrap();
 	Salts\bootstrap();
 	Settings\bootstrap();
+	Updater\bootstrap();
+	Upgrades\bootstrap();
 	User_Notification\bootstrap();
 	Version_Check\bootstrap();
 
@@ -49,7 +58,7 @@ function bootstrap() {
 function register_class_path( string $prefix, string $path ) : void {
 	$prefix_length = strlen( $prefix );
 	spl_autoload_register( function ( $class ) use ( $prefix, $prefix_length, $path ) {
-		if ( strpos( $class, $prefix . NS_SEPARATOR ) !== 0 ) {
+		if ( ! str_starts_with( $class, $prefix . NS_SEPARATOR ) ) {
 			return;
 		}
 

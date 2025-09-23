@@ -1,5 +1,5 @@
 {
-    "name": "fair/fair-plugin",
+    "name": "fairpm/fair-plugin",
     "description": "Make your site more FAIR.",
     "type": "wordpress-plugin",
     "license": "gpl-2.0-only",
@@ -15,12 +15,18 @@
     },
     "require-dev": {
         "yoast/phpunit-polyfills": "*",
-        "nimut/phpunit-merger": "*"
+        "nimut/phpunit-merger": "*",
+        "humanmade/coding-standards": "^1.2"
     },
     "config": {
-        "lock": false
+        "lock": false,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "scripts": {
+		"lint": "@php ./vendor/bin/phpcs .",
+		"format": "@php ./vendor/bin/phpcbf .",
         "test": [
             "Composer\\Config::disableProcessTimeout",
             "@php ./vendor/phpunit/phpunit/phpunit"
