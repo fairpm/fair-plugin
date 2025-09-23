@@ -126,6 +126,7 @@ function search_by_did( $result, $action, $args ) {
 	$api_data = json_decode( json_encode( $api_data ), true );
 	$api_data['description'] = $api_data['sections']['description'] ?? '';
 	$api_data['short_description'] = $api_data['_fair']['description'] ?? '';
+	$api_data['short_description'] = substr( strip_tags( trim( $api_data['short_description'] ) ), 0, 147 ) . '...';
 	$api_data['last_updated'] ??= 0;
 	$api_data['num_ratings'] ??= 0;
 	$api_data['rating'] ??= 0;
