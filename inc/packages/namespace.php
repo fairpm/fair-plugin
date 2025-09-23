@@ -40,7 +40,7 @@ function bootstrap() {
  * @return DID|WP_Error
  */
 function parse_did( string $id ) {
-	if ( ! str_starts_with( $id, 'did:' ) ) {
+	if ( ! str_starts_with( $id, 'did:plc:' ) ) {
 		return new WP_Error( 'fair.packages.validate_did.not_did', __( 'ID is not a valid DID.', 'fair' ) );
 	}
 

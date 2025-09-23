@@ -86,7 +86,7 @@ function handle_did_during_ajax( $result, $action, $args ) {
 	}
 
 	$did = 'did:' . explode( '-did:', str_replace( '--', ':', $slug ), 2 )[1];
-	if ( ! preg_match( '/^did:(web|plc):.+$/', $did ) ) {
+	if ( ! preg_match( '/^did:plc:.+$/', $did ) ) {
 		return $result;
 	}
 
@@ -152,15 +152,15 @@ function render_tab_direct() {
 				type="text"
 				id="plugin_id"
 				name="plugin_id"
-				pattern="did:(web|plc):.+"
-				placeholder="did:..."
+				pattern="did:plc:.+"
+				placeholder="did:plc:..."
 				required
 				aria-describedby="fair-direct-install__note"
 			/>
 			<?php submit_button( _x( 'View Details', 'plugin', 'fair' ), '', '', false ); ?>
 		</form>
 		<p id="fair-direct-install__note">
-			<?= __( 'Plugin IDs should be in the format <code>did:web:...</code> or <code>did:plc:...</code>', 'fair' ); ?>
+			<?= __( 'Plugin IDs should be in the format <code>did:plc:...</code>', 'fair' ); ?>
 		</p>
 	</div>
 	<script>
@@ -257,7 +257,7 @@ function set_slug_to_hashed() : void {
 
 	$escaped_slug = sanitize_text_field( wp_unslash( $_POST['slug'] ) );
 	$did = 'did:' . explode( '-did:', str_replace( '--', ':', $escaped_slug ), 2 )[1];
-	if ( ! preg_match( '/^did:(web|plc):.+$/', $did ) ) {
+	if ( ! preg_match( '/^did:plc:.+$/', $did ) ) {
 		return;
 	}
 
@@ -302,7 +302,7 @@ function maybe_hijack_plugin_info() {
 
 	// Hijack, if the plugin is a FAIR package.
 	$id = sanitize_text_field( wp_unslash( $_REQUEST['plugin'] ) );
-	if ( ! preg_match( '/^did:(web|plc):.+$/', $id ) ) {
+	if ( ! preg_match( '/^did:plc:.+$/', $id ) ) {
 		if ( str_contains( $id, '-did--' ) ) {
 			// Bridged. Convert back to a DID.
 			$split = explode( '-did--', $id, 2 );
