@@ -583,7 +583,7 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 			);
 
 		case 'installed':
-			if ( is_plugin_inactive( $file ) ) {
+			if ( current_user_can( 'activate_plugin', $file ) && is_plugin_inactive( $file ) ) {
 				return sprintf(
 					'<a href="%s" class="button activate-now button-primary" aria-label="%s" data-name="%s">%s</a>',
 					esc_url( wp_nonce_url( self_admin_url( 'plugins.php?action=activate&plugin=' . rawurlencode( $file ) ), 'activate-plugin_' . $file ) ),
