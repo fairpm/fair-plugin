@@ -139,7 +139,7 @@ function search_by_did( $result, $action, $args ) {
 		$api_data['slug'] = str_replace( $hash_suffix, '', $api_data['slug'] );
 	}
 
-	$result = (object) [
+	$result = [
 		'plugins' => [ $api_data ],
 		'info' => [
 			'page' => 1,
@@ -149,7 +149,7 @@ function search_by_did( $result, $action, $args ) {
 		],
 	];
 
-	return $result;
+	return (object) $result;
 }
 
 /**
