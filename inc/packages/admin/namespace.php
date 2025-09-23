@@ -113,6 +113,7 @@ function search_by_did( $result, $action, $args ) {
 		return $result;
 	}
 
+	// The DID comes from a URL-encoded request parameter, and must be decoded first.
 	$did = sanitize_text_field( urldecode( $args->search ) );
 	if ( ! str_starts_with( $did, 'did:plc:' ) || strlen( $did ) !== 32 ) {
 		return $result;
