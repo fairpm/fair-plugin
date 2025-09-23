@@ -7,16 +7,11 @@
 
 namespace FAIR\Packages\Admin;
 
-use const FAIR\PLUGIN_FILE;
-
 use FAIR;
-use FAIR\Icons;
 use FAIR\Packages;
 use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
 use FAIR\Updater;
-
-use function FAIR\Packages\pick_artifact_by_lang;
 
 const TAB_DIRECT = 'fair_direct';
 const ACTION_INSTALL = 'fair-install-plugin';
@@ -123,42 +118,18 @@ function search_by_did( $result, $action, $args ) {
 		return $result;
 	}
 
-	$api_data = Packages\fetch_package_metadata( $did );
+	$api_data = Packages\get_update_data( $did );
 	if ( is_wp_error( $api_data ) ) {
 		return $result;
 	}
 
-	$latest_release = Packages\get_latest_release_from_did( $did );
-	if ( is_wp_error( $latest_release ) ) {
-		return $result;
-	}
-
-	$artifact = pick_artifact_by_lang( (array) $latest_release->artifacts->package );
-	if ( ! $artifact ) {
-		return $result;
-	}
-
 	$api_data = json_decode( json_encode( $api_data ), true );
-	$api_data['author'] = $api_data['authors'][0]['name'] ?? '';
-	$api_data['short_description'] = $api_data['description'] ?? '';
-	$api_data['version'] = $latest_release->version;
+	$api_data['description'] = $api_data['sections']['description'] ?? '';
+	$api_data['short_description'] = $api_data['_fair']['description'] ?? '';
 	$api_data['last_updated'] ??= 0;
 	$api_data['num_ratings'] ??= 0;
 	$api_data['rating'] ??= 0;
 	$api_data['active_installs'] ??= 0;
-	$api_data['download_link'] = $artifact->url;
-	$api_data['_fair'] = [
-		'id' => $did,
-		'slug' => $api_data['slug'],
-	];
-
-	if ( isset( $latest_release->artifacts->icon[0]->url ) ) {
-		$api_data['icons'] = (object) [ 'default' => $latest_release->artifacts->icon[0]->url ];
-	} else {
-		$url = plugin_dir_url( PLUGIN_FILE ) . 'inc/icons/svg.php';
-		$url = add_query_arg( 'color', Icons\set_random_color(), $url );
-		$api_data['icons'] = [ 'default' => $url ];
-	}
 
 	$result = (object) [
 		'plugins' => [ json_decode( json_encode( $api_data ), true ) ],
