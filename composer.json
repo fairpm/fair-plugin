@@ -61,7 +61,7 @@
     },
 	"support": {
 		"issues": "https://github.com/fairpm/fair-plugin/issues",
-		"source": "https://github.com/fairpm/fair-plugin/issues",
+		"source": "https://github.com/fairpm/fair-plugin",
 		"docs": "https://github.com/fairpm/fair-plugin/blob/main/README.md"
 	}
 }
