@@ -131,6 +131,12 @@ function search_by_did( $result, $action, $args ) {
 	$api_data['rating'] ??= 0;
 	$api_data['active_installs'] ??= 0;
 
+	// Avoid a double-hashed slug.
+	$hash_suffix = '-' . Packages\get_did_hash( $did );
+	if ( str_ends_with( $api_data['slug'], $hash_suffix ) ) {
+		$api_data['slug'] = str_replace( $hash_suffix, '', $api_data['slug'] );
+	}
+
 	$result = (object) [
 		'plugins' => [ json_decode( json_encode( $api_data ), true ) ],
 		'info' => [
