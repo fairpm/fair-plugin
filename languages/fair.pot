@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: FAIR - Federated and Independent Repositories 0.4.1\n"
+"Project-Id-Version: FAIR - Federated and Independent Repositories 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-08-17T01:17:00+00:00\n"
+"POT-Creation-Date: 2025-09-23T22:18:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -63,172 +63,220 @@ msgstr ""
 msgid "No credits could be found."
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:100
+#: inc/dashboard-widgets/namespace.php:105
 msgid "Unable to fetch events (parse error)."
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:107
+#: inc/dashboard-widgets/namespace.php:112
 msgctxt "default event location"
 msgid "Online"
 msgstr ""
 
 #. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
-#: inc/dashboard-widgets/namespace.php:184
+#: inc/dashboard-widgets/namespace.php:189
 msgctxt "Events and News dashboard widget"
 msgid "https://fair.pm/"
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:185
+#: inc/dashboard-widgets/namespace.php:190
 msgid "News"
 msgstr ""
 
 #. translators: Hidden accessibility text.
-#: inc/dashboard-widgets/namespace.php:187
-#: inc/dashboard-widgets/namespace.php:199
+#: inc/dashboard-widgets/namespace.php:192
+#: inc/dashboard-widgets/namespace.php:204
 msgid "(opens in a new tab)"
 msgstr ""
 
-#: inc/dashboard-widgets/namespace.php:197
+#: inc/dashboard-widgets/namespace.php:202
 msgid "Events (by The WP World)"
-msgstr ""
-
-#: inc/packages/admin/info.php:78
-msgctxt "Plugin installer section title"
-msgid "Description"
 msgstr ""
 
 #: inc/packages/admin/info.php:80
 msgctxt "Plugin installer section title"
-msgid "Installation"
+msgid "Description"
 msgstr ""
 
 #: inc/packages/admin/info.php:82
 msgctxt "Plugin installer section title"
-msgid "FAQ"
+msgid "Installation"
 msgstr ""
 
 #: inc/packages/admin/info.php:84
 msgctxt "Plugin installer section title"
-msgid "Screenshots"
+msgid "FAQ"
 msgstr ""
 
 #: inc/packages/admin/info.php:86
 msgctxt "Plugin installer section title"
-msgid "Changelog"
+msgid "Screenshots"
 msgstr ""
 
 #: inc/packages/admin/info.php:88
 msgctxt "Plugin installer section title"
-msgid "Reviews"
+msgid "Changelog"
 msgstr ""
 
 #: inc/packages/admin/info.php:90
 msgctxt "Plugin installer section title"
+msgid "Reviews"
+msgstr ""
+
+#: inc/packages/admin/info.php:92
+msgctxt "Plugin installer section title"
 msgid "Other Notes"
 msgstr ""
 
-#: inc/packages/admin/info.php:106
+#: inc/packages/admin/info.php:108
 msgid "Plugin Installation"
 msgstr ""
 
-#: inc/packages/admin/info.php:195
+#: inc/packages/admin/info.php:198
 msgctxt "plugin"
 msgid "Activate"
 msgstr ""
 
-#: inc/packages/admin/info.php:252
+#: inc/packages/admin/info.php:255
 msgid "WordPress"
 msgstr ""
 
-#: inc/packages/admin/info.php:255
+#: inc/packages/admin/info.php:258
 msgid "PHP"
 msgstr ""
 
-#: inc/packages/admin/info.php:278
+#: inc/packages/admin/info.php:283
 msgid "Version:"
 msgstr ""
 
-#: inc/packages/admin/info.php:281
+#: inc/packages/admin/info.php:286
 msgid "Slug:"
 msgstr ""
 
-#: inc/packages/admin/info.php:285
+#: inc/packages/admin/info.php:289
+msgid "ID:"
+msgstr ""
+
+#: inc/packages/admin/info.php:293
 msgid "Requires:"
 msgstr ""
 
-#: inc/packages/admin/info.php:295
+#: inc/packages/admin/info.php:303
 msgid "Suggests:"
 msgstr ""
 
-#: inc/packages/admin/info.php:307
+#: inc/packages/admin/info.php:315
 msgid "Authors"
 msgstr ""
 
-#: inc/packages/admin/info.php:344
+#: inc/packages/admin/info.php:387
 msgid "<strong>Error:</strong> This plugin <strong>requires a newer version of PHP</strong>."
 msgstr ""
 
 #. translators: %s: URL to Update PHP page.
-#: inc/packages/admin/info.php:349
+#: inc/packages/admin/info.php:392
 #, php-format
 msgid "<a href=\"%s\" target=\"_blank\">Click here to learn more about updating PHP</a>."
 msgstr ""
 
-#: inc/packages/admin/info.php:369
+#: inc/packages/admin/info.php:412
 msgid "<strong>Warning:</strong> This plugin <strong>has not been tested</strong> with your current version of WordPress."
 msgstr ""
 
-#: inc/packages/admin/info.php:376
+#: inc/packages/admin/info.php:419
 msgid "<strong>Error:</strong> This plugin <strong>requires a newer version of WordPress</strong>."
 msgstr ""
 
 #. translators: %s: URL to WordPress Updates screen.
-#: inc/packages/admin/info.php:380
+#: inc/packages/admin/info.php:423
 #, php-format
 msgid "<a href=\"%s\" target=\"_parent\">Click here to update WordPress</a>."
 msgstr ""
 
-#: inc/packages/admin/info.php:426
-#: inc/packages/admin/info.php:439
+#: inc/packages/admin/info.php:451
+msgid "Domain Alias:"
+msgstr ""
+
+#. translators: %1$s: full URL for validated domain, %2$s: raw domain
+#: inc/packages/admin/info.php:457
+#, php-format
+msgid "<strong>Validated</strong> as <a href=\"%1$s\">%2$s</a>"
+msgstr ""
+
+#: inc/packages/admin/info.php:465
+msgid "Not validated: No domain alias is set"
+msgstr ""
+
+#: inc/packages/admin/info.php:474
+msgid "An unknown error occurred"
+msgstr ""
+
+#: inc/packages/admin/info.php:479
+msgid "Validation failed"
+msgstr ""
+
+#. translators: %s: validation error message
+#: inc/packages/admin/info.php:485
+#, php-format
+msgid "<p><strong>Error:</strong> Failed domain alias validation, this package may be unsafe: %s</p>"
+msgstr ""
+
+#: inc/packages/admin/info.php:548
+#: inc/packages/admin/info.php:561
 msgid "Install Now"
 msgstr ""
 
 #. translators: %s: The package's name.
-#: inc/packages/admin/info.php:437
+#: inc/packages/admin/info.php:559
 #, php-format
 msgid "Install %s now"
 msgstr ""
 
-#: inc/packages/admin/info.php:446
-#: inc/packages/admin/info.php:464
+#: inc/packages/admin/info.php:568
+#: inc/packages/admin/info.php:582
 msgid "Update Now"
 msgstr ""
 
 #. translators: %s: The package's name.
-#: inc/packages/admin/info.php:462
+#: inc/packages/admin/info.php:580
 #, php-format
 msgid "Update %s now"
 msgstr ""
 
-#: inc/packages/admin/info.php:470
+#. translators: %s: The package's name.
+#: inc/packages/admin/info.php:591
+#, php-format
+msgid "Activate %s now"
+msgstr ""
+
+#: inc/packages/admin/info.php:593
+msgid "Activate"
+msgstr ""
+
+#: inc/packages/admin/info.php:599
 msgid "Installed"
 msgstr ""
 
-#: inc/packages/admin/namespace.php:45
+#: inc/packages/admin/namespace.php:67
 msgid "Direct Install"
 msgstr ""
 
-#: inc/packages/admin/namespace.php:111
+#: inc/packages/admin/namespace.php:186
 msgid "Enter a plugin ID to view details and install."
 msgstr ""
 
-#: inc/packages/admin/namespace.php:137
+#: inc/packages/admin/namespace.php:212
 msgctxt "plugin"
 msgid "View Details"
 msgstr ""
 
-#: inc/packages/admin/namespace.php:140
-msgid "Plugin IDs should be in the format <code>did:web:...</code> or <code>did:plc:...</code>"
+#: inc/packages/admin/namespace.php:215
+msgid "Plugin IDs should be in the format <code>did:plc:...</code>"
+msgstr ""
+
+#. translators: %1$s: repository hostname
+#: inc/packages/admin/namespace.php:518
+#, php-format
+msgid "Hosted on %1$s"
 msgstr ""
 
 #: inc/packages/class-metadatadocument.php:125
@@ -253,36 +301,70 @@ msgstr ""
 msgid "The PLC directory did not return the DID that was sent or the DID was invalid."
 msgstr ""
 
-#: inc/packages/namespace.php:41
+#: inc/packages/namespace.php:44
 msgid "ID is not a valid DID."
 msgstr ""
 
-#: inc/packages/namespace.php:46
+#: inc/packages/namespace.php:49
 msgid "DID could not be parsed as a URI."
 msgstr ""
 
-#: inc/packages/namespace.php:57
+#: inc/packages/namespace.php:60
 msgid "Unsupported DID method."
 msgstr ""
 
-#: inc/packages/namespace.php:122
+#: inc/packages/namespace.php:125
 msgid "DID is not a valid package to fetch metadata for."
 msgstr ""
 
-#: inc/packages/namespace.php:133
+#: inc/packages/namespace.php:136
 msgid "Fetched metadata does not match the requested DID."
 msgstr ""
 
-#: inc/packages/namespace.php:160
+#: inc/packages/namespace.php:169
 msgid "HTTP error code received"
 msgstr ""
 
-#: inc/packages/namespace.php:202
+#: inc/packages/namespace.php:241
 msgid "DID does not contain valid signing keys."
 msgstr ""
 
-#: inc/packages/namespace.php:212
+#: inc/packages/namespace.php:251
 msgid "No releases found in the repository."
+msgstr ""
+
+#: inc/packages/namespace.php:774
+msgctxt "alias validation error"
+msgid "Multiple aliases set in DID; packages may only have a single alias"
+msgstr ""
+
+#: inc/packages/namespace.php:784
+msgctxt "alias validation error"
+msgid "Invalid FAIR alias format"
+msgstr ""
+
+#: inc/packages/namespace.php:793
+msgctxt "alias validation error"
+msgid "FAIR alias format exceeds valid domain length"
+msgstr ""
+
+#. translators: %s: domain
+#: inc/packages/namespace.php:806
+#, php-format
+msgctxt "alias validation error"
+msgid "Missing verification record for \"%s\""
+msgstr ""
+
+#. translators: %s: domain
+#: inc/packages/namespace.php:820
+#, php-format
+msgctxt "alias validation error"
+msgid "Verification record for \"%s\" is invalid"
+msgstr ""
+
+#: inc/packages/namespace.php:831
+msgctxt "alias validation error"
+msgid "DID in validation record does not match"
 msgstr ""
 
 #: inc/settings/namespace.php:44
@@ -307,36 +389,42 @@ msgid "Gravatar"
 msgstr ""
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:397
-#: inc/updater/class-updater.php:319
+#: inc/updater/class-lite.php:393
+#: inc/updater/class-updater.php:433
 #, php-format
 msgid "There is a new version of %s available."
 msgstr ""
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
-#: inc/updater/class-lite.php:408
-#: inc/updater/class-updater.php:330
+#: inc/updater/class-lite.php:404
+#: inc/updater/class-updater.php:444
 #, php-format
 msgid "View version %1$s details%2$s or %3$supdate now%2$s."
 msgstr ""
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:413
-#: inc/updater/class-updater.php:335
+#: inc/updater/class-lite.php:409
+#: inc/updater/class-updater.php:449
 #, php-format
 msgid "%s: update now"
 msgstr ""
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
-#: inc/updater/class-lite.php:420
-#: inc/updater/class-updater.php:342
+#: inc/updater/class-lite.php:416
+#: inc/updater/class-updater.php:456
 #, php-format
 msgid "View version %1$s details%2$s."
 msgstr ""
 
-#: inc/updater/class-lite.php:425
-#: inc/updater/class-updater.php:347
+#: inc/updater/class-lite.php:421
+#: inc/updater/class-updater.php:461
 msgid "Automatic update is unavailable for this theme."
+msgstr ""
+
+#. translators: %s: The package's URL.
+#: inc/updater/class-updater.php:206
+#, php-format
+msgid "Signature verification could not be performed for the package: %s"
 msgstr ""
 
 #. translators: 1) Fair PM URL, 2) AspirePress URL.
@@ -345,12 +433,12 @@ msgstr ""
 msgid "Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a href=\"%2$s\">AspirePress</a>"
 msgstr ""
 
-#: inc/version-check/namespace.php:100
+#: inc/version-check/namespace.php:97
 msgctxt "operating system check"
 msgid "your platform"
 msgstr ""
 
-#: inc/version-check/namespace.php:101
+#: inc/version-check/namespace.php:98
 msgctxt "browser version check"
 msgid "your browser"
 msgstr ""
