@@ -1,5 +1,5 @@
 {
-    "name": "fair/fair-plugin",
+    "name": "fairpm/fair-plugin",
     "description": "Make your site more FAIR.",
     "type": "wordpress-plugin",
     "license": "gpl-2.0-only",
