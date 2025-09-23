@@ -138,7 +138,7 @@ function search_by_did( $result, $action, $args ) {
 	}
 
 	$result = (object) [
-		'plugins' => [ json_decode( json_encode( $api_data ), true ) ],
+		'plugins' => [ $api_data ],
 		'info' => [
 			'page' => 1,
 			'pages' => 1,
