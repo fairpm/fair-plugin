@@ -147,7 +147,10 @@ function search_by_did( $result, $action, $args ) {
 	$api_data['rating'] ??= 0;
 	$api_data['active_installs'] ??= 0;
 	$api_data['download_link'] = $artifact->url;
-	$api_data['_fair'] = [ 'id' => $did ];
+	$api_data['_fair'] = [
+		'id' => $did,
+		'slug' => $api_data['slug'],
+	];
 
 	if ( isset( $latest_release->artifacts->icon[0]->url ) ) {
 		$api_data['icons'] = (object) [ 'default' => $latest_release->artifacts->icon[0]->url ];
