@@ -22,6 +22,26 @@ echo "Fetching WordPress version data" >&2
 VERSION_DATA=$(curl -s https://api.wordpress.org/core/version-check/1.7/)
 AVAILABLE_VERSIONS=$(echo "$VERSION_DATA" | jq -r '.offers[] | .version')
 
+# Download the plugin release zip from GitHub (if missing) and calculate its hash sums
+PLUGIN_VERSION="${GITHUB_REF_NAME#v}"
+PLUGIN_ZIP="/tmp/fair-plugin-${PLUGIN_VERSION}.zip"
+
+if [ ! -f "$PLUGIN_ZIP" ]; then
+    echo "Downloading plugin release zip fair-plugin-$PLUGIN_VERSION.zip from GitHub releases..." >&2
+    curl -sL "https://github.com/fairpm/fair-plugin/releases/download/${PLUGIN_VERSION}/fair-plugin-${PLUGIN_VERSION}.zip" -o "$PLUGIN_ZIP" || {
+        echo "Warning: plugin release zip for version $PLUGIN_VERSION not found." >&2;
+    }
+fi
+
+if [ -f "$PLUGIN_ZIP" ]; then
+    echo "Calculating hashes for plugin release zip: $PLUGIN_ZIP" >&2
+    BASENAME_PLUGIN_ZIP=$(basename "$PLUGIN_ZIP")
+    md5sum -b "$PLUGIN_ZIP" | sed "s|$PLUGIN_ZIP|$BASENAME_PLUGIN_ZIP|" > /tmp/fair-dist/MD5SUMS
+    sha1sum -b "$PLUGIN_ZIP" | sed "s|$PLUGIN_ZIP|$BASENAME_PLUGIN_ZIP|" > /tmp/fair-dist/SHA1SUMS
+    sha256sum -b "$PLUGIN_ZIP" | sed "s|$PLUGIN_ZIP|$BASENAME_PLUGIN_ZIP|" > /tmp/fair-dist/SHA256SUMS
+    sha384sum -b "$PLUGIN_ZIP" | sed "s|$PLUGIN_ZIP|$BASENAME_PLUGIN_ZIP|" > /tmp/fair-dist/SHA384SUMS
+fi
+
 # For each available version, download WP and add our plugin to the WP zip.
 for VERSION in $AVAILABLE_VERSIONS; do
 	# Skip repeat versions via the API.
