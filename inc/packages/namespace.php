@@ -7,16 +7,20 @@
 
 namespace FAIR\Packages;
 
+use const FAIR\CACHE_BASE;
+use const FAIR\CACHE_LIFETIME;
+use FAIR\Packages\DID\Document as DIDDocument;
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use FAIR\Updater;
 use WP_Error;
 use WP_Upgrader;
 
-const SERVICE_ID = 'FairPackageManagementRepo';
+const CACHE_KEY = CACHE_BASE . 'packages-';
+const CACHE_METADATA_DOCUMENTS = CACHE_BASE . 'metadata-documents-';
+const CACHE_RELEASE_PACKAGES = CACHE_BASE . 'release-packages';
 const CONTENT_TYPE = 'application/json+fair';
-const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
-const RELEASE_PACKAGES_CACHE_KEY = 'fair-release-packages';
+const SERVICE_ID = 'FairPackageManagementRepo';
 
 // phpcs:disable WordPress.NamingConventions.ValidVariableName
 
@@ -36,7 +40,7 @@ function bootstrap() {
  * @return DID|WP_Error
  */
 function parse_did( string $id ) {
-	if ( ! str_starts_with( $id, 'did:' ) ) {
+	if ( ! str_starts_with( $id, 'did:plc:' ) ) {
 		return new WP_Error( 'fair.packages.validate_did.not_did', __( 'ID is not a valid DID.', 'fair' ) );
 	}
 
@@ -83,7 +87,7 @@ function get_did_hash( string $id ) {
  * @return DIDDocument|WP_Error
  */
 function get_did_document( string $id ) {
-	$cached = get_site_transient( $id );
+	$cached = get_transient( CACHE_METADATA_DOCUMENTS . $id );
 	if ( $cached ) {
 		return $cached;
 	}
@@ -98,7 +102,7 @@ function get_did_document( string $id ) {
 	if ( is_wp_error( $document ) ) {
 		return $document;
 	}
-	set_site_transient( $id, $document, CACHE_LIFETIME );
+	set_transient( CACHE_METADATA_DOCUMENTS . $id, $document, CACHE_LIFETIME );
 
 	return $document;
 }
@@ -142,26 +146,62 @@ function fetch_package_metadata( string $id ) {
  * @return MetadataDocument|WP_Error
  */
 function fetch_metadata_doc( string $url ) {
-	$cache_key = md5( $url );
-	$response = get_site_transient( $cache_key );
+	$cache_key = CACHE_KEY . md5( $url );
+	$response = get_transient( $cache_key );
+	$response = fetch_metadata_from_local( $response, $url );
 
 	if ( ! $response ) {
-		$response = wp_remote_get( $url, [
+		$options = [
 			'headers' => [
 				'Accept' => sprintf( '%s;q=1.0, application/json;q=0.8', CONTENT_TYPE ),
 			],
-			'timeout' => 7,
-		] );
+		];
+
+		// Set low timeout for local package.
+		if ( str_contains( $url, home_url() ) ) {
+			$options['timeout'] = 1;
+		}
+		$response = wp_remote_get( $url, $options );
 		$code = wp_remote_retrieve_response_code( $response );
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		} elseif ( $code !== 200 ) {
 			return new WP_Error( 'fair.packages.metadata.failure', __( 'HTTP error code received', 'fair' ) );
 		}
-		set_site_transient( $cache_key, $response, CACHE_LIFETIME );
+		set_transient( $cache_key, $response, CACHE_LIFETIME );
 	}
 
 	return MetadataDocument::from_response( $response );
+}
+
+/**
+ * Fetch Metadata from local source.
+ *
+ * Solves issue where Metadata source is from same site.
+ * Mini-FAIR REST endpoint may time out under these circumstances.
+ * Directly calling the WP_REST_Request does not return complete data.
+ *
+ * @param  bool|array $response Response from cache.
+ * @param  string $url URI for Metadata.
+ * @return bool|array
+ */
+function fetch_metadata_from_local( $response, $url ) {
+	if ( ! $response && str_contains( $url, home_url() ) ) {
+		$did = explode( '/', parse_url( $url, PHP_URL_PATH ) );
+		$did = array_pop( $did );
+		$body = get_transient( 'fair-metadata-endpoint-' . $did );
+		$response = [];
+		$response = [
+			'headers' => [],
+			'body' => json_encode( $body ),
+		];
+		$response = ! $body ? false : $response;
+		if ( $response ) {
+			set_transient( CACHE_KEY . md5( $url ), $response, CACHE_LIFETIME );
+		}
+	}
+
+	return $response;
 }
 
 /**
@@ -564,15 +604,16 @@ function get_update_data( $did ) {
 		'icons'            => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
 		'banners'          => isset( $release->artifacts->banner ) ? get_banners( $release->artifacts->banner ) : [],
 		'update-supported' => true,
-		'requires'         => $required_versions['requires_wp'],
-		'requires_php'     => $required_versions['requires_php'],
+		'requires'         => $required_versions['requires_wp'] ?? '',
+		'requires_php'     => $required_versions['requires_php'] ?? '',
 		'new_version'      => $release->version,
 		'version'          => $release->version,
 		'remote_version'   => $release->version,
 		'package'          => $release->artifacts->package[0]->url,
 		'download_link'    => $release->artifacts->package[0]->url,
-		'tested'           => $required_versions['tested_to'],
+		'tested'           => $required_versions['tested_to'] ?? '',
 		'external'         => 'xxx',
+		'_fair'            => $metadata,
 	];
 	if ( 'theme' === $type ) {
 		$response['theme_uri'] = $response['url'];
@@ -609,7 +650,7 @@ function upgrader_pre_download( $false ) : bool {
 function rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
 
-	$did = wp_cache_get( Admin\ACTION_INSTALL_DID );
+	$did = get_transient( Admin\ACTION_INSTALL_DID );
 
 	if ( ! $did ) {
 		return $source;
@@ -648,9 +689,9 @@ function add_package_to_release_cache( string $did ) : void {
 	if ( empty( $did ) ) {
 		return;
 	}
-	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
+	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?: [];
 	$releases[ $did ] = get_latest_release_from_did( $did );
-	wp_cache_set( RELEASE_PACKAGES_CACHE_KEY, $releases );
+	set_transient( CACHE_RELEASE_PACKAGES, $releases );
 }
 
 /**
@@ -665,7 +706,7 @@ function add_package_to_release_cache( string $did ) : void {
  * @return array
  */
 function maybe_add_accept_header( $args, $url ) : array {
-	$releases = wp_cache_get( RELEASE_PACKAGES_CACHE_KEY ) ?: [];
+	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?: [];
 
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;
@@ -682,6 +723,118 @@ function maybe_add_accept_header( $args, $url ) : array {
 	}
 
 	return $args;
+}
+
+/**
+ * Validate the package alias for a DID.
+ *
+ * Uses `fair://` aliases from the DID document to determine the alias for the
+ * package. Performs bidirectional validation using DNS to ensure the DID is
+ * valid for the given alias.
+ *
+ * Uses cached result for one hour.
+ *
+ * @param DIDDocument $did DID to validate.
+ * @return string|WP_Error|null Alias domain if successfully validated, null if no valid alias is set, or error otherwise.
+ */
+function validate_package_alias( DIDDocument $did ) {
+	$cache_key = sprintf( 'fair_did_alias_%s', $did->id );
+	$cached = get_site_transient( $cache_key );
+	if ( $cached ) {
+		return $cached;
+	}
+
+	$alias = fetch_and_validate_package_alias( $did );
+	set_site_transient( $cache_key, $alias, HOUR_IN_SECONDS );
+	return $alias;
+}
+
+/**
+ * Validate the package alias for a DID.
+ *
+ * Uses `fair://` aliases from the DID document to determine the alias for the
+ * package. Performs bidirectional validation using DNS to ensure the DID is
+ * valid for the given alias.
+ *
+ * This function queries DNS directly, and is uncached.
+ *
+ * @param DIDDocument $did DID to validate.
+ * @return string|WP_Error|null Alias domain if successfully validated, null if no valid alias is set, or error otherwise.
+ */
+function fetch_and_validate_package_alias( DIDDocument $did ) {
+	$aliases = array_filter( $did->alsoKnownAs, fn ( $alias ) => is_string( $alias ) && str_starts_with( $alias, 'fair://' ) );
+
+	// Packages may only have a single alias, so ignore multiple.
+	if ( empty( $aliases ) ) {
+		return null;
+	}
+	if ( count( $aliases ) !== 1 ) {
+		return new WP_Error(
+			'fair.packages.get_package_alias.too_many_aliases',
+			_x( 'Multiple aliases set in DID; packages may only have a single alias', 'alias validation error', 'fair' ),
+			compact( 'aliases' )
+		);
+	}
+
+	// Check the domain is valid.
+	$alias = reset( $aliases );
+	if ( ! preg_match( '#^fair://([a-z0-9][a-z0-9\-]{1,63}(\.[a-z0-9][a-z0-9\-]{1,63})+)/?$#', $alias, $domain_match ) ) {
+		return new WP_Error(
+			'fair.packages.get_package_alias.invalid_domain',
+			_x( 'Invalid FAIR alias format', 'alias validation error', 'fair' ),
+			compact( 'alias' )
+		);
+	}
+	$domain = $domain_match[1];
+	$validation_domain = '_fairpm.' . $domain;
+	if ( strlen( $validation_domain ) > 255 ) {
+		return new WP_Error(
+			'fair.packages.get_package_alias.domain_too_long',
+			_x( 'FAIR alias format exceeds valid domain length', 'alias validation error', 'fair' ),
+			compact( 'validation_domain' )
+		);
+	}
+
+	// Check DNS record.
+	$records = dns_get_record( '_fairpm.' . $domain, DNS_TXT );
+	$validation_records = array_filter( $records, fn ( $record ) => str_starts_with( $record['txt'], 'did=' ) );
+	if ( count( $validation_records ) !== 1 ) {
+		return new WP_Error(
+			'fair.packages.get_package_alias.missing_record',
+			sprintf(
+				/* translators: %s: domain */
+				_x( 'Missing verification record for "%s"', 'alias validation error', 'fair' ),
+				$domain
+			),
+			compact( 'domain', 'records' )
+		);
+	}
+
+	$record = reset( $validation_records );
+	if ( ! preg_match( '/^did="?([^"]+)"?$/', $record['txt'], $record_match ) ) {
+		// Invalid format.
+		return new WP_Error(
+			'fair.packages.get_package_alias.invalid_record',
+			sprintf(
+				/* translators: %s: domain */
+				_x( 'Verification record for "%s" is invalid', 'alias validation error', 'fair' ),
+				$domain
+			),
+			compact( 'domain' )
+		);
+	}
+	$expected_did = $record_match[1];
+
+	if ( $expected_did !== $did->id ) {
+		return new WP_Error(
+			'fair.packages.get_package_alias.mismatched_did',
+			_x( 'DID in validation record does not match', 'alias validation error', 'fair' ),
+			compact( 'expected_did' )
+		);
+	}
+
+	// Validated, so return the valid domain.
+	return $domain;
 }
 
 // phpcs:enable

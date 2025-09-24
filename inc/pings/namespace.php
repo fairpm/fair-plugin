@@ -109,14 +109,8 @@ function handle_key_file_request() {
  * @param WP_Post $post       Post object.
  */
 function ping_indexnow( $new_status, $old_status, $post ) : void {
-	/*
-	 * Skip if post type isn't viewable.
-	 *
-	 * The post type shouldn't change under normal circumstances,
-	 * so it's safe to assume that both the old and new post are
-	 * not viewable.
-	 */
-	if ( ! is_post_type_viewable( $post->post_type ) ) {
+	// Skip if the post isn't viewable.
+	if ( ! is_post_type_viewable( $post->post_type ) || ! is_post_status_viewable( $new_status ) ) {
 		return;
 	}
 
@@ -127,21 +121,6 @@ function ping_indexnow( $new_status, $old_status, $post ) : void {
 	 * parent post's transition_post_status hook.
 	 */
 	if ( wp_is_post_revision( $post ) || wp_is_post_autosave( $post ) ) {
-		return;
-	}
-
-	/*
-	 * Skip if both old and new statuses are private.
-	 *
-	 * The page will have been a 404 before and after.
-	 *
-	 * For pages that are newly a 404, still ping IndexNow
-	 * to encourage removal of the URL from search engines.
-	 */
-	if (
-		! is_post_status_viewable( $new_status )
-		&& ! is_post_status_viewable( $old_status )
-	) {
 		return;
 	}
 

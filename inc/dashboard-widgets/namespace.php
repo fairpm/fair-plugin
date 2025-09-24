@@ -7,6 +7,8 @@
 
 namespace FAIR\Dashboard_Widgets;
 
+use const FAIR\CACHE_LIFETIME;
+
 use WP_Error;
 
 const EVENTS_API = 'https://api.fair.pm/fair/v1/events';
@@ -15,10 +17,6 @@ const EVENTS_API = 'https://api.fair.pm/fair/v1/events';
  * Bootstrap.
  */
 function bootstrap() {
-	// Support existing software like ClassicPress, which removes this feature.
-	if ( ! function_exists( 'wp_print_community_events_markup' ) ) {
-		return;
-	}
 	add_action( 'wp_ajax_get-community-events', __NAMESPACE__ . '\\get_community_events_ajax', 0 );
 	remove_action( 'wp_ajax_get-community-events', 'wp_ajax_get_community_events', 1 );
 
@@ -29,9 +27,14 @@ function bootstrap() {
 
 	add_action( 'admin_head-index.php', __NAMESPACE__ . '\\set_help_content_fair_planet_urls' );
 
+	// Remove the primary feed and link to avoid showing WordPress.org news.
+	add_filter( 'dashboard_primary_link', '__return_empty_string' );
+	add_filter( 'dashboard_primary_feed', fn () => [ 'url' => null ] );
+
 	// Configure the WordPress Events and News widget to use FAIR.
 	add_filter( 'dashboard_secondary_link', __NAMESPACE__ . '\\get_fair_planet_url' );
 	add_filter( 'dashboard_secondary_feed', __NAMESPACE__ . '\\get_fair_planet_feed' );
+	add_filter( 'dashboard_secondary_items', fn() => 5 );
 }
 
 /**
@@ -86,9 +89,13 @@ function get_community_events_ajax() : void {
  * @return array|WP_Error List of events or WP_Error on failure.
  */
 function get_community_events() {
-	$response = wp_remote_get( EVENTS_API );
-	if ( is_wp_error( $response ) ) {
-		return $response;
+	$response = get_transient( EVENTS_API );
+	if ( ! $response ) {
+		$response = wp_remote_get( EVENTS_API );
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+		set_transient( EVENTS_API, $response, CACHE_LIFETIME );
 	}
 
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
@@ -161,6 +168,11 @@ function get_community_events() {
  *           otherwise not filterable.
  */
 function render_news_widget() : void {
+	// Support existing software like ClassicPress, which removes this feature.
+	if ( ! function_exists( 'wp_print_community_events_markup' ) ) {
+		return;
+	}
+
 	wp_print_community_events_markup();
 
 	?>

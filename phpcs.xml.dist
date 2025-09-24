@@ -34,6 +34,7 @@
 
 	<!-- Exclude third-party dependencies -->
 	<exclude-pattern>inc/updater/class-lite\.php</exclude-pattern>
+	<exclude-pattern>inc/updater/class-base58btc\.php</exclude-pattern>
 
 	<!-- Exclude language files -->
 	<exclude-pattern>languages/*</exclude-pattern>
