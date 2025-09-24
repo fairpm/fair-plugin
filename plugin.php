@@ -34,6 +34,7 @@ require_once __DIR__ . '/inc/packages/namespace.php';
 require_once __DIR__ . '/inc/packages/admin/namespace.php';
 require_once __DIR__ . '/inc/packages/admin/info.php';
 require_once __DIR__ . '/inc/pings/namespace.php';
+require_once __DIR__ . '/inc/plugins/namespace.php';
 require_once __DIR__ . '/inc/salts/namespace.php';
 require_once __DIR__ . '/inc/settings/namespace.php';
 require_once __DIR__ . '/inc/upgrades/namespace.php';
