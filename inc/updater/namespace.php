@@ -128,6 +128,15 @@ function verify_signature_on_download( $reply, string $package, WP_Upgrader $upg
 	remove_filter( 'wp_trusted_keys', __NAMESPACE__ . '\\get_trusted_keys', 100 );
 
 	if ( $result === true ) {
+		if ( is_wp_cli() ) {
+			WP_CLI::success(
+				sprintf(
+					/* translators: %s: The DID of the package. */
+					__( 'Verified signature for %s', 'fair' ),
+					$did
+				)
+			);
+		}
 		return $path;
 	}
 
