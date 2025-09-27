@@ -28,7 +28,7 @@ function bootstrap() {
 
 	add_filter( 'install_plugins_tabs', __NAMESPACE__ . '\\add_direct_tab' );
 	add_filter( 'plugins_api', __NAMESPACE__ . '\\handle_did_during_ajax', 10, 3 );
-	add_filter( 'plugins_api', __NAMESPACE__ . '\\search_by_did', 10, 3 );
+	add_filter( 'plugins_api', 'FAIR\\Packages\\search_by_did', 10, 3 );
 	add_filter( 'upgrader_pre_download', 'FAIR\\Packages\\upgrader_pre_download', 10, 1 );
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
@@ -98,57 +98,6 @@ function handle_did_during_ajax( $result, $action, $args ) {
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
 
 	return (object) Packages\get_update_data( $did );
-}
-
-/**
- * Enable searching by DID.
- *
- * @param mixed  $result The result of the plugins_api call.
- * @param string $action The action being performed.
- * @param object $args   The arguments passed to the plugins_api call.
- * @return mixed
- */
-function search_by_did( $result, $action, $args ) {
-	if ( 'query_plugins' !== $action || empty( $args->search ) ) {
-		return $result;
-	}
-
-	// The DID comes from a URL-encoded request parameter, and must be decoded first.
-	$did = sanitize_text_field( urldecode( $args->search ) );
-	if ( ! str_starts_with( $did, 'did:plc:' ) || strlen( $did ) !== 32 ) {
-		return $result;
-	}
-
-	$api_data = Packages\get_update_data( $did );
-	if ( is_wp_error( $api_data ) ) {
-		return $result;
-	}
-
-	$api_data = json_decode( json_encode( $api_data ), true );
-	$api_data['description'] = $api_data['sections']['description'];
-	$api_data['short_description'] = substr( strip_tags( trim( $api_data['description'] ) ), 0, 147 ) . '...';
-	$api_data['last_updated'] ??= 0;
-	$api_data['num_ratings'] ??= 0;
-	$api_data['rating'] ??= 0;
-	$api_data['active_installs'] ??= 0;
-
-	// Avoid a double-hashed slug.
-	$hash_suffix = '-' . Packages\get_did_hash( $did );
-	if ( str_ends_with( $api_data['slug'], $hash_suffix ) ) {
-		$api_data['slug'] = str_replace( $hash_suffix, '', $api_data['slug'] );
-	}
-
-	$result = [
-		'plugins' => [ $api_data ],
-		'info' => [
-			'page' => 1,
-			'pages' => 1,
-			'results' => 1,
-			'total' => 1,
-		],
-	];
-
-	return (object) $result;
 }
 
 /**
