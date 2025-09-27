@@ -32,6 +32,7 @@ const SERVICE_ID = 'FairPackageManagementRepo';
  */
 function bootstrap() {
 	Admin\bootstrap();
+	WP_CLI\bootstrap();
 }
 
 /**
@@ -937,6 +938,32 @@ function get_api_data( $did ) {
 	}
 
 	return $api_data;
+}
+
+/**
+ * Get a plugin's information when a DID is supplied.
+ *
+ * @param mixed    $result The result of the plugins_api call.
+ * @param string   $action The action being performed.
+ * @param stdClass $args   The arguments passed to the plugins_api call.
+ * @return stdClass|WP_Error The plugin information object or WP_Error.
+ */
+function get_plugin_information( $result, $action, $args ) {
+	if ( $action !== 'plugin_information' || empty( $args->slug ) ) {
+		return $result;
+	}
+
+	$did = sanitize_text_field( $args->slug );
+	if ( ! str_starts_with( $did, 'did:plc:' ) || strlen( $did ) !== 32 ) {
+		return $result;
+	}
+
+	$api_data = get_api_data( $did );
+	if ( is_wp_error( $api_data ) ) {
+		return $result;
+	}
+
+	return (object) $api_data;
 }
 
 // phpcs:enable
