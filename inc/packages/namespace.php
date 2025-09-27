@@ -634,7 +634,7 @@ function get_update_data( $did ) {
  */
 function upgrader_pre_download( $false ) : bool {
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
-	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\rename_source_selection', 10, 3 );
+	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\rename_source_selection', 11, 3 );
 	return $false;
 }
 
