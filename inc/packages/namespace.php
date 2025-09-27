@@ -19,6 +19,7 @@ use WP_Upgrader;
 const CACHE_KEY = CACHE_BASE . 'packages-';
 const CACHE_METADATA_DOCUMENTS = CACHE_BASE . 'metadata-documents-';
 const CACHE_RELEASE_PACKAGES = CACHE_BASE . 'release-packages';
+const CACHE_DID_FOR_INSTALL = 'fair-install-did';
 const CONTENT_TYPE = 'application/json+fair';
 const SERVICE_ID = 'FairPackageManagementRepo';
 
@@ -637,6 +638,41 @@ function upgrader_pre_download( $false ) : bool {
 }
 
 /**
+ * Cache the DID before install.
+ *
+ * @param array $options Upgrader package options.
+ * @return array The same options.
+ */
+function cache_did_for_install( array $options ): array {
+	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?: [];
+
+	if ( ! empty( $releases ) ) {
+		$did = array_find_key(
+			$releases,
+			function ( $release ) use ( $options ) {
+				$artifact = pick_artifact_by_lang( $release->artifacts->package );
+				return $artifact && $artifact->url === $options['package'];
+			}
+		);
+
+		if ( $did ) {
+			set_transient( CACHE_DID_FOR_INSTALL, $did );
+		}
+	}
+
+	return $options;
+}
+
+/**
+ * Delete cached DID after install.
+ *
+ * @return void
+ */
+function delete_cached_did_for_install(): void {
+	delete_transient( CACHE_DID_FOR_INSTALL );
+}
+
+/**
  * Renames a package's directory when it doesn't match the slug.
  *
  * This is commonly required for packages from Git hosts.
@@ -650,7 +686,7 @@ function upgrader_pre_download( $false ) : bool {
 function rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
 
-	$did = get_transient( Admin\ACTION_INSTALL_DID );
+	$did = get_transient( CACHE_DID_FOR_INSTALL );
 
 	if ( ! $did ) {
 		return $source;

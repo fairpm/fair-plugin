@@ -16,7 +16,6 @@ use FAIR\Updater;
 const TAB_DIRECT = 'fair_direct';
 const ACTION_INSTALL = 'fair-install-plugin';
 const ACTION_INSTALL_NONCE = 'fair-install-plugin';
-const ACTION_INSTALL_DID = 'fair-install-did';
 
 /**
  * Bootstrap.
@@ -29,6 +28,8 @@ function bootstrap() {
 	add_filter( 'install_plugins_tabs', __NAMESPACE__ . '\\add_direct_tab' );
 	add_filter( 'plugins_api', __NAMESPACE__ . '\\handle_did_during_ajax', 10, 3 );
 	add_filter( 'plugins_api', 'FAIR\\Packages\\search_by_did', 10, 3 );
+	add_filter( 'upgrader_package_options', 'FAIR\\Packages\\cache_did_for_install', 10, 1 );
+	add_action( 'upgrader_post_install', 'FAIR\\Packages\\delete_cached_did_for_install', 10, 3 );
 	add_filter( 'upgrader_pre_download', 'FAIR\\Packages\\upgrader_pre_download', 10, 1 );
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
@@ -93,7 +94,6 @@ function handle_did_during_ajax( $result, $action, $args ) {
 
 	( new Updater\Updater( $did ) )->run();
 
-	set_transient( ACTION_INSTALL_DID, $did );
 	Packages\add_package_to_release_cache( $did );
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
 
