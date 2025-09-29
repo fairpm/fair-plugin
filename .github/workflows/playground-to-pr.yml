@@ -1,8 +1,7 @@
 name: Add Playground link to PR
 
 on:
-  pull_request:
-    types: [opened]
+  pull_request
 
 jobs:
   add-comment-with-link:
