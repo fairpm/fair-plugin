@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: add-comment
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh pr comment ${{ github.event.number }} --repo ${{ github.event.repository.full_name }} --body "[🧪 Test this PR on Playground](https://playground.wordpress.net/?mode=seamless#{%22siteOptions%22:{%22blogname%22:%22FAIR%20Plugin%20Test%20Site:%20PR%20#${{ github.event.number }}%22},%22features%22:{%22networking%22:true},%22login%22:true,%22landingPage%22:%22/wp-admin/%22,%22plugins%22:[%22https://github-proxy.com/proxy/?repo=${{ github.event.repository.full_name }}&pr=${{ github.event.number }}%22],%22preferredVersions%22:{%22php%22:%228.3%22,%22wp%22:%22latest%22}})"
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            [🧪 Test this PR on Playground](https://playground.wordpress.net/?mode=seamless#{%22siteOptions%22:{%22blogname%22:%22FAIR%20Plugin%20Test%20Site:%20PR%20#${{ github.event.number }}%22},%22features%22:{%22networking%22:true},%22login%22:true,%22landingPage%22:%22/wp-admin/%22,%22plugins%22:[%22https://github-proxy.com/proxy/?repo=${{ github.event.repository.full_name }}&pr=${{ github.event.number }}%22],%22preferredVersions%22:{%22php%22:%228.3%22,%22wp%22:%22latest%22}})
