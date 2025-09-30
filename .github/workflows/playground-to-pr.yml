@@ -11,7 +11,7 @@ jobs:
       - name: add-comment
         uses: actions/github-script@v7
         with:
-          github-token: ${{ github.token  }}
+          github-token: ${{ github.token }}
           script: |
             const prNumber = context.issue.number
             const repoName = context.repo.owner + '/' + context.repo.repo
