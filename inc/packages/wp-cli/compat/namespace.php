@@ -141,8 +141,12 @@ function force_detection_by_did( array $dids ): void {
 		function ( $all_plugins ) use ( $dids ) {
 			foreach ( $dids as $did ) {
 				$metadata = Packages\fetch_package_metadata( $did );
-				$filename = Packages\get_hashed_filename( $metadata );
+				if ( is_wp_error( $metadata ) ) {
+					WP_CLI::warning( $metadata->get_error_message() );
+					continue;
+				}
 
+				$filename = Packages\get_hashed_filename( $metadata );
 				if ( isset( $all_plugins[ $filename ] ) ) {
 					$all_plugins[ $did ] = $all_plugins[ $filename ];
 				}
