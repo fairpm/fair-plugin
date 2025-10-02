@@ -1,6 +1,6 @@
 <?php
 /**
- * Packages WP_CLI bootstrap.
+ * Manage FAIR packages with WP-CLI.
  *
  * @package FAIR
  */
