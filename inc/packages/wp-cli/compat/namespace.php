@@ -56,7 +56,8 @@ function maybe_handle_command( array $args = [], array $assoc_args = [] ): void 
 
 			$did = Packages\parse_did( $did );
 			if ( is_wp_error( $did ) ) {
-				WP_CLI::error( $did->get_error_message() );
+				WP_CLI::warning( $did->get_error_message() );
+				return false;
 			}
 			return true;
 		}
@@ -253,7 +254,8 @@ function replace_dids_with_hashed_filenames( array $items, array $dids ): array 
 			if ( in_array( $item, $dids, true ) ) {
 				$metadata = Packages\fetch_package_metadata( $item );
 				if ( is_wp_error( $metadata ) ) {
-					WP_CLI::error( $metadata->get_error_message() );
+					WP_CLI::warning( $metadata->get_error_message() );
+					return $item;
 				}
 
 				return Packages\get_hashed_filename( $metadata );
