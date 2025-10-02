@@ -54,9 +54,16 @@ function maybe_handle_command( array $args = [], array $assoc_args = [] ): void 
 				return false;
 			}
 
-			$did = Packages\parse_did( $did );
-			if ( is_wp_error( $did ) ) {
-				WP_CLI::warning( $did->get_error_message() );
+			$parsed_did = Packages\parse_did( $did );
+			if ( is_wp_error( $parsed_did ) ) {
+				WP_CLI::warning(
+					sprintf(
+						/* translators: 1: The DID, 2: The error message. */
+						__( 'Could not parse %1$s - %2$s', 'fair' ),
+						$did,
+						$parsed_did->get_error_message()
+					)
+				);
 				return false;
 			}
 			return true;
@@ -142,7 +149,14 @@ function force_detection_by_did( array $dids ): void {
 			foreach ( $dids as $did ) {
 				$metadata = Packages\fetch_package_metadata( $did );
 				if ( is_wp_error( $metadata ) ) {
-					WP_CLI::warning( $metadata->get_error_message() );
+					WP_CLI::warning(
+						sprintf(
+							/* translators: 1: The DID, 2: The error message. */
+							__( 'Could not retrieve metadata for %1$s - %2$s', 'fair' ),
+							$did,
+							$metadata->get_error_message()
+						)
+					);
 					continue;
 				}
 
@@ -258,7 +272,14 @@ function replace_dids_with_hashed_filenames( array $items, array $dids ): array 
 			if ( in_array( $item, $dids, true ) ) {
 				$metadata = Packages\fetch_package_metadata( $item );
 				if ( is_wp_error( $metadata ) ) {
-					WP_CLI::warning( $metadata->get_error_message() );
+					WP_CLI::warning(
+						sprintf(
+							/* translators: 1: The DID, 2: The error message. */
+							__( 'Could not retrieve metadata for %1$s - %2$s', 'fair' ),
+							$item,
+							$metadata->get_error_message()
+						)
+					);
 					return $item;
 				}
 
