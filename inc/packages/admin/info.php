@@ -96,6 +96,37 @@ function get_section_title( string $id ) {
 }
 
 /**
+ * Order sections by a predefined order.
+ *
+ * @param array<string, string> $sections Sections to order.
+ *
+ * @return array<string, string> Ordered sections.
+ */
+function order_sections_by_predefined_order( array $sections ) : array {
+	$desired_order = [
+		'description',
+		'installation',
+		'faq',
+		'screenshots',
+		'changelog',
+		'security',
+		'reviews',
+		'other_notes',
+	];
+
+	$desired_order_index = array_flip( $desired_order );
+
+	uksort($sections, function( $a, $b ) use ( $desired_order_index ) {
+		$pos_a = $desired_order_index[ $a ] ?? PHP_INT_MAX;
+		$pos_b = $desired_order_index[ $b ] ?? PHP_INT_MAX;
+
+		return $pos_a <=> $pos_b;
+	});
+
+	return $sections;
+}
+
+/**
  * Render page.
  *
  * @param  MetadataDocument $metadata Metadata for page render.
