@@ -540,8 +540,8 @@ function get_banners( $banners ) : array {
 		return [];
 	}
 
-	$banners_arr['low'] = $regular->url;
-	$banners_arr['high'] = $high_res->url;
+	$banners_arr['low'] = $regular->url ?? '';
+	$banners_arr['high'] = $high_res->url ?? '';
 
 	return $banners_arr;
 }
