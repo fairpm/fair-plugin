@@ -501,8 +501,8 @@ function get_icons( $icons ) : array {
 	}
 
 	$icons_arr = [];
-	$regular = array_find( $icons, fn ( $icon ) => $icon->width === 772 && $icon->height === 250 );
-	$high_res = array_find( $icons, fn ( $icon ) => $icon->width === 1544 && $icon->height === 500 );
+	$regular = array_find( $icons, fn ( $icon ) => $icon->width === 128 && $icon->height === 128 );
+	$high_res = array_find( $icons, fn ( $icon ) => $icon->width === 256 && $icon->height === 256 );
 	$svg = array_find( $icons, fn ( $icon ) => str_contains( $icon->{'content-type'}, 'svg+xml' ) );
 
 	if ( empty( $regular ) && empty( $high_res ) && empty( $svg ) ) {
