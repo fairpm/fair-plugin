@@ -155,7 +155,7 @@ function render_page( MetadataDocument $metadata, string $tab, string $section )
  * @param  string           $section Page section.
  */
 function render( MetadataDocument $doc, string $tab, string $section ) {
-	$sections = (array) $doc->sections;
+	$sections = order_sections_by_predefined_order( (array) $doc->sections );
 
 	if ( ! isset( $sections[ $section ] ) ) {
 		$section = array_keys( $sections )[0];
