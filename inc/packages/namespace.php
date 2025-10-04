@@ -617,6 +617,7 @@ function get_update_data( $did ) {
 	];
 	if ( 'theme' === $type ) {
 		$response['theme_uri'] = $response['url'];
+		$response['preview_url'] = $metadata->url ?? '';
 		$response['author'] = [
 			'display_name' => $metadata->authors[0]->name,
 		];
