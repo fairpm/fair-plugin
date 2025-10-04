@@ -453,9 +453,7 @@ function alter_slugs( $res, $action, $args ) {
 }
 
 /**
- * Filters the Plugin Installation API response results.
- *
- * @since 2.7.0
+ * Orders the sections of Plugin Installation API response.
  *
  * @param object|WP_Error $res    Response object or WP_Error.
  * @param string          $action The type of information being requested from the Plugin Installation API.
