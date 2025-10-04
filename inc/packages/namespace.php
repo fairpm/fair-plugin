@@ -665,8 +665,6 @@ function get_package_data( $did ) {
 
 	$response = [
 		'name'              => $metadata->name,
-		'author'            => $metadata->authors[0]->name,
-		'author_uri'        => $metadata->authors[0]->url,
 		'slug'              => $metadata->slug,
 		'slug_didhash'      => $metadata->slug . '-' . get_did_hash( $did ),
 		$type               => $filename,
@@ -695,6 +693,12 @@ function get_package_data( $did ) {
 	];
 	if ( 'theme' === $type ) {
 		$response['theme_uri'] = $response['url'];
+		$response['author'] = [
+			'display_name' => $metadata->authors[0]->name,
+		];
+	} else {
+		$response['author'] = $metadata->authors[0]->name;
+		$response['author_uri'] = $metadata->authors[0]->url;
 	}
 
 	return $response;
