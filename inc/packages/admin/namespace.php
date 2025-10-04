@@ -97,7 +97,7 @@ function handle_did_during_ajax( $result, $action, $args ) {
 	Packages\add_package_to_release_cache( $did );
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
 
-	return (object) Packages\get_update_data( $did );
+	return (object) Packages\get_package_data( $did );
 }
 
 /**
