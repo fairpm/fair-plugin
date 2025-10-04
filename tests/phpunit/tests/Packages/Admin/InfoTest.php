@@ -1,11 +1,18 @@
 <?php
+/**
+ * Tests for functions under FAIR\Packages\Admin\Info namespace.
+ *
+ * @package FAIR
+ */
 
 use function FAIR\Packages\Admin\Info\order_sections_by_predefined_order;
 
+/**
+ * Test cases for functions under FAIR\Packages\Admin\Info namespace.
+ */
 class InfoTest extends WP_UnitTestCase {
-
 	/**
-	 * Tests that sections are ordered in a predefined order.
+	 * Test that sections are ordered in a predefined order.
 	 *
 	 * @dataProvider data_plugin_detail_sections
 	 *
