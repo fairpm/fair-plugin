@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-23T22:18:40+00:00\n"
+"POT-Creation-Date: 2025-10-04T20:20:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -256,25 +256,25 @@ msgstr ""
 msgid "Installed"
 msgstr ""
 
-#: inc/packages/admin/namespace.php:67
+#: inc/packages/admin/namespace.php:68
 msgid "Direct Install"
 msgstr ""
 
-#: inc/packages/admin/namespace.php:186
+#: inc/packages/admin/namespace.php:135
 msgid "Enter a plugin ID to view details and install."
 msgstr ""
 
-#: inc/packages/admin/namespace.php:212
+#: inc/packages/admin/namespace.php:161
 msgctxt "plugin"
 msgid "View Details"
 msgstr ""
 
-#: inc/packages/admin/namespace.php:215
+#: inc/packages/admin/namespace.php:164
 msgid "Plugin IDs should be in the format <code>did:plc:...</code>"
 msgstr ""
 
 #. translators: %1$s: repository hostname
-#: inc/packages/admin/namespace.php:518
+#: inc/packages/admin/namespace.php:467
 #, php-format
 msgid "Hosted on %1$s"
 msgstr ""
@@ -301,70 +301,87 @@ msgstr ""
 msgid "The PLC directory did not return the DID that was sent or the DID was invalid."
 msgstr ""
 
-#: inc/packages/namespace.php:44
+#: inc/packages/namespace.php:46
 msgid "ID is not a valid DID."
 msgstr ""
 
-#: inc/packages/namespace.php:49
+#: inc/packages/namespace.php:51
 msgid "DID could not be parsed as a URI."
 msgstr ""
 
-#: inc/packages/namespace.php:60
+#: inc/packages/namespace.php:62
 msgid "Unsupported DID method."
 msgstr ""
 
-#: inc/packages/namespace.php:125
+#: inc/packages/namespace.php:127
 msgid "DID is not a valid package to fetch metadata for."
 msgstr ""
 
-#: inc/packages/namespace.php:136
+#: inc/packages/namespace.php:138
 msgid "Fetched metadata does not match the requested DID."
 msgstr ""
 
-#: inc/packages/namespace.php:169
+#: inc/packages/namespace.php:171
 msgid "HTTP error code received"
 msgstr ""
 
-#: inc/packages/namespace.php:241
+#: inc/packages/namespace.php:243
 msgid "DID does not contain valid signing keys."
 msgstr ""
 
-#: inc/packages/namespace.php:251
+#: inc/packages/namespace.php:253
 msgid "No releases found in the repository."
 msgstr ""
 
-#: inc/packages/namespace.php:774
+#: inc/packages/namespace.php:811
 msgctxt "alias validation error"
 msgid "Multiple aliases set in DID; packages may only have a single alias"
 msgstr ""
 
-#: inc/packages/namespace.php:784
+#: inc/packages/namespace.php:821
 msgctxt "alias validation error"
 msgid "Invalid FAIR alias format"
 msgstr ""
 
-#: inc/packages/namespace.php:793
+#: inc/packages/namespace.php:830
 msgctxt "alias validation error"
 msgid "FAIR alias format exceeds valid domain length"
 msgstr ""
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:806
+#: inc/packages/namespace.php:843
 #, php-format
 msgctxt "alias validation error"
 msgid "Missing verification record for \"%s\""
 msgstr ""
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:820
+#: inc/packages/namespace.php:857
 #, php-format
 msgctxt "alias validation error"
 msgid "Verification record for \"%s\" is invalid"
 msgstr ""
 
-#: inc/packages/namespace.php:831
+#: inc/packages/namespace.php:868
 msgctxt "alias validation error"
 msgid "DID in validation record does not match"
+msgstr ""
+
+#. translators: 1: The DID, 2: The error message.
+#: inc/packages/wp-cli/compat/namespace.php:62
+#, php-format
+msgid "Could not parse %1$s - %2$s"
+msgstr ""
+
+#: inc/packages/wp-cli/compat/namespace.php:127
+msgid "The verify-checksums command is not currently supported for DIDs."
+msgstr ""
+
+#. translators: 1: The DID, 2: The error message.
+#: inc/packages/wp-cli/compat/namespace.php:155
+#: inc/packages/wp-cli/compat/namespace.php:278
+#, php-format
+msgid "Could not retrieve metadata for %1$s - %2$s"
 msgstr ""
 
 #: inc/settings/namespace.php:44
@@ -390,39 +407,45 @@ msgstr ""
 
 #. translators: %s: theme name
 #: inc/updater/class-lite.php:393
-#: inc/updater/class-updater.php:433
+#: inc/updater/class-updater.php:333
 #, php-format
 msgid "There is a new version of %s available."
 msgstr ""
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
 #: inc/updater/class-lite.php:404
-#: inc/updater/class-updater.php:444
+#: inc/updater/class-updater.php:344
 #, php-format
 msgid "View version %1$s details%2$s or %3$supdate now%2$s."
 msgstr ""
 
 #. translators: %s: theme name
 #: inc/updater/class-lite.php:409
-#: inc/updater/class-updater.php:449
+#: inc/updater/class-updater.php:349
 #, php-format
 msgid "%s: update now"
 msgstr ""
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
 #: inc/updater/class-lite.php:416
-#: inc/updater/class-updater.php:456
+#: inc/updater/class-updater.php:356
 #, php-format
 msgid "View version %1$s details%2$s."
 msgstr ""
 
 #: inc/updater/class-lite.php:421
-#: inc/updater/class-updater.php:461
+#: inc/updater/class-updater.php:361
 msgid "Automatic update is unavailable for this theme."
 msgstr ""
 
+#. translators: %s: The DID of the package.
+#: inc/updater/namespace.php:135
+#, php-format
+msgid "Verified signature for %s"
+msgstr ""
+
 #. translators: %s: The package's URL.
-#: inc/updater/class-updater.php:206
+#: inc/updater/namespace.php:151
 #, php-format
 msgid "Signature verification could not be performed for the package: %s"
 msgstr ""
