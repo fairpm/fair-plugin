@@ -602,5 +602,6 @@ function maybe_add_data_to_theme_description( $themes ) {
 		}
 	}
 	unset( $theme );
+
 	return $themes;
 }
