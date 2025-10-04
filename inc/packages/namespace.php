@@ -931,7 +931,8 @@ function get_api_data( $did ) {
 		return $api_data;
 	}
 
-	$api_data = json_decode( json_encode( $api_data ), true );
+	// Convert the MetadataDocument to an array for compatibility.
+	$api_data['_fair'] = json_decode( json_encode( $api_data['_fair'] ), true );
 
 	return $api_data;
 }
