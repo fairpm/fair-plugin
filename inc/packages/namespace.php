@@ -704,7 +704,10 @@ function rename_source_selection( string $source, string $remote_source, WP_Upgr
 	}
 
 	// Sanity check.
-	if ( $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
+	if (
+		( $upgrader instanceof Plugin_Upgrader && $upgrader->new_plugin_data['Name'] !== $metadata->name )
+		|| ( $upgrader instanceof Theme_Upgrader && $upgrader->new_theme_data['Name'] !== $metadata->name )
+	) {
 		return $source;
 	}
 
