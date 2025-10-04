@@ -43,6 +43,7 @@ function bootstrap() {
 	add_filter( 'themes_api', 'FAIR\\Packages\\search_by_did', 10, 3 );
 	add_filter( 'themes_api_result', __NAMESPACE__ . '\\alter_slugs', 10, 3 );
 	add_action( 'load-themes.php', __NAMESPACE__ . '\\set_stylesheet_to_hashed_on_theme_activation' );
+	add_action( 'plugins_loaded', __NAMESPACE__ . '\\set_theme_to_hashed_for_customize', 9 );
 	add_filter( 'wp_prepare_themes_for_js', __NAMESPACE__ . '\\maybe_add_data_to_theme_description', 10, 1 );
 
 	// Common.
@@ -314,6 +315,44 @@ function set_stylesheet_to_hashed_on_theme_activation() {
 	$new_nonce = wp_create_nonce( 'switch-theme_' . $hashed_stylesheet );
 	$_GET['_wpnonce'] = $new_nonce;
 	$_REQUEST['_wpnonce'] = $new_nonce;
+}
+
+/**
+ * Set the theme to the hashed version in the customizer.
+ *
+ * Immediately after installation, the "Live Preview" button
+ * includes the escaped DID, not the hash of the DID.
+ *
+ * The theme parameter needs to be in the slug-didhash format
+ * so that the theme can be found.
+ *
+ * @return void
+ */
+function set_theme_to_hashed_for_customize() {
+	// phpcs:ignore HM.PHP.Isset.MultipleArguments
+	if ( ! isset( $_GET['theme'] ) || ! isset( $_GET['return'] ) ) {
+		return;
+	}
+
+	$request_uri = wp_unslash( $_SERVER['REQUEST_URI'] );
+	if ( ! str_contains( $request_uri, 'customize.php' ) ) {
+		return;
+	}
+
+
+	$theme = sanitize_text_field( wp_unslash( $_GET['theme'] ) );
+	if ( ! str_contains( $theme, '-did--' ) ) {
+		return;
+	}
+
+	$did = 'did:' . explode( '-did:', str_replace( '--', ':', $theme ), 2 )[1];
+	if ( ! preg_match( '/^did:plc:.+$/', $did ) ) {
+		return;
+	}
+
+	$hashed_theme = explode( '-did--', $theme, 2 )[0] . '-' . Packages\get_did_hash( $did );
+	$_GET['theme'] = $hashed_theme;
+	$_REQUEST['theme'] = $hashed_theme;
 }
 
 /**
