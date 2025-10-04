@@ -877,13 +877,13 @@ function fetch_and_validate_package_alias( DIDDocument $did ) {
 /**
  * Enable searching by DID.
  *
- * @param mixed  $result The result of the plugins_api call.
+ * @param mixed  $result The result of the API call.
  * @param string $action The action being performed.
- * @param stdClass $args The arguments passed to the plugins_api call.
+ * @param stdClass $args The arguments passed to the API call.
  * @return mixed The search result for the DID.
  */
 function search_by_did( $result, $action, $args ) {
-	if ( 'query_plugins' !== $action || empty( $args->search ) ) {
+	if ( empty( $args->search ) || ( 'query_plugins' !== $action && 'query_themes' !== $action ) ) {
 		return $result;
 	}
 
@@ -898,8 +898,9 @@ function search_by_did( $result, $action, $args ) {
 		return $result;
 	}
 
+	$type = explode( '_', $action )[1];
 	$result = [
-		'plugins' => [ $api_data ],
+		$type => [ $type === 'plugin' ? $api_data : (object) $api_data ],
 		'info' => [
 			'page' => 1,
 			'pages' => 1,
