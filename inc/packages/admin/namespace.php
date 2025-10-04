@@ -267,7 +267,7 @@ function set_slug_to_hashed() : void {
 }
 
 /**
- * Check if this is a FAIR plugin, for legacy data.
+ * Check if this is a FAIR package, for legacy data.
  *
  * FAIR data is bridged into legacy data via the _fair property, and needs
  * to have a valid DID. We can use this to enhance our existing metadata.
@@ -275,7 +275,7 @@ function set_slug_to_hashed() : void {
  * @param array|stdClass $api_data Legacy dotorg-formatted data to check.
  * @return bool
  */
-function is_fair_plugin( $api_data ) : bool {
+function is_fair_package( $api_data ) : bool {
 	$api = (array) $api_data;
 	if ( empty( $api['_fair'] ) ) {
 		return false;
@@ -350,7 +350,7 @@ function maybe_hijack_legacy_plugin_info() {
 	}
 
 	// Is this a FAIR plugin, actually?
-	if ( ! is_fair_plugin( $api ) ) {
+	if ( ! is_fair_package( $api ) ) {
 		return;
 	}
 
@@ -412,7 +412,7 @@ function alter_slugs( $res, $action, $args ) {
  * @return array Altered actions.
  */
 function maybe_hijack_plugin_install_button( $links, $plugin ) {
-	if ( ! is_fair_plugin( $plugin ) || ! str_contains( $plugin['slug'], '-did--' ) ) {
+	if ( ! is_fair_package( $plugin ) || ! str_contains( $plugin['slug'], '-did--' ) ) {
 		return $links;
 	}
 
@@ -453,7 +453,7 @@ function maybe_hijack_plugin_install_button( $links, $plugin ) {
  * @return string Plugin card description.
  */
 function maybe_add_data_to_description( $description, $plugin ) {
-	if ( ! is_fair_plugin( $plugin ) ) {
+	if ( ! is_fair_package( $plugin ) ) {
 		return $description;
 	}
 
