@@ -326,7 +326,8 @@ function set_stylesheet_to_hashed_on_theme_activation() {
  * The theme parameter needs to be in the slug-didhash format
  * so that the theme can be found.
  *
- * @return void
+ * @param string $url The URL to filter.
+ * @return string
  */
 function set_theme_to_hashed_for_customize( $url ) {
 	if ( str_contains( $url, 'customize.php?theme=' ) ) {
