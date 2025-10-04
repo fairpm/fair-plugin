@@ -270,6 +270,11 @@ class Updater {
 			return $prepared_themes;
 		}
 
+		$did_hash = Packages\get_did_hash( $this->did );
+		if ( ! str_ends_with( $theme->slug, '-' . $did_hash ) ) {
+			$theme->slug = $theme->slug . '-' . $did_hash;
+		}
+
 		if ( ! empty( $prepared_themes[ $theme->slug ]['hasUpdate'] ) ) {
 			$prepared_themes[ $theme->slug ]['update'] = $this->append_theme_actions_content( $theme );
 		} else {

@@ -596,8 +596,6 @@ function get_update_data( $did ) {
 
 	$response = [
 		'name'             => $metadata->name,
-		'author'           => $metadata->authors[0]->name,
-		'author_uri'       => $metadata->authors[0]->url,
 		'slug'             => $metadata->slug . '-' . get_did_hash( $did ),
 		$type              => $filename,
 		'file'             => $filename,
@@ -619,6 +617,13 @@ function get_update_data( $did ) {
 	];
 	if ( 'theme' === $type ) {
 		$response['theme_uri'] = $response['url'];
+		$response['preview_url'] = $metadata->url ?? '';
+		$response['author'] = [
+			'display_name' => $metadata->authors[0]->name,
+		];
+	} else {
+		$response['author'] = $metadata->authors[0]->name;
+		$response['author_uri'] = $metadata->authors[0]->url;
 	}
 
 	return $response;
@@ -699,7 +704,10 @@ function rename_source_selection( string $source, string $remote_source, WP_Upgr
 	}
 
 	// Sanity check.
-	if ( $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
+	if (
+		( $upgrader instanceof Plugin_Upgrader && $upgrader->new_plugin_data['Name'] !== $metadata->name )
+		|| ( $upgrader instanceof Theme_Upgrader && $upgrader->new_theme_data['Name'] !== $metadata->name )
+	) {
 		return $source;
 	}
 
@@ -877,13 +885,13 @@ function fetch_and_validate_package_alias( DIDDocument $did ) {
 /**
  * Enable searching by DID.
  *
- * @param mixed  $result The result of the plugins_api call.
+ * @param mixed  $result The result of the API call.
  * @param string $action The action being performed.
- * @param stdClass $args The arguments passed to the plugins_api call.
+ * @param stdClass $args The arguments passed to the API call.
  * @return mixed The search result for the DID.
  */
 function search_by_did( $result, $action, $args ) {
-	if ( 'query_plugins' !== $action || empty( $args->search ) ) {
+	if ( empty( $args->search ) || ( 'query_plugins' !== $action && 'query_themes' !== $action ) ) {
 		return $result;
 	}
 
@@ -898,8 +906,9 @@ function search_by_did( $result, $action, $args ) {
 		return $result;
 	}
 
+	$type = explode( '_', $action )[1];
 	$result = [
-		'plugins' => [ $api_data ],
+		$type => [ $type === 'plugin' ? $api_data : (object) $api_data ],
 		'info' => [
 			'page' => 1,
 			'pages' => 1,
