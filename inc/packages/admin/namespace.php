@@ -43,6 +43,7 @@ function bootstrap() {
 	add_filter( 'themes_api', 'FAIR\\Packages\\search_by_did', 10, 3 );
 	add_filter( 'themes_api_result', __NAMESPACE__ . '\\alter_slugs', 10, 3 );
 	add_action( 'load-themes.php', __NAMESPACE__ . '\\set_stylesheet_to_hashed_on_theme_activation' );
+	add_filter( 'wp_prepare_themes_for_js', __NAMESPACE__ . '\\maybe_add_data_to_theme_description', 10, 1 );
 
 	// Common.
 	add_filter( 'upgrader_package_options', 'FAIR\\Packages\\cache_did_for_install', 10, 1 );
@@ -542,4 +543,34 @@ function maybe_add_data_to_description( $description, $plugin ) {
 	/* translators: %1$s: repository hostname */
 	$description .= '</p><p class="authors"><em>' . sprintf( __( 'Hosted on %1$s', 'fair' ), esc_html( $repo_host ) ) . '</em>';
 	return $description;
+}
+
+/**
+ * Filters the theme description when preparing themes for JS.
+ *
+ * @param array $themes Array of themes prepared for JS.
+ * @return array Array of themes with possible modifications.
+ */
+function maybe_add_data_to_theme_description( $themes ) {
+	foreach ( $themes as &$theme ) {
+		$did = get_file_data( get_stylesheet_directory() . '/style.css', [ 'ThemeID' => 'Theme ID' ] )['ThemeID'];
+		if ( empty( $did ) || ! str_starts_with( $did, 'did:plc:' ) ) {
+			continue;
+		}
+
+		$repo_host = Info\get_repository_hostname( $did );
+		if ( empty( $repo_host ) ) {
+			continue;
+		}
+
+		/* translators: %1$s: repository hostname */
+		$additional_description = '<p class="authors"><em>' . sprintf( __( 'Hosted on %1$s', 'fair' ), esc_html( $repo_host ) ) . '</em>';
+		if ( empty( $theme->description ) ) {
+			$theme['description'] .= '</p>' . $additional_description;
+		} else {
+			$theme['description'] .= $additional_description . '</p>';
+		}
+	}
+	unset( $theme );
+	return $themes;
 }
