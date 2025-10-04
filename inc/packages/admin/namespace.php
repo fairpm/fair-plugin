@@ -42,6 +42,7 @@ function bootstrap() {
 	add_filter( 'themes_api', __NAMESPACE__ . '\\handle_did_during_ajax', 10, 3 );
 	add_filter( 'themes_api', 'FAIR\\Packages\\search_by_did', 10, 3 );
 	add_filter( 'themes_api_result', __NAMESPACE__ . '\\alter_slugs', 10, 3 );
+	add_action( 'load-themes.php', __NAMESPACE__ . '\\set_stylesheet_to_hashed_on_theme_activation' );
 
 	// Common.
 	add_filter( 'upgrader_package_options', 'FAIR\\Packages\\cache_did_for_install', 10, 1 );
@@ -272,6 +273,46 @@ function set_slug_to_hashed() : void {
 
 	// Reset to proper hashed slug.
 	$_POST['slug'] = explode( '-did--', $escaped_slug, 2 )[0] . '-' . Packages\get_did_hash( $did );
+}
+
+/**
+ * Set the stylesheet to the hashed version on theme activation.
+ *
+ * After installing a theme via AJAX, the activation button's link
+ * includes the escaped DID, not the hash of the DID.
+ *
+ * The stylesheet parameter needs to be in the slug-didhash format
+ * so that the theme can be found.
+ *
+ * The nonce also needs to be regenerated as the action includes
+ * the stylesheet.
+ *
+ * @return void
+ */
+function set_stylesheet_to_hashed_on_theme_activation() {
+	// phpcs:ignore HM.PHP.Isset.MultipleArguments
+	if ( ! isset( $_GET['action'], $_GET['stylesheet'] ) || $_GET['action'] !== 'activate' ) {
+		return;
+	}
+
+	$stylesheet = sanitize_text_field( wp_unslash( $_GET['stylesheet'] ) );
+	check_admin_referer( 'switch-theme_' . $stylesheet );
+
+	if ( ! str_contains( $stylesheet, '-did--' ) ) {
+		return;
+	}
+
+	$did = 'did:' . explode( '-did:', str_replace( '--', ':', $stylesheet ), 2 )[1];
+	if ( ! preg_match( '/^did:plc:.+$/', $did ) ) {
+		return;
+	}
+
+	$hashed_stylesheet = explode( '-did--', $stylesheet, 2 )[0] . '-' . Packages\get_did_hash( $did );
+	$_GET['stylesheet'] = $hashed_stylesheet;
+	$_REQUEST['stylesheet'] = $hashed_stylesheet;
+	$new_nonce = wp_create_nonce( 'switch-theme_' . $hashed_stylesheet );
+	$_GET['_wpnonce'] = $new_nonce;
+	$_REQUEST['_wpnonce'] = $new_nonce;
 }
 
 /**
