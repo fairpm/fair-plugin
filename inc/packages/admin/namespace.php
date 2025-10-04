@@ -41,6 +41,7 @@ function bootstrap() {
 	// Themes.
 	add_filter( 'themes_api', __NAMESPACE__ . '\\handle_did_during_ajax', 10, 3 );
 	add_filter( 'themes_api', 'FAIR\\Packages\\search_by_did', 10, 3 );
+	add_filter( 'themes_api_result', __NAMESPACE__ . '\\alter_slugs', 10, 3 );
 
 	// Common.
 	add_filter( 'upgrader_package_options', 'FAIR\\Packages\\cache_did_for_install', 10, 1 );
@@ -376,31 +377,58 @@ function maybe_hijack_legacy_plugin_info() {
 }
 
 /**
- * Filters the Plugin Installation API response results.
+ * Filters the Installation API response results.
  *
  * @since 2.7.0
  *
  * @param object|WP_Error $res    Response object or WP_Error.
- * @param string          $action The type of information being requested from the Plugin Installation API.
- * @param object          $args   Plugin API arguments.
+ * @param string          $action The type of information being requested from the Installation API.
+ * @param object          $args   API arguments.
  */
 function alter_slugs( $res, $action, $args ) {
-	if ( 'query_plugins' !== $action ) {
+	if ( 'query_plugins' !== $action && 'query_themes' !== $action ) {
 		return $res;
 	}
 
-	if ( empty( $res->plugins ) ) {
+	$type = explode( '_', $action )[1];
+
+	if (
+		( $type === 'plugin' && empty( $res->plugins ) )
+		|| ( $type === 'theme' && empty( $res->themes ) )
+	) {
 		return $res;
 	}
+
+	$items = $type === 'plugin' ? $res->plugins : $res->themes;
 
 	// Alter the slugs to our globally unique version.
-	foreach ( $res->plugins as &$plugin ) {
-		if ( ! is_fair_plugin( $plugin ) ) {
+	foreach ( $items as &$item ) {
+		if ( ! is_fair_package( $item ) ) {
 			continue;
 		}
 
-		$did = $plugin['_fair']['id'];
-		$plugin['slug'] = esc_attr( $plugin['slug'] . '-' . str_replace( ':', '--', $did ) );
+		if ( $type === 'plugin' ) {
+			$did = $item['_fair']['id'];
+			$item['slug'] = esc_attr( $item['slug'] . '-' . str_replace( ':', '--', $did ) );
+		} else {
+			// Installed themes need to have the slug-didhash format
+			// so their activation status can be determined.
+			$did_hash = Packages\get_did_hash( $item->_fair['id'] );
+			$slug = $item->slug;
+			if ( ! str_ends_with( $slug, '-' . $did_hash ) ) {
+				$slug = $item->slug . '-' . $did_hash;
+			}
+			$theme = wp_get_theme( $slug );
+			if ( $theme->exists() ) {
+				$item->slug = esc_attr( $slug );
+				continue;
+			}
+
+			// Themes that aren't installed need the slug--escaped-did format
+			// so their metadata can be retrieved.
+			$did = $item->_fair['id'];
+			$item->slug = esc_attr( $item->slug . '-' . str_replace( ':', '--', $did ) );
+		}
 	}
 
 	return $res;
