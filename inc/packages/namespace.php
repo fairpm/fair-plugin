@@ -596,8 +596,6 @@ function get_update_data( $did ) {
 
 	$response = [
 		'name'             => $metadata->name,
-		'author'           => $metadata->authors[0]->name,
-		'author_uri'       => $metadata->authors[0]->url,
 		'slug'             => $metadata->slug . '-' . get_did_hash( $did ),
 		$type              => $filename,
 		'file'             => $filename,
@@ -619,6 +617,12 @@ function get_update_data( $did ) {
 	];
 	if ( 'theme' === $type ) {
 		$response['theme_uri'] = $response['url'];
+		$response['author'] = [
+			'display_name' => $metadata->authors[0]->name,
+		];
+	} else {
+		$response['author'] = $metadata->authors[0]->name;
+		$response['author_uri'] = $metadata->authors[0]->url;
 	}
 
 	return $response;
