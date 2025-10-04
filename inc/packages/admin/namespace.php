@@ -12,6 +12,7 @@ use FAIR\Packages;
 use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
 use FAIR\Updater;
+use WP_Error;
 
 const TAB_DIRECT = 'fair_direct';
 const ACTION_INSTALL = 'fair-install-plugin';
@@ -34,6 +35,7 @@ function bootstrap() {
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
 	add_filter( 'plugins_api_result', __NAMESPACE__ . '\\alter_slugs', 10, 3 );
+	add_filter( 'plugins_api_result', __NAMESPACE__ . '\\order_plugin_information_sections', 11, 2 );
 	add_filter( 'plugin_install_action_links', __NAMESPACE__ . '\\maybe_hijack_plugin_install_button', 10, 2 );
 	add_filter( 'plugin_install_description', __NAMESPACE__ . '\\maybe_add_data_to_description', 10, 2 );
 	add_action( 'wp_ajax_check_plugin_dependencies', __NAMESPACE__ . '\\set_slug_to_hashed' );
@@ -446,6 +448,32 @@ function alter_slugs( $res, $action, $args ) {
 		$did = $plugin['_fair']['id'];
 		$plugin['slug'] = esc_attr( $plugin['slug'] . '-' . str_replace( ':', '--', $did ) );
 	}
+
+	return $res;
+}
+
+/**
+ * Filters the Plugin Installation API response results.
+ *
+ * @since 2.7.0
+ *
+ * @param object|WP_Error $res    Response object or WP_Error.
+ * @param string          $action The type of information being requested from the Plugin Installation API.
+ */
+function order_plugin_information_sections( $res, $action ) {
+	if ( is_wp_error( $res ) ) {
+		return $res;
+	}
+
+	if ( 'plugin_information' !== $action ) {
+		return $res;
+	}
+
+	if ( empty( $res->sections ) ) {
+		return $res;
+	}
+
+	$res->sections = order_sections_by_predefined_order( $res->sections );
 
 	return $res;
 }
