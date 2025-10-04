@@ -77,15 +77,15 @@ function add_direct_tab( $tabs ) {
 }
 
 /**
- * Handles the AJAX request for plugin information when a DID is present.
+ * Handles the AJAX request for information when a DID is present.
  *
- * @param mixed  $result The result of the plugins_api call.
+ * @param mixed  $result The result of the API call.
  * @param string $action The action being performed.
- * @param object $args   The arguments passed to the plugins_api call.
+ * @param object $args   The arguments passed to the API call.
  * @return mixed
  */
 function handle_did_during_ajax( $result, $action, $args ) {
-	if ( ! wp_doing_ajax() || 'plugin_information' !== $action || ! isset( $args->slug ) ) {
+	if ( ! wp_doing_ajax() || ! isset( $args->slug ) || ( 'plugin_information' !== $action && 'theme_information' !== $action ) ) {
 		return $result;
 	}
 
