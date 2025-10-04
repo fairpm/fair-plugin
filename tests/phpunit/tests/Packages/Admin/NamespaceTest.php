@@ -1,16 +1,17 @@
 <?php
 /**
- * Tests for functions under FAIR\Packages\Admin\Info namespace.
+ * Tests for functions under FAIR\Packages\Admin namespace.
  *
  * @package FAIR
  */
 
-use function FAIR\Packages\Admin\Info\order_sections_by_predefined_order;
+use function FAIR\Packages\Admin\order_sections_by_predefined_order;
 
 /**
- * Test cases for functions under FAIR\Packages\Admin\Info namespace.
+ * Test cases for functions under FAIR\Packages\Admin namespace.
  */
-class InfoTest extends WP_UnitTestCase {
+class NamespaceTest extends WP_UnitTestCase {
+
 	/**
 	 * Test that sections are ordered in a predefined order.
 	 *
