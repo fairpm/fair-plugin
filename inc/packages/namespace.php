@@ -594,6 +594,7 @@ function get_package_data( $did ) {
 	$filename = get_hashed_filename( $metadata );
 	$type = str_replace( 'wp-', '', $metadata->type );
 	$sections = (array) $metadata->sections;
+	$description = trim( $sections['description'] ) ?? '';
 
 	$response = [
 		'name'              => $metadata->name,
@@ -605,8 +606,8 @@ function get_package_data( $did ) {
 		'file'              => $filename,
 		'url'               => $metadata->url ?? $metadata->slug,
 		'sections'          => $sections,
-		'description'       => $sections['description'] ?? '',
-		'short_description' => substr( strip_tags( trim( $sections['description'] ) ), 0, 147 ) . '...',
+		'description'       => $description,
+		'short_description' => substr( strip_tags( $description ), 0, 147 ) . '...',
 		'icons'             => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
 		'banners'           => isset( $release->artifacts->banner ) ? get_banners( $release->artifacts->banner ) : [],
 		'update-supported'  => true,
