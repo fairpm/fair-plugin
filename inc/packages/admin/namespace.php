@@ -459,15 +459,7 @@ function alter_slugs( $res, $action, $args ) {
  * @param string          $action The type of information being requested from the Plugin Installation API.
  */
 function order_plugin_information_sections( $res, $action ) {
-	if ( is_wp_error( $res ) ) {
-		return $res;
-	}
-
-	if ( 'plugin_information' !== $action ) {
-		return $res;
-	}
-
-	if ( empty( $res->sections ) ) {
+	if ( is_wp_error( $res ) || 'plugin_information' !== $action || empty( $res->sections ) ) {
 		return $res;
 	}
 
