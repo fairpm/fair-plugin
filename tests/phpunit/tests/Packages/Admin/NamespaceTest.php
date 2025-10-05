@@ -18,11 +18,11 @@ class NamespaceTest extends WP_UnitTestCase {
 	 * @dataProvider data_plugin_detail_sections
 	 *
 	 * @param array $sections Sections provided in arbitrary order, as if returned from MetadataDocument.
-	 * @param array $ordered_sections The sections in order we expect them to be.
+	 * @param array $expected_order The sections in order we expect them to be.
 	 */
-	public function test_should_return_sections_in_predefined_order( array $sections, array $ordered_sections ) {
+	public function test_should_return_sections_in_predefined_order( array $sections, array $expected_order ) {
 		$this->assertSame(
-			$ordered_sections,
+			$expected_order,
 			order_sections_by_predefined_order( $sections )
 		);
 	}
@@ -33,7 +33,7 @@ class NamespaceTest extends WP_UnitTestCase {
 	public static function data_plugin_detail_sections(): array {
 		return [
 			'expected sections' => [
-				'arbitrary order' => [
+				'sections' => [
 					'faq' => '',
 					'screenshots' => '',
 					'changelog' => '',
@@ -43,7 +43,7 @@ class NamespaceTest extends WP_UnitTestCase {
 					'other_notes' => '',
 					'installation' => '',
 				],
-				'expected order' => [
+				'expected_order' => [
 					'description' => '',
 					'installation' => '',
 					'faq' => '',
@@ -55,19 +55,19 @@ class NamespaceTest extends WP_UnitTestCase {
 				],
 			],
 			'unknown sections' => [
-				'arbitrary order' => [
+				'sections' => [
 					'foo' => '',
 					'bar' => '',
 					'baz' => '',
 				],
-				'expected order' => [
+				'expected_order' => [
 					'foo' => '',
 					'bar' => '',
 					'baz' => '',
 				],
 			],
 			'expected and unknown sections' => [
-				'arbitrary order' => [
+				'sections' => [
 					'faq' => '',
 					'foo' => '',
 					'screenshots' => '',
@@ -77,7 +77,7 @@ class NamespaceTest extends WP_UnitTestCase {
 					'installation' => '',
 					'security' => '',
 				],
-				'expected order' => [
+				'expected_order' => [
 					'installation' => '',
 					'faq' => '',
 					'screenshots' => '',
@@ -89,8 +89,8 @@ class NamespaceTest extends WP_UnitTestCase {
 				],
 			],
 			'empty sections' => [
-				'arbitrary order' => [],
-				'expected order' => [],
+				'sections' => [],
+				'expected_order' => [],
 			],
 		];
 	}
