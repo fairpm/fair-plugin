@@ -241,6 +241,7 @@ class Updater {
 		if ( is_wp_error( $response ) ) {
 			return $transient;
 		}
+		$response['slug'] = $response['slug_didhash'];
 		$response = 'plugin' === $this->type ? (object) $response : $response;
 		$is_compatible = Packages\check_requirements( $this->release );
 
