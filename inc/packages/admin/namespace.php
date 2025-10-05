@@ -392,6 +392,11 @@ function alter_slugs( $res, $action, $args ) {
 			continue;
 		}
 
+		$plugins = get_plugins();
+		if ( array_key_exists( $plugin['file'], $plugins ) ) {
+			continue;
+		}
+
 		$did = $plugin['_fair']['id'];
 		$plugin['slug'] = esc_attr( $plugin['slug'] . '-' . str_replace( ':', '--', $did ) );
 	}
