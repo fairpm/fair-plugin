@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for functions under FAIR\Packages\Admin namespace.
+ * Tests for FAIR\Packages\Admin\order_sections_by_predefined_order().
  *
  * @package FAIR
  */
@@ -8,9 +8,11 @@
 use function FAIR\Packages\Admin\order_sections_by_predefined_order;
 
 /**
- * Test cases for functions under FAIR\Packages\Admin namespace.
+ * Tests for FAIR\Packages\Admin\order_sections_by_predefined_order().
+ *
+ * @covers FAIR\Packages\Admin\order_sections_by_predefined_order
  */
-class NamespaceTest extends WP_UnitTestCase {
+class OrderSectionsByPredefinedOrderTest extends WP_UnitTestCase {
 
 	/**
 	 * Test that sections are ordered in a predefined order.
