@@ -594,7 +594,7 @@ function get_package_data( $did ) {
 	$filename = get_hashed_filename( $metadata );
 	$type = str_replace( 'wp-', '', $metadata->type );
 	$sections = (array) $metadata->sections;
-	$description = ( trim( $sections['description'] ) ?? '' );
+	$description = trim( $sections['description'] ?? '' );
 
 	$response = [
 		'name'              => $metadata->name,
