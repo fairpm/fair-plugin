@@ -4,6 +4,12 @@
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
+# Extract a header value from plugin.php
+# Usage: get_plugin_header "Header Name"
+get_plugin_header() {
+	sed -n "s/.*$1: \([0-9.]*\).*/\1/p" "$SCRIPT_DIR/../plugin.php"
+}
+
 # Prepare the distribution directory.
 DIST_DIR="/tmp/fair-dist"
 [ -d "$DIST_DIR" ] && rm -rf "$DIST_DIR"
@@ -18,12 +24,22 @@ touch /tmp/fair-dist/SHA384SUMS
 mkdir -p /tmp/fair-temp/wordpress/wp-content/plugins/fair-plugin
 rsync -a --exclude-from="$SCRIPT_DIR/../.distignore" "$SCRIPT_DIR/.." /tmp/fair-temp/wordpress/wp-content/plugins/fair-plugin
 
+# Extract minimum required WordPress version from plugin header.
+REQUIRES_AT_LEAST=$(get_plugin_header "Requires at least")
+echo "Plugin requires WordPress $REQUIRES_AT_LEAST or higher" >&2
+
 echo "Fetching WordPress version data" >&2
 VERSION_DATA=$(curl -s https://api.wordpress.org/core/version-check/1.7/)
 AVAILABLE_VERSIONS=$(echo "$VERSION_DATA" | jq -r '.offers[] | .version')
 
 # For each available version, download WP and add our plugin to the WP zip.
 for VERSION in $AVAILABLE_VERSIONS; do
+	# Skip versions older than minimum required.
+	if [ "$(printf '%s\n' "$REQUIRES_AT_LEAST" "$VERSION" | sort -V | head -n1)" != "$REQUIRES_AT_LEAST" ]; then
+		echo "Skipping $VERSION (older than $REQUIRES_AT_LEAST)" >&2
+		continue
+	fi
+
 	# Skip repeat versions via the API.
 	if [ -f "$DIST_DIR/wordpress-$VERSION-fair.zip" ]; then
 		echo "Skipping $VERSION (already bundled)" >&2
