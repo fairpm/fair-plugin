@@ -22,7 +22,7 @@ touch /tmp/fair-dist/SHA384SUMS
 # Bundle our plugin first.
 [ -d /tmp/fair-temp ] && rm -rf /tmp/fair-temp
 mkdir -p /tmp/fair-temp/wordpress/wp-content/plugins/fair-plugin
-rsync -a --exclude-from="$SCRIPT_DIR/../.distignore" "$SCRIPT_DIR/.." /tmp/fair-temp/wordpress/wp-content/plugins/fair-plugin
+rsync -a --exclude-from="$SCRIPT_DIR/../.distignore" "$SCRIPT_DIR/../" /tmp/fair-temp/wordpress/wp-content/plugins/fair-plugin
 
 # Extract minimum required WordPress version from plugin header.
 REQUIRES_AT_LEAST=$(get_plugin_header "Requires at least")
