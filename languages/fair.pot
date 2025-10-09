@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-10-04T20:20:21+00:00\n"
+"POT-Creation-Date: 2025-10-09T20:00:33+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -333,36 +333,36 @@ msgstr ""
 msgid "No releases found in the repository."
 msgstr ""
 
-#: inc/packages/namespace.php:811
+#: inc/packages/namespace.php:820
 msgctxt "alias validation error"
 msgid "Multiple aliases set in DID; packages may only have a single alias"
 msgstr ""
 
-#: inc/packages/namespace.php:821
+#: inc/packages/namespace.php:830
 msgctxt "alias validation error"
 msgid "Invalid FAIR alias format"
 msgstr ""
 
-#: inc/packages/namespace.php:830
+#: inc/packages/namespace.php:839
 msgctxt "alias validation error"
 msgid "FAIR alias format exceeds valid domain length"
 msgstr ""
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:843
+#: inc/packages/namespace.php:852
 #, php-format
 msgctxt "alias validation error"
 msgid "Missing verification record for \"%s\""
 msgstr ""
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:857
+#: inc/packages/namespace.php:866
 #, php-format
 msgctxt "alias validation error"
 msgid "Verification record for \"%s\" is invalid"
 msgstr ""
 
-#: inc/packages/namespace.php:868
+#: inc/packages/namespace.php:877
 msgctxt "alias validation error"
 msgid "DID in validation record does not match"
 msgstr ""
@@ -407,34 +407,34 @@ msgstr ""
 
 #. translators: %s: theme name
 #: inc/updater/class-lite.php:393
-#: inc/updater/class-updater.php:333
+#: inc/updater/class-updater.php:334
 #, php-format
 msgid "There is a new version of %s available."
 msgstr ""
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
 #: inc/updater/class-lite.php:404
-#: inc/updater/class-updater.php:344
+#: inc/updater/class-updater.php:345
 #, php-format
 msgid "View version %1$s details%2$s or %3$supdate now%2$s."
 msgstr ""
 
 #. translators: %s: theme name
 #: inc/updater/class-lite.php:409
-#: inc/updater/class-updater.php:349
+#: inc/updater/class-updater.php:350
 #, php-format
 msgid "%s: update now"
 msgstr ""
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
 #: inc/updater/class-lite.php:416
-#: inc/updater/class-updater.php:356
+#: inc/updater/class-updater.php:357
 #, php-format
 msgid "View version %1$s details%2$s."
 msgstr ""
 
 #: inc/updater/class-lite.php:421
-#: inc/updater/class-updater.php:361
+#: inc/updater/class-updater.php:362
 msgid "Automatic update is unavailable for this theme."
 msgstr ""
 
