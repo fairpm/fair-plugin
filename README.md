@@ -19,9 +19,9 @@ FAIR can be installed manually by downloading the latest zip from releases and i
 
 ### Uninstallation
 
-To remove the FAIR plugin and it's features, you can deactivate and delete the plugin. There are no changes made to your database outside of the plugin settings, and no external files are edited. FAIR is a self-contained plugin, using the accepted WordPress standards and practices.
+To remove the FAIR plugin and its features, you can deactivate and delete the plugin. There are no changes made to your database outside of the plugin settings, and no external files are edited. FAIR is a self-contained plugin, using the accepted WordPress standards and practices.
 
-### Features
+## Features
 
 > [!NOTE]
 > The FAIR project is brand new. This plugin is a pre-release and some features are yet to be fully implemented.
@@ -35,6 +35,7 @@ The FAIR plugin implements federated or local versions of the following features
 * Browser and server health checks
 * Other APIs such as the Credits API, Secret Keys API, and Importers API
 * Twemoji images for emojis
+* Installation and updating of packages direct from their source repository, without talking to any centralized server
 
 The default FAIR provider in this plugin is [AspireCloud from AspirePress](https://aspirepress.org/). The AspirePress team were key in helping the FAIR project get off the ground. As the FAIR project grows and other providers come online you will be able to configure your chosen FAIR provider within the plugin.
 
@@ -43,6 +44,23 @@ In addition to the key FAIR implementations, a few other features in WordPress a
 * User avatars can optionally be uploaded locally as an alternative to the Gravatar service
 * Media features provided by OpenVerse are disabled, pending discussion and work by the FAIR working group
 * Ping services are configured to use IndexNow in place of Pingomatic
+
+## Data Privacy
+
+* See Also: [Linux Foundation Projects Privacy Policy](https://lfprojects.org/policies/privacy-policy/)
+
+FAIR is built to reduce external dependencies and keep your site as self-contained as possible. However, some essential features require connecting to remote services in order to function correctly. This section details which features involve remote requests, what data may be transmitted, and the specific third-party providers involved. Review the list below to understand exactly where and why your site may communicate with external endpoints.
+
+* Search engine pings when a post is published are handled by [IndexNow](https://www.indexnow.org).
+* Installation and updates of all WordPress Packages (core, plugins, themes) are via [AspireCloud from AspirePress](https://aspirepress.org/) (or other mirror as configured).
+* PHP versions are provided by [php.net](https://php.net)
+* Twemoji (emoji assets) are retrieved by [jsDeliver](https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/)
+
+In addition we self-host certain features that could not be properly protected on our API servers as an intermediary. All data collected from FAIR servers fall under the [Linux Foundation Policies and Terms of Use for Hosted Projects](https://lfprojects.org/policies/hosted-project-tools-terms-of-use/); additionally, [the server itself is open source](https://github.com/fairpm/server). These services include:
+
+* WordPress Events (`https://api.fair.pm/fair/v1/events`) - Retrieved from [The WP World](https://thewp.world) hourly and then cached on our servers. No user data is sent to The WP World.
+* WordPress Planet/News (`https://planet.fair.pm/atom.xml`)
+
 
 ## Contributing
 

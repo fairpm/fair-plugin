@@ -1,0 +1,25 @@
+name: Add Playground link to PR
+
+on:
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  add-comment-with-link:
+    runs-on: ubuntu-latest
+    steps:
+      - name: add-comment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const prNumber = context.issue.number
+            const repoName = context.repo.owner + '/' + context.repo.repo
+            const playgroundUrl = `https://playground.wordpress.net/?mode=seamless#{%22siteOptions%22:{%22blogname%22:%22FAIR%20Plugin%20Test%20Site:%20PR%20#${prNumber}%22},%22features%22:{%22networking%22:true},%22login%22:true,%22landingPage%22:%22/wp-admin/%22,%22plugins%22:[%22https://github-proxy.com/proxy/?repo=${repoName}&pr=${prNumber}%22],%22preferredVersions%22:{%22php%22:%228.3%22,%22wp%22:%22latest%22}}`
+
+            github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `[🧪 Test this PR on Playground](${playgroundUrl})`
+            })
