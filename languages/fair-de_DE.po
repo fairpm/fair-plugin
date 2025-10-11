@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
 "Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
 "POT-Creation-Date: 2025-06-10T04:28:22+00:00\n"
-"PO-Revision-Date: 2025-10-11 19:10+0200\n"
+"PO-Revision-Date: 2025-10-11 22:02+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -83,7 +83,8 @@ msgid "News"
 msgstr "Neues"
 
 #. translators: Hidden accessibility text.
-#: inc/dashboard-widgets/namespace.php:192 inc/dashboard-widgets/namespace.php:204
+#: inc/dashboard-widgets/namespace.php:192
+#: inc/dashboard-widgets/namespace.php:204
 msgid "(opens in a new tab)"
 msgstr "(öffnet in einem neuen Tab)"
 
@@ -179,9 +180,7 @@ msgstr "<a href=\"%s\" target=\"_blank\">Hier klicken, um mehr über das Aktuali
 
 #: inc/packages/admin/info.php:412
 msgid "<strong>Warning:</strong> This plugin <strong>has not been tested</strong> with your current version of WordPress."
-msgstr ""
-"<strong>Warnung:</strong> Dieses Plugin <strong>wurde noch nicht</strong> mit deiner aktuellen Version von WordPress "
-"getestet."
+msgstr "<strong>Warnung:</strong> Dieses Plugin <strong>wurde noch nicht</strong> mit deiner aktuellen Version von WordPress getestet."
 
 #: inc/packages/admin/info.php:419
 msgid "<strong>Error:</strong> This plugin <strong>requires a newer version of WordPress</strong>."
@@ -219,9 +218,7 @@ msgstr "Die Validierung ist fehlgeschlagen"
 #: inc/packages/admin/info.php:485
 #, php-format
 msgid "<p><strong>Error:</strong> Failed domain alias validation, this package may be unsafe: %s</p>"
-msgstr ""
-"<p><strong>Fehler:</strong> Fehlgeschlagene Validierung des Domain-Alias, dieses Paket ist möglicherweise unsicher: %s</"
-"p>"
+msgstr "<p><strong>Fehler:</strong> Fehlgeschlagene Validierung des Domain-Alias, dieses Paket ist möglicherweise unsicher: %s</p>"
 
 #: inc/packages/admin/info.php:548 inc/packages/admin/info.php:561
 msgid "Install Now"
@@ -280,7 +277,8 @@ msgstr "Plugin-IDs sollten das Format <code>did:plc:...</code> haben"
 msgid "Hosted on %1$s"
 msgstr "Hosting bei %1$s"
 
-#: inc/packages/class-metadatadocument.php:125 inc/packages/class-releasedocument.php:81
+#: inc/packages/class-metadatadocument.php:125
+#: inc/packages/class-releasedocument.php:81
 #, php-format
 msgid "Missing mandatory field: %s"
 msgstr "Folgendes Pflichtfeld fehlt: %s"
@@ -378,7 +376,8 @@ msgid "The verify-checksums command is not currently supported for DIDs."
 msgstr "Der Befehl verify-checksums wird derzeit für DIDs nicht unterstützt."
 
 #. translators: 1: The DID, 2: The error message.
-#: inc/packages/wp-cli/compat/namespace.php:155 inc/packages/wp-cli/compat/namespace.php:278
+#: inc/packages/wp-cli/compat/namespace.php:155
+#: inc/packages/wp-cli/compat/namespace.php:278
 #, php-format
 msgid "Could not retrieve metadata for %1$s - %2$s"
 msgstr "Metadaten für %1$s – %2$s konnten nicht abgerufen werden."
@@ -441,8 +440,7 @@ msgstr "Die Signaturüberprüfung für das Paket konnte nicht durchgeführt werd
 #: inc/user-notification/namespace.php:27
 #, php-format
 msgid "Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a href=\"%2$s\">AspirePress</a>"
-msgstr ""
-"Updates werden vom <a href=\"%1$s\">FAIR Package Manager</a> und von <a href=\"%2$s\">AspirePress</a> bereitgestellt."
+msgstr "Updates werden vom <a href=\"%1$s\">FAIR Package Manager</a> und von <a href=\"%2$s\">AspirePress</a> bereitgestellt."
 
 #: inc/version-check/namespace.php:97
 msgctxt "operating system check"
