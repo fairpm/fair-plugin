@@ -219,7 +219,7 @@ class Updater {
 			return $result;
 		}
 
-		return (object) Packages\get_update_data( $this->did );
+		return (object) Packages\get_package_data( $this->did );
 	}
 
 	/**
@@ -237,10 +237,11 @@ class Updater {
 
 		$rel_path = plugin_basename( $this->filepath );
 		$rel_path = 'theme' === $this->type ? dirname( $rel_path ) : $rel_path;
-		$response = Packages\get_update_data( $this->did );
+		$response = Packages\get_package_data( $this->did );
 		if ( is_wp_error( $response ) ) {
 			return $transient;
 		}
+		$response['slug'] = $response['slug_didhash'];
 		$response = 'plugin' === $this->type ? (object) $response : $response;
 		$is_compatible = Packages\check_requirements( $this->release );
 

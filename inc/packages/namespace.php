@@ -579,7 +579,7 @@ function get_hashed_filename( $metadata ) : string {
  * @param string $did DID.
  * @return array|WP_Error
  */
-function get_update_data( $did ) {
+function get_package_data( $did ) {
 	$metadata = fetch_package_metadata( $did );
 	if ( is_wp_error( $metadata ) ) {
 		return $metadata;
@@ -593,27 +593,38 @@ function get_update_data( $did ) {
 	$required_versions = version_requirements( $release );
 	$filename = get_hashed_filename( $metadata );
 	$type = str_replace( 'wp-', '', $metadata->type );
+	$sections = (array) $metadata->sections;
+	$description = trim( $sections['description'] ?? '' );
 
 	$response = [
-		'name'             => $metadata->name,
-		'slug'             => $metadata->slug . '-' . get_did_hash( $did ),
-		$type              => $filename,
-		'file'             => $filename,
-		'url'              => $metadata->url ?? $metadata->slug,
-		'sections'         => (array) $metadata->sections,
-		'icons'            => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
-		'banners'          => isset( $release->artifacts->banner ) ? get_banners( $release->artifacts->banner ) : [],
-		'update-supported' => true,
-		'requires'         => $required_versions['requires_wp'] ?? '',
-		'requires_php'     => $required_versions['requires_php'] ?? '',
-		'new_version'      => $release->version,
-		'version'          => $release->version,
-		'remote_version'   => $release->version,
-		'package'          => $release->artifacts->package[0]->url,
-		'download_link'    => $release->artifacts->package[0]->url,
-		'tested'           => $required_versions['tested_to'] ?? '',
-		'external'         => 'xxx',
-		'_fair'            => $metadata,
+		'name'              => $metadata->name,
+		'author'            => $metadata->authors[0]->name,
+		'author_uri'        => $metadata->authors[0]->url,
+		'slug'              => $metadata->slug,
+		'slug_didhash'      => $metadata->slug . '-' . get_did_hash( $did ),
+		$type               => $filename,
+		'file'              => $filename,
+		'url'               => $metadata->url ?? $metadata->slug,
+		'sections'          => $sections,
+		'description'       => $description,
+		'short_description' => substr( strip_tags( $description ), 0, 147 ) . '...',
+		'icons'             => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
+		'banners'           => isset( $release->artifacts->banner ) ? get_banners( $release->artifacts->banner ) : [],
+		'update-supported'  => true,
+		'requires'          => $required_versions['requires_wp'] ?? '',
+		'requires_php'      => $required_versions['requires_php'] ?? '',
+		'new_version'       => $release->version,
+		'version'           => $release->version,
+		'remote_version'    => $release->version,
+		'package'           => $release->artifacts->package[0]->url,
+		'download_link'     => $release->artifacts->package[0]->url,
+		'tested'            => $required_versions['tested_to'] ?? '',
+		'external'          => 'xxx',
+		'last_updated'      => $metadata->last_updated ?? '',
+		'num_ratings'       => 0,
+		'rating'            => 0,
+		'active_installs'   => 0,
+		'_fair'             => $metadata,
 	];
 	if ( 'theme' === $type ) {
 		$response['theme_uri'] = $response['url'];
@@ -927,24 +938,13 @@ function search_by_did( $result, $action, $args ) {
  * @return array|WP_Error The API data array or WP_Error on failure.
  */
 function get_api_data( $did ) {
-	$api_data = get_update_data( $did );
+	$api_data = get_package_data( $did );
 	if ( is_wp_error( $api_data ) ) {
 		return $api_data;
 	}
 
-	$api_data = json_decode( json_encode( $api_data ), true );
-	$api_data['description'] = $api_data['sections']['description'];
-	$api_data['short_description'] = substr( strip_tags( trim( $api_data['description'] ) ), 0, 147 ) . '...';
-	$api_data['last_updated'] ??= 0;
-	$api_data['num_ratings'] ??= 0;
-	$api_data['rating'] ??= 0;
-	$api_data['active_installs'] ??= 0;
-
-	// Avoid a double-hashed slug.
-	$hash_suffix = '-' . get_did_hash( $did );
-	if ( str_ends_with( $api_data['slug'], $hash_suffix ) ) {
-		$api_data['slug'] = str_replace( $hash_suffix, '', $api_data['slug'] );
-	}
+	// Convert the MetadataDocument to an array for compatibility.
+	$api_data['_fair'] = json_decode( json_encode( $api_data['_fair'] ), true );
 
 	return $api_data;
 }
