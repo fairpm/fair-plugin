@@ -613,7 +613,6 @@ function get_update_data( $did ) {
 		'download_link'    => $release->artifacts->package[0]->url,
 		'tested'           => $required_versions['tested_to'] ?? '',
 		'external'         => 'xxx',
-		'last_updated'     => $metadata->last_updated,
 		'_fair'            => $metadata,
 	];
 	if ( 'theme' === $type ) {
