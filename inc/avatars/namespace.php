@@ -143,6 +143,10 @@ function save_avatar_upload( $user_id ) {
  * @return string              Filtered avatar HTML.
  */
 function filter_avatar( $avatar, $id_or_email, $size, $default, $alt, $args ) {
+	if ( ! str_contains( $avatar, 'secure.gravatar.com' ) ) {
+		return $avatar;
+	}
+
 	$avatar_url = get_avatar_url( $id_or_email, $args );
 
 	$class = [ 'avatar', 'avatar-' . (int) $size, 'photo' ];
@@ -185,7 +189,10 @@ function filter_avatar( $avatar, $id_or_email, $size, $default, $alt, $args ) {
  * @return string              Filtered avatar URL.
  */
 function filter_avatar_url( $url, $id_or_email, $args ) {
-	return get_avatar_url( $id_or_email, $args );
+	if ( str_contains( $url, 'secure.gravatar.com' ) ) {
+		$url = get_avatar_url( $id_or_email, $args );
+	}
+	return $url;
 }
 
 /**
