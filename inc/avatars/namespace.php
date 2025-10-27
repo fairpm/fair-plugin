@@ -143,7 +143,7 @@ function save_avatar_upload( $user_id ) {
  * @return string              Filtered avatar HTML.
  */
 function filter_avatar( $avatar, $id_or_email, $size, $default, $alt, $args ) {
-	if ( ! str_contains( $avatar, 'secure.gravatar.com' ) ) {
+	if ( ! str_contains( $avatar, "src=''" ) && ! str_contains( $avatar, 'secure.gravatar.com' ) ) {
 		return $avatar;
 	}
 
