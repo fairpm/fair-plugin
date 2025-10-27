@@ -31,7 +31,6 @@ function bootstrap() {
 
 	// Filter avatar retrieval.
 	add_filter( 'get_avatar', __NAMESPACE__ . '\\filter_avatar', 10, 6 );
-	add_filter( 'get_avatar_url', fn () => 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png', 10, 3 );
 	add_filter( 'get_avatar_url', __NAMESPACE__ . '\\filter_avatar_url', 10, 3 );
 	add_filter( 'avatar_defaults', '__return_empty_array' );
 
