@@ -85,6 +85,13 @@ class MetadataDocument {
 	public $security = [];
 
 	/**
+	 * Last updated.
+	 *
+	 * @var string
+	 */
+	public $last_updated;
+
+	/**
 	 * Sections.
 	 *
 	 * @var stdClass
@@ -134,6 +141,7 @@ class MetadataDocument {
 			'filename',
 			'description',
 			'keywords',
+			'last_updated',
 			'sections',
 		];
 		foreach ( $optional as $key ) {

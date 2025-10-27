@@ -9,9 +9,11 @@ namespace FAIR\Packages\Admin\Info;
 
 use FAIR\Packages;
 use FAIR\Packages\Admin;
+use FAIR\Packages\DID\Document as DIDDocument;
 use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
 use FAIR\Updater;
+use WP_Error;
 
 /**
  * Sanitize HTML content for plugin information.
@@ -168,6 +170,7 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 			<div id="section-holder">
 			<?php
 			add_requirement_notices( $latest );
+			do_action( 'minifair.render.notices', $doc, $tab, $section );
 			foreach ( $sections as $section_id => $content ) {
 				$prepared = sanitize_html( $content );
 				$prepared = links_add_target( $prepared, '_blank' );
@@ -271,14 +274,19 @@ function name_requirement( string $requirement ) : string {
  * @return void
  */
 function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
+	$did = Packages\get_did_document( $doc->id );
 	?>
 	<div class="fyi">
 		<ul>
+			<li><?php render_alias_notice( $did ); ?></li>
 			<?php if ( ! empty( $release ) ) : ?>
 				<li><strong><?= __( 'Version:', 'fair' ); ?></strong> <?= esc_attr( $release->version ); ?></li>
 			<?php endif; ?>
 			<?php if ( ! empty( $doc->slug ) ) : ?>
 				<li><strong><?= __( 'Slug:', 'fair' ); ?></strong> <?= esc_attr( $doc->slug ); ?></li>
+			<?php endif; ?>
+			<?php if ( ! empty( $doc->id ) ) : ?>
+				<li><strong><?= __( 'ID:', 'fair' ); ?></strong> <code><?= esc_attr( $doc->id ); ?></code></li>
 			<?php endif; ?>
 			<?php if ( ! empty( $release->requires ) ) : ?>
 				<li>
@@ -322,8 +330,43 @@ function render_fyi( MetadataDocument $doc, ReleaseDocument $release ) : void {
 				?>
 			</ul>
 		<?php endif ?>
+		<?php
+		$repo_host = get_repository_hostname( $doc->id );
+		if ( $repo_host ) :
+			?>
+			<p><small>Plugin available via FAIR repository hosted at <?php echo esc_html( $repo_host ); ?></small></p>
+		<?php else : ?>
+			<p><small>Plugin available via FAIR repository</small></p>
+		<?php endif; ?>
 	</div>
 	<?php
+}
+
+/**
+ * Get the hostname for the repository hosting a package.
+ *
+ * @param string $did DID to check.
+ * @return string|null Hostname if available, null if there's an error.
+ */
+function get_repository_hostname( string $did ) : ?string {
+	$did_doc = Packages\get_did_document( $did );
+	if ( is_wp_error( $did_doc ) ) {
+		return null;
+	}
+
+	$repo = $did_doc->get_service( Packages\SERVICE_ID );
+	if ( empty( $repo ) ) {
+		return null;
+	}
+
+	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+	$host = parse_url( $repo->serviceEndpoint, PHP_URL_HOST );
+	if ( empty( $host ) ) {
+		// Invalid URL.
+		return null;
+	}
+
+	return $host;
 }
 
 /**
@@ -393,6 +436,76 @@ function add_requirement_notices( ReleaseDocument $release ) : void {
 }
 
 /**
+ * Render the validation notice.
+ *
+ * Renders the validation status for the package's alias. Also returns a bool
+ * indicating whether the package is "safe" to install - packages which fail
+ * validation are not safe, while those without an alias or with a valid alias
+ * are safe.
+ *
+ * @param DIDDocument $did DID to validate.
+ * @return bool True if the package is "safe" to install, false if install should be blocked.
+ */
+function render_alias_notice( DIDDocument $did ) : bool {
+	$validation = Packages\validate_package_alias( $did );
+	$title = __( 'Domain Alias:', 'fair' );
+	$result = false;
+	switch ( gettype( $validation ) ) {
+		case 'string':
+			$message = sprintf(
+				/* translators: %1$s: full URL for validated domain, %2$s: raw domain */
+				__( '<strong>Validated</strong> as <a href="%1$s">%2$s</a>', 'fair' ),
+				esc_url( 'https://' . $validation . '/' ),
+				esc_html( $validation )
+			);
+			$result = true;
+			break;
+
+		case 'NULL':
+			$message = __( 'Not validated: No domain alias is set', 'fair' );
+			$result = true;
+			break;
+
+		default:
+			if ( ! is_wp_error( $validation ) ) {
+				// Invalid type, assume failure.
+				$validation = new WP_Error(
+					'fair.packages.admin.info.validation_notice.invalid_result',
+					__( 'An unknown error occurred', 'fair' )
+				);
+			}
+			$message = sprintf(
+				'<strong>%s</strong>',
+				esc_html__( 'Validation failed', 'fair' )
+			);
+			add_action( 'minifair.render.notices', function () use ( $validation ) {
+				wp_admin_notice(
+					sprintf(
+						/* translators: %s: validation error message */
+						__( '<p><strong>Error:</strong> Failed domain alias validation, this package may be unsafe: %s</p>', 'fair' ),
+						esc_html( $validation->get_error_message() )
+					),
+					[
+						'type'               => 'error',
+						'additional_classes' => [ 'notice-alt' ],
+						'paragraph_wrap'     => false,
+					]
+				);
+			} );
+			$result = false;
+			break;
+	}
+
+	printf(
+		'<strong>%s</strong> %s',
+		esc_html( $title ),
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized.
+		sanitize_html( $message )
+	);
+	return $result;
+}
+
+/**
  * Gets the markup for the plugin install action button.
  *
  * @param  MetadataDocument $doc Metadata document.
@@ -414,6 +527,15 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 		$status = 'update';
 	} else {
 		$status = 'installed';
+	}
+
+	if ( $status === 'install' ) {
+		$file = null;
+		$slug = null;
+	} else {
+		$file = Updater\get_packages()[ "{$type}s" ][ $doc->id ];
+		$file = $type === 'plugin' ? plugin_basename( $file ) : basename( dirname( $file ) );
+		$slug = $type === 'plugin' ? dirname( $file ) : $file;
 	}
 
 	// Do we actually meet the requirements?
@@ -447,10 +569,6 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 				);
 			}
 
-			$file = Updater\get_packages()[ "{$type}s" ][ $doc->id ];
-			$file = $type === 'plugin' ? plugin_basename( $file ) : basename( dirname( $file ) );
-			$slug = $type === 'plugin' ? dirname( $file ) : $file;
-
 			return sprintf(
 				'<a id="plugin_install_from_iframe" class="update-now button" data-id="%s" data-%s="%s" data-slug="%s" href="%s" aria-label="%s" data-name="%s" role="button">%s</a>',
 				esc_attr( $doc->id ),
@@ -465,6 +583,17 @@ function get_action_button( MetadataDocument $doc, ReleaseDocument $release ) {
 			);
 
 		case 'installed':
+			if ( current_user_can( 'activate_plugin', $file ) && is_plugin_inactive( $file ) ) {
+				return sprintf(
+					'<a href="%s" class="button activate-now button-primary" aria-label="%s" data-name="%s">%s</a>',
+					esc_url( wp_nonce_url( self_admin_url( 'plugins.php?action=activate&plugin=' . rawurlencode( $file ) ), 'activate-plugin_' . $file ) ),
+					/* translators: %s: The package's name. */
+					esc_attr( sprintf( __( 'Activate %s now', 'fair' ), $doc->name ) ),
+					esc_attr( $doc->name ),
+					esc_html__( 'Activate', 'fair' )
+				);
+			}
+
 			return sprintf(
 				'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
 				esc_html__( 'Installed', 'fair' )

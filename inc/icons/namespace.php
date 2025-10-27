@@ -31,7 +31,7 @@ function set_default_icon( $transient ) {
 		$transient = new stdClass();
 	}
 
-	if ( ! property_exists( $transient, 'response' ) ) {
+	if ( ! property_exists( $transient, 'response' ) || ! is_array( $transient->response ) ) {
 		return $transient;
 	}
 

@@ -7,6 +7,8 @@
 
 namespace FAIR;
 
+const CACHE_BASE = 'fair-';
+const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
 const NS_SEPARATOR = '\\';
 
 /**
@@ -77,4 +79,13 @@ function register_class_path( string $prefix, string $path ) : void {
 		}
 	} );
 	Version_Check\bootstrap();
+}
+
+/**
+ * Check if WP-CLI is running.
+ *
+ * @return bool True if running in WP-CLI, false otherwise.
+ */
+function is_wp_cli(): bool {
+	return defined( 'WP_CLI' ) && WP_CLI;
 }

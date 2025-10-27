@@ -32,14 +32,14 @@ class Updater {
 	 * For plugins, this is the PHP file with the plugin header. For themes,
 	 * this is the style.css file.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	protected $filepath;
 
 	/**
 	 * Current installed version of the package.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
 	protected $local_version;
 
@@ -70,10 +70,10 @@ class Updater {
 	 * @param string $did DID.
 	 * @param string $filepath Absolute file path.
 	 */
-	public function __construct( string $did, string $filepath ) {
+	public function __construct( string $did, string $filepath = '' ) {
 		$this->did = $did;
 		$this->filepath = $filepath;
-		$this->local_version = get_file_data( $filepath, [ 'Version' => 'Version' ] )['Version'];
+		$this->local_version = $filepath ? get_file_data( $filepath, [ 'Version' => 'Version' ] )['Version'] : null;
 	}
 
 	/**
@@ -124,9 +124,23 @@ class Updater {
 	public function load_hooks() {
 		add_filter( 'upgrader_source_selection', [ $this, 'upgrader_source_selection' ], 10, 4 );
 		add_filter( "{$this->type}s_api", [ $this, 'repo_api_details' ], 99, 3 );
-		add_filter( "site_transient_update_{$this->type}s", [ $this, 'update_site_transient' ], 20, 1 );
+
+		if ( ! empty( $this->filepath ) && ! empty( $this->local_version ) ) {
+			add_filter( "site_transient_update_{$this->type}s", [ $this, 'update_site_transient' ], 20, 1 );
+		}
+
 		if ( ! is_multisite() ) {
 			add_filter( 'wp_prepare_themes_for_js', [ $this, 'customize_theme_update_html' ] );
+		}
+
+		/**
+		 * Filter whether to verify FAIR package signatures during update.
+		 *
+		 * @param bool $verify Whether to verify signatures. Default true.
+		 * @return bool
+		 */
+		if ( apply_filters( 'fair.packages.updater.verify_signatures', true ) ) {
+			add_filter( 'upgrader_pre_download', 'FAIR\\Updater\\verify_signature_on_download', 10, 4 );
 		}
 
 		Packages\add_package_to_release_cache( $this->did );
@@ -205,7 +219,7 @@ class Updater {
 			return $result;
 		}
 
-		return (object) Packages\get_update_data( $this->did );
+		return (object) Packages\get_package_data( $this->did );
 	}
 
 	/**
@@ -223,10 +237,11 @@ class Updater {
 
 		$rel_path = plugin_basename( $this->filepath );
 		$rel_path = 'theme' === $this->type ? dirname( $rel_path ) : $rel_path;
-		$response = Packages\get_update_data( $this->did );
+		$response = Packages\get_package_data( $this->did );
 		if ( is_wp_error( $response ) ) {
 			return $transient;
 		}
+		$response['slug'] = $response['slug_didhash'];
 		$response = 'plugin' === $this->type ? (object) $response : $response;
 		$is_compatible = Packages\check_requirements( $this->release );
 
