@@ -78,3 +78,12 @@ function register_class_path( string $prefix, string $path ) : void {
 	} );
 	Version_Check\bootstrap();
 }
+
+/**
+ * Check if WP-CLI is running.
+ *
+ * @return bool True if running in WP-CLI, false otherwise.
+ */
+function is_wp_cli(): bool {
+	return defined( 'WP_CLI' ) && WP_CLI;
+}

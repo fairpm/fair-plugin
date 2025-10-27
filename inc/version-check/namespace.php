@@ -7,12 +7,14 @@
 
 namespace FAIR\Version_Check;
 
+use const FAIR\CACHE_LIFETIME;
+
 /**
  * This constant is replaced by bin/update-browsers.sh.
  *
  * DO NOT EDIT THIS CONSTANT MANUALLY.
  */
-const BROWSER_REGEX = '/Edge?\/13[78]\.0(\.\d+|)|Firefox\/(128\.0|14[0-4]\.0)(\.\d+|)|Chrom(ium|e)\/(109\.0|1{2}2\.0|1(3[7-9]|4[0-2])\.0)(\.\d+|)|(Maci|X1{2}).+ Version\/(18\.[4-6]|26\.0)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/1{2}[67]\.0\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(18[._][4-6]|26[._]0)([._]\d+|)|Opera Mini|Android:?[ /-]138(\.0|)(\.\d+|)|Mobile Safari.+OPR\/8(0\.){2}\d+|Android.+Firefox\/140\.0(\.\d+|)|Android.+Chrom(ium|e)\/138\.0(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?1(5\.){2}\d+|SamsungBrowser\/2[78]\.0|Android.+MQ{2}Browser\/14(\.9|)(\.\d+|)|K[Aa][Ii]OS\/(2\.5|3\.[01])(\.\d+|)/';
+const BROWSER_REGEX = '/Edge?\/1(39|4[01])\.0(\.\d+|)|Firefox\/(140\.0|14[2-7]\.0)(\.\d+|)|Chrom(ium|e)\/(109\.0|1{2}2\.0|126\.0|134\.0|1(3[89]|4[0-4])\.0)(\.\d+|)|(Maci|X1{2}).+ Version\/(18\.[56]|26\.[01])([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/12[12]\.0\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(18[._][56]|26[._][01])([._]\d+|)|Opera Mini|Android:?[ /-]141(\.0|)(\.\d+|)|Mobile Safari.+OPR\/8(0\.){2}\d+|Android.+Firefox\/143\.0(\.\d+|)|Android.+Chrom(ium|e)\/141\.0(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?1(5\.){2}\d+|SamsungBrowser\/2[78]\.0|Android.+MQ{2}Browser\/14(\.9|)(\.\d+|)|K[Aa][Ii]OS\/(2\.5|3\.[01])(\.\d+|)/';
 
 /**
  * The latest branch of PHP which WordPress.org recommends.
@@ -44,11 +46,6 @@ const SECURE_PHP = '7.4';
  * (Fallback if we can't load PHP.net.)
  */
 const ACCEPTABLE_PHP = '7.4';
-
-/**
- * Lifetime of the php.net cache.
- */
-const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
 
 /**
  * Bootstrap.

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: FAIR - Federated and Independent Repositories
  * Description: Make your site more FAIR.
- * Version: 0.4.1
+ * Version: 1.0.0
  * Author: FAIR Contributors
  * License: GPLv2
  * Requires at least: 5.4
@@ -18,7 +18,7 @@
 
 namespace FAIR;
 
-const VERSION = '0.4.1';
+const VERSION = '1.0.0';
 const PLUGIN_DIR = __DIR__;
 const PLUGIN_FILE = __FILE__;
 
@@ -33,6 +33,8 @@ require_once __DIR__ . '/inc/importers/namespace.php';
 require_once __DIR__ . '/inc/packages/namespace.php';
 require_once __DIR__ . '/inc/packages/admin/namespace.php';
 require_once __DIR__ . '/inc/packages/admin/info.php';
+require_once __DIR__ . '/inc/packages/wp-cli/namespace.php';
+require_once __DIR__ . '/inc/packages/wp-cli/compat/namespace.php';
 require_once __DIR__ . '/inc/pings/namespace.php';
 require_once __DIR__ . '/inc/salts/namespace.php';
 require_once __DIR__ . '/inc/settings/namespace.php';

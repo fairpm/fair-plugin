@@ -7,7 +7,7 @@
 
 namespace FAIR\Dashboard_Widgets;
 
-use const FAIR\Packages\CACHE_LIFETIME;
+use const FAIR\CACHE_LIFETIME;
 
 use WP_Error;
 
