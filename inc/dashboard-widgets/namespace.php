@@ -1,6 +1,13 @@
 <?php
+/**
+ * Changes events to use The WP World, and news to use FAIR Planet.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Dashboard_Widgets;
+
+use const FAIR\CACHE_LIFETIME;
 
 use WP_Error;
 
@@ -10,10 +17,6 @@ const EVENTS_API = 'https://api.fair.pm/fair/v1/events';
  * Bootstrap.
  */
 function bootstrap() {
-	// Support existing software like ClassicPress, which removes this feature.
-	if ( ! function_exists( 'wp_print_community_events_markup' ) ) {
-		return;
-	}
 	add_action( 'wp_ajax_get-community-events', __NAMESPACE__ . '\\get_community_events_ajax', 0 );
 	remove_action( 'wp_ajax_get-community-events', 'wp_ajax_get_community_events', 1 );
 
@@ -24,14 +27,18 @@ function bootstrap() {
 
 	add_action( 'admin_head-index.php', __NAMESPACE__ . '\\set_help_content_fair_planet_urls' );
 
+	// Remove the primary feed and link to avoid showing WordPress.org news.
+	add_filter( 'dashboard_primary_link', '__return_empty_string' );
+	add_filter( 'dashboard_primary_feed', fn () => [ 'url' => null ] );
+
 	// Configure the WordPress Events and News widget to use FAIR.
 	add_filter( 'dashboard_secondary_link', __NAMESPACE__ . '\\get_fair_planet_url' );
 	add_filter( 'dashboard_secondary_feed', __NAMESPACE__ . '\\get_fair_planet_feed' );
+	add_filter( 'dashboard_secondary_items', fn() => 5 );
 }
 
 /**
  * Fires after core widgets for the admin dashboard have been registered.
- *
  */
 function on_dashboard_setup() : void {
 	// Swap the "Primary" dashboard widget's callback.
@@ -82,9 +89,13 @@ function get_community_events_ajax() : void {
  * @return array|WP_Error List of events or WP_Error on failure.
  */
 function get_community_events() {
-	$response = wp_remote_get( EVENTS_API );
-	if ( is_wp_error( $response ) ) {
-		return $response;
+	$response = get_transient( EVENTS_API );
+	if ( ! $response ) {
+		$response = wp_remote_get( EVENTS_API );
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+		set_transient( EVENTS_API, $response, CACHE_LIFETIME );
 	}
 
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
@@ -112,7 +123,7 @@ function get_community_events() {
 
 		$url = add_query_arg( 'ref', 'fair-dashboard', $event['camp_website_url'] ?? $event['link'] );
 
-		$events[] = array(
+		$events[] = [
 			'type' => 'event',
 			'title' => $event['title']['rendered'],
 			'url' => $url,
@@ -128,7 +139,7 @@ function get_community_events() {
 				'latitude' => $event['camp_lat'] ?? 0,
 				'longitude' => $event['camp_lng'] ?? 0,
 			],
-		);
+		];
 	}
 
 	// Resort events by start date.
@@ -157,6 +168,11 @@ function get_community_events() {
  *           otherwise not filterable.
  */
 function render_news_widget() : void {
+	// Support existing software like ClassicPress, which removes this feature.
+	if ( ! function_exists( 'wp_print_community_events_markup' ) ) {
+		return;
+	}
+
 	wp_print_community_events_markup();
 
 	?>
@@ -171,9 +187,9 @@ function render_news_widget() : void {
 				'<a href="%1$s" target="_blank">%2$s <span class="screen-reader-text"> %3$s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a>',
 				/* translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated. */
 				esc_url( _x( 'https://fair.pm/', 'Events and News dashboard widget', 'fair' ) ),
-				__( 'News' ),
+				__( 'News', 'fair' ),
 				/* translators: Hidden accessibility text. */
-				__( '(opens in a new tab)' )
+				__( '(opens in a new tab)', 'fair' )
 			);
 		?>
 
@@ -185,7 +201,7 @@ function render_news_widget() : void {
 				'https://thewp.world/events/',
 				__( 'Events (by The WP World)', 'fair' ),
 				/* translators: Hidden accessibility text. */
-				__( '(opens in a new tab)' )
+				__( '(opens in a new tab)', 'fair' )
 			);
 		?>
 	</p>
@@ -240,6 +256,7 @@ function set_help_content_fair_planet_urls() : void {
 	$planet_fair_url = rtrim( $planet_fair_url, '/' );
 
 	$new_tab_content = preg_replace(
+		/* phpcs:ignore WordPress.WP.CapitalPDangit.Misspelled */
 		'/https?:\/\/planet\.wordpress\.org/',
 		$planet_fair_url,
 		$tab['content'],

@@ -11,7 +11,7 @@ namespace FAIR\Disable_Openverse;
  * Bootstrap the module functionality.
  */
 function bootstrap() {
-    add_filter( 'block_editor_settings_all', __NAMESPACE__ . '\\disable_openverse_block_editor_settings' );
+	add_filter( 'block_editor_settings_all', __NAMESPACE__ . '\\disable_openverse_block_editor_settings' );
 }
 
 /**
@@ -21,6 +21,6 @@ function bootstrap() {
  * @return array The modified block editor settings.
  */
 function disable_openverse_block_editor_settings( array $settings ) : array {
-    $settings['enableOpenverseMediaCategory'] = false;
-    return $settings;
+	$settings['enableOpenverseMediaCategory'] = false;
+	return $settings;
 }

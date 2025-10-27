@@ -7,12 +7,14 @@
 
 namespace FAIR\Version_Check;
 
+use const FAIR\CACHE_LIFETIME;
+
 /**
  * This constant is replaced by bin/update-browsers.sh.
  *
  * DO NOT EDIT THIS CONSTANT MANUALLY.
  */
-const BROWSER_REGEX = '/Edge?\/13[5-7]\.0(\.\d+|)|Firefox\/(128\.0|1(3[89]|4[0-2])\.0)(\.\d+|)|Chrom(ium|e)\/(109\.0|131\.0|1(3[4-9]|40)\.0)(\.\d+|)|(Maci|X1{2}).+ Version\/(18\.[45]|26\.0)([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/1{2}[67]\.0\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(16[._][67]|17[._][67]|18[._][3-5]|26[._]0)([._]\d+|)|Opera Mini|Android:?[ /-]137(\.0|)(\.\d+|)|Mobile Safari.+OPR\/8(0\.){2}\d+|Android.+Firefox\/139\.0(\.\d+|)|Android.+Chrom(ium|e)\/137\.0(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?1(5\.){2}\d+|SamsungBrowser\/2[78]\.0|Android.+MQ{2}Browser\/14(\.9|)(\.\d+|)|K[Aa][Ii]OS\/(2\.5|3\.[01])(\.\d+|)/';
+const BROWSER_REGEX = '/Edge?\/1(39|4[01])\.0(\.\d+|)|Firefox\/(140\.0|14[2-7]\.0)(\.\d+|)|Chrom(ium|e)\/(109\.0|1{2}2\.0|126\.0|134\.0|1(3[89]|4[0-4])\.0)(\.\d+|)|(Maci|X1{2}).+ Version\/(18\.[56]|26\.[01])([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/12[12]\.0\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(18[._][56]|26[._][01])([._]\d+|)|Opera Mini|Android:?[ /-]141(\.0|)(\.\d+|)|Mobile Safari.+OPR\/8(0\.){2}\d+|Android.+Firefox\/143\.0(\.\d+|)|Android.+Chrom(ium|e)\/141\.0(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?1(5\.){2}\d+|SamsungBrowser\/2[78]\.0|Android.+MQ{2}Browser\/14(\.9|)(\.\d+|)|K[Aa][Ii]OS\/(2\.5|3\.[01])(\.\d+|)/';
 
 /**
  * The latest branch of PHP which WordPress.org recommends.
@@ -46,11 +48,6 @@ const SECURE_PHP = '7.4';
 const ACCEPTABLE_PHP = '7.4';
 
 /**
- * Lifetime of the php.net cache.
- */
-const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
-
-/**
  * Bootstrap.
  */
 function bootstrap() {
@@ -61,16 +58,16 @@ function bootstrap() {
  * Replace the browser version check.
  *
  * @param bool|array $value Filtered value, or false to proceed.
- * @param array $args
- * @param string $url
+ * @param array $args HTTP request arguments.
+ * @param string $url The request URL.
  * @return bool|array Replaced value, or false to proceed.
  */
 function replace_browser_version_check( $value, $args, $url ) {
-	if ( strpos( $url, 'api.wordpress.org/core/browse-happy' ) !== false ) {
+	if ( str_contains( $url, 'api.wordpress.org/core/browse-happy' ) ) {
 		$agent = $args['body']['useragent'];
 		return get_browser_check_response( $agent );
 	}
-	if ( strpos( $url, 'api.wordpress.org/core/serve-happy' ) !== false ) {
+	if ( str_contains( $url, 'api.wordpress.org/core/serve-happy' ) ) {
 		$query = parse_url( $url, PHP_URL_QUERY );
 		$url_args = wp_parse_args( $query );
 		return get_server_check_response( $url_args['php_version'] ?? PHP_VERSION );
@@ -97,7 +94,7 @@ function get_browser_check_response( string $agent ) {
 			'message' => 'OK',
 		],
 		'body' => json_encode( [
-			'platform' => _x( 'your platform', 'browser version check', 'fair' ),
+			'platform' => _x( 'your platform', 'operating system check', 'fair' ),
 			'name' => _x( 'your browser', 'browser version check', 'fair' ),
 			'version' => '',
 			'current_version' => '',
@@ -139,7 +136,7 @@ function get_php_branches() {
 	// Index data by branch.
 	$indexed = [];
 	foreach ( $data as $ver ) {
-		if ( empty( $ver['branch' ] ) ) {
+		if ( empty( $ver['branch'] ) ) {
 			continue;
 		}
 

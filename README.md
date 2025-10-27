@@ -21,7 +21,7 @@ FAIR can be installed manually by downloading the latest zip from releases and i
 
 To remove the FAIR plugin and its features, you can deactivate and delete the plugin. There are no changes made to your database outside of the plugin settings, and no external files are edited. FAIR is a self-contained plugin, using the accepted WordPress standards and practices.
 
-### Features
+## Features
 
 > [!NOTE]
 > The FAIR project is brand new. This plugin is a pre-release and some features are yet to be fully implemented.
@@ -35,6 +35,7 @@ The FAIR plugin implements federated or local versions of the following features
 * Browser and server health checks
 * Other APIs such as the Credits API, Secret Keys API, and Importers API
 * Twemoji images for emojis
+* Installation and updating of packages direct from their source repository, without talking to any centralized server
 
 The default FAIR provider in this plugin is [AspireCloud from AspirePress](https://aspirepress.org/). The AspirePress team were key in helping the FAIR project get off the ground. As the FAIR project grows and other providers come online you will be able to configure your chosen FAIR provider within the plugin.
 
@@ -44,7 +45,7 @@ In addition to the key FAIR implementations, a few other features in WordPress a
 * Media features provided by OpenVerse are disabled, pending discussion and work by the FAIR working group
 * Ping services are configured to use IndexNow in place of Pingomatic
 
-### Data Privacy
+## Data Privacy
 
 * See Also: [Linux Foundation Projects Privacy Policy](https://lfprojects.org/policies/privacy-policy/)
 
@@ -59,6 +60,7 @@ In addition we self-host certain features that could not be properly protected o
 
 * WordPress Events (`https://api.fair.pm/fair/v1/events`) - Retrieved from [The WP World](https://thewp.world) hourly and then cached on our servers. No user data is sent to The WP World.
 * WordPress Planet/News (`https://planet.fair.pm/atom.xml`)
+
 
 ## Contributing
 

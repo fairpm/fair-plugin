@@ -7,7 +7,7 @@
 
 namespace FAIR\Default_Repo;
 
-use WP_Error;
+use FAIR;
 
 /**
  * Bootstrap.
@@ -39,8 +39,9 @@ function get_default_repo_domain() : string {
  * and themes APIs. Only these get passed to the chosen FAIR repo, as the others are
  * handled in other modules.
  *
- * @param array $args
- * @param string $url
+ * @param bool|array $status Filtered value, or false to proceed.
+ * @param array $args HTTP request arguments.
+ * @param string $url The request URL.
  * @return bool|array Replaced value, or false to proceed.
  */
 function replace_repo_api_urls( $status, $args, $url ) {
@@ -50,9 +51,9 @@ function replace_repo_api_urls( $status, $args, $url ) {
 	}
 
 	if (
-		strpos( $url, 'api.wordpress.org/plugins/' ) === false
-		&& strpos( $url, 'api.wordpress.org/themes/' ) === false
-		&& strpos( $url, 'api.wordpress.org/core/version-check/' ) === false
+		! str_contains( $url, 'api.wordpress.org/plugins/' )
+		&& ! str_contains( $url, 'api.wordpress.org/themes/' )
+		&& ! str_contains( $url, 'api.wordpress.org/core/version-check/' )
 	) {
 		return $status;
 	}
@@ -64,6 +65,10 @@ function replace_repo_api_urls( $status, $args, $url ) {
 
 	// Alter the URL, then reissue the request (with a lock to prevent loops).
 	$url = str_replace( '//api.wordpress.org/', '//' . get_default_repo_domain() . '/', $url );
+
+	// Indicate this is a FAIR install.
+	$url = add_query_arg( '_fair', FAIR\VERSION, $url );
+
 	$is_replacing = true;
 	$response = wp_remote_request( $url, $args );
 	$is_replacing = false;
@@ -76,7 +81,7 @@ function replace_repo_api_urls( $status, $args, $url ) {
  * This tab only makes sense for WordPress.org, so is not supported by
  * other repositories.
  *
- * @param array $tabs
+ * @param array $tabs Tabs in the plugin browser.
  */
 function remove_favorites_tab( array $tabs ) : array {
 	unset( $tabs['favorites'] );
