@@ -18,6 +18,7 @@ class List_Table extends WP_Plugin_Install_List_Table {
 	/**
 	 * Replace Add Plugins message with ours.
 	 *
+	 * @since WordPress 6.9.0
 	 * @return void
 	 */
 	public function views() {
