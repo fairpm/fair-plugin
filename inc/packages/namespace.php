@@ -643,7 +643,7 @@ function get_package_data( $did ) {
  */
 function upgrader_pre_download( $false ) : bool {
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
-	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\rename_source_selection', 11, 3 );
+	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\rename_source_on_download', 11, 3 );
 	return $false;
 }
 
@@ -683,7 +683,7 @@ function delete_cached_did_for_install(): void {
 }
 
 /**
- * Renames a package's directory when it doesn't match the slug.
+ * Renames a package's directory on download when it doesn't match the slug.
  *
  * This is commonly required for packages from Git hosts.
  *
@@ -693,7 +693,7 @@ function delete_cached_did_for_install(): void {
  *
  * @return string|WP_Error
  */
-function rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
+function rename_source_on_download( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
 
 	$upgrader_class = get_class( $upgrader );
@@ -724,7 +724,6 @@ function rename_source_selection( string $source, string $remote_source, WP_Upgr
 	if ( 'theme' === $type && $upgrader->new_theme_data['Name'] !== $metadata->name ) {
 		return $source;
 	}
-
 	if ( str_contains( $source, get_did_hash( $did ) ) && basename( $source ) === $metadata->slug ) {
 		return $source;
 	}
