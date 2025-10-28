@@ -39,6 +39,9 @@ function bootstrap() {
 	add_filter( 'plugin_install_description', __NAMESPACE__ . '\\maybe_add_data_to_description', 10, 2 );
 	add_action( 'wp_ajax_check_plugin_dependencies', __NAMESPACE__ . '\\set_slug_to_hashed' );
 	add_filter( 'wp_list_table_class_name', __NAMESPACE__ . '\\maybe_override_list_table' );
+
+	// Needed for pre WP 6.9 compatibility.
+	add_action( 'install_plugins_featured', __NAMESPACE__ . '\\replace_featured_message', 5 );
 }
 
 /**
@@ -67,6 +70,26 @@ function maybe_override_list_table( $class_name ) {
 function add_direct_tab( $tabs ) {
 	$tabs[ TAB_DIRECT ] = __( 'Direct Install', 'fair' );
 	return $tabs;
+}
+
+/**
+ * Replace the featured message with our own.
+ *
+ * @return void
+ */
+function replace_featured_message() {
+	ob_start();
+	\display_plugins_table();
+	$views = ob_get_clean();
+
+	echo wp_kses_post(
+		str_replace(
+			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- Intentional use of Core's text domain.
+			[ __( 'https://wordpress.org/plugins/' ), __( 'WordPress Plugin Directory' ) ],
+			[ esc_url( 'https://fair.pm/packages/plugins/' ), __( 'FAIR Package Directory', 'fair' ) ],
+			$views
+		)
+	);
 }
 
 /**
