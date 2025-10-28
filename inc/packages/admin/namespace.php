@@ -40,7 +40,7 @@ function bootstrap() {
 	add_action( 'wp_ajax_check_plugin_dependencies', __NAMESPACE__ . '\\set_slug_to_hashed' );
 	add_filter( 'wp_list_table_class_name', __NAMESPACE__ . '\\maybe_override_list_table' );
 
-	// Needed for pre WP 6.9 compatibility.
+	// Needed for pre WordPress 6.9 compatibility.
 	add_action( 'install_plugins_featured', __NAMESPACE__ . '\\replace_featured_message', 5 );
 }
 
@@ -75,6 +75,7 @@ function add_direct_tab( $tabs ) {
 /**
  * Replace the featured message with our own.
  *
+ * @until WordPress 6.9.0
  * @return void
  */
 function replace_featured_message() {
