@@ -87,14 +87,14 @@ function replace_featured_message() {
 	\display_plugins_table();
 	$views = ob_get_clean();
 
-	echo wp_kses_post(
+	echo
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Replacements are escaped. The previous content is direct from Core.
 		str_replace(
 			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- Intentional use of Core's text domain.
 			[ __( 'https://wordpress.org/plugins/' ), __( 'WordPress Plugin Directory' ) ],
 			[ esc_url( 'https://fair.pm/packages/plugins/' ), __( 'FAIR Package Directory', 'fair' ) ],
 			$views
-		)
-	);
+		);
 }
 
 /**
