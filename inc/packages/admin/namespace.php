@@ -87,14 +87,18 @@ function replace_featured_message() {
 	\display_plugins_table();
 	$views = ob_get_clean();
 
-	echo
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Replacements are escaped. The previous content is direct from Core.
-		str_replace(
-			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- Intentional use of Core's text domain.
-			[ __( 'https://wordpress.org/plugins/' ), __( 'WordPress Plugin Directory' ) ],
-			[ esc_url( 'https://fair.pm/packages/plugins/' ), __( 'FAIR Package Directory', 'fair' ) ],
-			$views
+	preg_match( '|<a href="(?<url>[^"]+)">(?<text>[^>]+)<\/a>|', $views, $matches );
+	if ( ! empty( $matches['text'] ) ) {
+		$text_with_fair = str_replace( 'WordPress', 'FAIR', $matches['text'] );
+		$str = str_replace(
+			[ $matches['url'], $matches['text'] ],
+			[ __( 'https://fair.pm/packages/plugins/', 'fair' ), $text_with_fair ],
+			$matches[0]
 		);
+	}
+
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Replacements are escaped. The previous content is direct from Core.
+	echo str_replace( $matches[0], $str, $views );
 }
 
 /**
