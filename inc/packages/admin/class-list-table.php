@@ -26,14 +26,56 @@ class List_Table extends WP_Plugin_Install_List_Table {
 		parent::views();
 		$views = ob_get_clean();
 
-		echo wp_kses_post(
+		add_filter( 'wp_kses_allowed_html', [ $this, 'my_allow_forms_in_kses' ], 10, 2 );
+		$allowed_html = wp_kses_allowed_html( 'post' );
+		remove_filter( 'wp_kses_allowed_html', [ $this, 'my_allow_forms_in_kses' ] );
+
+		echo wp_kses(
 			str_replace(
     			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- Intentional use of Core's text domain.
 				[ __( 'https://wordpress.org/plugins/' ), __( 'WordPress Plugin Directory' ) ],
 				[ esc_url( 'https://fair.pm/packages/plugins/' ), __( 'FAIR Package Directory', 'fair' ) ],
 				$views
-			)
+			), $allowed_html
 		);
+	}
+
+	/**
+	 * Add search form tags for wp_kses.
+	 *
+	 * @param  array  $tags    Array of allowed HTML tags.
+	 * @param  string $context Context of the allowed HTML.
+	 * @return array
+	 */
+	public function my_allow_forms_in_kses( $tags, $context ) {
+		if ( 'post' === $context ) {
+			$tags['form'] = [
+				'action' => true,
+				'method' => true,
+				'name'   => true,
+				'class'  => true,
+			];
+			$tags['input'] = [
+				'type' => true,
+				'name' => true,
+				'value' => true,
+				'id'   => true,
+				'class' => true,
+			];
+			$tags['label']  = [
+				'for' => true,
+			];
+			$tags['select'] = [
+				'name' => true,
+				'id'   => true,
+			];
+			$tags['option'] = [
+				'value' => true,
+				'selected' => true,
+			];
+		}
+
+		return $tags;
 	}
 
 	/**
