@@ -42,7 +42,7 @@ function bootstrap() {
 
 	// Needed for pre WordPress 6.9 compatibility.
 	global $wp_version;
-	if ( version_compare( $wp_version, '6.9-beta1', '<' ) ) {
+	if ( version_compare( $wp_version, '6.8.100', '<' ) ) {
 		add_action( 'install_plugins_featured', __NAMESPACE__ . '\\replace_featured_message' );
 		add_action( 'admin_init', fn() => remove_action( 'install_plugins_featured', 'install_dashboard' ) );
 	}
