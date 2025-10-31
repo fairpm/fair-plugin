@@ -18,11 +18,12 @@ class List_Table extends WP_Plugin_Install_List_Table {
 	/**
 	 * Replace Add Plugins message with ours.
 	 *
+	 * Skip for WP versions prior to 6.9.0.
+	 *
 	 * @since WordPress 6.9.0
 	 * @return void
 	 */
 	public function views() {
-		// For WP versions prior to 6.9.0, do not modify views.
 		if ( ! is_wp_version_compatible( '6.9' ) ) {
 			parent::views();
 			return;
