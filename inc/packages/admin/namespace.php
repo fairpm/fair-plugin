@@ -453,7 +453,7 @@ function sort_sections_in_api( $res ) {
 		$res->sections = array_filter( $properly_ordered );
 	}
 
-		return $res;
+	return $res;
 }
 
 /**
