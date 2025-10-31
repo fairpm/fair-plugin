@@ -448,7 +448,7 @@ function sort_sections_in_api( $res ) {
 		'other_notes',
 		'reviews',
 	];
-	if ( property_exists( $res, 'sections' ) ) {
+	if ( property_exists( $res, 'sections' ) && is_array( $res->sections ) ) {
 		$properly_ordered = array_merge( array_fill_keys( $ordered_sections, '' ), $res->sections );
 		$res->sections = array_filter( $properly_ordered );
 	}
