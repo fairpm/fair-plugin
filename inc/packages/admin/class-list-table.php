@@ -22,13 +22,12 @@ class List_Table extends WP_Plugin_Install_List_Table {
 	 * @return void
 	 */
 	public function views() {
-		global $wp_version;
 		ob_start();
 		parent::views();
 		$views = ob_get_clean();
 
 		// For WP versions prior to 6.9.0, do not modify views.
-		if ( version_compare( $wp_version, '6.8.100', '<' ) ) {
+		if ( ! is_wp_version_compatible( '6.9' ) ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Replacements are escaped. The previous content is direct from Core.
 			echo $views;
 			return;

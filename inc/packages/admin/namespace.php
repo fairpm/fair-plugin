@@ -41,8 +41,7 @@ function bootstrap() {
 	add_filter( 'wp_list_table_class_name', __NAMESPACE__ . '\\maybe_override_list_table' );
 
 	// Needed for pre WordPress 6.9 compatibility.
-	global $wp_version;
-	if ( version_compare( $wp_version, '6.8.100', '<' ) ) {
+	if ( ! is_wp_version_compatible( '6.9' ) ) {
 		add_action( 'install_plugins_featured', __NAMESPACE__ . '\\replace_featured_message' );
 		add_action( 'admin_init', fn() => remove_action( 'install_plugins_featured', 'install_dashboard' ) );
 	}
