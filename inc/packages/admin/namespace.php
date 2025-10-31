@@ -444,7 +444,9 @@ function sort_sections_in_api( $res ) {
 		'screenshots',
 		'changelog',
 		'upgrade_notice',
+		'security',
 		'other_notes',
+		'reviews',
 	];
 	if ( property_exists( $res, 'sections' ) ) {
 		$properly_ordered = array_merge( array_fill_keys( $ordered_sections, '' ), $res->sections );
