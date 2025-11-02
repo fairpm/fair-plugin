@@ -98,7 +98,23 @@ class SortSectionsInApi extends WP_UnitTestCase {
 					'bar' => 'bar',
 				],
 			],
-			'empty sections' => [
+			'some empty sections' => [
+				'sections' => [
+					'faq' => '',
+					'foo' => '',
+					'screenshots' => 'screenshots',
+					'changelog' => '',
+					'bar' => '',
+					'reviews' => 'reviews',
+					'installation' => '',
+					'security' => '',
+				],
+				'expected_order' => [
+					'screenshots' => 'screenshots',
+					'reviews' => 'reviews',
+				],
+			],
+			'no sections' => [
 				'sections' => [],
 				'expected_order' => [],
 			],
