@@ -35,6 +35,7 @@ function bootstrap() {
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
 	add_filter( 'plugins_api_result', __NAMESPACE__ . '\\alter_slugs', 10, 3 );
+	add_filter( 'plugins_api_result', __NAMESPACE__ . '\\sort_sections_in_api', 15, 1 );
 	add_filter( 'plugin_install_action_links', __NAMESPACE__ . '\\maybe_hijack_plugin_install_button', 10, 2 );
 	add_filter( 'plugin_install_description', __NAMESPACE__ . '\\maybe_add_data_to_description', 10, 2 );
 	add_action( 'wp_ajax_check_plugin_dependencies', __NAMESPACE__ . '\\set_slug_to_hashed' );
@@ -425,6 +426,34 @@ function alter_slugs( $res, $action, $args ) {
 
 		$did = $plugin['_fair']['id'];
 		$plugin['slug'] = esc_attr( $plugin['slug'] . '-' . str_replace( ':', '--', $did ) );
+	}
+
+	return $res;
+}
+
+/**
+ * Sort plugin modal tabs.
+ *
+ * Based on standard tab listing order.
+ *
+ * @param object|WP_Error $res Response object or WP_Error.
+ * @return object|WP_Error
+ */
+function sort_sections_in_api( $res ) {
+	$ordered_sections = [
+		'description',
+		'installation',
+		'faq',
+		'screenshots',
+		'changelog',
+		'upgrade_notice',
+		'security',
+		'other_notes',
+		'reviews',
+	];
+	if ( property_exists( $res, 'sections' ) && is_array( $res->sections ) ) {
+		$properly_ordered = array_merge( array_fill_keys( $ordered_sections, '' ), $res->sections );
+		$res->sections = array_filter( $properly_ordered );
 	}
 
 	return $res;

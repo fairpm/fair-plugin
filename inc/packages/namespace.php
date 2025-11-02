@@ -13,6 +13,7 @@ use FAIR\Packages\DID\Document as DIDDocument;
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use FAIR\Updater;
+use function FAIR\Packages\Admin\sort_sections_in_api;
 use WP_Error;
 use WP_Upgrader;
 
@@ -170,6 +171,14 @@ function fetch_metadata_doc( string $url ) {
 		} elseif ( $code !== 200 ) {
 			return new WP_Error( 'fair.packages.metadata.failure', __( 'HTTP error code received', 'fair' ) );
 		}
+
+		// Reorder sections before caching.
+		$body = json_decode( $response['body'] );
+		$body->sections = (array) $body->sections;
+		$body = sort_sections_in_api( $body );
+		$body->sections = (object) $body->sections;
+		$response['body'] = json_encode( $body );
+
 		set_transient( $cache_key, $response, CACHE_LIFETIME );
 	}
 
