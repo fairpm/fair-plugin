@@ -37,6 +37,8 @@ function bootstrap() {
 	Importers\bootstrap();
 	Packages\bootstrap();
 	Pings\bootstrap();
+	Plugin_Filter\bootstrap();
+	Plugin_Filter\Settings\bootstrap();
 	Salts\bootstrap();
 	Settings\bootstrap();
 	Updater\bootstrap();
