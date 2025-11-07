@@ -512,8 +512,8 @@ function alter_slugs( $res, $action, $args ) {
 		}
 
 		if ( $type === 'plugin' ) {
-			$did = $item['_fair']['id'];
-			$item['slug'] = esc_attr( $item['slug'] . '-' . str_replace( ':', '--', $did ) );
+			$did = $item->_fair['id'];
+			$item->slug = esc_attr( $item->slug . '-' . str_replace( ':', '--', $did ) );
 		} else {
 			// Installed themes need to have the slug-didhash format
 			// so their activation status can be determined.
