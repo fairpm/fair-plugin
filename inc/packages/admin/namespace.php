@@ -497,13 +497,13 @@ function alter_slugs( $res, $action, $args ) {
 	$type = explode( '_', $action )[1];
 
 	if (
-		( $type === 'plugin' && empty( $res->plugins ) )
-		|| ( $type === 'theme' && empty( $res->themes ) )
+		( $type === 'plugins' && empty( $res->plugins ) )
+		|| ( $type === 'themes' && empty( $res->themes ) )
 	) {
 		return $res;
 	}
 
-	$items = $type === 'plugin' ? $res->plugins : $res->themes;
+	$items = $type === 'plugins' ? $res->plugins : $res->themes;
 
 	// Alter the slugs to our globally unique version.
 	foreach ( $items as &$item ) {
@@ -511,7 +511,7 @@ function alter_slugs( $res, $action, $args ) {
 			continue;
 		}
 
-		if ( $type === 'plugin' ) {
+		if ( $type === 'plugins' ) {
 			$did = $item['_fair']['id'];
 			$item['slug'] = esc_attr( $item['slug'] . '-' . str_replace( ':', '--', $did ) );
 		} else {
