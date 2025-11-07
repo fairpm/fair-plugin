@@ -495,23 +495,20 @@ function handle_did_in_search_results( $res, $action, $args ) {
 	$type = explode( '_', $action )[1];
 
 	if (
-		( $type === 'plugin' && empty( $res->plugins ) )
-		|| ( $type === 'theme' && empty( $res->themes ) )
+		( $type === 'plugins' && empty( $res->plugins ) )
+		|| ( $type === 'themes' && empty( $res->themes ) )
 	) {
 		return $res;
 	}
 
-<<<<<<< HEAD
 	// Alter the slugs to our globally unique version and populate release cache.
-	$items = $type === 'plugin' ? $res->plugins : $res->themes;
-
-	// Alter the slugs to our globally unique version.
+	$items = $type === 'plugins' ? $res->plugins : $res->themes;
 	foreach ( $items as &$item ) {
 		if ( ! is_fair_package( $item ) ) {
 			continue;
 		}
 
-		if ( $type === 'plugin' ) {
+		if ( $type === 'plugins' ) {
 			$did = $item['_fair']['id'];
 			$item['slug'] = esc_attr( $item['slug'] . '-' . str_replace( ':', '--', $did ) );
 		} else {
