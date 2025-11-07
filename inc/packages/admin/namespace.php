@@ -514,6 +514,7 @@ function handle_did_in_search_results( $res, $action, $args ) {
 		if ( ! str_ends_with( $slug, '-' . $did_hash ) ) {
 			$slug = $item->slug . '-' . $did_hash;
 		}
+		$item->slug = esc_attr( $item->slug . '-' . str_replace( ':', '--', $did ) );
 
 		// Installed themes need the slug-didhash format
 		// so their activation status can be determined.
@@ -521,12 +522,9 @@ function handle_did_in_search_results( $res, $action, $args ) {
 			$theme = wp_get_theme( $slug );
 			if ( $theme->exists() ) {
 				$item->slug = esc_attr( $slug );
-				continue;
 			}
 		}
 		Packages\add_package_to_release_cache( $did );
-
-		$item->slug = esc_attr( $item->slug . '-' . str_replace( ':', '--', $did ) );
 	}
 
 	return $res;
