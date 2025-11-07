@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: FAIR - Federated and Independent Repositories 1.0.0\n"
+"Project-Id-Version: FAIR - Federated and Independent Repositories 1.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-10-27T19:50:47+00:00\n"
+"POT-Creation-Date: 2025-11-07T00:13:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -29,26 +29,26 @@ msgstr ""
 msgid "FAIR Contributors"
 msgstr ""
 
-#: inc/avatars/namespace.php:99
+#: inc/avatars/namespace.php:102
 msgid "Choose Profile Image"
 msgstr ""
 
-#: inc/avatars/namespace.php:100
+#: inc/avatars/namespace.php:103
 msgid "Remove Profile Image"
 msgstr ""
 
-#: inc/avatars/namespace.php:103
+#: inc/avatars/namespace.php:106
 msgid "Upload a custom profile picture for your account."
 msgstr ""
 
 #. translators: %s: Name of person in profile picture
-#: inc/avatars/namespace.php:252
-#: inc/avatars/namespace.php:268
+#: inc/avatars/namespace.php:259
+#: inc/avatars/namespace.php:275
 #, php-format
 msgid "profile picture for %s"
 msgstr ""
 
-#: inc/avatars/namespace.php:264
+#: inc/avatars/namespace.php:271
 msgctxt "alt for unknown avatar user"
 msgid "profile picture for user"
 msgstr ""
@@ -90,6 +90,11 @@ msgstr ""
 
 #: inc/dashboard-widgets/namespace.php:202
 msgid "Events (by The WP World)"
+msgstr ""
+
+#: inc/packages/admin/class-list-table.php:41
+#: inc/packages/admin/namespace.php:95
+msgid "https://fair.pm/packages/plugins/"
 msgstr ""
 
 #: inc/packages/admin/info.php:80
@@ -256,25 +261,25 @@ msgstr ""
 msgid "Installed"
 msgstr ""
 
-#: inc/packages/admin/namespace.php:68
+#: inc/packages/admin/namespace.php:75
 msgid "Direct Install"
 msgstr ""
 
-#: inc/packages/admin/namespace.php:135
+#: inc/packages/admin/namespace.php:167
 msgid "Enter a plugin ID to view details and install."
 msgstr ""
 
-#: inc/packages/admin/namespace.php:161
+#: inc/packages/admin/namespace.php:193
 msgctxt "plugin"
 msgid "View Details"
 msgstr ""
 
-#: inc/packages/admin/namespace.php:164
+#: inc/packages/admin/namespace.php:196
 msgid "Plugin IDs should be in the format <code>did:plc:...</code>"
 msgstr ""
 
 #. translators: %1$s: repository hostname
-#: inc/packages/admin/namespace.php:467
+#: inc/packages/admin/namespace.php:527
 #, php-format
 msgid "Hosted on %1$s"
 msgstr ""
@@ -301,68 +306,68 @@ msgstr ""
 msgid "The PLC directory did not return the DID that was sent or the DID was invalid."
 msgstr ""
 
-#: inc/packages/namespace.php:46
+#: inc/packages/namespace.php:47
 msgid "ID is not a valid DID."
 msgstr ""
 
-#: inc/packages/namespace.php:51
+#: inc/packages/namespace.php:52
 msgid "DID could not be parsed as a URI."
 msgstr ""
 
-#: inc/packages/namespace.php:62
+#: inc/packages/namespace.php:63
 msgid "Unsupported DID method."
 msgstr ""
 
-#: inc/packages/namespace.php:127
+#: inc/packages/namespace.php:128
 msgid "DID is not a valid package to fetch metadata for."
 msgstr ""
 
-#: inc/packages/namespace.php:138
+#: inc/packages/namespace.php:139
 msgid "Fetched metadata does not match the requested DID."
 msgstr ""
 
-#: inc/packages/namespace.php:171
+#: inc/packages/namespace.php:172
 msgid "HTTP error code received"
 msgstr ""
 
-#: inc/packages/namespace.php:243
+#: inc/packages/namespace.php:252
 msgid "DID does not contain valid signing keys."
 msgstr ""
 
-#: inc/packages/namespace.php:253
+#: inc/packages/namespace.php:262
 msgid "No releases found in the repository."
 msgstr ""
 
-#: inc/packages/namespace.php:820
+#: inc/packages/namespace.php:829
 msgctxt "alias validation error"
 msgid "Multiple aliases set in DID; packages may only have a single alias"
 msgstr ""
 
-#: inc/packages/namespace.php:830
+#: inc/packages/namespace.php:839
 msgctxt "alias validation error"
 msgid "Invalid FAIR alias format"
 msgstr ""
 
-#: inc/packages/namespace.php:839
+#: inc/packages/namespace.php:848
 msgctxt "alias validation error"
 msgid "FAIR alias format exceeds valid domain length"
 msgstr ""
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:852
+#: inc/packages/namespace.php:861
 #, php-format
 msgctxt "alias validation error"
 msgid "Missing verification record for \"%s\""
 msgstr ""
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:866
+#: inc/packages/namespace.php:875
 #, php-format
 msgctxt "alias validation error"
 msgid "Verification record for \"%s\" is invalid"
 msgstr ""
 
-#: inc/packages/namespace.php:877
+#: inc/packages/namespace.php:886
 msgctxt "alias validation error"
 msgid "DID in validation record does not match"
 msgstr ""
