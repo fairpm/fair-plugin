@@ -8,6 +8,9 @@
 namespace FAIR\Avatars;
 
 const AVATAR_SRC_SETTING_KEY = 'fair_avatar_source';
+const AVATAR_DOMAINS_TO_REPLACE = [
+	'secure.gravatar.com',
+];
 
 /**
  * Bootstrap.
@@ -143,6 +146,10 @@ function save_avatar_upload( $user_id ) {
  * @return string              Filtered avatar HTML.
  */
 function filter_avatar( $avatar, $id_or_email, $size, $default, $alt, $args ) {
+	if ( ! str_contains( $avatar, "src=''" ) && ! should_replace_url( $avatar ) ) {
+		return $avatar;
+	}
+
 	$avatar_url = get_avatar_url( $id_or_email, $args );
 
 	$class = [ 'avatar', 'avatar-' . (int) $size, 'photo' ];
@@ -185,7 +192,7 @@ function filter_avatar( $avatar, $id_or_email, $size, $default, $alt, $args ) {
  * @return string              Filtered avatar URL.
  */
 function filter_avatar_url( $url, $id_or_email, $args ) {
-	return get_avatar_url( $id_or_email, $args );
+	return should_replace_url( $url ) ? get_avatar_url( $id_or_email, $args ) : $url;
 }
 
 /**
@@ -324,4 +331,19 @@ function generate_default_avatar( ?string $name = null ) : string {
 
 	$uri = 'data:image/svg+xml;base64,' . base64_encode( $data );
 	return $uri;
+}
+
+/**
+ * Determine whether the avatar URL should be replaced.
+ *
+ * @param string $url_or_markup The avatar's URL or markup.
+ * @return bool Whether the URL should be replaced.
+ */
+function should_replace_url( string $url_or_markup ) : bool {
+	foreach ( AVATAR_DOMAINS_TO_REPLACE as $domain ) {
+		if ( str_contains( $url_or_markup, $domain ) ) {
+			return true;
+		}
+	}
+	return false;
 }

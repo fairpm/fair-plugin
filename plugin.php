@@ -2,7 +2,7 @@
 /**
  * Plugin Name: FAIR - Federated and Independent Repositories
  * Description: Make your site more FAIR.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: FAIR Contributors
  * License: GPLv2
  * Requires at least: 5.4
@@ -18,7 +18,7 @@
 
 namespace FAIR;
 
-const VERSION = '1.0.0';
+const VERSION = '1.1.0';
 const PLUGIN_DIR = __DIR__;
 const PLUGIN_FILE = __FILE__;
 
