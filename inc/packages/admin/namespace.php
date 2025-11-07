@@ -492,23 +492,23 @@ function handle_did_in_search_results( $res, $action, $args ) {
 		return $res;
 	}
 
-	$type = explode( '_', $action )[1];
+	$type = rtrim( explode( '_', $action )[1], 's' );
 
 	if (
-		( $type === 'plugins' && empty( $res->plugins ) )
-		|| ( $type === 'themes' && empty( $res->themes ) )
+		( $type === 'plugin' && empty( $res->plugins ) )
+		|| ( $type === 'theme' && empty( $res->themes ) )
 	) {
 		return $res;
 	}
 
 	// Alter the slugs to our globally unique version and populate release cache.
-	$items = $type === 'plugins' ? $res->plugins : $res->themes;
+	$items = $type === 'plugin' ? $res->plugins : $res->themes;
 	foreach ( $items as &$item ) {
 		if ( ! is_fair_package( $item ) ) {
 			continue;
 		}
 
-		if ( $type === 'plugins' ) {
+		if ( $type === 'plugin' ) {
 			$did = $item['_fair']['id'];
 			$item['slug'] = esc_attr( $item['slug'] . '-' . str_replace( ':', '--', $did ) );
 		} else {
