@@ -511,28 +511,23 @@ function alter_slugs( $res, $action, $args ) {
 			continue;
 		}
 
-		if ( $type === 'plugin' ) {
-			$did = $item->_fair['id'];
-			$item->slug = esc_attr( $item->slug . '-' . str_replace( ':', '--', $did ) );
-		} else {
-			// Installed themes need to have the slug-didhash format
-			// so their activation status can be determined.
-			$did_hash = Packages\get_did_hash( $item->_fair['id'] );
-			$slug = $item->slug;
-			if ( ! str_ends_with( $slug, '-' . $did_hash ) ) {
-				$slug = $item->slug . '-' . $did_hash;
-			}
+		$did = $item->_fair['id'];
+		$did_hash = Packages\get_did_hash( $item->_fair['id'] );
+		$slug = $item->slug;
+		if ( ! str_ends_with( $slug, '-' . $did_hash ) ) {
+			$slug = $item->slug . '-' . $did_hash;
+		}
+
+		// Installed themes need the slug-didhash format
+		// so their activation status can be determined.
+		if ( 'theme' === $type ) {
 			$theme = wp_get_theme( $slug );
 			if ( $theme->exists() ) {
 				$item->slug = esc_attr( $slug );
 				continue;
 			}
-
-			// Themes that aren't installed need the slug--escaped-did format
-			// so their metadata can be retrieved.
-			$did = $item->_fair['id'];
-			$item->slug = esc_attr( $item->slug . '-' . str_replace( ':', '--', $did ) );
 		}
+		$item->slug = esc_attr( $item->slug . '-' . str_replace( ':', '--', $did ) );
 	}
 
 	return $res;
