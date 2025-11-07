@@ -517,6 +517,7 @@ function alter_slugs( $res, $action, $args ) {
 		if ( ! str_ends_with( $slug, '-' . $did_hash ) ) {
 			$slug = $item->slug . '-' . $did_hash;
 		}
+		$item->slug = esc_attr( $item->slug . '-' . str_replace( ':', '--', $did ) );
 
 		// Installed themes need the slug-didhash format
 		// so their activation status can be determined.
@@ -524,10 +525,8 @@ function alter_slugs( $res, $action, $args ) {
 			$theme = wp_get_theme( $slug );
 			if ( $theme->exists() ) {
 				$item->slug = esc_attr( $slug );
-				continue;
 			}
 		}
-		$item->slug = esc_attr( $item->slug . '-' . str_replace( ':', '--', $did ) );
 	}
 
 	return $res;
