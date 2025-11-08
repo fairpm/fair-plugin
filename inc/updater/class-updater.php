@@ -219,7 +219,12 @@ class Updater {
 			return $result;
 		}
 
-		return (object) Packages\get_package_data( $this->did );
+		$package_data = (object) Packages\get_package_data( $this->did );
+		if ( $this->type === 'theme' ) {
+			$package_data->author = $package_data->author['display_name'];
+		}
+
+		return $package_data;
 	}
 
 	/**
