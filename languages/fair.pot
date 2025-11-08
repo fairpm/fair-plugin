@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-11-07T00:13:51+00:00\n"
+"POT-Creation-Date: 2025-11-08T23:36:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -444,13 +444,13 @@ msgid "Automatic update is unavailable for this theme."
 msgstr ""
 
 #. translators: %s: The DID of the package.
-#: inc/updater/namespace.php:135
+#: inc/updater/namespace.php:141
 #, php-format
 msgid "Verified signature for %s"
 msgstr ""
 
 #. translators: %s: The package's URL.
-#: inc/updater/namespace.php:151
+#: inc/updater/namespace.php:157
 #, php-format
 msgid "Signature verification could not be performed for the package: %s"
 msgstr ""
