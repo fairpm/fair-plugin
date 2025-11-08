@@ -46,12 +46,18 @@ function get_packages() : array {
 		}
 	}
 
-	$theme_path = WP_CONTENT_DIR . '/themes/';
-	$themes     = wp_get_themes();
-	foreach ( $themes as $file => $theme ) {
-		$theme_id = get_file_data( $theme_path . $file . '/style.css', [ 'ThemeID' => 'Theme ID' ] )['ThemeID'];
+	$themes = wp_get_themes();
+	foreach ( $themes as $theme ) {
+		$stylesheet_directory = $theme->get_stylesheet_directory();
+		if ( empty( $stylesheet_directory ) ) {
+			// The theme root is missing.
+			continue;
+		}
+
+		$stylesheet_file = trailingslashit( $stylesheet_directory ) . 'style.css';
+		$theme_id = get_file_data( $stylesheet_file, [ 'ThemeID' => 'Theme ID' ] )['ThemeID'];
 		if ( ! empty( $theme_id ) ) {
-			$packages['themes'][ $theme_id ] = $theme_path . $file . '/style.css';
+			$packages['themes'][ $theme_id ] = $stylesheet_file;
 		}
 	}
 
