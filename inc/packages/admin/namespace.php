@@ -510,18 +510,18 @@ function handle_did_in_search_results( $res, $action, $args ) {
 
 		$did = $item->_fair['id'];
 		$did_hash = Packages\get_did_hash( $item->_fair['id'] );
-		$slug = $item->slug;
-		if ( ! str_ends_with( $slug, '-' . $did_hash ) ) {
-			$slug = $item->slug . '-' . $did_hash;
+		$slug_did_hash = $item->slug;
+		if ( ! str_ends_with( $slug_did_hash, '-' . $did_hash ) ) {
+			$slug_did_hash .= '-' . $did_hash;
 		}
 		$item->slug = esc_attr( $item->slug . '-' . str_replace( ':', '--', $did ) );
 
 		// Installed themes need the slug-didhash format
 		// so their activation status can be determined.
 		if ( 'theme' === $type ) {
-			$theme = wp_get_theme( $slug );
+			$theme = wp_get_theme( $slug_did_hash );
 			if ( $theme->exists() ) {
-				$item->slug = esc_attr( $slug );
+				$item->slug = esc_attr( $slug_did_hash );
 			}
 		}
 		Packages\add_package_to_release_cache( $did );
