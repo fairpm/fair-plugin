@@ -1,7 +1,7 @@
 ---
-name: Bug report
+name: "🐞 Bug report"
 about: Let us know what needs work
-title: '\U0001F41E Bug Report: '
+title: '🐞 Bug Report: '
 labels: [ 'triage' ]
 type: bug
 
