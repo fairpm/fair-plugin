@@ -1,7 +1,7 @@
 ---
-name: "New/Updated Translation"
+name: "🌐 New/Updated Translation"
 about: "For new and corrected translation files"
-title: "\U0001F310 Translation: "
+title: "🌐 Translation: "
 labels: [ 'translation', 'triage' ]
 type: feature
 
