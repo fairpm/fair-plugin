@@ -222,6 +222,7 @@ class Updater {
 		$package_data = (object) Packages\get_package_data( $this->did );
 		if ( $this->type === 'theme' ) {
 			$package_data->author = $package_data->author['display_name'];
+			$package_data->slug = $package_data->slug_didhash;
 		}
 
 		return $package_data;
