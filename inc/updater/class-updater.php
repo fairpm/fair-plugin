@@ -246,7 +246,6 @@ class Updater {
 		if ( is_wp_error( $response ) ) {
 			return $transient;
 		}
-		// $response['slug'] = $response['slug_didhash'];
 		// Delete any existing update for this package if non-hashed slug.
 		// Avoids duplicate update theme entries.
 		if ( 'theme' === $this->type && $response['file'] === $rel_path ) {
