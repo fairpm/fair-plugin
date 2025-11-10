@@ -282,7 +282,7 @@ class Updater {
 		$did_hash = Packages\get_did_hash( $this->did );
 		$theme = (object) Packages\get_package_data( $this->did );
 		if ( ! str_ends_with( $theme->slug, '-' . $did_hash ) ) {
-			$theme->slug = $theme->slug . '-' . $did_hash;
+			$theme->slug = array_key_exists( $theme->slug, $prepared_themes ) ? $theme->slug : $theme->slug . '-' . $did_hash;
 		}
 
 		if ( ! empty( $prepared_themes[ $theme->slug ]['hasUpdate'] ) ) {
