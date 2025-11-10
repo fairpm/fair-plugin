@@ -181,10 +181,8 @@ function get_trusted_keys(): array {
 		return [];
 	}
 
-	/*
-		* FAIR uses Base58BTC-encoded Ed25519 keys.
-		* Core expects base64-encoded keys.
-		*/
+	// FAIR uses Base58BTC-encoded Ed25519 keys.
+	// Core expects base64-encoded keys.
 	$recoded_keys = [];
 	foreach ( $keys as $key ) {
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase

@@ -308,10 +308,8 @@ function get_language_priority_list( ?string $locale = null ) {
 		} while ( $i > 0 );
 	}
 
-	/*
-	 * Double the primary language code, to catch cases where the
-	 * locale matches the country code. (e.g. de becomes de-DE.)
-	 */
+	// Double the primary language code, to catch cases where the
+	// locale matches the country code. (e.g. de becomes de-DE).
 	$primary = substr( $locale, 0, strpos( $locale, '-' ) );
 	$langs[] = $primary . '-' . $primary;
 

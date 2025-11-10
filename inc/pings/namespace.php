@@ -114,19 +114,14 @@ function ping_indexnow( $new_status, $old_status, $post ) : void {
 		return;
 	}
 
-	/*
-	 * Skip for revisions and autosaves.
-	 *
-	 * The IndexNow ping for revisions will be handled by the
-	 * parent post's transition_post_status hook.
-	 */
+	// Skip for revisions and autosaves.
+	// The IndexNow ping for revisions will be handled by the
+	// parent post's transition_post_status hook.
 	if ( wp_is_post_revision( $post ) || wp_is_post_autosave( $post ) ) {
 		return;
 	}
 
-	/*
-	 * Prevent double pings for block editor legacy meta boxes.
-	 */
+	// Prevent double pings for block editor legacy meta boxes.
 	if (
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		isset( $_GET['meta-box-loader'] )
