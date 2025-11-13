@@ -109,6 +109,11 @@ function handle_key_file_request() {
  * @param WP_Post $post       Post object.
  */
 function ping_indexnow( $new_status, $old_status, $post ) : void {
+	// Skip during imports to avoid flooding IndexNow.
+	if ( defined( 'WP_IMPORTING' ) && WP_IMPORTING ) {
+		return;
+	}
+
 	// Skip if the post isn't viewable.
 	if ( ! is_post_type_viewable( $post->post_type ) || ! is_post_status_viewable( $new_status ) ) {
 		return;
