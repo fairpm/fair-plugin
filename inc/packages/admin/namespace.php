@@ -289,7 +289,7 @@ function set_slug_to_hashed() : void {
 	}
 
 	$escaped_slug = sanitize_text_field( wp_unslash( $_POST['slug'] ) );
-	$did = 'did:' . explode( '-did:', str_replace( '--', ':', $escaped_slug ), 2 )[1];
+	$did = 'did:' . ( explode( '-did:', str_replace( '--', ':', $escaped_slug ), 2 )[1] ?? '' );
 	if ( ! preg_match( '/^did:plc:.+$/', $did ) ) {
 		return;
 	}
