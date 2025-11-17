@@ -116,7 +116,7 @@ function get_browser_check_response( string $agent ) {
  * @return array|null Branch-indexed data from PHP.net, or null on failure.
  */
 function get_php_branches() {
-	$releases = get_transient( 'php_releases' );
+	$releases = get_site_transient( 'php_releases' );
 	if ( $releases ) {
 		return $releases;
 	}
@@ -143,7 +143,7 @@ function get_php_branches() {
 		$indexed[ $ver['branch'] ] = $ver;
 	}
 
-	set_transient( 'php_releases', $indexed, CACHE_LIFETIME );
+	set_site_transient( 'php_releases', $indexed, CACHE_LIFETIME );
 	return $indexed;
 }
 

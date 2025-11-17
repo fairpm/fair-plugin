@@ -90,7 +90,7 @@ function get_did_hash( string $id ) {
  * @return DIDDocument|WP_Error
  */
 function get_did_document( string $id ) {
-	$cached = get_transient( CACHE_METADATA_DOCUMENTS . $id );
+	$cached = get_site_transient( CACHE_METADATA_DOCUMENTS . $id );
 	if ( $cached ) {
 		return $cached;
 	}
@@ -105,7 +105,7 @@ function get_did_document( string $id ) {
 	if ( is_wp_error( $document ) ) {
 		return $document;
 	}
-	set_transient( CACHE_METADATA_DOCUMENTS . $id, $document, CACHE_LIFETIME );
+	set_site_transient( CACHE_METADATA_DOCUMENTS . $id, $document, CACHE_LIFETIME );
 
 	return $document;
 }
@@ -150,7 +150,7 @@ function fetch_package_metadata( string $id ) {
  */
 function fetch_metadata_doc( string $url ) {
 	$cache_key = CACHE_KEY . md5( $url );
-	$response = get_transient( $cache_key );
+	$response = get_site_transient( $cache_key );
 	$response = fetch_metadata_from_local( $response, $url );
 
 	if ( ! $response ) {
@@ -179,7 +179,7 @@ function fetch_metadata_doc( string $url ) {
 		$body->sections = (object) $body->sections;
 		$response['body'] = json_encode( $body );
 
-		set_transient( $cache_key, $response, CACHE_LIFETIME );
+		set_site_transient( $cache_key, $response, CACHE_LIFETIME );
 	}
 
 	return MetadataDocument::from_response( $response );
@@ -200,7 +200,7 @@ function fetch_metadata_from_local( $response, $url ) {
 	if ( ! $response && str_contains( $url, home_url() ) ) {
 		$did = explode( '/', parse_url( $url, PHP_URL_PATH ) );
 		$did = array_pop( $did );
-		$body = get_transient( 'fair-metadata-endpoint-' . $did );
+		$body = get_site_transient( 'fair-metadata-endpoint-' . $did );
 		$response = [];
 		$response = [
 			'headers' => [],
@@ -208,7 +208,7 @@ function fetch_metadata_from_local( $response, $url ) {
 		];
 		$response = ! $body ? false : $response;
 		if ( $response ) {
-			set_transient( CACHE_KEY . md5( $url ), $response, CACHE_LIFETIME );
+			set_site_transient( CACHE_KEY . md5( $url ), $response, CACHE_LIFETIME );
 		}
 	}
 
@@ -661,7 +661,7 @@ function upgrader_pre_download( $false ) : bool {
  * @return array The same options.
  */
 function cache_did_for_install( array $options ): array {
-	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?: [];
+	$releases = get_site_transient( CACHE_RELEASE_PACKAGES ) ?: [];
 
 	if ( ! empty( $releases ) ) {
 		$did = array_find_key(
@@ -673,7 +673,7 @@ function cache_did_for_install( array $options ): array {
 		);
 
 		if ( $did ) {
-			set_transient( CACHE_DID_FOR_INSTALL, $did );
+			set_site_transient( CACHE_DID_FOR_INSTALL, $did );
 		}
 	}
 
@@ -703,7 +703,7 @@ function delete_cached_did_for_install(): void {
 function rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
 
-	$did = get_transient( CACHE_DID_FOR_INSTALL );
+	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
 
 	if ( ! $did ) {
 		return $source;
@@ -742,9 +742,9 @@ function add_package_to_release_cache( string $did ) : void {
 	if ( empty( $did ) ) {
 		return;
 	}
-	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?: [];
+	$releases = get_site_transient( CACHE_RELEASE_PACKAGES ) ?: [];
 	$releases[ $did ] = get_latest_release_from_did( $did );
-	set_transient( CACHE_RELEASE_PACKAGES, $releases );
+	set_site_transient( CACHE_RELEASE_PACKAGES, $releases );
 }
 
 /**
@@ -759,7 +759,7 @@ function add_package_to_release_cache( string $did ) : void {
  * @return array
  */
 function maybe_add_accept_header( $args, $url ) : array {
-	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?: [];
+	$releases = get_site_transient( CACHE_RELEASE_PACKAGES ) ?: [];
 
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;
