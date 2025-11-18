@@ -219,7 +219,13 @@ class Updater {
 			return $result;
 		}
 
-		return (object) Packages\get_package_data( $this->did );
+		$package_data = (object) Packages\get_package_data( $this->did );
+		if ( $this->type === 'theme' ) {
+			$package_data->author = $package_data->author['display_name'];
+			$package_data->slug = $package_data->slug_didhash;
+		}
+
+		return $package_data;
 	}
 
 	/**
@@ -236,12 +242,16 @@ class Updater {
 		}
 
 		$rel_path = plugin_basename( $this->filepath );
-		$rel_path = 'theme' === $this->type ? dirname( $rel_path ) : $rel_path;
+		$rel_path = 'theme' === $this->type ? basename( dirname( $rel_path ) ) : $rel_path;
 		$response = Packages\get_package_data( $this->did );
 		if ( is_wp_error( $response ) ) {
 			return $transient;
 		}
-		$response['slug'] = $response['slug_didhash'];
+		// Delete any existing update for this package if non-hashed slug.
+		// Avoids duplicate update theme entries.
+		if ( 'theme' === $this->type && $response['file'] === $rel_path ) {
+			unset( $transient->response[ $response['slug'] ] );
+		}
 		$response = 'plugin' === $this->type ? (object) $response : $response;
 		$is_compatible = Packages\check_requirements( $this->release );
 
@@ -265,10 +275,14 @@ class Updater {
 	 * @return array
 	 */
 	public function customize_theme_update_html( $prepared_themes ) {
-		$theme = $this->metadata;
-
 		if ( 'theme' !== $this->type ) {
 			return $prepared_themes;
+		}
+
+		$did_hash = Packages\get_did_hash( $this->did );
+		$theme = (object) Packages\get_package_data( $this->did );
+		if ( ! str_ends_with( $theme->slug, '-' . $did_hash ) ) {
+			$theme->slug = array_key_exists( $theme->slug, $prepared_themes ) ? $theme->slug : $theme->slug . '-' . $did_hash;
 		}
 
 		if ( ! empty( $prepared_themes[ $theme->slug ]['hasUpdate'] ) ) {
