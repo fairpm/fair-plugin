@@ -650,7 +650,7 @@ function get_package_data( $did ) {
  */
 function upgrader_pre_download( $false ) : bool {
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
-	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\rename_source_selection', 11, 3 );
+	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\rename_source_on_download', 11, 3 );
 	return $false;
 }
 
@@ -690,7 +690,7 @@ function delete_cached_did_for_install(): void {
 }
 
 /**
- * Renames a package's directory when it doesn't match the slug.
+ * Renames a package's directory on download when it doesn't match the slug.
  *
  * This is commonly required for packages from Git hosts.
  *
@@ -700,10 +700,20 @@ function delete_cached_did_for_install(): void {
  *
  * @return string|WP_Error
  */
-function rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
+function rename_source_on_download( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
 
+	$upgrader_class = get_class( $upgrader );
+	$type = str_contains( $upgrader_class, 'Plugin' ) ? 'plugin' : ( str_contains( $upgrader_class, 'Theme' ) ? 'theme' : '' );
 	$did = get_transient( CACHE_DID_FOR_INSTALL );
+
+	if ( ! $did ) {
+		if ( empty( $type ) ) {
+			return $source;
+		}
+		$did_doc = get_did_by_path( $source, $type );
+		$did = $did_doc->get_id();
+	}
 
 	if ( ! $did ) {
 		return $source;
@@ -715,10 +725,12 @@ function rename_source_selection( string $source, string $remote_source, WP_Upgr
 	}
 
 	// Sanity check.
-	if ( $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
+	if ( 'plugin' === $type && $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
 		return $source;
 	}
-
+	if ( 'theme' === $type && $upgrader->new_theme_data['Name'] !== $metadata->name ) {
+		return $source;
+	}
 	if ( str_contains( $source, get_did_hash( $did ) ) && basename( $source ) === $metadata->slug ) {
 		return $source;
 	}
@@ -971,4 +983,52 @@ function get_plugin_information( $result, $action, $args ) {
 	return (object) $api_data;
 }
 
+/**
+ * Get a package's DID by its path.
+ *
+ * @param string $path The absolute path to the package's directory or main file.
+ * @param string $type The type of package. Allowed types are 'plugin' or 'theme'.
+ * @return DID|WP_Error The DID object on success, WP_Error on failure.
+ */
+function get_did_by_path( $path, $type ) {
+	global $wp_filesystem;
+
+	if ( $type === 'theme' ) {
+		if ( ! str_ends_with( $path, 'style.css' ) ) {
+			$path = trailingslashit( $path ) . 'style.css';
+		}
+
+		$id = get_file_data( $path, [ 'id' => 'Theme ID' ] )['id'];
+		if ( $id ) {
+			return parse_did( $id );
+		}
+	}
+
+	if ( $type === 'plugin' ) {
+		if ( str_ends_with( $path, '.php' ) ) {
+			$id = get_file_data( $path, [ 'id' => 'Plugin ID' ] )['id'];
+			return parse_did( $id );
+		}
+
+		$files = $wp_filesystem->dirlist( $path ) ?: false;
+		if ( ! $files ) {
+			// Finding a DID is impossible.
+			return new WP_Error( 'fair.packages.dirlist_failed', __( "The package's file list could not be retrieved.", 'fair' ) );
+		}
+
+		foreach ( $files as $filename => $data ) {
+			if ( $data['type'] !== 'f' || ! str_ends_with( $filename, '.php' ) ) {
+				continue;
+			}
+
+			$filepath = trailingslashit( $path ) . $filename;
+			$id = get_file_data( $filepath, [ 'id' => 'Plugin ID' ] )['id'];
+			if ( $id ) {
+				return parse_did( $id );
+			}
+		}
+	}
+
+	return new WP_Error( 'fair.packages.none_found', __( 'No FAIR packages were found.', 'fair' ) );
+}
 // phpcs:enable
