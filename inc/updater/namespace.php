@@ -95,7 +95,7 @@ function verify_signature_on_download( $reply, string $package, WP_Upgrader $upg
 		return $reply;
 	}
 
-	$did = get_transient( CACHE_DID_FOR_INSTALL );
+	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
 	if ( ! $did ) {
 		return $reply;
 	}
@@ -113,7 +113,7 @@ function verify_signature_on_download( $reply, string $package, WP_Upgrader $upg
 		return $package;
 	}
 
-	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?? [];
+	$releases = get_site_transient( CACHE_RELEASE_PACKAGES ) ?? [];
 	if ( empty( $releases ) || ! isset( $releases[ $did ] ) ) {
 		return $reply;
 	}
@@ -166,7 +166,7 @@ function verify_signature_on_download( $reply, string $package, WP_Upgrader $upg
  * @return array
  */
 function get_trusted_keys(): array {
-	$did = get_transient( CACHE_DID_FOR_INSTALL );
+	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
 	if ( ! $did ) {
 		return [];
 	}
