@@ -686,7 +686,7 @@ function cache_did_for_install( array $options ): array {
  * @return void
  */
 function delete_cached_did_for_install(): void {
-	delete_transient( CACHE_DID_FOR_INSTALL );
+	delete_site_transient( CACHE_DID_FOR_INSTALL );
 }
 
 /**
