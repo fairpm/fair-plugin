@@ -15,8 +15,8 @@ touch /tmp/fair-dist/SHA384SUMS
 
 # Bundle our plugin first.
 [ -d /tmp/fair-temp ] && rm -rf /tmp/fair-temp
-mkdir -p /tmp/fair-temp/wordpress/wp-content/plugins/fair
-rsync -a --exclude-from="$SCRIPT_DIR/../.distignore" "$SCRIPT_DIR/.." /tmp/fair-temp/wordpress/wp-content/plugins/fair
+mkdir -p /tmp/fair-temp/wordpress/wp-content/plugins/fair-plugin
+rsync -a --exclude-from="$SCRIPT_DIR/../.distignore" "$SCRIPT_DIR/.." /tmp/fair-temp/wordpress/wp-content/plugins/fair-plugin
 
 echo "Fetching WordPress version data" >&2
 VERSION_DATA=$(curl -s https://api.wordpress.org/core/version-check/1.7/)

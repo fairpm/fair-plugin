@@ -1,0 +1,204 @@
+# Copyright (C) 2025 FAIR Contributors
+# This file is distributed under the GPLv2.
+msgid ""
+msgstr ""
+"Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
+"Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
+"POT-Creation-Date: 2025-06-16T16:26:12+00:00\n"
+"PO-Revision-Date: 2025-06-20 17:22+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.6\n"
+"X-Domain: fair\n"
+
+#. Plugin Name of the plugin
+#: plugin.php
+msgid "FAIR - Federated and Independent Repositories"
+msgstr "FAIR - Repositori federati ed indipendenti"
+
+#. Description of the plugin
+#: plugin.php
+msgid "Make your site more FAIR."
+msgstr "Rendi il tuo sito più equo grazie a FAIR."
+
+#. Author of the plugin
+#: plugin.php
+msgid "FAIR Contributors"
+msgstr "Persone che contribuiscono a FAIR"
+
+#: inc/avatars/namespace.php:93
+msgid "Choose Profile Image"
+msgstr "Scegli l’immagine del profilo"
+
+#: inc/avatars/namespace.php:94
+msgid "Remove Profile Image"
+msgstr "Rimuovi l’immagine del profilo"
+
+#: inc/avatars/namespace.php:97
+msgid "Upload a custom profile picture for your account."
+msgstr "Carica un’immagine del profilo per il tuo account."
+
+#. translators: %s: Name of person in profile picture
+#: inc/avatars/namespace.php:244 inc/avatars/namespace.php:260
+#, php-format
+msgid "profile picture for %s"
+msgstr "immagine del profilo di %s"
+
+#: inc/avatars/namespace.php:256
+msgctxt "alt for unknown avatar user"
+msgid "profile picture for user"
+msgstr "immagine del profilo per l’utente"
+
+#. translators: %s: The version string.
+#: inc/credits/namespace.php:85
+#, php-format
+msgid "%s is not a valid version string."
+msgstr "%s non è una stringa di versione valida."
+
+#: inc/credits/namespace.php:114
+msgid "No credits could be found."
+msgstr "Nessun credito trovato."
+
+#: inc/dashboard-widgets/namespace.php:94
+msgid "Unable to fetch events (parse error)."
+msgstr "Impossibile recuperare gli eventi (errore di parsing)."
+
+#: inc/dashboard-widgets/namespace.php:101
+msgctxt "default event location"
+msgid "Online"
+msgstr "Online"
+
+#. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
+#: inc/dashboard-widgets/namespace.php:173
+msgctxt "Events and News dashboard widget"
+msgid "https://fair.pm/"
+msgstr "https://fair.pm/"
+
+#: inc/dashboard-widgets/namespace.php:186
+msgid "Events (by The WP World)"
+msgstr "Eventi (tramite The WP World)"
+
+#: inc/settings/namespace.php:46 inc/settings/namespace.php:47
+#: inc/settings/namespace.php:71
+msgid "FAIR Settings"
+msgstr "Impostazioni di FAIR"
+
+#: inc/settings/namespace.php:60
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Non disponi dei privilegi necessari per accedere a questa pagina."
+
+#. translators: %s: AspirePress website URL
+#: inc/settings/namespace.php:74
+#, php-format
+msgid ""
+"Your site is now disconnected from WordPress.org managed servers and uses a "
+"dedicated mirror from %s. In the coming weeks and months, we'll be making "
+"the mirror configurable and add in the ability to add your own."
+msgstr ""
+"Il tuo sito è ora staccato da WordPress.org e utilizza una copia dedicata "
+"fornita da %s. Nelle prossime settimane e mesi, renderemo configurabile "
+"quale copia utilizzare per gli aggiornamenti e inseriremo la possibilità di "
+"aggiungere la tua."
+
+#. translators: %1$s: FAIR GitHub URL, %2$s: FAQ URL
+#: inc/settings/namespace.php:79
+#, php-format
+msgid "If you want to learn more, check out the %1$s and our %2$s."
+msgstr ""
+"Se vuoi saperne di più, consulta il repositorio di %1$s and le nostre %2$s."
+
+#: inc/settings/namespace.php:86
+msgid "Save Settings"
+msgstr "Salva le impostazioni"
+
+#: inc/settings/namespace.php:107
+msgid "Avatar Settings"
+msgstr "Impostazioni di avatar"
+
+#: inc/settings/namespace.php:112
+msgid "Avatar Source"
+msgstr "Sorgente di avatar"
+
+#: inc/settings/namespace.php:124
+msgid "Avatars will be loaded from the selected source."
+msgstr "Gli avatar saranno caricati dalla sorgente selezionata."
+
+#: inc/settings/namespace.php:167
+msgid "FAIR Avatars"
+msgstr "Avatar FAIR"
+
+#: inc/settings/namespace.php:168
+msgid "Gravatar"
+msgstr "Gravatar"
+
+#: inc/settings/namespace.php:182
+msgid "Settings saved successfully."
+msgstr "Impostazioni salvate con successo."
+
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:391
+#, php-format
+msgid "There is a new version of %s available."
+msgstr "È disponibile una nuova versione di %s."
+
+#. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
+#: inc/updater/class-lite.php:402
+#, php-format
+msgid "View version %1$s details%2$s or %3$supdate now%2$s."
+msgstr "Visualizza i dettagli della versione %1$s%2$s, o %3$saggiorna ora%2$s."
+
+#. translators: %s: theme name
+#: inc/updater/class-lite.php:407
+#, php-format
+msgid "%s: update now"
+msgstr "%s: aggiorna ora"
+
+#. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
+#: inc/updater/class-lite.php:414
+#, php-format
+msgid "View version %1$s details%2$s."
+msgstr "Visualizza i dettagli della versione %1$s%2$s."
+
+#: inc/updater/class-lite.php:419
+msgid "Automatic update is unavailable for this theme."
+msgstr "Gli aggiornamenti automatici non sono disponibili per questo tema."
+
+#. translators: 1) Fair PM URL, 2) AspirePress URL.
+#: inc/user-notification/namespace.php:27
+#, php-format
+msgid ""
+"Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a "
+"href=\"%2$s\">AspirePress</a>"
+msgstr ""
+"Aggiornamenti distribuiti dal <a href=\"%1$s\">FAIR Package Manager</a> e <a "
+"href=\"%2$s\">AspirePress</a>"
+
+#: inc/version-check/namespace.php:100
+msgctxt "browser version check"
+msgid "your platform"
+msgstr "la tua piattaforma"
+
+#: inc/version-check/namespace.php:101
+msgctxt "browser version check"
+msgid "your browser"
+msgstr "il tuo browser"
+
+#: assets/js/fair-avatars.js:20
+msgid "Choose Profile Picture"
+msgstr "Scegli un’immagine di profilo"
+
+#: assets/js/fair-avatars.js:22
+msgid "Use as Profile Picture"
+msgstr "Usa come immagine di profilo"
+
+#: assets/js/fair-avatars.js:44
+msgid "Profile Picture Assigned"
+msgstr "Immagine di profilo assegnata"
+
+#: assets/js/fair-avatars.js:60
+msgid "Profile Picture Removed"
+msgstr "Immagine di profilo rimossa"

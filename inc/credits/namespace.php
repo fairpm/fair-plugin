@@ -1,7 +1,6 @@
 <?php
 /**
- * Prevents calls to the Credits API.
- * Prevents calls to Gravatar.com.
+ * Configures the Credits API to fetch credits from local files.
  *
  * @package FAIR
  */
@@ -21,15 +20,17 @@ function bootstrap() {
 }
 
 /**
- * Replace versions 1.0 and 1.1 of the Credits API with local file copies.
+ * Respond to a Credits API request with a response from a local file.
  *
- * @param bool|array $value Filtered value, or false to proceed.
+ * Supports Credits API versions 1.0 and 1.1.
+ *
+ * @param false|array|WP_Error $response Filtered response.
  * @param array $parsed_args The request's arguments.
  * @param string $url The request's URL.
  * @return bool|array|WP_Error Replaced value, false to proceed, or WP_Error on failure.
  */
 function replace_credits_api( $response, array $parsed_args, string $url ) {
-	if ( strpos( $url, 'api.wordpress.org/core/credits/' ) === false ) {
+	if ( ! str_contains( $url, 'api.wordpress.org/core/credits/' ) ) {
 		return $response;
 	}
 
@@ -44,7 +45,7 @@ function replace_credits_api( $response, array $parsed_args, string $url ) {
 	}
 
 	// Credits API 1.0 returns a serialized value rather than JSON.
-	if ( strpos( $url, 'credits/1.0' ) !== false ) {
+	if ( str_contains( $url, 'credits/1.0' ) ) {
 		$credits = serialize( json_decode( $credits, true ) );
 	}
 
@@ -115,7 +116,7 @@ function get_credits( string $major_version ) {
 }
 
 /**
- * Get a fake response.
+ * Mock an HTTP response for the Credits API with the local credits data.
  *
  * @param string $body The response's body.
  * @return array The response.

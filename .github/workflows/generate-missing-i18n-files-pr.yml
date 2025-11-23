@@ -1,0 +1,75 @@
+name: Generate missing i18n files PR
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'languages/*.po'
+
+jobs:
+  generate-missing-i18n-files:
+    name: Generate missing i18n files PR
+    if: github.repository == ${{ github.event.repository.full_name }}
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "7.4"
+
+      - name: Setup WP-CLI
+        uses: godaddy-wordpress/setup-wp-cli@1
+
+      - name: Configure git user
+        run: |
+          git config user.name ${{ github.actor }}
+          git config user.email ${{ github.actor }}@users.noreply.github.com
+
+      - name: Check if remote branch exists
+        run: echo "REMOTE_BRANCH_EXISTS=$([[ -z $(git ls-remote --heads origin generate-missing-i18n-files) ]] && echo "0" || echo "1")" >> $GITHUB_ENV
+
+      - name: Create branch to base pull request on
+        if: env.REMOTE_BRANCH_EXISTS == 0
+        run: |
+          git checkout -b generate-missing-i18n-files
+
+      - name: Fetch existing branch to add commits to
+        if: env.REMOTE_BRANCH_EXISTS == 1
+        run: |
+          git fetch --all --prune
+          git checkout generate-missing-i18n-files
+          git pull --no-rebase
+
+      - name: Run wp-cli i18n make-mo
+        run: wp i18n make-mo ./languages
+
+      - name: Run wp-cli i18n make-php
+        run: wp i18n make-php ./languages
+
+      - name: Run wp-cli i18n make-json
+        run: wp i18n make-json --no-purge ./languages
+
+      - name: Check if there are changes
+        run: echo "CHANGES_DETECTED=$([[ -z $(git status --porcelain) ]] && echo "0" || echo "1")" >> $GITHUB_ENV
+
+      - name: Commit changes
+        if: env.CHANGES_DETECTED == 1
+        run: |
+          git add languages/*.mo languages/*.json languages/*.php
+          git commit -s -m "Generate missing i18n files - $(date +'%Y-%m-%d')"
+          git push origin generate-missing-i18n-files
+
+      - name: Create pull request
+        if: env.CHANGES_DETECTED == 1 && env.REMOTE_BRANCH_EXISTS == 0
+        run: gh pr create --base ${BRANCH_NAME} --head generate-missing-i18n-files --title "Generate missing i18n files - $(date +'%Y-%m-%d')" --body "Automated PR"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
