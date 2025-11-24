@@ -170,7 +170,12 @@ function render( MetadataDocument $doc, string $tab, string $section ) {
 			<div id="section-holder">
 			<?php
 			add_requirement_notices( $latest );
-			do_action( 'minifair.render.notices', $doc, $tab, $section );
+
+			// For backwards compatibility.
+			do_action_deprecated( 'minifair.render.notices', [ $doc, $tab, $section ], '1.2', 'fair_beacon.render.notices' );
+
+			do_action( 'fair_beacon.render.notices', $doc, $tab, $section );
+
 			foreach ( $sections as $section_id => $content ) {
 				$prepared = sanitize_html( $content );
 				$prepared = links_add_target( $prepared, '_blank' );
@@ -478,7 +483,11 @@ function render_alias_notice( DIDDocument $did ) : bool {
 				'<strong>%s</strong>',
 				esc_html__( 'Validation failed', 'fair' )
 			);
-			add_action( 'minifair.render.notices', function () use ( $validation ) {
+
+			// For backwards compatibility.
+			do_action_deprecated( 'minifair.render.notices', [ $validation ], '1.2', 'fair_beacon.render.notices' );
+
+			add_action( 'fair_beacon.render.notices', function () use ( $validation ) {
 				wp_admin_notice(
 					sprintf(
 						/* translators: %s: validation error message */

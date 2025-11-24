@@ -189,7 +189,7 @@ function fetch_metadata_doc( string $url ) {
  * Fetch Metadata from local source.
  *
  * Solves issue where Metadata source is from same site.
- * Mini-FAIR REST endpoint may time out under these circumstances.
+ * FAIR-Beacon REST endpoint may time out under these circumstances.
  * Directly calling the WP_REST_Request does not return complete data.
  *
  * @param  bool|array $response Response from cache.
