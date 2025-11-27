@@ -719,11 +719,11 @@ function rename_source_selection( string $source, string $remote_source, WP_Upgr
 		return $source;
 	}
 
-	if ( str_contains( $source, get_did_hash( $did ) ) && basename( $source ) === $metadata->slug ) {
+	if ( basename( $source ) === $metadata->slug ) {
 		return $source;
+	} else {
+		$new_source = trailingslashit( $remote_source ) . $metadata->slug . '-' . get_did_hash( $did );
 	}
-
-	$new_source = trailingslashit( $remote_source ) . $metadata->slug . '-' . get_did_hash( $did );
 
 	if ( trailingslashit( strtolower( $source ) ) !== trailingslashit( strtolower( $new_source ) ) ) {
 		$wp_filesystem->move( $source, $new_source, true );
