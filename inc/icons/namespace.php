@@ -38,6 +38,11 @@ function set_default_icon( $transient ) {
 	foreach ( $transient->response as $updates ) {
 		$url = plugin_dir_url( PLUGIN_FILE ) . 'inc/icons/svg.php';
 		$url = add_query_arg( 'color', set_random_color(), $url );
+
+		if ( ! isset( $updates->icons ) || ! is_array( $updates->icons ) ) {
+			$updates->icons = [];
+		}
+
 		$updates->icons['default'] = $url;
 	}
 
