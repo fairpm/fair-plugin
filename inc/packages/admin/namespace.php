@@ -25,12 +25,10 @@ function bootstrap() {
 		return;
 	}
 
+	// Plugins.
 	add_filter( 'install_plugins_tabs', __NAMESPACE__ . '\\add_direct_tab' );
 	add_filter( 'plugins_api', __NAMESPACE__ . '\\handle_did_during_ajax', 10, 3 );
 	add_filter( 'plugins_api', 'FAIR\\Packages\\search_by_did', 10, 3 );
-	add_filter( 'upgrader_package_options', 'FAIR\\Packages\\cache_did_for_install', 10, 1 );
-	add_action( 'upgrader_post_install', 'FAIR\\Packages\\delete_cached_did_for_install', 10, 3 );
-	add_filter( 'upgrader_pre_download', 'FAIR\\Packages\\upgrader_pre_download', 10, 1 );
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
@@ -46,6 +44,19 @@ function bootstrap() {
 		add_action( 'install_plugins_featured', __NAMESPACE__ . '\\replace_featured_message' );
 		add_action( 'admin_init', fn() => remove_action( 'install_plugins_featured', 'install_dashboard' ) );
 	}
+
+	// Themes.
+	add_filter( 'themes_api', __NAMESPACE__ . '\\handle_did_during_ajax', 10, 3 );
+	add_filter( 'themes_api', 'FAIR\\Packages\\search_by_did', 10, 3 );
+	add_filter( 'themes_api_result', __NAMESPACE__ . '\\alter_slugs', 10, 3 );
+	add_action( 'load-themes.php', __NAMESPACE__ . '\\set_stylesheet_to_hashed_on_theme_activation' );
+	add_filter( 'clean_url', __NAMESPACE__ . '\\set_theme_to_hashed_for_customize', 10, 3 );
+	add_filter( 'wp_prepare_themes_for_js', __NAMESPACE__ . '\\maybe_add_data_to_theme_description', 10, 1 );
+
+	// Common.
+	add_filter( 'upgrader_package_options', 'FAIR\\Packages\\cache_did_for_install', 10, 1 );
+	add_action( 'upgrader_post_install', 'FAIR\\Packages\\delete_cached_did_for_install', 10, 3 );
+	add_filter( 'upgrader_pre_download', 'FAIR\\Packages\\upgrader_pre_download', 10, 1 );
 }
 
 /**
@@ -104,13 +115,13 @@ function replace_featured_message() {
 /**
  * Handles the AJAX request for plugin information when a DID is present.
  *
- * @param mixed  $result The result of the plugins_api call.
+ * @param mixed  $result The result of the API call.
  * @param string $action The action being performed.
- * @param object $args   The arguments passed to the plugins_api call.
+ * @param object $args   The arguments passed to the API call.
  * @return mixed
  */
 function handle_did_during_ajax( $result, $action, $args ) {
-	if ( ! wp_doing_ajax() || 'plugin_information' !== $action || ! isset( $args->slug ) ) {
+	if ( ! wp_doing_ajax() || ! isset( $args->slug ) || ( 'plugin_information' !== $action && 'theme_information' !== $action ) ) {
 		return $result;
 	}
 
@@ -299,7 +310,76 @@ function set_slug_to_hashed() : void {
 }
 
 /**
- * Check if this is a FAIR plugin, for legacy data.
+ * Set the stylesheet to the hashed version on theme activation.
+ *
+ * After installing a theme via AJAX, the activation button's link
+ * includes the escaped DID, not the hash of the DID.
+ *
+ * The stylesheet parameter needs to be in the slug-didhash format
+ * so that the theme can be found.
+ *
+ * The nonce also needs to be regenerated as the action includes
+ * the stylesheet.
+ *
+ * @return void
+ */
+function set_stylesheet_to_hashed_on_theme_activation() {
+	// phpcs:ignore HM.PHP.Isset.MultipleArguments
+	if ( ! isset( $_GET['action'], $_GET['stylesheet'] ) || $_GET['action'] !== 'activate' ) {
+		return;
+	}
+
+	$stylesheet = sanitize_text_field( wp_unslash( $_GET['stylesheet'] ) );
+	check_admin_referer( 'switch-theme_' . $stylesheet );
+
+	if ( ! str_contains( $stylesheet, '-did--' ) ) {
+		return;
+	}
+
+	$did = 'did:' . explode( '-did:', str_replace( '--', ':', $stylesheet ), 2 )[1];
+	if ( ! preg_match( '/^did:plc:.+$/', $did ) ) {
+		return;
+	}
+
+	$hashed_stylesheet = explode( '-did--', $stylesheet, 2 )[0] . '-' . Packages\get_did_hash( $did );
+	$_GET['stylesheet'] = $hashed_stylesheet;
+	$_REQUEST['stylesheet'] = $hashed_stylesheet;
+	$new_nonce = wp_create_nonce( 'switch-theme_' . $hashed_stylesheet );
+	$_GET['_wpnonce'] = $new_nonce;
+	$_REQUEST['_wpnonce'] = $new_nonce;
+}
+
+/**
+ * Set the theme to the hashed version in the customizer.
+ *
+ * Immediately after installation, the "Live Preview" button
+ * includes the escaped DID, not the hash of the DID.
+ *
+ * The theme parameter needs to be in the slug-didhash format
+ * so that the theme can be found.
+ *
+ * @param string $url The URL to filter.
+ * @return string
+ */
+function set_theme_to_hashed_for_customize( $url ) {
+	if ( str_contains( $url, 'customize.php?theme=' ) ) {
+		$theme = explode( 'theme=', $url )[1];
+
+		if ( str_contains( $theme, '-did--' ) ) {
+			$did = 'did:' . explode( '-did:', str_replace( '--', ':', $theme ), 2 )[1];
+
+			if ( preg_match( '/^did:plc:.+$/', $did ) ) {
+				$hashed_theme = explode( '-did--', $theme, 2 )[0] . '-' . Packages\get_did_hash( $did );
+				$url = str_replace( $theme, $hashed_theme, $url );
+			}
+		}
+	}
+
+	return $url;
+}
+
+/**
+ * Check if this is a FAIR package, for legacy data.
  *
  * FAIR data is bridged into legacy data via the _fair property, and needs
  * to have a valid DID. We can use this to enhance our existing metadata.
@@ -307,7 +387,7 @@ function set_slug_to_hashed() : void {
  * @param array|stdClass $api_data Legacy dotorg-formatted data to check.
  * @return bool
  */
-function is_fair_plugin( $api_data ) : bool {
+function is_fair_package( $api_data ) : bool {
 	$api = (array) $api_data;
 	if ( empty( $api['_fair'] ) ) {
 		return false;
@@ -382,7 +462,7 @@ function maybe_hijack_legacy_plugin_info() {
 	}
 
 	// Is this a FAIR plugin, actually?
-	if ( ! is_fair_plugin( $api ) ) {
+	if ( ! is_fair_package( $api ) ) {
 		return;
 	}
 
@@ -401,31 +481,52 @@ function maybe_hijack_legacy_plugin_info() {
 }
 
 /**
- * Filters the Plugin Installation API response results.
+ * Filters the Installation API response results.
  *
  * @since 2.7.0
  *
  * @param object|WP_Error $res    Response object or WP_Error.
- * @param string          $action The type of information being requested from the Plugin Installation API.
- * @param object          $args   Plugin API arguments.
+ * @param string          $action The type of information being requested from the Installation API.
+ * @param object          $args   API arguments.
  */
 function alter_slugs( $res, $action, $args ) {
-	if ( 'query_plugins' !== $action ) {
+	if ( 'query_plugins' !== $action && 'query_themes' !== $action ) {
 		return $res;
 	}
 
-	if ( empty( $res->plugins ) ) {
+	$type = rtrim( explode( '_', $action )[1], 's' );
+
+	if (
+		( $type === 'plugin' && empty( $res->plugins ) )
+		|| ( $type === 'theme' && empty( $res->themes ) )
+	) {
 		return $res;
 	}
+
+	$items = $type === 'plugin' ? $res->plugins : $res->themes;
 
 	// Alter the slugs to our globally unique version.
-	foreach ( $res->plugins as &$plugin ) {
-		if ( ! is_fair_plugin( $plugin ) ) {
+	foreach ( $items as &$item ) {
+		if ( ! is_fair_package( $item ) ) {
 			continue;
 		}
 
-		$did = $plugin['_fair']['id'];
-		$plugin['slug'] = esc_attr( $plugin['slug'] . '-' . str_replace( ':', '--', $did ) );
+		$did = $item->_fair['id'];
+		$did_hash = Packages\get_did_hash( $item->_fair['id'] );
+		$slug_did_hash = $item->slug;
+		if ( ! str_ends_with( $slug_did_hash, '-' . $did_hash ) ) {
+			$slug_did_hash .= '-' . $did_hash;
+		}
+		$item->slug = esc_attr( $item->slug . '-' . str_replace( ':', '--', $did ) );
+
+		// Installed themes need the slug-didhash format
+		// so their activation status can be determined.
+		if ( 'theme' === $type ) {
+			$theme = wp_get_theme( $slug_did_hash );
+			if ( $theme->exists() ) {
+				$item->slug = esc_attr( $slug_did_hash );
+			}
+		}
 	}
 
 	return $res;
@@ -472,7 +573,7 @@ function sort_sections_in_api( $res ) {
  * @return array Altered actions.
  */
 function maybe_hijack_plugin_install_button( $links, $plugin ) {
-	if ( ! is_fair_plugin( $plugin ) || ! str_contains( $plugin['slug'], '-did--' ) ) {
+	if ( ! is_fair_package( $plugin ) || ! str_contains( $plugin['slug'], '-did--' ) ) {
 		return $links;
 	}
 
@@ -513,7 +614,7 @@ function maybe_hijack_plugin_install_button( $links, $plugin ) {
  * @return string Plugin card description.
  */
 function maybe_add_data_to_description( $description, $plugin ) {
-	if ( ! is_fair_plugin( $plugin ) ) {
+	if ( ! is_fair_package( $plugin ) ) {
 		return $description;
 	}
 
@@ -523,7 +624,38 @@ function maybe_add_data_to_description( $description, $plugin ) {
 		return $description;
 	}
 
-	/* translators: %1$s: repository hostname */
-	$description .= '</p><p class="authors"><em>' . sprintf( __( 'Hosted on %1$s', 'fair' ), esc_html( $repo_host ) ) . '</em>';
+	/* translators: %s: repository hostname */
+	$description .= '</p><p class="authors"><em>' . sprintf( __( 'Hosted on %s', 'fair' ), esc_html( $repo_host ) ) . '</em>';
 	return $description;
+}
+
+/**
+ * Filters the theme description when preparing themes for JS.
+ *
+ * @param array $themes Array of themes prepared for JS.
+ * @return array Array of themes with possible modifications.
+ */
+function maybe_add_data_to_theme_description( $themes ) {
+	foreach ( $themes as &$theme ) {
+		$did = get_file_data( get_stylesheet_directory() . '/style.css', [ 'ThemeID' => 'Theme ID' ] )['ThemeID'];
+		if ( empty( $did ) || ! str_starts_with( $did, 'did:plc:' ) ) {
+			continue;
+		}
+
+		$repo_host = Info\get_repository_hostname( $did );
+		if ( empty( $repo_host ) ) {
+			continue;
+		}
+
+		/* translators: %s: repository hostname */
+		$additional_description = '<p class="authors"><em>' . sprintf( __( 'Hosted on %s', 'fair' ), esc_html( $repo_host ) ) . '</em>';
+		if ( empty( $theme->description ) ) {
+			$theme['description'] .= '</p>' . $additional_description;
+		} else {
+			$theme['description'] .= $additional_description . '</p>';
+		}
+	}
+	unset( $theme );
+
+	return $themes;
 }
