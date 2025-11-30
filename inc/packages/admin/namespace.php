@@ -35,7 +35,6 @@ function bootstrap() {
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
 	add_filter( 'plugins_api_result', __NAMESPACE__ . '\\alter_slugs', 10, 3 );
-	add_filter( 'plugins_api_result', __NAMESPACE__ . '\\handle_did_in_search_result', 10, 3 );
 	add_filter( 'plugins_api_result', __NAMESPACE__ . '\\sort_sections_in_api', 15, 1 );
 	add_filter( 'plugin_install_action_links', __NAMESPACE__ . '\\maybe_hijack_plugin_install_button', 10, 2 );
 	add_filter( 'plugin_install_description', __NAMESPACE__ . '\\maybe_add_data_to_description', 10, 2 );
@@ -418,7 +417,7 @@ function alter_slugs( $res, $action, $args ) {
 		return $res;
 	}
 
-	// Alter the slugs to our globally unique version.
+	// Alter the slugs to our globally unique version and populate release cache.
 	foreach ( $res->plugins as &$plugin ) {
 		if ( ! is_fair_plugin( $plugin ) ) {
 			continue;
@@ -426,31 +425,7 @@ function alter_slugs( $res, $action, $args ) {
 
 		$did = $plugin['_fair']['id'];
 		$plugin['slug'] = esc_attr( $plugin['slug'] . '-' . str_replace( ':', '--', $did ) );
-	}
-
-	return $res;
-}
-
-/**
- * Filter Plugin Installation API response results.
- *
- * @param object|WP_Error $res    Response object or WP_Error.
- * @param string          $action The type of information being requested from the Plugin Installation API.
- * @param object          $args   Plugin API arguments.
- * @return object|WP_Error
- */
-function handle_did_in_search_result( $res, $action, $args ) {
-	if ( $action !== 'query_plugins' && $action !== 'query_themes' ) {
-		return $res;
-	}
-
-	$type = rtrim( explode( '_', $action )[1], 's' );
-	$items = $type === 'plugin' ? $res->plugins : $res->themes;
-	foreach ( $items as $item ) {
-		if ( is_fair_plugin( $item ) ) {
-			$item = (array) $item;
-			Packages\add_package_to_release_cache( $item['_fair']['id'] );
-		}
+		Packages\add_package_to_release_cache( $did );
 	}
 
 	return $res;
