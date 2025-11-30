@@ -441,7 +441,7 @@ function alter_slugs( $res, $action, $args ) {
  */
 function handle_did_in_search_result( $res, $action, $args ) {
 	if ( $action !== 'query_plugins' && $action !== 'query_themes' ) {
-			return $res;
+		return $res;
 	}
 
 	$type = rtrim( explode( '_', $action )[1], 's' );
