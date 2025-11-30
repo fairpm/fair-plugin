@@ -403,11 +403,10 @@ function maybe_hijack_legacy_plugin_info() {
 /**
  * Filters the Plugin Installation API response results.
  *
- * @since 2.7.0
- *
  * @param object|WP_Error $res    Response object or WP_Error.
  * @param string          $action The type of information being requested from the Plugin Installation API.
  * @param object          $args   Plugin API arguments.
+ * @return object|WP_Error
  */
 function alter_slugs( $res, $action, $args ) {
 	if ( 'query_plugins' !== $action ) {
