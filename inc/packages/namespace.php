@@ -721,9 +721,9 @@ function maybe_rename_source_selection( string $source, string $remote_source, W
 
 	if ( basename( $source ) === $metadata->slug ) {
 		return $source;
-	} else {
-		$new_source = trailingslashit( $remote_source ) . $metadata->slug . '-' . get_did_hash( $did );
 	}
+
+	$new_source = trailingslashit( $remote_source ) . $metadata->slug . '-' . get_did_hash( $did );
 
 	if ( trailingslashit( strtolower( $source ) ) !== trailingslashit( strtolower( $new_source ) ) ) {
 		$wp_filesystem->move( $source, $new_source, true );
