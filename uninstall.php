@@ -9,3 +9,9 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	die;
 }
+
+// Delete our single keys.
+delete_option( 'fair_indexnow_key' );
+
+// Our multisite level options.
+delete_site_option( 'fair_avatar_source' );
