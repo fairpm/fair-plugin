@@ -55,7 +55,7 @@ function build_error_message_regex() {
 /**
  * Filter debug information.
  *
- * @param array $args {
+ * @param array $info {
  *     The debug information to be added to the core information page.
  *
  *     This is an associative multi-dimensional array, up to three levels deep.
@@ -101,9 +101,9 @@ function build_error_message_regex() {
  */
 function filter_debug_information( $info ) {
 	// translators: enabled default repository domain.
-	$info['wp-core']['fields']['dotorg_communication']['label'] = sprintf( __( 'Communication with %s' ), \FAIR\Default_Repo\get_default_repo_domain() );
+	$info['wp-core']['fields']['dotorg_communication']['label'] = sprintf( __( 'Communication with %s', 'fair' ), \FAIR\Default_Repo\get_default_repo_domain() );
 	// translators: enabled default repository domain.
-	$info['wp-core']['fields']['dotorg_communication']['value'] = sprintf( __( '%s is reachable' ), \FAIR\Default_Repo\get_default_repo_domain() );
+	$info['wp-core']['fields']['dotorg_communication']['value'] = sprintf( __( '%s is reachable', 'fair' ), \FAIR\Default_Repo\get_default_repo_domain() );
 
 	return $info;
 }
