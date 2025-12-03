@@ -4,6 +4,8 @@
  * Description: Make your site more FAIR.
  * Version: 1.1.0
  * Author: FAIR Contributors
+ * Author URI: https://fair.pm
+ * Security: security@fair.pm
  * License: GPLv2
  * Requires at least: 5.4
  * Requires PHP: 7.4
