@@ -27,10 +27,11 @@ global $wpdb;
 $query_args = $wpdb->prepare("
 	DELETE FROM $wpdb->usermeta
 	WHERE       meta_key IN (
-		'%s',
-		'%s'
+		%s,
+		%s
 	)
 ", esc_attr( 'fair_avatar_site_id' ), esc_attr( 'fair_avatar_id' ) );
 
 // And actually run it.
+// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- we did use the prepare function above
 $wpdb->query( $query_args );
