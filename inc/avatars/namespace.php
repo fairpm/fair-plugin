@@ -92,20 +92,18 @@ function add_avatar_upload_field( $description, $profile_user ) {
 	// Set a class based on an avatar being there right now.
 	$remove_cls = $avatar_id ? 'button' : 'button button-hidden';
 
-	echo '<input type="hidden" name="fair_avatar_id" id="fair-avatar-id" value="' . absint( $avatar_id ) . '" />';
-	echo '<input type="button" class="button" id="fair-avatar-upload" value="' . esc_attr__( 'Choose Profile Image', 'fair' ) . '" />';
-	echo '<input type="button" class="' . esc_attr( $remove_cls ) . '" id="fair-avatar-remove" value="' . esc_attr__( 'Remove Profile Image', 'fair' ) . '" />';
+	$inputs  = '<input type="hidden" name="fair_avatar_id" id="fair-avatar-id" value="' . absint( $avatar_id ) . '" />';
+	$inputs .= '<input type="button" class="button" id="fair-avatar-upload" value="' . esc_attr__( 'Choose Profile Image', 'fair' ) . '" />';
+	$inputs .= '<input type="button" class="' . esc_attr( $remove_cls ) . '" id="fair-avatar-remove" value="' . esc_attr__( 'Remove Profile Image', 'fair' ) . '" />';
 
 	// Using a span because this entire area is dropped into a `<p>` tag.
 	if ( 'fair' !== $avatar_source ) {
 		$description = str_replace( '.', '', $description );
 		// translators: The original WordPress.org profile description string & HTML minus final full stop.
-		echo '<span class="fair-avatar-desc">' . sprintf( esc_html__( '%s, or upload a custom profile picture for your account.', 'fair' ), $description ) . '</span>';
+		return $inputs . '<span class="fair-avatar-desc">' . sprintf( esc_html__( '%s, or upload a custom profile picture for your account.', 'fair' ), $description ) . '</span>';
 	} else {
-		echo '<span class="fair-avatar-desc">' . esc_html__( 'Upload a custom profile picture for your account.', 'fair' ) . '</span>';
+		return $inputs . '<span class="fair-avatar-desc">' . esc_html__( 'Upload a custom profile picture for your account.', 'fair' ) . '</span>';
 	}
-
-	return;
 }
 
 /**
