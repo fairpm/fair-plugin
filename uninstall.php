@@ -30,7 +30,7 @@ $query_args = $wpdb->prepare("
 		%s,
 		%s
 	)
-", esc_attr( 'fair_avatar_site_id' ), esc_attr( 'fair_avatar_id' ) );
+", 'fair_avatar_site_id', 'fair_avatar_id' );
 
 // And actually run it.
 // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- we did use the prepare function above
