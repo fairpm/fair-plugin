@@ -40,6 +40,7 @@ require_once __DIR__ . '/inc/packages/wp-cli/compat/namespace.php';
 require_once __DIR__ . '/inc/pings/namespace.php';
 require_once __DIR__ . '/inc/salts/namespace.php';
 require_once __DIR__ . '/inc/settings/namespace.php';
+require_once __DIR__ . '/inc/site-health/namespace.php';
 require_once __DIR__ . '/inc/upgrades/namespace.php';
 require_once __DIR__ . '/inc/updater/namespace.php';
 require_once __DIR__ . '/inc/user-notification/namespace.php';
