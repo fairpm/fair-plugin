@@ -45,6 +45,26 @@ In addition to the key FAIR implementations, a few other features in WordPress a
 * Media features provided by OpenVerse are disabled, pending discussion and work by the FAIR working group
 * Ping services are configured to use IndexNow in place of Pingomatic
 
+## Screenshots
+
+**Add Plugins page with FAIR Package Manager installed**
+![Add Plugins page with FAIR Package Manager installed](https://raw.githubusercontent.com/fairpm/fair-plugin/main/assets/screenshot-1.png)
+
+**Plugin details modal for a FAIR-managed plugin**
+![Plugin details modal for a FAIR-managed plugin](https://raw.githubusercontent.com/fairpm/fair-plugin/main/assets/screenshot-2.png)
+
+**Direct Install page to install a new plugin by DID**
+![Direct Install page to install a new plugin by DID](https://raw.githubusercontent.com/fairpm/fair-plugin/main/assets/screenshot-3.png)
+
+**Avatar Source setting to manage FAIR Avatars or Gravatar**
+![Avatar Source setting to manage FAIR Avatars or Gravatar](https://raw.githubusercontent.com/fairpm/fair-plugin/main/assets/screenshot-4.png)
+
+**Updated WordPress News and Events dashboard widget**
+![Updated WordPress News and Events dashboard widget](https://raw.githubusercontent.com/fairpm/fair-plugin/main/assets/screenshot-5.png)
+
+**WordPress update page showing AspireCloud as the update source for core themes**
+![WordPress update page showing AspireCloud as the update source for core themes](https://raw.githubusercontent.com/fairpm/fair-plugin/main/assets/screenshot-6.png)
+
 ## Data Privacy
 
 * See Also: [Linux Foundation Projects Privacy Policy](https://lfprojects.org/policies/privacy-policy/)

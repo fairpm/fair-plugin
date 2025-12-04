@@ -67,3 +67,10 @@ To remove the FAIR plugin and its features, you can deactivate and delete the pl
 
 
 ## Screenshots
+
+1. Add Plugins page with FAIR Package Manager installed
+2. Plugin details modal for a FAIR-managed plugin
+3. Direct Install page to install a new pluging by DID
+4. Avatar Source setting to manage FAIR Avatars or Gravatar
+5. Updated WordPress News and Events dashboard widget
+6. WordPress update page showing AspireCloud as the update source for core themes
