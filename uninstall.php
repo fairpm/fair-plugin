@@ -17,7 +17,7 @@ require_once __DIR__ . '/inc/avatars/namespace.php';
 delete_option( 'fair_indexnow_key' );
 delete_site_option( \FAIR\Avatars\AVATAR_SRC_SETTING_KEY );
 
-// Delete any transients we may have.
+// Delete any transients we may have created or modified.
 delete_site_transient( 'update_plugins' );
 delete_site_transient( 'update_themes' );
 
