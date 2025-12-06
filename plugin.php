@@ -49,7 +49,6 @@ require_once __DIR__ . '/inc/version-check/namespace.php';
 // External dependencies.
 require_once __DIR__ . '/inc/compatibility/php-polyfill.php';
 require_once __DIR__ . '/inc/compatibility/wp-polyfill.php';
-require_once __DIR__ . '/inc/updater/class-lite.php';
 
 /**
  * Load translations.
