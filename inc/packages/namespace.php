@@ -14,6 +14,8 @@ use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use FAIR\Updater;
 use function FAIR\Packages\Admin\sort_sections_in_api;
+use Plugin_Upgrader;
+use Theme_Upgrader;
 use WP_Error;
 use WP_Upgrader;
 
@@ -703,9 +705,7 @@ function delete_cached_did_for_install(): void {
 function maybe_rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
 
-	$upgrader_class = get_class( $upgrader );
-	$type = str_contains( $upgrader_class, 'Plugin' ) ? 'plugin' : ( str_contains( $upgrader_class, 'Theme' ) ? 'theme' : '' );
-
+	$type = $upgrader instanceof Plugin_Upgrader ? 'plugin' : ( $upgrader instanceof Theme_Upgrader ? 'theme' : '' );
 	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
 
 	if ( ! $did ) {
