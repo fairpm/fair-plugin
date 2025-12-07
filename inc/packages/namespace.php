@@ -719,10 +719,6 @@ function maybe_rename_source_selection( string $source, string $remote_source, W
 		$did = $did_doc->get_id();
 	}
 
-	if ( ! $did ) {
-		return $source;
-	}
-
 	$metadata = fetch_package_metadata( $did );
 	if ( is_wp_error( $metadata ) ) {
 		return $metadata;
