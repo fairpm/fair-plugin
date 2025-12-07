@@ -713,6 +713,9 @@ function maybe_rename_source_selection( string $source, string $remote_source, W
 			return $source;
 		}
 		$did_doc = get_did_by_path( $source, $type );
+		if ( is_wp_error( $did_doc ) ) {
+			return $did_doc;
+		}
 		$did = $did_doc->get_id();
 	}
 
