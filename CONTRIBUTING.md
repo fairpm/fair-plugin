@@ -2,7 +2,7 @@
 
 FAIR is an open project, and we welcome contributions from all.
 
-FAIR is administered directly by the [Technical Steering Committee](https://github.com/fairpm/tsc). The FAIR plugin is currently maintained by the Technical Independence Working Group, in conjunction with the FAIR Working Group; this maintenance will transition to the FAIR WG's responsibility once the independence work is complete.
+FAIR is administered directly by the [Technical Steering Committee](https://github.com/fairpm/tsc). The FAIR Connect plugin is currently maintained by the Technical Independence Working Group, in conjunction with the FAIR Working Group; this maintenance will transition to the FAIR WG's responsibility once the independence work is complete.
 
 All contributions must be made under the GNU General Public License v2, and are made available to users under the terms of the GPL v2 or later.
 
