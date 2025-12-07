@@ -46,12 +46,18 @@ function get_packages() : array {
 		}
 	}
 
-	$theme_path = WP_CONTENT_DIR . '/themes/';
-	$themes     = wp_get_themes();
-	foreach ( $themes as $file => $theme ) {
-		$theme_id = get_file_data( $theme_path . $file . '/style.css', [ 'ThemeID' => 'Theme ID' ] )['ThemeID'];
+	$themes = wp_get_themes();
+	foreach ( $themes as $theme ) {
+		$stylesheet_directory = $theme->get_stylesheet_directory();
+		if ( empty( $stylesheet_directory ) ) {
+			// The theme root is missing.
+			continue;
+		}
+
+		$stylesheet_file = trailingslashit( $stylesheet_directory ) . 'style.css';
+		$theme_id = get_file_data( $stylesheet_file, [ 'ThemeID' => 'Theme ID' ] )['ThemeID'];
 		if ( ! empty( $theme_id ) ) {
-			$packages['themes'][ $theme_id ] = $theme_path . $file . '/style.css';
+			$packages['themes'][ $theme_id ] = $stylesheet_file;
 		}
 	}
 
@@ -89,7 +95,7 @@ function verify_signature_on_download( $reply, string $package, WP_Upgrader $upg
 		return $reply;
 	}
 
-	$did = get_transient( CACHE_DID_FOR_INSTALL );
+	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
 	if ( ! $did ) {
 		return $reply;
 	}
@@ -107,7 +113,7 @@ function verify_signature_on_download( $reply, string $package, WP_Upgrader $upg
 		return $package;
 	}
 
-	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?? [];
+	$releases = get_site_transient( CACHE_RELEASE_PACKAGES ) ?? [];
 	if ( empty( $releases ) || ! isset( $releases[ $did ] ) ) {
 		return $reply;
 	}
@@ -160,7 +166,7 @@ function verify_signature_on_download( $reply, string $package, WP_Upgrader $upg
  * @return array
  */
 function get_trusted_keys(): array {
-	$did = get_transient( CACHE_DID_FOR_INSTALL );
+	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
 	if ( ! $did ) {
 		return [];
 	}
@@ -175,10 +181,8 @@ function get_trusted_keys(): array {
 		return [];
 	}
 
-	/*
-		* FAIR uses Base58BTC-encoded Ed25519 keys.
-		* Core expects base64-encoded keys.
-		*/
+	// FAIR uses Base58BTC-encoded Ed25519 keys.
+	// Core expects base64-encoded keys.
 	$recoded_keys = [];
 	foreach ( $keys as $key ) {
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
