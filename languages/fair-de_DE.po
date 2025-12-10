@@ -463,7 +463,8 @@ msgstr "Die Signaturüberprüfung für das Paket konnte nicht durchgeführt werd
 #: inc/user-notification/namespace.php:27
 #, php-format
 msgid "Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a href=\"%2$s\">AspirePress</a>"
-msgstr "Updates werden vom <a href=\"%1$s\">FAIR Package Manager</a> und von <a "href=\"%2$s\">AspirePress</a> bereitgestellt."
+msgstr "Updates werden vom <a href=\"%1$s\">FAIR Package Manager</a> und von <a href=\"%2$s\">AspirePress</a> bereitgestellt."
+
 
 #: inc/version-check/namespace.php:97
 msgctxt "operating system check"
