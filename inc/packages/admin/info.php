@@ -452,11 +452,15 @@ function render_alias_notice( DIDDocument $did ) : bool {
 	$result = false;
 	switch ( gettype( $validation ) ) {
 		case 'string':
-			$message = sprintf(
-				/* translators: %1$s: full URL for validated domain, %2$s: raw domain */
-				__( '<strong>Validated</strong> as <a href="%1$s">%2$s</a>', 'fair' ),
-				esc_url( 'https://' . $validation . '/' ),
+			$link = sprintf(
+				'<a href="%s" target="_blank">%s</a>',
+				esc_url( 'https://' . $validation ),
 				esc_html( $validation )
+			);
+			$message = sprintf(
+				/* translators: %s: URL for validated domain */
+				__( '<strong>Validated</strong> as %s', 'fair' ),
+				$link
 			);
 			$result = true;
 			break;
