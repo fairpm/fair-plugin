@@ -77,7 +77,8 @@ class PLC implements DID {
 		$document = new Document(
 			$data->id,
 			$data->service ?? [],
-			$data->verificationMethod ?? []
+			$data->verificationMethod ?? [],
+			$data->alsoKnownAs ?? [],
 		);
 		return $document;
 	}
