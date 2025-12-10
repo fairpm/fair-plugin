@@ -129,6 +129,7 @@ class MetadataDocument {
 		];
 		foreach ( $mandatory as $key ) {
 			if ( ! isset( $data->{$key} ) ) {
+				/* translators: %s is the missing field name. */
 				return new WP_Error( 'fair.packages.metadata_document.missing_field', sprintf( __( 'Missing mandatory field: %s', 'fair' ), $key ) );
 			}
 

@@ -17,6 +17,7 @@ wp.hooks.addFilter( 'site_status_test_result', 'fair/fair-plugin/site-health', f
 	switch ( response_data['status'] ) {
 		case 'critical' :
 			response_data.label = sprintf(
+				/* translators: %s is the domain. */
 				__( 'Could not reach %s' , 'fair' ),
 				fairSiteHealth.defaultRepoDomain
 			);
@@ -45,6 +46,7 @@ wp.hooks.addFilter( 'site_status_test_result', 'fair/fair-plugin/site-health', f
 			break;
 		case 'good' :
 			response_data.label = sprintf(
+				/* translators: %s is the domain. */
 				__( 'Can communicate with %s' , 'fair' ),
 				fairSiteHealth.defaultRepoDomain
 			);
