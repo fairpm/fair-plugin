@@ -652,7 +652,7 @@ function get_package_data( $did ) {
  */
 function upgrader_pre_download( $false ) : bool {
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
-	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\maybe_rename_source_selection', 11, 3 );
+	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\maybe_rename_source_selection', 11, 4 );
 	return $false;
 }
 
@@ -699,14 +699,16 @@ function delete_cached_did_for_install(): void {
  * @param string $source        Path of $source.
  * @param string $remote_source Path of $remote_source.
  * @param WP_Upgrader $upgrader An Upgrader object.
+ * @param array $hook_extra     Array of hook data.
  *
  * @return string|WP_Error
  */
-function maybe_rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
+function maybe_rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra ) {
 	global $wp_filesystem;
 
 	$type = $upgrader instanceof Plugin_Upgrader ? 'plugin' : ( $upgrader instanceof Theme_Upgrader ? 'theme' : '' );
 	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
+	$is_installing = isset( $hook_extra['action'] ) && $hook_extra['action'] === 'install';
 
 	if ( ! $did ) {
 		if ( empty( $type ) ) {
@@ -732,7 +734,7 @@ function maybe_rename_source_selection( string $source, string $remote_source, W
 		return $source;
 	}
 
-	if ( basename( $source ) === $metadata->slug ) {
+	if ( ! $is_installing && basename( $source ) === $metadata->slug ) {
 		return $source;
 	}
 
