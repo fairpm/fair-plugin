@@ -724,17 +724,18 @@ function maybe_rename_source_selection( string $source, string $remote_source, W
 		}
 		$did_doc = get_did_by_path( $source, $type );
 		if ( is_wp_error( $did_doc ) ) {
-			return $did_doc;
+			error_log( basename( $source ) . ' : ' . $did_doc->get_error_message() );
+		} else {
+			$did = $did_doc->get_id();
 		}
-		$did = $did_doc->get_id();
 	}
 
 	$metadata = fetch_package_metadata( $did );
-	if ( is_wp_error( $metadata ) ) {
-		return $metadata;
-	}
 
-	// Sanity check.
+	// Sanity check for not renaming existing installs or non-FAIR packages.
+	if ( is_wp_error( $metadata ) ) {
+		return $source;
+	}
 	if ( 'plugin' === $type && $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
 		return $source;
 	}
