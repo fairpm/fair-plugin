@@ -1,18 +1,21 @@
 <?php
+/**
+ * Adds a local source for avatars.
+ *
+ * @package FAIR
+ */
 
 namespace FAIR\Avatars;
+
+const AVATAR_SRC_SETTING_KEY = 'fair_avatar_source';
+const AVATAR_DOMAINS_TO_REPLACE = [
+	'secure.gravatar.com',
+];
 
 /**
  * Bootstrap.
  */
 function bootstrap() {
-	$options = get_option( 'fair_settings', [] );
-	$avatar_source = array_key_exists( 'avatar_source', $options ) ? $options['avatar_source'] : 'fair';
-
-	if ( 'fair' !== $avatar_source ) {
-		return;
-	}
-
 	// Add avatar upload field to user profile.
 	add_filter( 'user_profile_picture_description', __NAMESPACE__ . '\\add_avatar_upload_field', 10, 2 );
 
@@ -41,20 +44,20 @@ function enqueue_media_scripts( $hook_suffix ) {
 	}
 
 	// Grab the user ID to pass along for alt text.
-	$user_id = 'profile.php' === $hook_suffix ? get_current_user_id() : absint( $_GET['user_id'] );
+	$user_id = 'profile.php' === $hook_suffix ? get_current_user_id() : absint( $_GET['user_id'] ?? 0 );
 	$display_name = get_user( $user_id )->display_name;
 
 	wp_enqueue_media();
-	wp_enqueue_script( 'fair-avatars', esc_url( plugin_dir_url( \FAIR\PLUGIN_FILE ) . 'assets/js/fair-avatars.js' ), ['jquery','wp-a11y','wp-i18n'], \FAIR\VERSION, true );
+	wp_enqueue_script( 'fair-avatars', esc_url( plugin_dir_url( \FAIR\PLUGIN_FILE ) . 'assets/js/fair-avatars.js' ), [ 'jquery', 'wp-a11y', 'wp-i18n' ], \FAIR\VERSION, true );
 	wp_localize_script( 'fair-avatars', 'fairAvatars',
 		[
-			'defaultImg' => generate_default_avatar( $display_name ),
+			'defaultImg' => generate_default_avatar( $display_name, $user_id ),
 			'defaultAlt' => get_avatar_alt( $user_id ),
 		]
 	);
 
 	// Some inline CSS for our fields.
-	$setup_css  = '
+	$setup_css = '
 		span.fair-avatar-desc {
 			display: block;
 			margin-top: 5px;
@@ -83,20 +86,24 @@ function add_avatar_upload_field( $description, $profile_user ) {
 	if ( ! current_user_can( 'upload_files' ) ) {
 		return $description;
 	}
-
-	$avatar_id = get_user_meta( $profile_user->ID, 'fair_avatar_id', true );
+	$avatar_source = get_site_option( AVATAR_SRC_SETTING_KEY, 'fair' );
+	$avatar_id     = get_user_meta( $profile_user->ID, 'fair_avatar_id', true );
 
 	// Set a class based on an avatar being there right now.
 	$remove_cls = $avatar_id ? 'button' : 'button button-hidden';
 
-	echo '<input type="hidden" name="fair_avatar_id" id="fair-avatar-id" value="' . absint( $avatar_id ) . '" />';
-	echo '<input type="button" class="button" id="fair-avatar-upload" value="' . esc_attr__( 'Choose Profile Image', 'fair' ) . '" />';
-	echo '<input type="button" class="' . esc_attr( $remove_cls ) . '" id="fair-avatar-remove" value="' . esc_attr__( 'Remove Profile Image', 'fair' ) . '" />';
+	$inputs  = '<input type="hidden" name="fair_avatar_id" id="fair-avatar-id" value="' . absint( $avatar_id ) . '" />';
+	$inputs .= '<input type="button" class="button" id="fair-avatar-upload" value="' . esc_attr__( 'Choose Profile Image', 'fair' ) . '" />';
+	$inputs .= '<input type="button" class="' . esc_attr( $remove_cls ) . '" id="fair-avatar-remove" value="' . esc_attr__( 'Remove Profile Image', 'fair' ) . '" />';
 
 	// Using a span because this entire area is dropped into a `<p>` tag.
-	echo '<span class="fair-avatar-desc">' . esc_html__( 'Upload a custom profile picture for your account.', 'fair' ) . '</span>';
-
-	return;
+	if ( 'fair' !== $avatar_source ) {
+		$description = str_replace( '.', '', $description );
+		// translators: The original WordPress.org profile description string & HTML minus final full stop.
+		return $inputs . '<span class="fair-avatar-desc">' . sprintf( esc_html__( '%s, or upload a custom profile picture for your account.', 'fair' ), $description ) . '</span>';
+	} else {
+		return $inputs . '<span class="fair-avatar-desc">' . esc_html__( 'Upload a custom profile picture for your account.', 'fair' ) . '</span>';
+	}
 }
 
 /**
@@ -105,6 +112,8 @@ function add_avatar_upload_field( $description, $profile_user ) {
  * @param int $user_id User ID.
  */
 function save_avatar_upload( $user_id ) {
+	check_admin_referer( 'update-user_' . $user_id );
+
 	if ( ! current_user_can( 'edit_user', $user_id ) ) {
 		return;
 	}
@@ -135,9 +144,13 @@ function save_avatar_upload( $user_id ) {
  * @return string              Filtered avatar HTML.
  */
 function filter_avatar( $avatar, $id_or_email, $size, $default, $alt, $args ) {
+	if ( ! str_contains( $avatar, "src=''" ) && ! should_replace_url( $avatar ) ) {
+		return $avatar;
+	}
+
 	$avatar_url = get_avatar_url( $id_or_email, $args );
 
-	$class = array( 'avatar', 'avatar-' . (int) $size, 'photo' );
+	$class = [ 'avatar', 'avatar-' . (int) $size, 'photo' ];
 	if ( ! empty( $args['class'] ) ) {
 		$class = array_merge( $class, (array) $args['class'] );
 	}
@@ -177,7 +190,7 @@ function filter_avatar( $avatar, $id_or_email, $size, $default, $alt, $args ) {
  * @return string              Filtered avatar URL.
  */
 function filter_avatar_url( $url, $id_or_email, $args ) {
-	return get_avatar_url( $id_or_email, $args );
+	return should_replace_url( $url ) ? get_avatar_url( $id_or_email, $args ) : $url;
 }
 
 /**
@@ -202,17 +215,17 @@ function get_avatar_url( $id_or_email, $args ) {
 
 		// Special-case for comments.
 		if ( ! $user ) {
-			return generate_default_avatar( $id_or_email->comment_author );
+			return generate_default_avatar( $id_or_email->comment_author, $id_or_email, $args );
 		}
 	}
 
 	if ( ! $user ) {
-		return generate_default_avatar( '?' );
+		return generate_default_avatar( '?', $id_or_email, $args );
 	}
 
 	$avatar_id = get_user_meta( $user->ID, 'fair_avatar_id', true );
 	if ( ! $avatar_id ) {
-		return generate_default_avatar( $user->display_name );
+		return generate_default_avatar( $user->display_name, $id_or_email, $args );
 	}
 
 	$size = isset( $args['size'] ) ? (int) $args['size'] : 150;
@@ -264,10 +277,19 @@ function get_avatar_alt( $id_or_email ) {
  * Get the default avatar URL.
  *
  * @param  string|null $name Name to derive avatar from.
+ * @param  mixed       $id_or_email  User ID, email, or comment object.
+ * @param  array       $args Avatar arguments.
  *
  * @return string            Default avatar URL.
  */
-function generate_default_avatar( ?string $name = null ) : string {
+function generate_default_avatar( ?string $name = null, $id_or_email = '', $args = [] ) : string {
+	$avatar_source = get_site_option( AVATAR_SRC_SETTING_KEY, 'fair' );
+	if ( 'gravatar' === $avatar_source ) {
+		remove_filter( 'get_avatar_url', __NAMESPACE__ . '\\filter_avatar_url', 10, 3 );
+		$args = get_avatar_data( $id_or_email, $args );
+		add_filter( 'get_avatar_url', __NAMESPACE__ . '\\filter_avatar_url', 10, 3 );
+		return $args['url'] ?? '';
+	}
 	$first = strtoupper( substr( $name ?? '', 0, 1 ) );
 
 	$tmpl = <<<"END"
@@ -316,4 +338,19 @@ function generate_default_avatar( ?string $name = null ) : string {
 
 	$uri = 'data:image/svg+xml;base64,' . base64_encode( $data );
 	return $uri;
+}
+
+/**
+ * Determine whether the avatar URL should be replaced.
+ *
+ * @param string $url_or_markup The avatar's URL or markup.
+ * @return bool Whether the URL should be replaced.
+ */
+function should_replace_url( string $url_or_markup ) : bool {
+	foreach ( AVATAR_DOMAINS_TO_REPLACE as $domain ) {
+		if ( str_contains( $url_or_markup, $domain ) ) {
+			return true;
+		}
+	}
+	return false;
 }
