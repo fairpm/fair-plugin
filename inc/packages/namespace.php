@@ -200,7 +200,7 @@ function fetch_metadata_from_local( $response, $url ) {
 	if ( ! $response && str_contains( $url, home_url() ) ) {
 		$did = explode( '/', parse_url( $url, PHP_URL_PATH ) );
 		$did = array_pop( $did );
-		$body = get_site_transient( 'fair-metadata-endpoint-' . $did );
+		$body = get_transient( 'fair-metadata-endpoint-' . $did );
 		$response = [];
 		$response = [
 			'headers' => [],
