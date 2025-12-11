@@ -174,7 +174,7 @@ function fetch_metadata_doc( string $url ) {
 
 		// Reorder sections before caching.
 		$body = json_decode( $response['body'] );
-		if ( isset($body->sections) ) {
+		if ( isset( $body->sections ) ) {
 			$body->sections = (array) $body->sections;
 			$body = sort_sections_in_api( $body );
 			$body->sections = (object) $body->sections;
@@ -379,7 +379,7 @@ function pick_artifact_by_lang( array $artifacts, ?string $locale = null ) {
 function version_requirements( ReleaseDocument $release ) {
 	$required_versions = [];
 
-	if ( isset($release->requires ) ) {
+	if ( isset( $release->requires ) ) {
 		foreach ( $release->requires as $pkg => $vers ) {
 			$vers = preg_replace( '/^[^0-9]+/', '', $vers );
 			if ( $pkg === 'env:php' ) {
@@ -391,7 +391,7 @@ function version_requirements( ReleaseDocument $release ) {
 		}
 	}
 
-	if ( isset($release->suggests ) ) {
+	if ( isset( $release->suggests ) ) {
 		foreach ( $release->suggests as $pkg => $vers ) {
 			$vers = preg_replace( '/^[^0-9]+/', '', $vers );
 			if ( $pkg === 'env:wp' ) {
