@@ -34,11 +34,18 @@ function bootstrap() {
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
 	add_action( 'install_plugins_pre_plugin-information', __NAMESPACE__ . '\\maybe_hijack_plugin_info', 0 );
-	add_filter( 'plugins_api_result', __NAMESPACE__ . '\\alter_slugs', 10, 3 );
+	add_filter( 'plugins_api_result', __NAMESPACE__ . '\\handle_did_in_search_results', 10, 3 );
+	add_filter( 'plugins_api_result', __NAMESPACE__ . '\\sort_sections_in_api', 15, 1 );
 	add_filter( 'plugin_install_action_links', __NAMESPACE__ . '\\maybe_hijack_plugin_install_button', 10, 2 );
 	add_filter( 'plugin_install_description', __NAMESPACE__ . '\\maybe_add_data_to_description', 10, 2 );
 	add_action( 'wp_ajax_check_plugin_dependencies', __NAMESPACE__ . '\\set_slug_to_hashed' );
 	add_filter( 'wp_list_table_class_name', __NAMESPACE__ . '\\maybe_override_list_table' );
+
+	// Needed for pre WordPress 6.9 compatibility.
+	if ( ! is_wp_version_compatible( '6.9' ) ) {
+		add_action( 'install_plugins_featured', __NAMESPACE__ . '\\replace_featured_message' );
+		add_action( 'admin_init', fn() => remove_action( 'install_plugins_featured', 'install_dashboard' ) );
+	}
 }
 
 /**
@@ -67,6 +74,31 @@ function maybe_override_list_table( $class_name ) {
 function add_direct_tab( $tabs ) {
 	$tabs[ TAB_DIRECT ] = __( 'Direct Install', 'fair' );
 	return $tabs;
+}
+
+/**
+ * Replace the featured message with our own.
+ *
+ * @until WordPress 6.9.0
+ * @return void
+ */
+function replace_featured_message() {
+	ob_start();
+	\display_plugins_table();
+	$views = ob_get_clean();
+
+	preg_match( '|<a href="(?<url>[^"]+)">(?<text>[^>]+)<\/a>|', $views, $matches );
+	if ( ! empty( $matches['text'] ) ) {
+		$text_with_fair = str_replace( 'WordPress', 'FAIR', $matches['text'] );
+		$str = str_replace(
+			[ $matches['url'], $matches['text'] ],
+			[ __( 'https://fair.pm/packages/plugins/', 'fair' ), $text_with_fair ],
+			$matches[0]
+		);
+	}
+
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Replacements are escaped. The previous content is direct from Core.
+	echo str_replace( $matches[0], $str, $views );
 }
 
 /**
@@ -257,7 +289,7 @@ function set_slug_to_hashed() : void {
 	}
 
 	$escaped_slug = sanitize_text_field( wp_unslash( $_POST['slug'] ) );
-	$did = 'did:' . explode( '-did:', str_replace( '--', ':', $escaped_slug ), 2 )[1];
+	$did = 'did:' . ( explode( '-did:', str_replace( '--', ':', $escaped_slug ), 2 )[1] ?? '' );
 	if ( ! preg_match( '/^did:plc:.+$/', $did ) ) {
 		return;
 	}
@@ -371,13 +403,12 @@ function maybe_hijack_legacy_plugin_info() {
 /**
  * Filters the Plugin Installation API response results.
  *
- * @since 2.7.0
- *
  * @param object|WP_Error $res    Response object or WP_Error.
  * @param string          $action The type of information being requested from the Plugin Installation API.
  * @param object          $args   Plugin API arguments.
+ * @return object|WP_Error
  */
-function alter_slugs( $res, $action, $args ) {
+function handle_did_in_search_results( $res, $action, $args ) {
 	if ( 'query_plugins' !== $action ) {
 		return $res;
 	}
@@ -386,7 +417,7 @@ function alter_slugs( $res, $action, $args ) {
 		return $res;
 	}
 
-	// Alter the slugs to our globally unique version.
+	// Alter the slugs to our globally unique version and populate release cache.
 	foreach ( $res->plugins as &$plugin ) {
 		if ( ! is_fair_plugin( $plugin ) ) {
 			continue;
@@ -394,6 +425,35 @@ function alter_slugs( $res, $action, $args ) {
 
 		$did = $plugin['_fair']['id'];
 		$plugin['slug'] = esc_attr( $plugin['slug'] . '-' . str_replace( ':', '--', $did ) );
+		Packages\add_package_to_release_cache( $did );
+	}
+
+	return $res;
+}
+
+/**
+ * Sort plugin modal tabs.
+ *
+ * Based on standard tab listing order.
+ *
+ * @param object|WP_Error $res Response object or WP_Error.
+ * @return object|WP_Error
+ */
+function sort_sections_in_api( $res ) {
+	$ordered_sections = [
+		'description',
+		'installation',
+		'faq',
+		'screenshots',
+		'changelog',
+		'upgrade_notice',
+		'security',
+		'other_notes',
+		'reviews',
+	];
+	if ( property_exists( $res, 'sections' ) && is_array( $res->sections ) ) {
+		$properly_ordered = array_merge( array_fill_keys( $ordered_sections, '' ), $res->sections );
+		$res->sections = array_filter( $properly_ordered );
 	}
 
 	return $res;
@@ -402,7 +462,7 @@ function alter_slugs( $res, $action, $args ) {
 /**
  * Override the install button, for bridged plugins.
  *
- * Bridged plugins appear in the API (via `alter_slugs()`) with slugs like
+ * Bridged plugins appear in the API (via `handle_did_in_search_results()`) with slugs like
  * `plugin-name-did--method--msid`, however they are installed to
  * `plugin-name-didhash`. In order to show the correct button, we need to check
  * against the install slug, not the API slug.
