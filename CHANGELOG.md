@@ -1,5 +1,53 @@
 [unreleased]
 
+#### 1.2.0 / 2025-12-11
+
+* Generate POT - 2025-11-07 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/314
+* Issue and PR Templates by @Ipstenu in https://github.com/fairpm/fair-plugin/pull/304
+* Updater: Use stylesheet directory to determine theme’s style.css location. by @peterwilsoncc in https://github.com/fairpm/fair-plugin/pull/323
+* Docs: Convert block comments to multiple single line comments. by @costdev in https://github.com/fairpm/fair-plugin/pull/326
+* Make emoji use and rendering consistent in GitHub templates. by @costdev in https://github.com/fairpm/fair-plugin/pull/321
+* Link to the FAIRPM repo's discussions section. by @costdev in https://github.com/fairpm/fair-plugin/pull/322
+* fix for non-fair plugin install with no did string by @afragen in https://github.com/fairpm/fair-plugin/pull/328
+* Parse IndexNow request earlier. by @peterwilsoncc in https://github.com/fairpm/fair-plugin/pull/317
+* Skip IndexNow notifications during imports. by @peterwilsoncc in https://github.com/fairpm/fair-plugin/pull/319
+* Add readme.txt and changelog by @afragen in https://github.com/fairpm/fair-plugin/pull/331
+* Add array_first() and array_last() compatibility from WP6.9 by @afragen in https://github.com/fairpm/fair-plugin/pull/332
+* Update get|set_transient to get|set_site_transient by @afragen in https://github.com/fairpm/fair-plugin/pull/330
+* Rename minifair to FAIR Beacon by @jdevalk in https://github.com/fairpm/fair-plugin/pull/340
+* Ensure proper format of $icons in transient by @afragen in https://github.com/fairpm/fair-plugin/pull/343
+* Add Author URI and Security contact to plugin header by @toderash in https://github.com/fairpm/fair-plugin/pull/346
+* rework dotorg_connectivity site health check - 2 by @joedolson in https://github.com/fairpm/fair-plugin/pull/337
+* removing data on uninstall by @norcross in https://github.com/fairpm/fair-plugin/pull/347
+* Appropriate slug rename on update by @afragen in https://github.com/fairpm/fair-plugin/pull/342
+* Support custom avatars when gravatar is left enabled. by @joedolson in https://github.com/fairpm/fair-plugin/pull/349
+* [browserslist] Update browser regex by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/325
+* Change text naming of plugin by @joedolson in https://github.com/fairpm/fair-plugin/pull/351
+* Update assets for FAIR Connect renaming by @joedolson in https://github.com/fairpm/fair-plugin/pull/352
+* Add screenshots by @jazzsequence in https://github.com/fairpm/fair-plugin/pull/348
+* Generate POT - 2025-11-08 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/324
+* Generate POT - 2025-12-10 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/358
+* Update ca POT translation (9-24-25) by @marcarmengou in https://github.com/fairpm/fair-plugin/pull/270
+* add missing translator comments by @afragen in https://github.com/fairpm/fair-plugin/pull/359
+* German translation files for FAIR 1.0 by @La-Geek in https://github.com/fairpm/fair-plugin/pull/297
+* Generate missing i18n files - 2025-12-10 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/361
+* Generate POT - 2025-12-10 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/360
+* Populate alsoKnownAs data after fetching it from the ledger. by @johnbillion in https://github.com/fairpm/fair-plugin/pull/357
+* Open the validated domain in a new tab so it doesn't open in the modal iframe by @johnbillion in https://github.com/fairpm/fair-plugin/pull/356
+* Update conditional for possible empty $svg by @afragen in https://github.com/fairpm/fair-plugin/pull/363
+* Generate POT - 2025-12-11 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/365
+* Don't create a bundle for versions older than FAIR supports by @johnbillion in https://github.com/fairpm/fair-plugin/pull/288
+* Update de_DE translation by @Soean in https://github.com/fairpm/fair-plugin/pull/112
+* Close existing automated PRs before creating new ones by @jazzsequence in https://github.com/fairpm/fair-plugin/pull/362
+* Update sv_SE to .pot for 2025-06-16 by @tobifjellner in https://github.com/fairpm/fair-plugin/pull/109
+* Generate missing i18n files - 2025-12-11 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/366
+* [bump-version] Bump version to 1.2.0 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/368
+* Fix jq command in workflow for closing PRs by @rmccue in https://github.com/fairpm/fair-plugin/pull/369
+
+##### New Contributors
+* @toderash made their first contribution in https://github.com/fairpm/fair-plugin/pull/346
+* @jazzsequence made their first contribution in https://github.com/fairpm/fair-plugin/pull/348
+
 #### 1.1.0 / 2025-11-02
 
 * Workflows: When detecting POT changes, ignore the creation date. by @costdev in #274
