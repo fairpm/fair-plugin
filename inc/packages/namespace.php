@@ -709,9 +709,9 @@ function delete_cached_did_for_install(): void {
  * @param WP_Upgrader $upgrader An Upgrader object.
  * @param array $hook_extra     Array of hook data.
  *
- * @return string|WP_Error
+ * @return string
  */
-function maybe_rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) {
+function maybe_rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) : string {
 	global $wp_filesystem;
 
 	$type = $upgrader instanceof Plugin_Upgrader ? 'plugin' : ( $upgrader instanceof Theme_Upgrader ? 'theme' : '' );
