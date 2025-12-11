@@ -176,10 +176,12 @@ function fetch_metadata_doc( string $url ) {
 
 		// Reorder sections before caching.
 		$body = json_decode( $response['body'] );
-		$body->sections = (array) $body->sections;
-		$body = sort_sections_in_api( $body );
-		$body->sections = (object) $body->sections;
-		$response['body'] = json_encode( $body );
+		if ( isset( $body->sections ) ) {
+			$body->sections = (array) $body->sections;
+			$body = sort_sections_in_api( $body );
+			$body->sections = (object) $body->sections;
+			$response['body'] = json_encode( $body );
+		}
 
 		set_site_transient( $cache_key, $response, CACHE_LIFETIME );
 	}
@@ -378,19 +380,25 @@ function pick_artifact_by_lang( array $artifacts, ?string $locale = null ) {
  */
 function version_requirements( ReleaseDocument $release ) {
 	$required_versions = [];
-	foreach ( $release->requires as $pkg => $vers ) {
-		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
-		if ( $pkg === 'env:php' ) {
-			$required_versions['requires_php'] = $vers;
-		}
-		if ( $pkg === 'env:wp' ) {
-			$required_versions['requires_wp'] = $vers;
+
+	if ( isset( $release->requires ) ) {
+		foreach ( $release->requires as $pkg => $vers ) {
+			$vers = preg_replace( '/^[^0-9]+/', '', $vers );
+			if ( $pkg === 'env:php' ) {
+				$required_versions['requires_php'] = $vers;
+			}
+			if ( $pkg === 'env:wp' ) {
+				$required_versions['requires_wp'] = $vers;
+			}
 		}
 	}
-	foreach ( $release->suggests as $pkg => $vers ) {
-		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
-		if ( $pkg === 'env:wp' ) {
-			$required_versions['tested_to'] = $vers;
+
+	if ( isset( $release->suggests ) ) {
+		foreach ( $release->suggests as $pkg => $vers ) {
+			$vers = preg_replace( '/^[^0-9]+/', '', $vers );
+			if ( $pkg === 'env:wp' ) {
+				$required_versions['tested_to'] = $vers;
+			}
 		}
 	}
 
