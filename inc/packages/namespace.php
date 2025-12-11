@@ -520,7 +520,7 @@ function get_icons( $icons ) : array {
 
 	$icons_arr['1x'] = $regular->url ?? '';
 	$icons_arr['2x'] = $high_res->url ?? '';
-	if ( str_contains( $svg->url, 's.w.org/plugins' ) ) {
+	if ( ! empty( $svg ) && str_contains( $svg->url, 's.w.org/plugins' ) ) {
 		$icons_arr['default'] = $svg->url;
 	} else {
 		$icons_arr['svg'] = $svg->url ?? '';
