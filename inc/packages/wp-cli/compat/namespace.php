@@ -72,6 +72,9 @@ function maybe_handle_command( array $args = [], array $assoc_args = [] ): void 
 
 	if ( $dids ) {
 		handle_command( $command, $subcommand, $args, $assoc_args, $items, $dids );
+	} else {
+		// No DIDs found; prime for search/install to avoid issues if a DID is added later.
+		prime_for_install( [] );
 	}
 }
 
