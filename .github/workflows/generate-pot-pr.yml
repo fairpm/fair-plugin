@@ -73,10 +73,10 @@ jobs:
             --repo ${{ github.repository }} \
             --state open \
             --json number,headRefName \
-            --jq '.[] | select(.headRefName == "'${BRANCH_NAME}'") | .number | \
+            --jq '.[] | select(.headRefName == "'${BRANCH_NAME}'") | .number' | \
               xargs -r -I {} gh pr close {} \
                 --repo ${{ github.repository }} \
-                --comment "Closing this PR in favor of ${TITLE}.'"
+                --comment "Closing this PR in favor of ${TITLE}."
 
           gh pr create \
             --base ${{ github.event.repository.default_branch }} \
