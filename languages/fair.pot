@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-10T19:37:59+00:00\n"
+"POT-Creation-Date: 2025-12-11T04:32:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -213,63 +213,63 @@ msgstr ""
 msgid "Domain Alias:"
 msgstr ""
 
-#. translators: %1$s: full URL for validated domain, %2$s: raw domain
-#: inc/packages/admin/info.php:462
+#. translators: %s: URL for validated domain
+#: inc/packages/admin/info.php:467
 #, php-format
-msgid "<strong>Validated</strong> as <a href=\"%1$s\">%2$s</a>"
+msgid "<strong>Validated</strong> as %s"
 msgstr ""
 
-#: inc/packages/admin/info.php:470
+#: inc/packages/admin/info.php:474
 msgid "Not validated: No domain alias is set"
 msgstr ""
 
-#: inc/packages/admin/info.php:479
+#: inc/packages/admin/info.php:483
 msgid "An unknown error occurred"
 msgstr ""
 
-#: inc/packages/admin/info.php:484
+#: inc/packages/admin/info.php:488
 msgid "Validation failed"
 msgstr ""
 
 #. translators: %s: validation error message
-#: inc/packages/admin/info.php:494
+#: inc/packages/admin/info.php:498
 #, php-format
 msgid "<p><strong>Error:</strong> Failed domain alias validation, this package may be unsafe: %s</p>"
 msgstr ""
 
-#: inc/packages/admin/info.php:557
-#: inc/packages/admin/info.php:570
+#: inc/packages/admin/info.php:561
+#: inc/packages/admin/info.php:574
 msgid "Install Now"
 msgstr ""
 
 #. translators: %s: The package's name.
-#: inc/packages/admin/info.php:568
+#: inc/packages/admin/info.php:572
 #, php-format
 msgid "Install %s now"
 msgstr ""
 
-#: inc/packages/admin/info.php:577
-#: inc/packages/admin/info.php:591
+#: inc/packages/admin/info.php:581
+#: inc/packages/admin/info.php:595
 msgid "Update Now"
 msgstr ""
 
 #. translators: %s: The package's name.
-#: inc/packages/admin/info.php:589
+#: inc/packages/admin/info.php:593
 #, php-format
 msgid "Update %s now"
 msgstr ""
 
 #. translators: %s: The package's name.
-#: inc/packages/admin/info.php:600
+#: inc/packages/admin/info.php:604
 #, php-format
 msgid "Activate %s now"
 msgstr ""
 
-#: inc/packages/admin/info.php:602
+#: inc/packages/admin/info.php:606
 msgid "Activate"
 msgstr ""
 
-#: inc/packages/admin/info.php:608
+#: inc/packages/admin/info.php:612
 msgid "Installed"
 msgstr ""
 
