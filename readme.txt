@@ -1,4 +1,4 @@
-# FAIR Package Manager
+# FAIR Connect
 
 Contributors: FAIR Contributors
 License: GPLv2 or later
@@ -18,7 +18,7 @@ This plugin configures your site to use FAIR implementations of the key services
 
 ### Features
 
-The FAIR plugin implements federated or local versions of the following features in WordPress:
+The FAIR Connect plugin implements federated or local versions of the following features in WordPress:
 
 * Version checks and updates to WordPress, plugins, and themes
 * Language packs and translations
@@ -63,7 +63,14 @@ FAIR can be installed manually by downloading the latest zip from releases and i
 
 ### Uninstallation
 
-To remove the FAIR plugin and its features, you can deactivate and delete the plugin. There are no changes made to your database outside of the plugin settings, and no external files are edited. FAIR is a self-contained plugin, using the accepted WordPress standards and practices.
+To remove the FAIR Connect plugin and its features, you can deactivate and delete the plugin. There are no changes made to your database outside of the plugin settings, and no external files are edited. FAIR is a self-contained plugin, using the accepted WordPress standards and practices.
 
 
 ## Screenshots
+
+1. Add Plugins page with FAIR Package Manager installed
+2. Plugin details modal for a FAIR-managed plugin
+3. Direct Install page to install a new pluging by DID
+4. Avatar Source setting to manage FAIR Avatars or Gravatar
+5. Updated WordPress News and Events dashboard widget
+6. WordPress update page showing AspireCloud as the update source for core themes

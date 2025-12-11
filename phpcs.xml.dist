@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="FAIR coding standards">
-	<description>Coding standards for the FAIR plugin</description>
+	<description>Coding standards for the FAIR Connect plugin</description>
 
 	<!-- Only scan PHP files. -->
 	<arg name="extensions" value="php" />

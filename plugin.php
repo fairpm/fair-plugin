@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: FAIR - Federated and Independent Repositories
+ * Plugin Name: FAIR Connect - Federated and Independent Repositories
  * Description: Make your site more FAIR.
  * Version: 1.1.0
  * Author: FAIR Contributors
