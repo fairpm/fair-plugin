@@ -1,45 +1,37 @@
-name: PHP coding standards
+name: Lint
 
 on:
   push:
     branches:
       - main
   pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
-# Cancels all previous workflow runs for pull requests that have not completed.
-concurrency:
-  # The concurrency group contains the workflow name and the branch name for pull requests
-  # or the commit hash for any other events.
-  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
-  cancel-in-progress: true
-
-# Disable permissions for all available scopes by default.
-# Any needed permissions should be configured at the job level.
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   lint:
-    name: Run coding standards checks
+    name: Lint PHP
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup cache
-        uses: actions/cache@v5
-        with:
-          key: ${{ runner.os }}-${{ hashFiles('composer.json') }} # Note that lock file will change between runs.
-          path: .cache
-
       - name: Set up PHP
-        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2.33.0
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4' # Sync with required PHP version for the plugin.
+          tools: composer
 
-      - name: Install dependencies
+      - name: Install Composer dependencies
         run: composer install
 
-      - name: Lint PHP
-        run: composer run lint
+      - name: Lint PHPCS
+        run: composer lint:phpcs -- --report-full
+
+      - name: Run PHPStan
+        run: composer lint:phpstan
