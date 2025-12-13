@@ -126,7 +126,7 @@ function render_page( MetadataDocument $metadata, string $tab, string $section )
 function render( MetadataDocument $doc, string $tab, string $section ) {
 	$sections = (array) $doc->sections;
 
-	if ( ! isset( $sections[ $section ] ) ) {
+	if ( ! isset( $sections[ $section ] ) && ! empty( $sections ) ) {
 		$section = array_keys( $sections )[0];
 	}
 
