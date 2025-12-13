@@ -209,7 +209,7 @@ function get_trusted_keys(): array {
 function move_package_during_install( $source, $remote_source, $upgrader, $hook_extra ): string {
 	global $wp_filesystem;
 
-	if ( isset( $hook_extra['action'] ) && $hook_extra['action'] !== 'install' ) {
+	if ( ! isset( $hook_extra['action'] ) || $hook_extra['action'] !== 'install' ) {
 		// Other actions are handled elsewhere.
 		return $source;
 	}
