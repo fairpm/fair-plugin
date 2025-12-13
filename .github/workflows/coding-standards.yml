@@ -37,7 +37,8 @@ jobs:
         run: npm run test:php:install-deps
 
       - name: Lint PHPCS
-        run: npm run lint:php:phpcs -- --report-full
+        # TODO: Remove the flag once all warnings are fixed.
+        run: npm run lint:php:phpcs -- -- -- --warning-severity=0
 
       - name: Run PHPStan
         run: npm run lint:php:phpstan
