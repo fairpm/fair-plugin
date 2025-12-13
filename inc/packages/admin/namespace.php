@@ -44,7 +44,9 @@ function bootstrap() {
 	// Needed for pre WordPress 6.9 compatibility.
 	if ( ! is_wp_version_compatible( '6.9' ) ) {
 		add_action( 'install_plugins_featured', __NAMESPACE__ . '\\replace_featured_message' );
-		add_action( 'admin_init', fn() => remove_action( 'install_plugins_featured', 'install_dashboard' ) );
+		add_action( 'admin_init', function () {
+			remove_action( 'install_plugins_featured', 'install_dashboard' );
+		} );
 	}
 }
 
