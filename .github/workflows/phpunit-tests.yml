@@ -21,6 +21,7 @@ permissions:
 
 jobs:
   generate-matrix:
+    name: Generate PHP and WP version testing matrix
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.generate.outputs.matrix }}
