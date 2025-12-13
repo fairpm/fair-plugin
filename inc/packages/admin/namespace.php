@@ -499,7 +499,7 @@ function maybe_hijack_plugin_install_button( $links, $plugin ) {
 		$requires_wp  = isset( $plugin['requires'] ) ? $plugin['requires'] : null;
 		$compatible_php = is_php_version_compatible( $requires_php );
 		$compatible_wp  = is_wp_version_compatible( $requires_wp );
-		$name = strip_tags( $plugin['name'] . ' ' . $plugin['version'] );
+		$name = wp_strip_all_tags( $plugin['name'] . ' ' . $plugin['version'] );
 		$link = wp_get_plugin_action_button( $name, $plugin_override, $compatible_php, $compatible_wp );
 	}
 	return $links;
