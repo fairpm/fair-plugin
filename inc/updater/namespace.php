@@ -214,7 +214,7 @@ function move_package_during_install( $source, $remote_source, $upgrader, $hook_
 		return $source;
 	}
 
-	if ( ! in_array( $hook_extra['type'], [ 'plugin', 'theme' ], true ) ) {
+	if ( ! in_array( $hook_extra['type'] ?? '', [ 'plugin', 'theme' ], true ) ) {
 		// This package type is not supported.
 		return $source;
 	}
