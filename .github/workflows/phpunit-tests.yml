@@ -75,13 +75,13 @@ jobs:
           cache: 'npm'
           node-version: '18'
 
-      - name: Remove lock file for fresh PHP-specific dependencies
+      - name: Install fresh dependencies for PHP ${{ matrix.php-version }}
         run: rm composer.lock
 
       - name: Start the development environment
         run: npm run env start
 
-      - name: Versions
+      - name: Report Versions
         run: |
           npm run env run cli -- php -v
           npm run env run cli -- wp core version
@@ -94,3 +94,31 @@ jobs:
 
       - name: Run PHPUnit tests (multisite)
         run: npm run test:php:multisite
+
+  phpunit-coverage:
+    name: PHPUnit Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version: '18'
+
+      - name: Start the development environment
+        run: npm run env -- start --xdebug=coverage
+
+      - name: Report Versions
+        run: |
+          npm run env run cli -- php -v
+          npm run env run cli -- php -i | grep xdebug
+          npm run env run cli -- wp core version
+
+      - name: Install Composer dependencies
+        run: npm run test:php:install-deps
+
+      - name: Generate coverage report
+        run: npm run test:php:coverage:report
