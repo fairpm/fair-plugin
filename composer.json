@@ -15,10 +15,11 @@
         "fairpm/did-manager-wordpress": "0.0.4-a"
     },
     "require-dev": {
-        "yoast/phpunit-polyfills": "*",
-        "nimut/phpunit-merger": "*",
+        "yoast/phpunit-polyfills": "^4.0",
+        "nimut/phpunit-merger": "^2.0",
         "humanmade/coding-standards": "^1.2",
-        "szepeviktor/phpstan-wordpress": "^2.0"
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "phpunit/phpunit": "^9"
     },
     "config": {
         "allow-plugins": {

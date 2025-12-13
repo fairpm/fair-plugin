@@ -74,7 +74,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v6
 
       - name: Setup MySQL with mysql_native_password
         uses: shogo82148/actions-setup-mysql@v1
@@ -91,9 +91,10 @@ jobs:
           php-version: ${{ matrix.php-version }}
           coverage: none
           extensions: mysql, mysqli
-          tools: composer, wp-cli, phpunit:${{ matrix.wp-version < '5.1' && '6' || ( matrix.wp-version < '5.9' || matrix.php-version < '8.0' ) && '7' || '9' }}, phpunit-polyfills:^1.1.0
-        env:
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tools: composer, wp-cli
+
+      - name: Setup Composer for PHP version
+        run: composer require --dev --update-with-all-dependencies phpunit:${{ matrix.wp-version < '5.1' && '6' || ( matrix.wp-version < '5.9' || matrix.php-version < '8.0' ) && '7' || '9' }}
 
       - name: Install Composer dependencies
         run: composer update --optimize-autoloader --prefer-dist
