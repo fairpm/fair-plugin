@@ -21,17 +21,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          php-version: '7.4' # Sync with required PHP version for the plugin.
-          tools: composer
+          cache: 'npm'
+          node-version: '18'
+
+      - name: Start the development environment
+        run: npm run env start
 
       - name: Install Composer dependencies
-        run: composer install
+        run: npm run test:php:install-deps
 
       - name: Lint PHPCS
-        run: composer lint:phpcs -- --report-full
+        run: npm run lint:php:phpcs -- --report-full
 
       - name: Run PHPStan
-        run: composer lint:phpstan
+        run: npm run lint:php:phpstan
+
