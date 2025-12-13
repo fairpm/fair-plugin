@@ -28,13 +28,13 @@
     },
     "scripts": {
         "lint:phpcs": "phpcs .",
-        "lint:phpstan": "phpstan analyse --verbose --memory-limit=1G",
+        "lint:phpstan": "phpstan analyse --verbose --memory-limit=2G",
         "lint": [
             "@lint:phpcs",
             "@lint:phpstan"
         ],
         "format:phpcs": "phpcbf .",
-        "format:phpstan": "phpstan analyse --fix --memory-limit=1G",
+        "format:phpstan": "phpstan analyse --fix --memory-limit=2G",
         "format": [
             "@format:phpcs",
             "@format:phpstan"
