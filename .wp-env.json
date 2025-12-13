@@ -1,4 +1,5 @@
 {
+	"@schema": "https://schemas.wp.org/trunk/wp-env.json",
 	"phpVersion": "7.4",
 	"plugins": [
 		"norcross/airplane-mode",
