@@ -206,7 +206,7 @@ function get_trusted_keys(): array {
  * @param array       $hook_extra    Array of hook data.
  * @return string The correct directory path for installation.
  */
-function move_package_during_install( string $source, string $remote_source, WP_Upgrader $upgrader,  array $hook_extra ): string {
+function move_package_during_install( string $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ): string {
 	global $wp_filesystem;
 
 	if ( ! isset( $hook_extra['action'] ) || $hook_extra['action'] !== 'install' ) {
