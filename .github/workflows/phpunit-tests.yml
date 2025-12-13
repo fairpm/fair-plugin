@@ -73,8 +73,8 @@ jobs:
       - name: Install fresh dependencies for PHP ${{ matrix.php-version }}
         run: rm composer.lock
 
-      - name: Install Composer dependencies
-        run: npm run test:php:install-deps
+      - name: Install dependencies
+        run: npm run cli -- composer require --dev phpunit/phpunit:^${{ matrix.wp-version < '5.1' && '6' || ( matrix.wp-version < '5.9' || matrix.php-version < '8.0' ) && '7' || '9' }}
 
       - name: Run PHPUnit tests (single site)
         run: npm run test:php
