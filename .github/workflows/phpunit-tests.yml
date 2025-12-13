@@ -62,6 +62,9 @@ jobs:
             .cache
             tests/phpunit/cache
 
+      - name: Skip development plugins
+        run: echo '{"plugins":[]}' > .wp-env.override.json
+
       - name: Start the development environment
         run: npm run env start
 
