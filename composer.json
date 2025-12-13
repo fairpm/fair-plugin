@@ -19,7 +19,8 @@
         "nimut/phpunit-merger": "^1.1",
         "humanmade/coding-standards": "^1.2",
         "szepeviktor/phpstan-wordpress": "^2.0",
-        "phpunit/phpunit": "^6|^7|^9"
+        "phpunit/phpunit": "^6|^7|^9",
+        "wp-cli/wp-cli-bundle": "^2.12"
     },
     "config": {
         "allow-plugins": {
