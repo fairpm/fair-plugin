@@ -47,7 +47,7 @@
         ],
         "test:multisite": [
             "Composer\\Config::disableProcessTimeout",
-            "@php vendor/bin/phpunit -c tests/phpunit/multisite.xml"
+            "@php vendor/bin/phpunit -c phpunit-multisite.xml.dist"
         ],
         "coverage:merge": [
             "Composer\\Config::disableProcessTimeout",
