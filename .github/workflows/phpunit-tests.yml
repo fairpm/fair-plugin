@@ -75,8 +75,8 @@ jobs:
           cache: 'npm'
           node-version: '18'
 
-      - name: Install fresh dependencies for PHP ${{ matrix.php-version }}
-        run: rm composer.lock
+      - name: Install dependencies
+        run: npm install
 
       - name: Start the development environment
         run: npm run env start
@@ -85,6 +85,9 @@ jobs:
         run: |
           npm run env run cli -- php -v
           npm run env run cli -- wp core version
+
+      - name: Install fresh dependencies for PHP ${{ matrix.php-version }}
+        run: rm composer.lock
 
       - name: Install Composer dependencies
         run: npm run test:php:install-deps
@@ -107,6 +110,9 @@ jobs:
         with:
           cache: 'npm'
           node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Start the development environment
         run: npm run env -- start --xdebug=coverage
