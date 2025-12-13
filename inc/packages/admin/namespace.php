@@ -29,7 +29,7 @@ function bootstrap() {
 	add_filter( 'plugins_api', __NAMESPACE__ . '\\handle_did_during_ajax', 10, 3 );
 	add_filter( 'plugins_api', 'FAIR\\Packages\\search_by_did', 10, 3 );
 	add_filter( 'upgrader_package_options', 'FAIR\\Packages\\cache_did_for_install', 10, 1 );
-	add_action( 'upgrader_post_install', 'FAIR\\Packages\\delete_cached_did_for_install', 10, 3 );
+	add_action( 'upgrader_post_install', 'FAIR\\Packages\\delete_cached_did_for_install', 10 );
 	add_filter( 'upgrader_pre_download', 'FAIR\\Packages\\upgrader_pre_download', 10, 1 );
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
