@@ -16,7 +16,7 @@
     },
     "require-dev": {
         "yoast/phpunit-polyfills": "^4.0",
-        "nimut/phpunit-merger": "^2.0",
+        "nimut/phpunit-merger": "^1.1",
         "humanmade/coding-standards": "^1.2",
         "szepeviktor/phpstan-wordpress": "^2.0",
         "phpunit/phpunit": "^9"
