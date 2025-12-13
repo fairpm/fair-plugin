@@ -35,6 +35,9 @@
 	<!-- Exclude third-party dependencies -->
 	<exclude-pattern>inc/updater/class-lite\.php</exclude-pattern>
 
+	<exclude-pattern>tests/phpunit/cache</exclude-pattern>
+	<exclude-pattern>tests/phpunit/coverage</exclude-pattern>
+
 	<!-- Exclude language files -->
 	<exclude-pattern>languages/*</exclude-pattern>
 
