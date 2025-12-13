@@ -658,7 +658,7 @@ function get_package_data( $did ) {
  */
 function upgrader_pre_download( $false ) : bool {
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
-	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\maybe_rename_source_selection', 11, 3 );
+	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\maybe_rename_on_package_download', 11, 3 );
 	return $false;
 }
 
@@ -698,7 +698,7 @@ function delete_cached_did_for_install(): void {
 }
 
 /**
- * Renames a package's directory when it doesn't match the slug.
+ * Renames a package's directory when it doesn't match the slug on package download.
  *
  * This is commonly required for packages from Git hosts.
  *
@@ -708,7 +708,7 @@ function delete_cached_did_for_install(): void {
  *
  * @return string|WP_Error
  */
-function maybe_rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
+function maybe_rename_on_package_download( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
 
 	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
