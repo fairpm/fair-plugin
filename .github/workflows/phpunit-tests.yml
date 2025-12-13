@@ -78,6 +78,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Setup cache
+        uses: actions/cache@v5
+        with:
+          key: ${{ runner.os }}-${{ hashFiles('composer.json') }} # Note that lock file will change between runs.
+          path: |
+            .cache
+            tests/phpunit/cache
+
       - name: Start the development environment
         run: npm run env start
 
@@ -104,6 +112,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Setup cache
+        uses: actions/cache@v5
+        with:
+          key: ${{ runner.os }}-${{ hashFiles('composer.json') }} # Note that lock file will change between runs.
+          path: |
+            .cache
+            tests/phpunit/cache
 
       - name: Setup Node
         uses: actions/setup-node@v4
