@@ -94,7 +94,7 @@ jobs:
           tools: composer, wp-cli
 
       - name: Setup Composer for PHP version
-        run: composer require --dev --update-with-all-dependencies phpunit:${{ matrix.wp-version < '5.1' && '6' || ( matrix.wp-version < '5.9' || matrix.php-version < '8.0' ) && '7' || '9' }}
+        run: composer require --dev --update-with-all-dependencies phpunit:^${{ matrix.wp-version < '5.1' && '6' || ( matrix.wp-version < '5.9' || matrix.php-version < '8.0' ) && '7' || '9' }}
 
       - name: Install SVN
         run: sudo apt-get update && sudo apt-get install -y subversion
