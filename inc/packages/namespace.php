@@ -13,6 +13,7 @@ use FAIR\Packages\DID\Document as DIDDocument;
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use FAIR\Updater;
+use function FAIR\Packages\Admin\sort_sections_in_api;
 use WP_Error;
 use WP_Upgrader;
 
@@ -90,7 +91,7 @@ function get_did_hash( string $id ) {
  * @return DIDDocument|WP_Error
  */
 function get_did_document( string $id ) {
-	$cached = get_transient( CACHE_METADATA_DOCUMENTS . $id );
+	$cached = get_site_transient( CACHE_METADATA_DOCUMENTS . $id );
 	if ( $cached ) {
 		return $cached;
 	}
@@ -105,7 +106,7 @@ function get_did_document( string $id ) {
 	if ( is_wp_error( $document ) ) {
 		return $document;
 	}
-	set_transient( CACHE_METADATA_DOCUMENTS . $id, $document, CACHE_LIFETIME );
+	set_site_transient( CACHE_METADATA_DOCUMENTS . $id, $document, CACHE_LIFETIME );
 
 	return $document;
 }
@@ -199,7 +200,7 @@ function fetch_package_metadata( string $id ) {
  */
 function fetch_metadata_doc( string $url ) {
 	$cache_key = CACHE_KEY . md5( $url );
-	$response = get_transient( $cache_key );
+	$response = get_site_transient( $cache_key );
 	$response = fetch_metadata_from_local( $response, $url );
 
 	if ( ! $response ) {
@@ -220,7 +221,17 @@ function fetch_metadata_doc( string $url ) {
 		} elseif ( $code !== 200 ) {
 			return new WP_Error( 'fair.packages.metadata.failure', __( 'HTTP error code received', 'fair' ) );
 		}
-		set_transient( $cache_key, $response, CACHE_LIFETIME );
+
+		// Reorder sections before caching.
+		$body = json_decode( $response['body'] );
+		if ( isset( $body->sections ) ) {
+			$body->sections = (array) $body->sections;
+			$body = sort_sections_in_api( $body );
+			$body->sections = (object) $body->sections;
+			$response['body'] = json_encode( $body );
+		}
+
+		set_site_transient( $cache_key, $response, CACHE_LIFETIME );
 	}
 
 	return MetadataDocument::from_response( $response );
@@ -230,7 +241,7 @@ function fetch_metadata_doc( string $url ) {
  * Fetch Metadata from local source.
  *
  * Solves issue where Metadata source is from same site.
- * Mini-FAIR REST endpoint may time out under these circumstances.
+ * FAIR-Beacon REST endpoint may time out under these circumstances.
  * Directly calling the WP_REST_Request does not return complete data.
  *
  * @param  bool|array $response Response from cache.
@@ -241,7 +252,7 @@ function fetch_metadata_from_local( $response, $url ) {
 	if ( ! $response && str_contains( $url, home_url() ) ) {
 		$did = explode( '/', parse_url( $url, PHP_URL_PATH ) );
 		$did = array_pop( $did );
-		$body = get_transient( 'fair-metadata-endpoint-' . $did );
+		$body = get_site_transient( 'fair-metadata-endpoint-' . $did );
 		$response = [];
 		$response = [
 			'headers' => [],
@@ -249,7 +260,7 @@ function fetch_metadata_from_local( $response, $url ) {
 		];
 		$response = ! $body ? false : $response;
 		if ( $response ) {
-			set_transient( CACHE_KEY . md5( $url ), $response, CACHE_LIFETIME );
+			set_site_transient( CACHE_KEY . md5( $url ), $response, CACHE_LIFETIME );
 		}
 	}
 
@@ -349,10 +360,8 @@ function get_language_priority_list( ?string $locale = null ) {
 		} while ( $i > 0 );
 	}
 
-	/*
-	 * Double the primary language code, to catch cases where the
-	 * locale matches the country code. (e.g. de becomes de-DE.)
-	 */
+	// Double the primary language code, to catch cases where the
+	// locale matches the country code. (e.g. de becomes de-DE).
 	$primary = substr( $locale, 0, strpos( $locale, '-' ) );
 	$langs[] = $primary . '-' . $primary;
 
@@ -419,19 +428,25 @@ function pick_artifact_by_lang( array $artifacts, ?string $locale = null ) {
  */
 function version_requirements( ReleaseDocument $release ) {
 	$required_versions = [];
-	foreach ( $release->requires as $pkg => $vers ) {
-		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
-		if ( $pkg === 'env:php' ) {
-			$required_versions['requires_php'] = $vers;
-		}
-		if ( $pkg === 'env:wp' ) {
-			$required_versions['requires_wp'] = $vers;
+
+	if ( isset( $release->requires ) ) {
+		foreach ( $release->requires as $pkg => $vers ) {
+			$vers = preg_replace( '/^[^0-9]+/', '', $vers );
+			if ( $pkg === 'env:php' ) {
+				$required_versions['requires_php'] = $vers;
+			}
+			if ( $pkg === 'env:wp' ) {
+				$required_versions['requires_wp'] = $vers;
+			}
 		}
 	}
-	foreach ( $release->suggests as $pkg => $vers ) {
-		$vers = preg_replace( '/^[^0-9]+/', '', $vers );
-		if ( $pkg === 'env:wp' ) {
-			$required_versions['tested_to'] = $vers;
+
+	if ( isset( $release->suggests ) ) {
+		foreach ( $release->suggests as $pkg => $vers ) {
+			$vers = preg_replace( '/^[^0-9]+/', '', $vers );
+			if ( $pkg === 'env:wp' ) {
+				$required_versions['tested_to'] = $vers;
+			}
 		}
 	}
 
@@ -563,7 +578,7 @@ function get_icons( $icons ) : array {
 
 	$icons_arr['1x'] = $regular->url ?? '';
 	$icons_arr['2x'] = $high_res->url ?? '';
-	if ( str_contains( $svg->url, 's.w.org/plugins' ) ) {
+	if ( ! empty( $svg->url ) && str_contains( $svg->url, 's.w.org/plugins' ) ) {
 		$icons_arr['default'] = $svg->url;
 	} else {
 		$icons_arr['svg'] = $svg->url ?? '';
@@ -693,7 +708,7 @@ function get_package_data( $did ) {
  */
 function upgrader_pre_download( $false ) : bool {
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
-	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\rename_source_selection', 11, 3 );
+	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\maybe_rename_on_package_download', 11, 3 );
 	return $false;
 }
 
@@ -704,7 +719,7 @@ function upgrader_pre_download( $false ) : bool {
  * @return array The same options.
  */
 function cache_did_for_install( array $options ): array {
-	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?: [];
+	$releases = get_site_transient( CACHE_RELEASE_PACKAGES ) ?: [];
 
 	if ( ! empty( $releases ) ) {
 		$did = array_find_key(
@@ -716,7 +731,7 @@ function cache_did_for_install( array $options ): array {
 		);
 
 		if ( $did ) {
-			set_transient( CACHE_DID_FOR_INSTALL, $did );
+			set_site_transient( CACHE_DID_FOR_INSTALL, $did );
 		}
 	}
 
@@ -729,11 +744,11 @@ function cache_did_for_install( array $options ): array {
  * @return void
  */
 function delete_cached_did_for_install(): void {
-	delete_transient( CACHE_DID_FOR_INSTALL );
+	delete_site_transient( CACHE_DID_FOR_INSTALL );
 }
 
 /**
- * Renames a package's directory when it doesn't match the slug.
+ * Renames a package's directory when it doesn't match the slug on package download.
  *
  * This is commonly required for packages from Git hosts.
  *
@@ -743,10 +758,10 @@ function delete_cached_did_for_install(): void {
  *
  * @return string|WP_Error
  */
-function rename_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader ) {
+function maybe_rename_on_package_download( string $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
 
-	$did = get_transient( CACHE_DID_FOR_INSTALL );
+	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
 
 	if ( ! $did ) {
 		return $source;
@@ -762,7 +777,7 @@ function rename_source_selection( string $source, string $remote_source, WP_Upgr
 		return $source;
 	}
 
-	if ( str_contains( $source, get_did_hash( $did ) ) && basename( $source ) === $metadata->slug ) {
+	if ( basename( $source ) === $metadata->slug ) {
 		return $source;
 	}
 
@@ -837,9 +852,9 @@ function add_package_to_release_cache( string $did ) : void {
 	if ( empty( $did ) ) {
 		return;
 	}
-	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?: [];
+	$releases = get_site_transient( CACHE_RELEASE_PACKAGES ) ?: [];
 	$releases[ $did ] = get_latest_release_from_did( $did );
-	set_transient( CACHE_RELEASE_PACKAGES, $releases );
+	set_site_transient( CACHE_RELEASE_PACKAGES, $releases );
 }
 
 /**
@@ -854,7 +869,7 @@ function add_package_to_release_cache( string $did ) : void {
  * @return array
  */
 function maybe_add_accept_header( $args, $url ) : array {
-	$releases = get_transient( CACHE_RELEASE_PACKAGES ) ?: [];
+	$releases = get_site_transient( CACHE_RELEASE_PACKAGES ) ?: [];
 
 	if ( ! str_contains( $url, 'api.github.com' ) ) {
 		return $args;

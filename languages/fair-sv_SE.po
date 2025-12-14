@@ -1,25 +1,23 @@
-# Copyright (C) 2025 FAIR Contributors
-# This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
+"Project-Id-Version: FAIR - Federated and Independent Repositories\n"
 "Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
-"POT-Creation-Date: 2025-06-10T04:28:22+00:00\n"
-"PO-Revision-Date: 2025-06-10 08:10+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: sv_SE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-06-16T16:26:12+00:00\n"
+"PO-Revision-Date: 2025-06-18 01:33+0200\n"
+"Language: sv_SE\n"
 "X-Generator: Poedit 3.6\n"
 "X-Domain: fair\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #. Plugin Name of the plugin
 #: plugin.php
-msgid "FAIR - Federated and Independent Repositories"
-msgstr "FAIR – Federated and Independent Repositories"
+msgid "FAIR Connect - Federated and Independent Repositories"
+msgstr "FAIR Connect - Federated and Independent Repositories"
 
 #. Description of the plugin
 #: plugin.php
@@ -31,24 +29,26 @@ msgstr "Gör din webbplats mer rättvis och FAIR."
 msgid "FAIR Contributors"
 msgstr "Bidragsgivare till FAIR"
 
-#: inc/avatars/namespace.php:93
+#: inc/avatars/namespace.php:96
 msgid "Choose Profile Image"
 msgstr "Välj profilbild"
 
-#: inc/avatars/namespace.php:94
+#: inc/avatars/namespace.php:97
 msgid "Remove Profile Image"
 msgstr "Ta bort profilbild"
 
-#: inc/avatars/namespace.php:97
+#: inc/avatars/namespace.php:105
 msgid "Upload a custom profile picture for your account."
 msgstr "Ladda upp en anpassad profilbild för ditt konto."
 
-#: inc/avatars/namespace.php:243 inc/avatars/namespace.php:258
+#. translators: %s: Name of person in profile picture
+#: inc/avatars/namespace.php:257
+#: inc/avatars/namespace.php:273
 #, php-format
 msgid "profile picture for %s"
 msgstr "profilbild för %s"
 
-#: inc/avatars/namespace.php:255
+#: inc/avatars/namespace.php:269
 msgctxt "alt for unknown avatar user"
 msgid "profile picture for user"
 msgstr "profilbild för användaren"
@@ -63,109 +63,86 @@ msgstr "%s är inte en giltig sträng för att ange version."
 msgid "No credits could be found."
 msgstr "Inga erkännanden hittades."
 
-#: inc/dashboard-widgets/namespace.php:90
+#: inc/dashboard-widgets/namespace.php:105
 msgid "Unable to fetch events (parse error)."
 msgstr "Det gick inte att hämta händelser (tolkningsfel)."
 
-#: inc/dashboard-widgets/namespace.php:97
+#: inc/dashboard-widgets/namespace.php:112
 msgctxt "default event location"
 msgid "Online"
 msgstr "Online"
 
 #. translators: If a Rosetta site exists (e.g. https://es.fair.pm/news/), then use that. Otherwise, leave untranslated.
-#: inc/dashboard-widgets/namespace.php:169
+#: inc/dashboard-widgets/namespace.php:189
 msgctxt "Events and News dashboard widget"
 msgid "https://fair.pm/"
 msgstr "https://fair.pm/"
 
-#: inc/dashboard-widgets/namespace.php:182
+#: inc/dashboard-widgets/namespace.php:202
 msgid "Events (by The WP World)"
 msgstr "Evenemang (från The WP World)"
 
-#: inc/settings/namespace.php:46 inc/settings/namespace.php:47
-#: inc/settings/namespace.php:71
+#: inc/settings/namespace.php:56
 msgid "FAIR Settings"
 msgstr "Inställningar för FAIR"
 
-#: inc/settings/namespace.php:60
-msgid "You do not have sufficient permissions to access this page."
-msgstr "Du har inte tillräcklig behörighet för att komma åt denna sida."
-
-#: inc/settings/namespace.php:75
-msgid "Save Settings"
-msgstr "Spara inställningarna"
-
-#: inc/settings/namespace.php:96
-msgid "Avatar Settings"
-msgstr "Avatarinställningar"
-
-#: inc/settings/namespace.php:101
+#: inc/settings/namespace.php:44
+#: inc/settings/namespace.php:116
 msgid "Avatar Source"
 msgstr "Avatarkälla"
 
-#: inc/settings/namespace.php:113
+#: inc/settings/namespace.php:121
 msgid "Avatars will be loaded from the selected source."
 msgstr "Avatarer kommer att hämtas från den valda källan."
 
-#: inc/settings/namespace.php:156
+#: inc/settings/namespace.php:134
 msgid "FAIR Avatars"
 msgstr "FAIR-avatarer"
 
-#: inc/settings/namespace.php:157
+#: inc/settings/namespace.php:135
 msgid "Gravatar"
 msgstr "Gravatar"
 
-#: inc/settings/namespace.php:171
-msgid "Settings saved successfully."
-msgstr "Inställningarna har sparats."
-
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:388
+#: inc/updater/class-lite.php:393
+#: inc/updater/class-updater.php:334
 #, php-format
 msgid "There is a new version of %s available."
 msgstr "En ny version av %s är tillgänglig."
 
-#. translators: 1: version number, 2: closing anchor tag, 3: update URL
-#: inc/updater/class-lite.php:399
+#. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
+#: inc/updater/class-lite.php:404
+#: inc/updater/class-updater.php:345
 #, php-format
 msgid "View version %1$s details%2$s or %3$supdate now%2$s."
 msgstr "Visa versionen %1$s uppgifter%2$s eller %3$s uppdatera direkt%2$s."
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:404
+#: inc/updater/class-lite.php:409
+#: inc/updater/class-updater.php:350
 #, php-format
-msgid "Update %s now"
-msgstr "Uppdatera %s nu"
+msgid "%s: update now"
+msgstr "%s: uppdatera nu"
 
-#. translators: 1: version number, 2: closing anchor tag, 3: update URL
-#: inc/updater/class-lite.php:411
+#. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
+#: inc/updater/class-lite.php:416
+#: inc/updater/class-updater.php:357
 #, php-format
 msgid "View version %1$s details%2$s."
 msgstr "Visa versionen %1$s uppgifter%2$s."
 
-#. translators: %s: opening/closing paragraph and italic tags
-#: inc/updater/class-lite.php:417
-#, php-format
-msgid "%1$sAutomatic update is unavailable for this theme.%2$s"
-msgstr ""
-"%1$sAutomatiska uppdateringar är inte tillgängliga för detta tema.%2$s"
+#: inc/updater/class-lite.php:421
+#: inc/updater/class-updater.php:362
+msgid "Automatic update is unavailable for this theme."
+msgstr "Automatiska uppdateringar är inte tillgängliga för detta tema."
 
 #. translators: 1) Fair PM URL, 2) AspirePress URL.
 #: inc/user-notification/namespace.php:27
 #, php-format
-msgid ""
-"Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a "
-"href=\"%2$s\">AspirePress</a>"
-msgstr ""
-"Uppdateringar hämtas från <a href=\"%1$s\">FAIR Package Manager</a> och <a "
-"href=\"%2$s\">AspirePress</a>"
+msgid "Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a href=\"%2$s\">AspirePress</a>"
+msgstr "Uppdateringar hämtas från <a href=\"%1$s\">FAIR Package Manager</a> och <a href=\"%2$s\">AspirePress</a>"
 
-#: inc/version-check/namespace.php:100
-msgctxt "browser version check"
-msgid "your platform"
-msgstr "din plattform"
-
-#: inc/version-check/namespace.php:101
+#: inc/version-check/namespace.php:98
 msgctxt "browser version check"
 msgid "your browser"
 msgstr "din webbläsare"
@@ -185,3 +162,393 @@ msgstr "Profilbild har tilldelats"
 #: assets/js/fair-avatars.js:60
 msgid "Profile Picture Removed"
 msgstr "Profilbilden har tagits bort"
+
+#. Plugin Name of the plugin
+#: plugin.php
+msgid "FAIR Connect - Federated and Independent Repositories"
+msgstr ""
+
+#. Author URI of the plugin
+#: plugin.php
+msgid "https://fair.pm"
+msgstr ""
+
+#. translators: The original WordPress.org profile description string & HTML minus final full stop.
+#: inc/avatars/namespace.php:103
+#, php-format
+msgid "%s, or upload a custom profile picture for your account."
+msgstr ""
+
+#: inc/dashboard-widgets/namespace.php:190
+msgid "News"
+msgstr ""
+
+#. translators: Hidden accessibility text.
+#: inc/dashboard-widgets/namespace.php:192
+#: inc/dashboard-widgets/namespace.php:204
+#: assets/js/fair-site-health.js:44
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: inc/packages/admin/class-list-table.php:41
+#: inc/packages/admin/namespace.php:95
+msgid "https://fair.pm/packages/plugins/"
+msgstr ""
+
+#: inc/packages/admin/info.php:80
+msgctxt "Plugin installer section title"
+msgid "Description"
+msgstr ""
+
+#: inc/packages/admin/info.php:82
+msgctxt "Plugin installer section title"
+msgid "Installation"
+msgstr ""
+
+#: inc/packages/admin/info.php:84
+msgctxt "Plugin installer section title"
+msgid "FAQ"
+msgstr ""
+
+#: inc/packages/admin/info.php:86
+msgctxt "Plugin installer section title"
+msgid "Screenshots"
+msgstr ""
+
+#: inc/packages/admin/info.php:88
+msgctxt "Plugin installer section title"
+msgid "Changelog"
+msgstr ""
+
+#: inc/packages/admin/info.php:90
+msgctxt "Plugin installer section title"
+msgid "Reviews"
+msgstr ""
+
+#: inc/packages/admin/info.php:92
+msgctxt "Plugin installer section title"
+msgid "Other Notes"
+msgstr ""
+
+#: inc/packages/admin/info.php:108
+msgid "Plugin Installation"
+msgstr ""
+
+#: inc/packages/admin/info.php:203
+msgctxt "plugin"
+msgid "Activate"
+msgstr ""
+
+#: inc/packages/admin/info.php:260
+msgid "WordPress"
+msgstr ""
+
+#: inc/packages/admin/info.php:263
+msgid "PHP"
+msgstr ""
+
+#: inc/packages/admin/info.php:288
+msgid "Version:"
+msgstr ""
+
+#: inc/packages/admin/info.php:291
+msgid "Slug:"
+msgstr ""
+
+#: inc/packages/admin/info.php:294
+msgid "ID:"
+msgstr ""
+
+#: inc/packages/admin/info.php:298
+msgid "Requires:"
+msgstr ""
+
+#: inc/packages/admin/info.php:308
+msgid "Suggests:"
+msgstr ""
+
+#: inc/packages/admin/info.php:320
+msgid "Authors"
+msgstr ""
+
+#: inc/packages/admin/info.php:392
+msgid "<strong>Error:</strong> This plugin <strong>requires a newer version of PHP</strong>."
+msgstr ""
+
+#. translators: %s: URL to Update PHP page.
+#: inc/packages/admin/info.php:397
+#, php-format
+msgid "<a href=\"%s\" target=\"_blank\">Click here to learn more about updating PHP</a>."
+msgstr ""
+
+#: inc/packages/admin/info.php:417
+msgid "<strong>Warning:</strong> This plugin <strong>has not been tested</strong> with your current version of WordPress."
+msgstr ""
+
+#: inc/packages/admin/info.php:424
+msgid "<strong>Error:</strong> This plugin <strong>requires a newer version of WordPress</strong>."
+msgstr ""
+
+#. translators: %s: URL to WordPress Updates screen.
+#: inc/packages/admin/info.php:428
+#, php-format
+msgid "<a href=\"%s\" target=\"_parent\">Click here to update WordPress</a>."
+msgstr ""
+
+#: inc/packages/admin/info.php:456
+msgid "Domain Alias:"
+msgstr ""
+
+#. translators: %s: URL for validated domain
+#: inc/packages/admin/info.php:467
+#, php-format
+msgid "<strong>Validated</strong> as %s"
+msgstr ""
+
+#: inc/packages/admin/info.php:474
+msgid "Not validated: No domain alias is set"
+msgstr ""
+
+#: inc/packages/admin/info.php:483
+msgid "An unknown error occurred"
+msgstr ""
+
+#: inc/packages/admin/info.php:488
+msgid "Validation failed"
+msgstr ""
+
+#. translators: %s: validation error message
+#: inc/packages/admin/info.php:498
+#, php-format
+msgid "<p><strong>Error:</strong> Failed domain alias validation, this package may be unsafe: %s</p>"
+msgstr ""
+
+#: inc/packages/admin/info.php:561
+#: inc/packages/admin/info.php:574
+msgid "Install Now"
+msgstr ""
+
+#. translators: %s: The package's name.
+#: inc/packages/admin/info.php:572
+#, php-format
+msgid "Install %s now"
+msgstr ""
+
+#: inc/packages/admin/info.php:581
+#: inc/packages/admin/info.php:595
+msgid "Update Now"
+msgstr ""
+
+#. translators: %s: The package's name.
+#: inc/packages/admin/info.php:593
+#, php-format
+msgid "Update %s now"
+msgstr ""
+
+#. translators: %s: The package's name.
+#: inc/packages/admin/info.php:604
+#, php-format
+msgid "Activate %s now"
+msgstr ""
+
+#: inc/packages/admin/info.php:606
+msgid "Activate"
+msgstr ""
+
+#: inc/packages/admin/info.php:612
+msgid "Installed"
+msgstr ""
+
+#: inc/packages/admin/namespace.php:75
+msgid "Direct Install"
+msgstr ""
+
+#: inc/packages/admin/namespace.php:167
+msgid "Enter a plugin ID to view details and install."
+msgstr ""
+
+#: inc/packages/admin/namespace.php:193
+msgctxt "plugin"
+msgid "View Details"
+msgstr ""
+
+#: inc/packages/admin/namespace.php:196
+msgid "Plugin IDs should be in the format <code>did:plc:...</code>"
+msgstr ""
+
+#. translators: %1$s: repository hostname
+#: inc/packages/admin/namespace.php:527
+#, php-format
+msgid "Hosted on %1$s"
+msgstr ""
+
+#. translators: %s is the missing field name.
+#: inc/packages/class-metadatadocument.php:133
+#: inc/packages/class-releasedocument.php:81
+#, php-format
+msgid "Missing mandatory field: %s"
+msgstr ""
+
+#: inc/packages/class-metadatadocument.php:156
+msgid "No releases found in the metadata document."
+msgstr ""
+
+#: inc/packages/class-metadatadocument.php:178
+msgid "Could not decode repository response."
+msgstr ""
+
+#: inc/packages/did/class-plc.php:68
+msgid "Unable to parse DID document response."
+msgstr ""
+
+#: inc/packages/did/class-plc.php:74
+msgid "The PLC directory did not return the DID that was sent or the DID was invalid."
+msgstr ""
+
+#: inc/packages/namespace.php:47
+msgid "ID is not a valid DID."
+msgstr ""
+
+#: inc/packages/namespace.php:52
+msgid "DID could not be parsed as a URI."
+msgstr ""
+
+#: inc/packages/namespace.php:63
+msgid "Unsupported DID method."
+msgstr ""
+
+#: inc/packages/namespace.php:128
+msgid "DID is not a valid package to fetch metadata for."
+msgstr ""
+
+#: inc/packages/namespace.php:139
+msgid "Fetched metadata does not match the requested DID."
+msgstr ""
+
+#: inc/packages/namespace.php:172
+msgid "HTTP error code received"
+msgstr ""
+
+#: inc/packages/namespace.php:252
+msgid "DID does not contain valid signing keys."
+msgstr ""
+
+#: inc/packages/namespace.php:262
+msgid "No releases found in the repository."
+msgstr ""
+
+#: inc/packages/namespace.php:827
+msgctxt "alias validation error"
+msgid "Multiple aliases set in DID; packages may only have a single alias"
+msgstr ""
+
+#: inc/packages/namespace.php:837
+msgctxt "alias validation error"
+msgid "Invalid FAIR alias format"
+msgstr ""
+
+#: inc/packages/namespace.php:846
+msgctxt "alias validation error"
+msgid "FAIR alias format exceeds valid domain length"
+msgstr ""
+
+#. translators: %s: domain
+#: inc/packages/namespace.php:859
+#, php-format
+msgctxt "alias validation error"
+msgid "Missing verification record for \"%s\""
+msgstr ""
+
+#. translators: %s: domain
+#: inc/packages/namespace.php:873
+#, php-format
+msgctxt "alias validation error"
+msgid "Verification record for \"%s\" is invalid"
+msgstr ""
+
+#: inc/packages/namespace.php:884
+msgctxt "alias validation error"
+msgid "DID in validation record does not match"
+msgstr ""
+
+#. translators: 1: The DID, 2: The error message.
+#: inc/packages/wp-cli/compat/namespace.php:62
+#, php-format
+msgid "Could not parse %1$s - %2$s"
+msgstr ""
+
+#: inc/packages/wp-cli/compat/namespace.php:127
+msgid "The verify-checksums command is not currently supported for DIDs."
+msgstr ""
+
+#. translators: 1: The DID, 2: The error message.
+#: inc/packages/wp-cli/compat/namespace.php:155
+#: inc/packages/wp-cli/compat/namespace.php:278
+#, php-format
+msgid "Could not retrieve metadata for %1$s - %2$s"
+msgstr ""
+
+#. translators: enabled default repository domain.
+#: inc/site-health/namespace.php:104
+#, php-format
+msgid "Communication with %s"
+msgstr ""
+
+#. translators: enabled default repository domain.
+#: inc/site-health/namespace.php:106
+#, php-format
+msgid "%s is reachable"
+msgstr ""
+
+#. translators: %s: The DID of the package.
+#: inc/updater/namespace.php:141
+#, php-format
+msgid "Verified signature for %s"
+msgstr ""
+
+#. translators: %s: The package's URL.
+#: inc/updater/namespace.php:157
+#, php-format
+msgid "Signature verification could not be performed for the package: %s"
+msgstr ""
+
+#: inc/version-check/namespace.php:97
+msgctxt "operating system check"
+msgid "your platform"
+msgstr ""
+
+#: assets/js/fair-site-health.js:15
+msgid "Communicating with the update servers is used to check for new versions, and to both install and update WordPress core, themes or plugins."
+msgstr ""
+
+#. translators: %s is the domain.
+#: assets/js/fair-site-health.js:21
+#, js-format
+msgid "Could not reach %s"
+msgstr ""
+
+#. translators: Hidden accessibility text.
+#: assets/js/fair-site-health.js:29
+msgid "Error"
+msgstr ""
+
+#. translators: 1: The IP address WordPress.org resolves to. 2: The error returned by the lookup.
+#: assets/js/fair-site-health.js:32
+#, js-format
+msgid "Your site is unable to reach update server at %1$s, and returned the error: %2$s"
+msgstr ""
+
+#. translators: Localized Support reference.
+#: assets/js/fair-site-health.js:41
+msgid "https://wordpress.org/support/forums/"
+msgstr ""
+
+#: assets/js/fair-site-health.js:42
+msgid "Get help resolving this issue."
+msgstr ""
+
+#. translators: %s is the domain.
+#: assets/js/fair-site-health.js:50
+#, js-format
+msgid "Can communicate with %s"
+msgstr ""

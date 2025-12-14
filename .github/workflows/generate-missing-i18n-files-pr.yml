@@ -15,6 +15,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    env:
+      BRANCH_NAME: generate-missing-i18n-files
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
@@ -34,18 +36,18 @@ jobs:
           git config user.email ${{ github.actor }}@users.noreply.github.com
 
       - name: Check if remote branch exists
-        run: echo "REMOTE_BRANCH_EXISTS=$([[ -z $(git ls-remote --heads origin generate-missing-i18n-files) ]] && echo "0" || echo "1")" >> $GITHUB_ENV
+        run: echo "REMOTE_BRANCH_EXISTS=$([[ -z $(git ls-remote --heads origin ${BRANCH_NAME}) ]] && echo "0" || echo "1")" >> $GITHUB_ENV
 
       - name: Create branch to base pull request on
         if: env.REMOTE_BRANCH_EXISTS == 0
         run: |
-          git checkout -b generate-missing-i18n-files
+          git checkout -b ${BRANCH_NAME}
 
       - name: Fetch existing branch to add commits to
         if: env.REMOTE_BRANCH_EXISTS == 1
         run: |
           git fetch --all --prune
-          git checkout generate-missing-i18n-files
+          git checkout ${BRANCH_NAME}
           git pull --no-rebase
 
       - name: Run wp-cli i18n make-mo
@@ -65,11 +67,28 @@ jobs:
         run: |
           git add languages/*.mo languages/*.json languages/*.php
           git commit -s -m "Generate missing i18n files - $(date +'%Y-%m-%d')"
-          git push origin generate-missing-i18n-files
+          git push origin ${BRANCH_NAME}
 
       - name: Create pull request
         if: env.CHANGES_DETECTED == 1 && env.REMOTE_BRANCH_EXISTS == 0
-        run: gh pr create --base ${BRANCH_NAME} --head generate-missing-i18n-files --title "Generate missing i18n files - $(date +'%Y-%m-%d')" --body "Automated PR"
+        run: |
+          TITLE="Generate missing i18n files - $(date +'%Y-%m-%d-%H%M%S')"
+          BODY="Automated PR to generate missing i18n files."
+          echo "Closing any existing Generate missing i18n files PRs..."
+          gh pr list \
+            --head ${BRANCH_NAME} \
+            --repo ${{ github.repository }} \
+            --state open \
+            --json number,headRefName \
+            --jq '.[] | select(.headRefName == "'${BRANCH_NAME}'") | .number' | \
+              xargs -r -I {} gh pr close {} \
+                --repo ${{ github.repository }} \
+                --comment "Closing this PR in favor of ${TITLE}."
+
+          gh pr create \
+            --base ${{ github.event.repository.default_branch }} \
+            --title ${TITLE} \
+            --head ${BRANCH_NAME} \
+            --body ${BODY}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
