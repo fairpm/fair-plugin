@@ -7,7 +7,7 @@
 
 namespace FAIR\Assets;
 
-const DEFAULT_EMOJI_BASE = 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/';
+const DEFAULT_EMOJI_BASE = 'https://cdn.jsdelivr.net/gh/jdecked/twemoji@17.0.2/assets/';
 
 /**
  * Bootstrap.
