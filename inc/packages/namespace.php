@@ -805,11 +805,22 @@ function move_package_during_install( string $source, string $remote_source, WP_
 
 	$did_hash = get_did_hash( $did->get_id() );
 	if ( str_ends_with( $source, "{$did_hash}/" ) ) {
-		// The directory name is already correct.
+		// The directory name is likely already correct.
 		return $source;
 	}
 
-	$new_source = untrailingslashit( $source ) . "-{$did_hash}/";
+	$metadata = fetch_package_metadata( $did->get_id() );
+	if (
+		is_wp_error( $metadata )
+		|| ( $metadata->id ?? '' ) !== $did->get_id()
+		|| trim( $metadata->slug ?? '' ) === ''
+	) {
+		// Cannot guarantee a slug-didhash format. dir-didhash is the best achievable.
+		$new_source = untrailingslashit( $source ) . "-{$did_hash}/";
+	} else {
+		$new_source = dirname( untrailingslashit( $source ), 2 ) . "/{$metadata->slug}-{$did_hash}/";
+	}
+
 	// Core must be able to find the new source directory.
 	$wp_filesystem->move( $source, $new_source, true );
 
