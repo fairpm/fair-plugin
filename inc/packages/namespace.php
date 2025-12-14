@@ -760,7 +760,7 @@ function delete_cached_did_for_install(): void {
  *
  * @return string|WP_Error
  */
-function maybe_rename_on_package_download( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) : string {
+function maybe_rename_on_package_download( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ): string {
 	global $wp_filesystem;
 
 	// Early exit on passed errors.
