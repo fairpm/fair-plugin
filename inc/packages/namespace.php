@@ -705,14 +705,20 @@ function delete_cached_did_for_install(): void {
  * @param string $source        Path of $source.
  * @param string $remote_source Path of $remote_source.
  * @param WP_Upgrader $upgrader An Upgrader object.
+ * @param array $hook_extra     Array of hook data.
  *
  * @return string|WP_Error
  */
-function maybe_rename_on_package_download( $source, string $remote_source, WP_Upgrader $upgrader ) {
+function maybe_rename_on_package_download( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) {
 	global $wp_filesystem;
 
 	// Exit early for $source errors.
-	if( is_wp_error( $source ) ) {
+	if ( is_wp_error( $source ) ) {
+		return $source;
+	}
+
+	// Exit early if installing.
+	if ( isset( $hook_extra['action'] ) && $hook_extra['action'] === 'install' ) {
 		return $source;
 	}
 
