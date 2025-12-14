@@ -797,9 +797,9 @@ function maybe_rename_on_package_download( string $source, string $remote_source
  * @param string          $remote_source Path of $remote_source.
  * @param WP_Upgrader     $upgrader      An Upgrader object.
  * @param array           $hook_extra    Array of hook data.
- * @return string The correct directory path for installation.
+ * @return string|WP_Error The correct directory path for installation, or a WP_Error object.
  */
-function move_package_during_install( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ): string {
+function move_package_during_install( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) {
 	global $wp_filesystem;
 
 	if ( is_wp_error( $source ) ) {
