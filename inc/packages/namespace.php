@@ -758,10 +758,15 @@ function delete_cached_did_for_install(): void {
  * @param WP_Upgrader $upgrader An Upgrader object.
  * @param array $hook_extra     Array of hook data.
  *
- * @return string
+ * @return string|WP_Error
  */
-function maybe_rename_on_package_download( string $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) : string {
+function maybe_rename_on_package_download( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) : string {
 	global $wp_filesystem;
+
+	// Early exit on passed errors.
+	if ( is_wp_error( $source ) ) {
+		return $source;
+	}
 
 	$type = $upgrader instanceof Plugin_Upgrader ? 'plugin' : ( $upgrader instanceof Theme_Upgrader ? 'theme' : '' );
 	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
