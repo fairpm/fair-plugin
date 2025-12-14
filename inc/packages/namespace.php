@@ -14,6 +14,8 @@ use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use FAIR\Updater;
 use function FAIR\Packages\Admin\sort_sections_in_api;
+use Plugin_Upgrader;
+use Theme_Upgrader;
 use WP_Error;
 use WP_Upgrader;
 
@@ -712,6 +714,8 @@ function delete_cached_did_for_install(): void {
 function maybe_rename_on_package_download( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) {
 	global $wp_filesystem;
 
+	$type = $upgrader instanceof Plugin_Upgrader ? 'plugin' : ( $upgrader instanceof Theme_Upgrader ? 'theme' : '' );
+
 	// Exit early for $source errors.
 	if ( is_wp_error( $source ) ) {
 		return $source;
@@ -733,7 +737,10 @@ function maybe_rename_on_package_download( $source, string $remote_source, WP_Up
 	}
 
 	// Sanity check.
-	if ( $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
+	if ( 'plugin' === $type && $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
+		return $source;
+	}
+	if ( 'theme' === $type && $upgrader->new_theme_data['Name'] !== $metadata->name ) {
 		return $source;
 	}
 
