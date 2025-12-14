@@ -14,6 +14,8 @@ use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use FAIR\Updater;
 use function FAIR\Packages\Admin\sort_sections_in_api;
+use Plugin_Upgrader;
+use Theme_Upgrader;
 use WP_Error;
 use WP_Upgrader;
 
@@ -81,6 +83,55 @@ function get_did_hash( string $id ) {
 	}
 
 	return substr( hash( 'sha256', $did->get_id() ), 0, 6 );
+}
+
+/**
+ * Get a package's DID by its path.
+ *
+ * @param string $path The absolute path to the package's directory or main file.
+ * @param string $type The type of package. Allowed types are 'plugin' or 'theme'.
+ * @return DID|WP_Error The DID object on success, WP_Error on failure.
+ */
+function get_did_by_path( $path, $type ) {
+	global $wp_filesystem;
+
+	if ( $type === 'theme' ) {
+		if ( ! str_ends_with( $path, 'style.css' ) ) {
+			$path = trailingslashit( $path ) . 'style.css';
+		}
+
+		$id = get_file_data( $path, [ 'id' => 'Theme ID' ] )['id'];
+		if ( $id ) {
+			return parse_did( $id );
+		}
+	}
+
+	if ( $type === 'plugin' ) {
+		if ( str_ends_with( $path, '.php' ) ) {
+			$id = get_file_data( $path, [ 'id' => 'Plugin ID' ] )['id'];
+			return parse_did( $id );
+		}
+
+		$files = $wp_filesystem->dirlist( $path ) ?: false;
+		if ( ! $files ) {
+			// Finding a DID is impossible.
+			return new WP_Error( 'fair.packages.dirlist_failed', __( "The package's file list could not be retrieved.", 'fair' ) );
+		}
+
+		foreach ( $files as $filename => $data ) {
+			if ( $data['type'] !== 'f' || ! str_ends_with( $filename, '.php' ) ) {
+				continue;
+			}
+
+			$filepath = trailingslashit( $path ) . $filename;
+			$id = get_file_data( $filepath, [ 'id' => 'Plugin ID' ] )['id'];
+			if ( $id ) {
+				return parse_did( $id );
+			}
+		}
+	}
+
+	return new WP_Error( 'fair.packages.none_found', __( 'No FAIR packages were found.', 'fair' ) );
 }
 
 /**
@@ -658,7 +709,7 @@ function get_package_data( $did ) {
  */
 function upgrader_pre_download( $false ) : bool {
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
-	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\maybe_rename_on_package_download', 11, 3 );
+	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\maybe_rename_on_package_download', 11, 4 );
 	return $false;
 }
 
@@ -705,29 +756,43 @@ function delete_cached_did_for_install(): void {
  * @param string $source        Path of $source.
  * @param string $remote_source Path of $remote_source.
  * @param WP_Upgrader $upgrader An Upgrader object.
+ * @param array $hook_extra     Array of hook data.
  *
- * @return string|WP_Error
+ * @return string
  */
-function maybe_rename_on_package_download( string $source, string $remote_source, WP_Upgrader $upgrader ) {
+function maybe_rename_on_package_download( string $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) : string {
 	global $wp_filesystem;
 
+	$type = $upgrader instanceof Plugin_Upgrader ? 'plugin' : ( $upgrader instanceof Theme_Upgrader ? 'theme' : '' );
 	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
+	$is_installing = isset( $hook_extra['action'] ) && $hook_extra['action'] === 'install';
 
 	if ( ! $did ) {
-		return $source;
+		if ( empty( $type ) ) {
+			return $source;
+		}
+		$did_doc = get_did_by_path( $source, $type );
+		if ( is_wp_error( $did_doc ) ) {
+			error_log( basename( $source ) . ' : ' . $did_doc->get_error_message() );
+		} else {
+			$did = $did_doc->get_id();
+		}
 	}
 
 	$metadata = fetch_package_metadata( $did );
-	if ( is_wp_error( $metadata ) ) {
-		return $metadata;
-	}
 
-	// Sanity check.
-	if ( $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
+	// Sanity check for not renaming existing installs or non-FAIR packages.
+	if ( is_wp_error( $metadata ) ) {
+		return $source;
+	}
+	if ( 'plugin' === $type && $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
+		return $source;
+	}
+	if ( 'theme' === $type && $upgrader->new_theme_data['Name'] !== $metadata->name ) {
 		return $source;
 	}
 
-	if ( basename( $source ) === $metadata->slug ) {
+	if ( ! $is_installing && basename( $source ) === $metadata->slug ) {
 		return $source;
 	}
 
