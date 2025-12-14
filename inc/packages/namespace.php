@@ -127,14 +127,14 @@ function get_did_by_path( $path, $type ) {
 
 		$id = get_file_data( $path, [ 'id' => 'Theme ID' ] )['id'];
 		if ( $id ) {
-			return Packages\parse_did( $id );
+			return parse_did( $id );
 		}
 	}
 
 	if ( $type === 'plugin' ) {
 		if ( str_ends_with( $path, '.php' ) ) {
 			$id = get_file_data( $path, [ 'id' => 'Plugin ID' ] )['id'];
-			return Packages\parse_did( $id );
+			return parse_did( $id );
 		}
 
 		$files = $wp_filesystem->dirlist( $path ) ?: false;
@@ -151,7 +151,7 @@ function get_did_by_path( $path, $type ) {
 			$filepath = trailingslashit( $path ) . $filename;
 			$id = get_file_data( $filepath, [ 'id' => 'Plugin ID' ] )['id'];
 			if ( $id ) {
-				return Packages\parse_did( $id );
+				return parse_did( $id );
 			}
 		}
 	}
