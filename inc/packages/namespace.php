@@ -716,8 +716,8 @@ function maybe_rename_on_package_download( $source, string $remote_source, WP_Up
 
 	$type = $upgrader instanceof Plugin_Upgrader ? 'plugin' : ( $upgrader instanceof Theme_Upgrader ? 'theme' : '' );
 
-	// Exit early for $source errors.
-	if ( is_wp_error( $source ) ) {
+	// Exit early for errors.
+	if ( is_wp_error( $source ) || empty( $type ) ) {
 		return $source;
 	}
 
