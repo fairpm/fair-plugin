@@ -708,11 +708,15 @@ function delete_cached_did_for_install(): void {
  *
  * @return string|WP_Error
  */
-function maybe_rename_on_package_download( string $source, string $remote_source, WP_Upgrader $upgrader ) {
+function maybe_rename_on_package_download( $source, string $remote_source, WP_Upgrader $upgrader ) {
 	global $wp_filesystem;
 
-	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
+	// Exit early for $source errors.
+	if( is_wp_error( $source ) ) {
+		return $source;
+	}
 
+	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
 	if ( ! $did ) {
 		return $source;
 	}
