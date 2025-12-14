@@ -814,11 +814,7 @@ function move_package_during_install( $source, string $remote_source, WP_Upgrade
 	}
 
 	$metadata = fetch_package_metadata( $did->get_id() );
-	if (
-		is_wp_error( $metadata )
-		|| ( $metadata->id ?? '' ) !== $did->get_id()
-		|| trim( $metadata->slug ?? '' ) === ''
-	) {
+	if ( is_wp_error( $metadata ) || trim( $metadata->slug ?? '' ) === '' ) {
 		// Cannot guarantee a slug-didhash format. dir-didhash is the best achievable.
 		$new_source = untrailingslashit( $source ) . "-{$did_hash}/";
 	} else {
