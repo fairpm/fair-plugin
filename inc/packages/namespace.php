@@ -14,6 +14,8 @@ use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
 use FAIR\Updater;
 use function FAIR\Packages\Admin\sort_sections_in_api;
+use Plugin_Upgrader;
+use Theme_Upgrader;
 use WP_Error;
 use WP_Upgrader;
 
@@ -705,14 +707,26 @@ function delete_cached_did_for_install(): void {
  * @param string $source        Path of $source.
  * @param string $remote_source Path of $remote_source.
  * @param WP_Upgrader $upgrader An Upgrader object.
+ * @param array $hook_extra     Array of hook data.
  *
  * @return string|WP_Error
  */
-function maybe_rename_on_package_download( string $source, string $remote_source, WP_Upgrader $upgrader ) {
+function maybe_rename_on_package_download( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) {
 	global $wp_filesystem;
 
-	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
+	$type = $upgrader instanceof Plugin_Upgrader ? 'plugin' : ( $upgrader instanceof Theme_Upgrader ? 'theme' : '' );
 
+	// Exit early for errors.
+	if ( is_wp_error( $source ) || empty( $type ) ) {
+		return $source;
+	}
+
+	// Exit early if installing.
+	if ( isset( $hook_extra['action'] ) && $hook_extra['action'] === 'install' ) {
+		return $source;
+	}
+
+	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
 	if ( ! $did ) {
 		return $source;
 	}
@@ -723,7 +737,10 @@ function maybe_rename_on_package_download( string $source, string $remote_source
 	}
 
 	// Sanity check.
-	if ( $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
+	if ( 'plugin' === $type && $upgrader->new_plugin_data['Name'] !== $metadata->name ) {
+		return $source;
+	}
+	if ( 'theme' === $type && $upgrader->new_theme_data['Name'] !== $metadata->name ) {
 		return $source;
 	}
 
