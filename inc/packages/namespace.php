@@ -778,14 +778,18 @@ function rename_source_selection( string $source, string $remote_source, WP_Upgr
 /**
  * Move a package to the correctly named directory during installation.
  *
- * @param string      $source        Path of $source.
- * @param string      $remote_source Path of $remote_source.
- * @param WP_Upgrader $upgrader      An Upgrader object.
- * @param array       $hook_extra    Array of hook data.
+ * @param string|WP_Error $source        Path of $source, or a WP_Error object.
+ * @param string          $remote_source Path of $remote_source.
+ * @param WP_Upgrader     $upgrader      An Upgrader object.
+ * @param array           $hook_extra    Array of hook data.
  * @return string The correct directory path for installation.
  */
-function move_package_during_install( string $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ): string {
+function move_package_during_install( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ): string {
 	global $wp_filesystem;
+
+	if ( is_wp_error( $source ) ) {
+		return $source;
+	}
 
 	if ( ! isset( $hook_extra['action'] ) || $hook_extra['action'] !== 'install' ) {
 		// Other actions are handled elsewhere.
