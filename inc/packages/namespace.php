@@ -760,19 +760,18 @@ function delete_cached_did_for_install(): void {
  *
  * @return string|WP_Error
  */
-function maybe_rename_on_package_download( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ): string {
+function maybe_rename_on_package_download( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) {
 	global $wp_filesystem;
 
-	// Early exit on passed errors.
+	$type = $upgrader instanceof Plugin_Upgrader ? 'plugin' : ( $upgrader instanceof Theme_Upgrader ? 'theme' : '' );
+	$is_installing = isset( $hook_extra['action'] ) && $hook_extra['action'] === 'install';
+
+	// Exit early for $source errors.
 	if ( is_wp_error( $source ) ) {
 		return $source;
 	}
 
-	$type = $upgrader instanceof Plugin_Upgrader ? 'plugin' : ( $upgrader instanceof Theme_Upgrader ? 'theme' : '' );
 	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
-	$is_installing = isset( $hook_extra['action'] ) && $hook_extra['action'] === 'install';
-
-	// Try to get DID if not cached.
 	if ( ! $did ) {
 		if ( empty( $type ) ) {
 			return $source;
