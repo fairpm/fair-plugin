@@ -772,6 +772,7 @@ function maybe_rename_on_package_download( $source, string $remote_source, WP_Up
 	$did = get_site_transient( CACHE_DID_FOR_INSTALL );
 	$is_installing = isset( $hook_extra['action'] ) && $hook_extra['action'] === 'install';
 
+	// Try to get DID if not cached.
 	if ( ! $did ) {
 		if ( empty( $type ) ) {
 			return $source;
@@ -797,6 +798,7 @@ function maybe_rename_on_package_download( $source, string $remote_source, WP_Up
 		return $source;
 	}
 
+	// Don't rename if already correct or not installing.
 	if ( ! $is_installing && basename( $source ) === $metadata->slug ) {
 		return $source;
 	}
