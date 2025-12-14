@@ -803,7 +803,7 @@ function move_package_during_install( string $source, string $remote_source, WP_
 		return $source;
 	}
 
-	$did_hash = Packages\get_did_hash( $did->get_id() );
+	$did_hash = get_did_hash( $did->get_id() );
 	if ( str_ends_with( $source, "{$did_hash}/" ) ) {
 		// The directory name is already correct.
 		return $source;
