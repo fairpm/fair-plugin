@@ -20,7 +20,7 @@ permissions: {}
 
 jobs:
   lint:
-    name: Lint PHP
+    name: Run coding standards checks
     runs-on: ubuntu-latest
     permissions:
       contents: read
