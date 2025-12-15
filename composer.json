@@ -17,7 +17,7 @@
         "yoast/phpunit-polyfills": "*",
         "nimut/phpunit-merger": "*",
         "humanmade/coding-standards": "^1.2",
-        "szepeviktor/phpstan-wordpress": "*"
+        "szepeviktor/phpstan-wordpress": "^2.0"
     },
     "config": {
         "lock": false,
