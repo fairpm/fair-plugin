@@ -3,6 +3,7 @@
 *.bak
 /.vscode
 /vendor/
+.wp-env.override.json
 .phpunit.result.cache
 phpunit.xml
 phpcs.xml
