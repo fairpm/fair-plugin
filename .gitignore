@@ -6,6 +6,7 @@
 .phpunit.result.cache
 phpunit.xml
 phpcs.xml
+phpstan.neon
 /tests/phpunit/cache
 /tests/phpunit/coverage
 wp-tests-config.php

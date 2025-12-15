@@ -5,7 +5,11 @@
 	"scripts": {
 		"env": "wp-env",
 		"lint:php": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run lint",
+		"lint:php:phpcs": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run lint:phpcs",
+		"lint:php:phpstan": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run lint:phpstan",
 		"format:php": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format",
+		"format:php:phpcs": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format:phpcs",
+		"format:php:phpstan": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format:phpstan",
 		"test:php:install-deps": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer install",
 		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test",
 		"test:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test:multisite",
