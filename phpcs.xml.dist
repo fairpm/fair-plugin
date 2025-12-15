@@ -49,6 +49,8 @@
 
 	<!-- Cache for PHPStan and PHPCS -->
 	<exclude-pattern>.cache</exclude-pattern>
+	<exclude-pattern>tests/phpunit/cache/</exclude-pattern>
+	<exclude-pattern>tests/phpunit/coverage/</exclude-pattern>
 
 	<!-- Exclude the unit tests from the file name rules -->
 	<rule ref="WordPress.Files.FileName">
