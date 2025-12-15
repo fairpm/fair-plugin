@@ -47,6 +47,9 @@
 		<exclude-pattern>plugin\.php</exclude-pattern>
 	</rule>
 
+	<!-- Cache for PHPStan and PHPCS -->
+	<exclude-pattern>.cache</exclude-pattern>
+
 	<!-- Exclude the unit tests from the file name rules -->
 	<rule ref="WordPress.Files.FileName">
 		<exclude-pattern>tests/phpunit/*</exclude-pattern>
