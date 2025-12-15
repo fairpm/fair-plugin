@@ -9,13 +9,16 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: read
+# Disable permissions for all available scopes by default.
+# Any needed permissions should be configured at the job level.
+permissions: {}
 
 jobs:
   lint:
     name: Lint PHP
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
