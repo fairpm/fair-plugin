@@ -5,12 +5,12 @@ msgstr ""
 "Project-Id-Version: FAIR - Federated and Independent Repositories 0.1\n"
 "Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
 "Last-Translator: Marc Armengou\n"
-"Language-Team: Catalan\n"
+"Language-Team: Català\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-06-10T04:28:22+00:00\n"
-"PO-Revision-Date: 2025-09-24 19:39+0000\n"
+"PO-Revision-Date: 2025-12-18 09:29+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Domain: fair\n"
 "Language: ca\n"
@@ -23,20 +23,33 @@ msgstr ""
 msgid "%s is not a valid version string."
 msgstr "%s no és una cadena de versió vàlida."
 
+#. translators: enabled default repository domain.
+#: inc/site-health/namespace.php:106
+#, php-format
+msgid "%s is reachable"
+msgstr "%s és accessible"
+
+#. translators: The original WordPress.org profile description string & HTML minus final full stop.
+#: inc/avatars/namespace.php:103
+#, php-format
+msgid "%s, or upload a custom profile picture for your account."
+msgstr ""
+"%s, o carregueu una imatge de perfil personalitzada per al vostre compte."
+
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:409 inc/updater/class-updater.php:449
+#: inc/updater/class-lite.php:409 inc/updater/class-updater.php:350
 #, php-format
 msgid "%s: update now"
 msgstr "%s: actualitza ara"
 
 #. translators: Hidden accessibility text.
 #: inc/dashboard-widgets/namespace.php:192
-#: inc/dashboard-widgets/namespace.php:204
+#: inc/dashboard-widgets/namespace.php:204 assets/js/fair-site-health.js:44
 msgid "(opens in a new tab)"
 msgstr "(s'obre en una pestanya nova)"
 
 #. translators: %s: URL to Update PHP page.
-#: inc/packages/admin/info.php:392
+#: inc/packages/admin/info.php:397
 #, php-format
 msgid ""
 "<a href=\"%s\" target=\"_blank\">Click here to learn more about updating "
@@ -46,7 +59,7 @@ msgstr ""
 "sobre l'actualització de PHP</a>."
 
 #. translators: %s: URL to WordPress Updates screen.
-#: inc/packages/admin/info.php:423
+#: inc/packages/admin/info.php:428
 #, php-format
 msgid "<a href=\"%s\" target=\"_parent\">Click here to update WordPress</a>."
 msgstr ""
@@ -54,7 +67,7 @@ msgstr ""
 "WordPress</a>."
 
 #. translators: %s: validation error message
-#: inc/packages/admin/info.php:485
+#: inc/packages/admin/info.php:498
 #, php-format
 msgid ""
 "<p><strong>Error:</strong> Failed domain alias validation, this package may "
@@ -63,7 +76,7 @@ msgstr ""
 "<p><strong>Error:</strong> ha fallat la validació de l'àlies del domini, "
 "aquest paquet pot ser insegur: %s</p>"
 
-#: inc/packages/admin/info.php:387
+#: inc/packages/admin/info.php:392
 msgid ""
 "<strong>Error:</strong> This plugin <strong>requires a newer version of "
 "PHP</strong>."
@@ -71,7 +84,7 @@ msgstr ""
 "<strong>Error:</strong> aquesta extensió <strong>requereix una versió més "
 "nova del PHP</strong>."
 
-#: inc/packages/admin/info.php:419
+#: inc/packages/admin/info.php:424
 msgid ""
 "<strong>Error:</strong> This plugin <strong>requires a newer version of "
 "WordPress</strong>."
@@ -79,13 +92,13 @@ msgstr ""
 "<strong>Error:</strong> aquesta extensió <strong>requereix una versió més "
 "nova del WordPress</strong>."
 
-#. translators: %1$s: full URL for validated domain, %2$s: raw domain
-#: inc/packages/admin/info.php:457
+#. translators: %s: URL for validated domain
+#: inc/packages/admin/info.php:467
 #, php-format
-msgid "<strong>Validated</strong> as <a href=\"%1$s\">%2$s</a>"
-msgstr "<strong>Validat</strong> com a <a href=\"%1$s\">%2$s</a>"
+msgid "<strong>Validated</strong> as %s"
+msgstr "<strong>Validat</strong> com a %s"
 
-#: inc/packages/admin/info.php:412
+#: inc/packages/admin/info.php:417
 msgid ""
 "<strong>Warning:</strong> This plugin <strong>has not been tested</strong> "
 "with your current version of WordPress."
@@ -93,65 +106,65 @@ msgstr ""
 "<strong>Avís:</strong> aquesta extensió <strong>no s'ha provat</strong> amb "
 "la versió actual del WordPress."
 
-#: inc/packages/admin/info.php:593
+#: inc/packages/admin/info.php:606
 msgid "Activate"
 msgstr "Activa"
 
 #. translators: %s: The package's name.
-#: inc/packages/admin/info.php:591
+#: inc/packages/admin/info.php:604
 #, php-format
 msgid "Activate %s now"
 msgstr "Activa %s ara"
 
-#: inc/packages/namespace.php:831
+#: inc/packages/namespace.php:884
 msgctxt "alias validation error"
 msgid "DID in validation record does not match"
 msgstr "El DID en el registre de validació no coincideix"
 
-#: inc/packages/namespace.php:793
+#: inc/packages/namespace.php:846
 msgctxt "alias validation error"
 msgid "FAIR alias format exceeds valid domain length"
 msgstr "El format de l'àlies FAIR excedeix la longitud vàlida del domini"
 
-#: inc/packages/namespace.php:784
+#: inc/packages/namespace.php:837
 msgctxt "alias validation error"
 msgid "Invalid FAIR alias format"
 msgstr "El format de l'àlies FAIR no és vàlid"
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:806
+#: inc/packages/namespace.php:859
 #, php-format
 msgctxt "alias validation error"
 msgid "Missing verification record for \"%s\""
 msgstr "Falta el registre de verificació de «%s»"
 
-#: inc/packages/namespace.php:774
+#: inc/packages/namespace.php:827
 msgctxt "alias validation error"
 msgid "Multiple aliases set in DID; packages may only have a single alias"
 msgstr ""
 "Múltiples àlies establerts a DID; els paquets només poden tenir un sol àlies"
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:820
+#: inc/packages/namespace.php:873
 #, php-format
 msgctxt "alias validation error"
 msgid "Verification record for \"%s\" is invalid"
 msgstr "El registre de verificació de «%s» no és vàlid"
 
-#: inc/avatars/namespace.php:264
+#: inc/avatars/namespace.php:269
 msgctxt "alt for unknown avatar user"
 msgid "profile picture for user"
 msgstr "imatge de perfil per a l'usuari"
 
-#: inc/packages/admin/info.php:474
+#: inc/packages/admin/info.php:483
 msgid "An unknown error occurred"
 msgstr "S'ha produït un error desconegut"
 
-#: inc/packages/admin/info.php:315
+#: inc/packages/admin/info.php:320
 msgid "Authors"
 msgstr "Autors"
 
-#: inc/updater/class-lite.php:421 inc/updater/class-updater.php:461
+#: inc/updater/class-lite.php:421 inc/updater/class-updater.php:362
 #| msgid "%1$sAutomatic update is unavailable for this theme.%2$s"
 msgid "Automatic update is unavailable for this theme."
 msgstr "L'actualització automàtica no està disponible per a aquest tema."
@@ -169,7 +182,13 @@ msgctxt "browser version check"
 msgid "your browser"
 msgstr "el vostre navegador"
 
-#: inc/avatars/namespace.php:99
+#. translators: %s is the domain.
+#: assets/js/fair-site-health.js:50
+#, js-format
+msgid "Can communicate with %s"
+msgstr "Pot comunicar-se amb %s"
+
+#: inc/avatars/namespace.php:96
 msgid "Choose Profile Image"
 msgstr "Trieu una imatge de perfil"
 
@@ -177,38 +196,77 @@ msgstr "Trieu una imatge de perfil"
 msgid "Choose Profile Picture"
 msgstr "Trieu la imatge del perfil"
 
-#: inc/packages/class-metadatadocument.php:169
+#: assets/js/fair-site-health.js:15
+msgid ""
+"Communicating with the update servers is used to check for new versions, and "
+"to both install and update WordPress core, themes or plugins."
+msgstr ""
+"La comunicació amb els servidors d'actualització s'utilitza per a comprovar "
+"noves versions, i per instal·lar i actualitzar el nucli del WordPress, temes "
+"o extensions."
+
+#. translators: enabled default repository domain.
+#: inc/site-health/namespace.php:104
+#, php-format
+msgid "Communication with %s"
+msgstr "Comunicació amb %s"
+
+#: inc/packages/class-metadatadocument.php:178
 msgid "Could not decode repository response."
 msgstr "No s'ha pogut descodificar la resposta del repositori."
+
+#. translators: 1: The DID, 2: The error message.
+#: inc/packages/wp-cli/compat/namespace.php:62
+#, php-format
+msgid "Could not parse %1$s - %2$s"
+msgstr "No s'ha pogut analitzar %1$s - %2$s"
+
+#. translators: %s is the domain.
+#: assets/js/fair-site-health.js:21
+#, js-format
+msgid "Could not reach %s"
+msgstr "No s'ha pogut arribar a %s"
+
+#. translators: 1: The DID, 2: The error message.
+#: inc/packages/wp-cli/compat/namespace.php:155
+#: inc/packages/wp-cli/compat/namespace.php:278
+#, php-format
+msgid "Could not retrieve metadata for %1$s - %2$s"
+msgstr "No s'han pogut recuperar les metadades de %1$s - %2$s"
 
 #: inc/dashboard-widgets/namespace.php:112
 msgctxt "default event location"
 msgid "Online"
 msgstr "En línia"
 
-#: inc/packages/namespace.php:49
+#: inc/packages/namespace.php:52
 msgid "DID could not be parsed as a URI."
 msgstr "El DID no s'ha pogut analitzar com un URI."
 
-#: inc/packages/namespace.php:241
+#: inc/packages/namespace.php:252
 msgid "DID does not contain valid signing keys."
 msgstr "El DID no conté claus de signatura vàlides."
 
-#: inc/packages/namespace.php:125
+#: inc/packages/namespace.php:128
 msgid "DID is not a valid package to fetch metadata for."
 msgstr "El DID no és un paquet vàlid per a obtenir les metadades."
 
-#: inc/packages/admin/namespace.php:67
+#: inc/packages/admin/namespace.php:75
 msgid "Direct Install"
 msgstr "Instal·lació directa"
 
-#: inc/packages/admin/info.php:451
+#: inc/packages/admin/info.php:456
 msgid "Domain Alias:"
 msgstr "Àlies de domini:"
 
-#: inc/packages/admin/namespace.php:186
+#: inc/packages/admin/namespace.php:167
 msgid "Enter a plugin ID to view details and install."
 msgstr "Introduïu un ID d'extensió per a veure els detalls i instal·lar."
+
+#. translators: Hidden accessibility text.
+#: assets/js/fair-site-health.js:29
+msgid "Error"
+msgstr "Error"
 
 #: inc/dashboard-widgets/namespace.php:202
 msgid "Events (by The WP World)"
@@ -220,14 +278,15 @@ msgctxt "Events and News dashboard widget"
 msgid "https://fair.pm/"
 msgstr "https://ca.fair.pm/news/"
 
-#. Plugin Name of the plugin
-#: plugin.php
-msgid "FAIR - Federated and Independent Repositories"
-msgstr "FAIR - Repositoris federats i independents"
-
 #: inc/settings/namespace.php:134
 msgid "FAIR Avatars"
 msgstr "Avatars del FAIR"
+
+#. Plugin Name of the plugin
+#: plugin.php
+#| msgid "FAIR - Federated and Independent Repositories"
+msgid "FAIR Connect - Federated and Independent Repositories"
+msgstr "FAIR Connect - Repositoris federats i independents"
 
 #. Author of the plugin
 #: plugin.php
@@ -238,43 +297,62 @@ msgstr "Col·laboradors del FAIR"
 msgid "FAIR Settings"
 msgstr "Configuració del FAIR"
 
-#: inc/packages/namespace.php:136
+#: inc/packages/namespace.php:139
 msgid "Fetched metadata does not match the requested DID."
 msgstr "Les metadades recuperades no coincideixen amb el DID sol·licitat."
+
+#: assets/js/fair-site-health.js:42
+msgid "Get help resolving this issue."
+msgstr "Obteniu ajuda per resoldre aquest problema."
 
 #: inc/settings/namespace.php:135
 msgid "Gravatar"
 msgstr "Gravatar"
 
 #. translators: %1$s: repository hostname
-#: inc/packages/admin/namespace.php:518
+#: inc/packages/admin/namespace.php:527
 #, php-format
 msgid "Hosted on %1$s"
 msgstr "Allotjat a %1$s"
 
-#: inc/packages/namespace.php:169
+#: inc/packages/namespace.php:172
 msgid "HTTP error code received"
 msgstr "S'ha rebut el codi d'error HTTP"
 
-#: inc/packages/namespace.php:44
+#. Author URI of the plugin
+#: plugin.php
+msgid "https://fair.pm"
+msgstr "https://fair.pm"
+
+#: inc/packages/admin/class-list-table.php:41
+#: inc/packages/admin/namespace.php:95
+msgid "https://fair.pm/packages/plugins/"
+msgstr "https://fair.pm/packages/plugins/"
+
+#. translators: Localized Support reference.
+#: assets/js/fair-site-health.js:41
+msgid "https://wordpress.org/support/forums/"
+msgstr "https://wordpress.org/support/forums/"
+
+#: inc/packages/namespace.php:47
 msgid "ID is not a valid DID."
 msgstr "L'ID no és un DID vàlid."
 
-#: inc/packages/admin/info.php:289
+#: inc/packages/admin/info.php:294
 msgid "ID:"
 msgstr "ID:"
 
 #. translators: %s: The package's name.
-#: inc/packages/admin/info.php:559
+#: inc/packages/admin/info.php:572
 #, php-format
 msgid "Install %s now"
 msgstr "Instal·la %s ara"
 
-#: inc/packages/admin/info.php:548 inc/packages/admin/info.php:561
+#: inc/packages/admin/info.php:561 inc/packages/admin/info.php:574
 msgid "Install Now"
 msgstr "Instal·la ara"
 
-#: inc/packages/admin/info.php:599
+#: inc/packages/admin/info.php:612
 msgid "Installed"
 msgstr "Instal·lat"
 
@@ -283,7 +361,8 @@ msgstr "Instal·lat"
 msgid "Make your site more FAIR."
 msgstr "Feu que el lloc web sigui més FAIR."
 
-#: inc/packages/class-metadatadocument.php:125
+#. translators: %s is the missing field name.
+#: inc/packages/class-metadatadocument.php:133
 #: inc/packages/class-releasedocument.php:81
 #, php-format
 msgid "Missing mandatory field: %s"
@@ -297,15 +376,15 @@ msgstr "Notícies"
 msgid "No credits could be found."
 msgstr "No s'han trobat crèdits."
 
-#: inc/packages/class-metadatadocument.php:147
+#: inc/packages/class-metadatadocument.php:156
 msgid "No releases found in the metadata document."
 msgstr "No s'ha trobat cap versió en el document de metadades."
 
-#: inc/packages/namespace.php:251
+#: inc/packages/namespace.php:262
 msgid "No releases found in the repository."
 msgstr "No s'ha trobat cap versió al repositori."
 
-#: inc/packages/admin/info.php:465
+#: inc/packages/admin/info.php:474
 msgid "Not validated: No domain alias is set"
 msgstr "No validat: no s'ha establert cap àlies de domini"
 
@@ -314,21 +393,21 @@ msgctxt "operating system check"
 msgid "your platform"
 msgstr "la vostra plataforma"
 
-#: inc/packages/admin/info.php:258
+#: inc/packages/admin/info.php:263
 msgid "PHP"
 msgstr "PHP"
 
-#: inc/packages/admin/info.php:198
+#: inc/packages/admin/info.php:203
 msgctxt "plugin"
 msgid "Activate"
 msgstr "Activa"
 
-#: inc/packages/admin/namespace.php:212
+#: inc/packages/admin/namespace.php:193
 msgctxt "plugin"
 msgid "View Details"
 msgstr "Mostra els detalls"
 
-#: inc/packages/admin/namespace.php:215
+#: inc/packages/admin/namespace.php:196
 msgid "Plugin IDs should be in the format <code>did:plc:...</code>"
 msgstr ""
 "Els ID de les extensions haurien d'estar en el format <code>did:plc:..."
@@ -378,7 +457,7 @@ msgid "Profile Picture Assigned"
 msgstr "Imatge del perfil assignada"
 
 #. translators: %s: Name of person in profile picture
-#: inc/avatars/namespace.php:252 inc/avatars/namespace.php:268
+#: inc/avatars/namespace.php:257 inc/avatars/namespace.php:273
 #, php-format
 msgid "profile picture for %s"
 msgstr "imatge de perfil per a %s"
@@ -387,25 +466,25 @@ msgstr "imatge de perfil per a %s"
 msgid "Profile Picture Removed"
 msgstr "S'ha suprimit la imatge del perfil"
 
-#: inc/avatars/namespace.php:100
+#: inc/avatars/namespace.php:97
 msgid "Remove Profile Image"
 msgstr "Suprimeix la imatge del perfil"
 
-#: inc/packages/admin/info.php:293
+#: inc/packages/admin/info.php:298
 msgid "Requires:"
 msgstr "Requereix:"
 
 #. translators: %s: The package's URL.
-#: inc/updater/class-updater.php:206
+#: inc/updater/namespace.php:157
 #, php-format
 msgid "Signature verification could not be performed for the package: %s"
 msgstr "No s'ha pogut verificar la signatura del paquet: %s"
 
-#: inc/packages/admin/info.php:286
+#: inc/packages/admin/info.php:291
 msgid "Slug:"
 msgstr "Àlies:"
 
-#: inc/packages/admin/info.php:303
+#: inc/packages/admin/info.php:308
 msgid "Suggests:"
 msgstr "Suggeriment:"
 
@@ -416,8 +495,12 @@ msgid ""
 msgstr ""
 "El directori PLC no ha retornat el DID que s'ha enviat o el DID no és vàlid."
 
+#: inc/packages/wp-cli/compat/namespace.php:127
+msgid "The verify-checksums command is not currently supported for DIDs."
+msgstr "L'ordre verify-checksums no és compatible actualment amb els DIDs."
+
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:393 inc/updater/class-updater.php:433
+#: inc/updater/class-lite.php:393 inc/updater/class-updater.php:334
 #, php-format
 msgid "There is a new version of %s available."
 msgstr "Hi ha disponible una versió nova de %s."
@@ -430,17 +513,17 @@ msgstr "No s'han pogut recuperar els esdeveniments (error d'anàlisi)."
 msgid "Unable to parse DID document response."
 msgstr "No s'ha pogut analitzar la resposta del document DID."
 
-#: inc/packages/namespace.php:60
+#: inc/packages/namespace.php:63
 msgid "Unsupported DID method."
 msgstr "Mètode DID no compatible."
 
 #. translators: %s: The package's name.
-#: inc/packages/admin/info.php:580
+#: inc/packages/admin/info.php:593
 #, php-format
 msgid "Update %s now"
 msgstr "Actualitza el %s ara"
 
-#: inc/packages/admin/info.php:568 inc/packages/admin/info.php:582
+#: inc/packages/admin/info.php:581 inc/packages/admin/info.php:595
 msgid "Update Now"
 msgstr "Actualitza ara"
 
@@ -454,7 +537,7 @@ msgstr ""
 "Actualitzacions proporcionades pel <a href=\"%1$s\">gestor de paquets "
 "FAIR</a> i <a href=\"%2$s\">AspirePress</a>"
 
-#: inc/avatars/namespace.php:103
+#: inc/avatars/namespace.php:105
 msgid "Upload a custom profile picture for your account."
 msgstr "Pugeu una imatge de perfil personalitzada per al compte."
 
@@ -462,26 +545,42 @@ msgstr "Pugeu una imatge de perfil personalitzada per al compte."
 msgid "Use as Profile Picture"
 msgstr "Utilitza com a imatge de perfil"
 
-#: inc/packages/admin/info.php:479
+#: inc/packages/admin/info.php:488
 msgid "Validation failed"
 msgstr "Ha fallat la validació"
 
-#: inc/packages/admin/info.php:283
+#. translators: %s: The DID of the package.
+#: inc/updater/namespace.php:141
+#, php-format
+msgid "Verified signature for %s"
+msgstr "Signatura verificada per a %s"
+
+#: inc/packages/admin/info.php:288
 msgid "Version:"
 msgstr "Versió:"
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
-#: inc/updater/class-lite.php:404 inc/updater/class-updater.php:444
+#: inc/updater/class-lite.php:404 inc/updater/class-updater.php:345
 #, php-format
 msgid "View version %1$s details%2$s or %3$supdate now%2$s."
 msgstr "Mostra els %1$s detalls%2$s de la versió o %3$sactualitza ara%2$s."
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
-#: inc/updater/class-lite.php:416 inc/updater/class-updater.php:456
+#: inc/updater/class-lite.php:416 inc/updater/class-updater.php:357
 #, php-format
 msgid "View version %1$s details%2$s."
 msgstr "Mostra els %1$s detalls%2$s. de la versió."
 
-#: inc/packages/admin/info.php:255
+#: inc/packages/admin/info.php:260
 msgid "WordPress"
 msgstr "WordPress"
+
+#. translators: 1: The IP address WordPress.org resolves to. 2: The error returned by the lookup.
+#: assets/js/fair-site-health.js:32
+#, js-format
+msgid ""
+"Your site is unable to reach update server at %1$s, and returned the error: "
+"%2$s"
+msgstr ""
+"El lloc no pot arribar al servidor d'actualitzacions a %1$s i ha retornat "
+"l'error: %2$s"
