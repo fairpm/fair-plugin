@@ -80,8 +80,8 @@ jobs:
 
           gh pr create \
             --base ${{ github.event.repository.default_branch }} \
-            --title ${TITLE} \
+            --title "${TITLE}" \
             --head ${BRANCH_NAME} \
-            --body ${BODY}
+            --body "${BODY}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
