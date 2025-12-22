@@ -63,7 +63,7 @@ Once the milestone contains no open issues or pull requests, the release is read
 
 7. Continue to the next step once all workflows finish.
 
-## 5. Create a new release on GitHub
+## 5. Create a new release on GitHub and update CHANGELOG.md
 
 1. From the repository’s main page, click the **Releases** link — or go directly to the [Releases page](https://github.com/fairpm/fair-plugin/releases).
 
@@ -79,6 +79,7 @@ Once the milestone contains no open issues or pull requests, the release is read
    - Leave **Previous tag** set to `Auto`.
    - Click **Generate release notes**.
    - Review and edit the generated notes as needed.
+   - Copy/paste the release notes into the **CHANGELOG.md** file under the new version heading and date.
 
 > [!TIP]
 > You can add additional information directly in the **Describe this release** field.
@@ -99,3 +100,4 @@ Once the milestone contains no open issues or pull requests, the release is read
 11. Verify successful release
     - Visit the [Releases page](https://github.com/fairpm/fair-plugin/releases) to confirm latest release.
     - Check any site using FAIR Connect to ensure the new version is available.
+    - Check the API response for the updated version number.
