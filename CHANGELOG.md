@@ -1,5 +1,22 @@
 [unreleased]
 
+#### 1.2.1 / 2025-12-22
+
+* confirm array or object parts exist before using by @norcross in https://github.com/fairpm/fair-plugin/pull/372
+* Rename function for context by @afragen in https://github.com/fairpm/fair-plugin/pull/377
+* Update rename on download by @afragen in https://github.com/fairpm/fair-plugin/pull/378
+* Fix modal for empty $sections by @afragen in https://github.com/fairpm/fair-plugin/pull/375
+* Update jdecked/twemoji to 17.0.2. by @costdev in https://github.com/fairpm/fair-plugin/pull/379
+* Workflows: Add WP 6.8, 6.9 and PHP 8.5 to PHPUnit tests. by @costdev in https://github.com/fairpm/fair-plugin/pull/380
+* More FAIR Connect naming changes by @johnbillion in https://github.com/fairpm/fair-plugin/pull/385
+* Hash the directory name of a package on install. by @costdev in https://github.com/fairpm/fair-plugin/pull/227
+* Update ca POT translation (12-18-25) by @marcarmengou in https://github.com/fairpm/fair-plugin/pull/387
+* [bump-version] Bump version to 1.2.1 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/388
+* Fix variable quoting in Generate POT by @cdils in https://github.com/fairpm/fair-plugin/pull/389
+
+##### New Contributors
+* @cdils made their first contribution inhttps://github.com/fairpm/fair-plugin/pull/389
+
 #### 1.2.0 / 2025-12-11
 
 * Generate POT - 2025-11-07 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/314
