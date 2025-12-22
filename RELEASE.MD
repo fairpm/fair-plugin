@@ -70,7 +70,7 @@ Once the milestone contains no open issues or pull requests, the release is read
 2. Click the **Draft a new release** button.
 
 3. In the **Select tag** field:
-    - Select the tag that matches the version you just released (e.g., `1.2.0`).
+    - Select the tag that matches the version you just bumped to (e.g., `1.2.0`).
     - Create a new tag if it does not appear in the dropdown.
 
 4. In the **Release title** field, enter a title for the release (e.g., `1.2.0`).
