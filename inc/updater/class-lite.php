@@ -178,17 +178,22 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 		/**
 		 * Correctly rename dependency for activation.
 		 *
-		 * @param string      $source        Path of $source.
-		 * @param string      $remote_source Path of $remote_source.
-		 * @param WP_Upgrader $upgrader      An Upgrader object.
-		 * @param array       $hook_extra    Array of hook data.
+		 * @param string|WP_Error $source        Path of $source, or a WP_Error object.
+		 * @param string          $remote_source Path of $remote_source.
+		 * @param WP_Upgrader     $upgrader      An Upgrader object.
+		 * @param array           $hook_extra    Array of hook data.
 		 *
 		 * @throws TypeError If the type of $upgrader is not correct.
 		 *
 		 * @return string|WP_Error
 		 */
-		public function upgrader_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
+		public function upgrader_source_selection( $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
 			global $wp_filesystem;
+
+			// Exit early for errors.
+			if ( is_wp_error( $source ) ) {
+				return $source;
+			}
 
 			$new_source = $source;
 
