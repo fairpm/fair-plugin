@@ -1,5 +1,12 @@
 [unreleased]
 
+#### 1.2.2 / 2025-12-24
+
+* Add RELEASE.md documenting the version release process by @cdils in https://github.com/fairpm/fair-plugin/pull/355
+* Update changelog.md with 1.2.1 release notes by @cdils in https://github.com/fairpm/fair-plugin/pull/391
+* Pass 4 arguments to `maybe_rename_on_package_download`. by @costdev in https://github.com/fairpm/fair-plugin/pull/394
+* [bump-version] Bump version to 1.2.2 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/395
+
 #### 1.2.1 / 2025-12-22
 
 * confirm array or object parts exist before using by @norcross in https://github.com/fairpm/fair-plugin/pull/372
