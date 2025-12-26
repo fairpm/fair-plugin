@@ -12,6 +12,7 @@ use Plugin_Upgrader;
 use stdClass;
 use Theme_Upgrader;
 use TypeError;
+use WP_Error;
 use WP_Upgrader;
 
 /**
@@ -149,7 +150,7 @@ class Updater {
 	/**
 	 * Correctly rename dependency for activation.
 	 *
-	 * @param string      $source        Path of $source.
+	 * @param string|WP_Error $source    Path of $source, or a WP_Error object.
 	 * @param string      $remote_source Path of $remote_source.
 	 * @param WP_Upgrader $upgrader      An Upgrader object.
 	 * @param array       $hook_extra    Array of hook data.
@@ -158,8 +159,13 @@ class Updater {
 	 *
 	 * @return string|WP_Error
 	 */
-	public function upgrader_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
+	public function upgrader_source_selection( $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
 		global $wp_filesystem;
+
+		// Exit early for errors.
+		if ( is_wp_error( $source ) ) {
+			return $source;
+		}
 
 		$new_source = $source;
 
