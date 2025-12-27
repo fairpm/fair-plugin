@@ -18,18 +18,29 @@ $ git commit -s -m 'My commit message.'
 
 This plugin is ready to use with wp-env for local development, with a default configuration included in the repository. `npm run env` is an alias for `wp-env`:
 
-```sh
-# Install wp-env and other dependencies.
-$ npm install
+- `npm install` to install wp-env and other dependencies.
+- `npm run env start` to start the development server. Run `npm run env start -- --xdebug=coverage` to enable Xdebug with test coverage reporting.
+- `npm run env logs` to get the logs.
+- `npm run env stop` to stop the development server.
+- `npm run cli` to run any CLI commands inside the environment, such as `npm run cli -- wp plugin list`.
 
-# Start the development server
-$ npm run env start
+By default wp-env is configured with PHP 7.4 (our minimum supported version), as well as Airplane Mode to avoid inadvertent requests.
 
-# Get the logs
-$ npm run env logs
+For linting and static analysis:
 
-# Stop the development server
-$ npm run env stop
+- `npm run lint:php:phpcs` to run PHPCS (configured in [`phpcs.xml.dist`](phpcs.xml.dist)).
+- `npm run lint:php:phpstan` to run PHPStan (configured in [`phpstan.dist.neon`](phpstan.dist.neon)).
+- `npm run format:php:phpcs` to automatically fix PHPCS issues.
+- `npm run format:php:phpstan` to automatically fix PHPStan issues.
+- `npm run cli -- composer phpstan-baseline` to update the PHPStan baseline [`tests/phpstan-baseline.neon`](tests/phpstan-baseline.neon) as you fix the reported issues.
+
+### Configuring PHP and WP Versions
+
+To run a specific version of PHP or WP with your local development environment, create a `.wp-env.override.json` file in the root of the repository with the following contents:
+
+```json
+{
+	"phpVersion": "8.5",
+	"core": "https://wordpress.org/wordpress-6.9.zip"
+}
 ```
-
-By default, wp-env is configured with PHP 7.4 (our minimum supported version), as well as Airplane Mode to avoid inadvertent requests.
