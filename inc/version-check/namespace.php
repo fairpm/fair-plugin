@@ -14,7 +14,7 @@ use const FAIR\CACHE_LIFETIME;
  *
  * DO NOT EDIT THIS CONSTANT MANUALLY.
  */
-const BROWSER_REGEX = '/Edge?\/14[0-2]\.0(\.\d+|)|Firefox\/(140\.0|14[3-8]\.0)(\.\d+|)|Chrom(ium|e)\/(109\.0|1{2}2\.0|12[56]\.0|130\.0|134\.0|1(39|4[0-6])\.0)(\.\d+|)|(Maci|X1{2}).+ Version\/26\.[12]([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/12[12]\.0\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(18[._][56]|26[._][01])([._]\d+|)|Opera Mini|Android:?[ /-]142(\.0|)(\.\d+|)|Mobile Safari.+OPR\/8(0\.){2}\d+|Android.+Firefox\/14{2}\.0(\.\d+|)|Android.+Chrom(ium|e)\/142\.0(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?1(5\.){2}\d+|SamsungBrowser\/2[89]\.0|Android.+MQ{2}Browser\/14(\.9|)(\.\d+|)|K[Aa][Ii]OS\/(2\.5|3\.[01])(\.\d+|)/';
+const BROWSER_REGEX = '/Edge?\/14[1-3]\.0(\.\d+|)|Firefox\/(140\.0|14[4-9]\.0)(\.\d+|)|Chrom(ium|e)\/(109\.0|1{2}2\.0|126\.0|130\.0|134\.0|1(39|4[0-6])\.0)(\.\d+|)|(Maci|X1{2}).+ Version\/26\.[1-3]([,.]\d+|)( \(\w+\)|)( Mobile\/\w+|) Safari\/|Chrome.+OPR\/12[45]\.0\.\d+|(CPU[ +]OS|iPhone[ +]OS|CPU[ +]iPhone|CPU IPhone OS|CPU iPad OS)[ +]+(18[._][5-7]|26[._][0-3])([._]\d+|)|Opera Mini|Android:?[ /-]143(\.0|)(\.\d+|)|Mobile Safari.+OPR\/8(0\.){2}\d+|Android.+Firefox\/146\.0(\.\d+|)|Android.+Chrom(ium|e)\/143\.0(\.\d+|)|Android.+(UC? ?Browser|UCWEB|U3)[ /]?1(5\.){2}\d+|SamsungBrowser\/2[89]\.0|Android.+MQ{2}Browser\/14(\.9|)(\.\d+|)|K[Aa][Ii]OS\/(2\.5|3\.[01])(\.\d+|)/';
 
 /**
  * The latest branch of PHP which WordPress.org recommends.
