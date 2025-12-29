@@ -63,7 +63,7 @@ Once the milestone contains no open issues or pull requests, the release is read
 
 7. Continue to the next step once all workflows finish.
 
-## 5. Create a new release on GitHub and update CHANGELOG.md
+## 5. Create a new release on GitHub
 
 1. From the repository’s main page, click the **Releases** link — or go directly to the [Releases page](https://github.com/fairpm/fair-plugin/releases).
 
@@ -79,25 +79,43 @@ Once the milestone contains no open issues or pull requests, the release is read
    - Leave **Previous tag** set to `Auto`.
    - Click **Generate release notes**.
    - Review and edit the generated notes as needed.
-   - Copy/paste the release notes into the **CHANGELOG.md** file under the new version heading and date.
+   - Click the **Save draft** button.
 
 > [!TIP]
 > You can add additional information directly in the **Describe this release** field.
 > If a teammate is preparing a release post for FAIR.pm, coordinate with them to include any relevant details.
 
-6. Check **Set as the latest release**.
+## 6. Update the changelog before publishing the GitHub release
 
-7. Check **Create a discussion for this release** and choose the **Announcements** category.
+1. In a new browser tab, open [`CHANGELOG.md`](/CHANGELOG.md).
 
-8. In a new browser tab, go to the repository’s **Actions** tab and confirm all workflows have completed.
+2. Click the pencil icon to edit the file directly in the browser.
 
-9. Return to the **Draft Release** page and click **Publish release**.
+3. Copy the release notes into `CHANGELOG.md` under the new version heading and date (e.g., `1.2.0 / 2025-12-11`).
 
-10. To verify release processing:
-    - Go to the **Actions** tab.
-    - Once workflows complete, the release is live.
+4. Click the **Commit changes** button. In the panel that opens:
+   - Select **Create a new branch for this commit and start a pull request**.
+   - Enter a branch name or use the default (e.g., `update-changelog-1.2.0`).
+   - Click the **Sign off and propose changes** button.
 
-11. Verify successful release
+5. Create a pull request for the updated `CHANGELOG.md` file.
+
+6. Review, approve, and merge the pull request.
+
+
+## 7. Finalize and publish the release
+
+1. Return to the **Draft Release** page.
+
+2. Check **Set as the latest release**.
+
+3. Check **Create a discussion for this release** and choose the **Announcements** category.
+
+4. In a new browser tab, go to the repository’s **Actions** tab and confirm all workflows have completed.
+
+5. Return to the **Draft Release** page and click **Publish release**. This initiates the remaining release workflows.
+
+6. Verify the release:
     - Visit the [Releases page](https://github.com/fairpm/fair-plugin/releases) to confirm latest release.
     - Check any site using FAIR Connect to ensure the new version is available.
-    - Check the API response for the updated version number.
+    - Verify the updated version number in the API response.
