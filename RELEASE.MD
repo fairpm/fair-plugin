@@ -1,5 +1,10 @@
 # Releasing a new version of FAIR Connect
 
+## 0. Ensure adequate permissions
+To perform a release of FAIR Connect, you need the following:
+- `write` or higher permissions on the [FAIR Connect repository](https://github.com/fairpm/fair-plugin)
+- `maintain` or higher permissions on the [TSC repository](https://github.com/fairpm/tsc) (this is required to post a Discussion per step 7.3.)
+
 ## 1. Verify milestone readiness
 
 Before starting the release process, ensure that the milestone for the upcoming release is finalized and clear.
@@ -118,4 +123,4 @@ Once the milestone contains no open issues or pull requests, the release is read
 6. Verify the release:
     - Visit the [Releases page](https://github.com/fairpm/fair-plugin/releases) to confirm latest release.
     - Check any site using FAIR Connect to ensure the new version is available.
-    - Verify the updated version number in the API response.
+    - Verify the updated version number in the API response. (Example URL to check: https://api.fair.pm/git-updater/v1/update-api/?slug=fair-plugin)
