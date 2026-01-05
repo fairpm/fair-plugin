@@ -3,7 +3,7 @@
 ## 0. Ensure adequate permissions
 To perform a release of FAIR Connect, you need the following:
 - `write` or higher permissions on the [FAIR Connect repository](https://github.com/fairpm/fair-plugin)
-- `maintain` or higher permissions on the [TSC repository](https://github.com/fairpm/tsc) (this is required to post a Discussion per step 7.3.)
+- `maintain` or higher permissions on the [TSC repository](https://github.com/fairpm/tsc) (this is required to post a Discussion in the Announcements category per step 7.3.)
 
 ## 1. Verify milestone readiness
 
