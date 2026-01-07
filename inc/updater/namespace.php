@@ -82,11 +82,11 @@ function run() {
 /**
  * Download a package with signature verification.
  *
- * @param bool|string|WP_Error $reply      Whether to proceed with the download, the path to the downloaded package, or an existing WP_Error object. Default true.
+ * @param bool|string|WP_Error $reply      Whether to proceed with the download, the path to the downloaded package, or an existing WP_Error object.
  * @param string               $package    The URI of the package. If this is the full path to an existing local file, it will be returned untouched.
  * @param WP_Upgrader          $upgrader   The WP_Upgrader instance.
  * @param array                $hook_extra Extra hook data.
- * @return true|WP_Error True if the signature is valid, otherwise WP_Error.
+ * @return string|WP_Error The package path if the signature is valid, otherwise WP_Error.
  */
 function verify_signature_on_download( $reply, string $package, WP_Upgrader $upgrader, $hook_extra ) {
 	static $has_run = [];
