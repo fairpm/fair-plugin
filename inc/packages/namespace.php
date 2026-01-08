@@ -754,7 +754,7 @@ function delete_cached_did_for_install(): void {
  *
  * This is commonly required for packages from Git hosts.
  *
- * @param string $source        Path of $source.
+ * @param string|WP_Error $source Path of $source, or a WP_Error object.
  * @param string $remote_source Path of $remote_source.
  * @param WP_Upgrader $upgrader An Upgrader object.
  * @param array $hook_extra     Array of hook data.

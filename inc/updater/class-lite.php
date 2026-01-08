@@ -125,6 +125,13 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 			);
 			$response = get_site_transient( "git-updater-lite_{$this->file}" );
 			if ( ! $response ) {
+				/* Apply filter to API URL.
+				 * Add `channel=development` query arg to URL to get pre-release versions.
+				 *
+				 * @param string $url The API URL.
+				 * @param string $slug The plugin/theme slug
+				 */
+				$url = apply_filters( 'git_updater_lite_api_url', $url, $this->slug );
 				$response = wp_remote_get( $url );
 				if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) === 404 ) {
 					return $response;
@@ -136,11 +143,9 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 				}
 				$this->api_data->file = $this->file;
 
-				/*
-				* Set transient for 5 minutes as AWS sets 5 minute timeout
-				* for release asset redirect.
-				*/
-				set_site_transient( "git-updater-lite_{$this->file}", $this->api_data, 5 * \MINUTE_IN_SECONDS );
+				// Set timeout for transient via filter.
+				$timeout = apply_filters( 'git_updater_lite_transient_timeout', 6 * HOUR_IN_SECONDS, $this->file );
+				set_site_transient( "git-updater-lite_{$this->file}", $this->api_data, $timeout );
 			} else {
 				if ( property_exists( $response, 'error' ) ) {
 					return new WP_Error( 'repo-no-exist', 'Specified repo does not exist' );
@@ -178,17 +183,22 @@ if ( ! class_exists( 'Fragen\\Git_Updater\\Lite' ) ) {
 		/**
 		 * Correctly rename dependency for activation.
 		 *
-		 * @param string      $source        Path of $source.
-		 * @param string      $remote_source Path of $remote_source.
-		 * @param WP_Upgrader $upgrader      An Upgrader object.
-		 * @param array       $hook_extra    Array of hook data.
+		 * @param string|WP_Error $source        Path of $source, or a WP_Error object.
+		 * @param string          $remote_source Path of $remote_source.
+		 * @param WP_Upgrader     $upgrader      An Upgrader object.
+		 * @param array           $hook_extra    Array of hook data.
 		 *
 		 * @throws TypeError If the type of $upgrader is not correct.
 		 *
 		 * @return string|WP_Error
 		 */
-		public function upgrader_source_selection( string $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
+		public function upgrader_source_selection( $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
 			global $wp_filesystem;
+
+			// Exit early for errors.
+			if ( is_wp_error( $source ) ) {
+				return $source;
+			}
 
 			$new_source = $source;
 
