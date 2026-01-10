@@ -16,7 +16,8 @@
     "require-dev": {
         "yoast/phpunit-polyfills": "*",
         "nimut/phpunit-merger": "*",
-        "humanmade/coding-standards": "^1.2"
+        "humanmade/coding-standards": "^1.2",
+        "szepeviktor/phpstan-wordpress": "^2.0"
     },
     "config": {
         "lock": false,
@@ -25,8 +26,19 @@
         }
     },
     "scripts": {
-		"lint": "@php ./vendor/bin/phpcs .",
-		"format": "@php ./vendor/bin/phpcbf .",
+        "lint:phpcs": "phpcs .",
+        "lint:phpstan": "phpstan analyse --verbose --memory-limit=2G",
+        "lint": [
+            "@lint:phpcs",
+            "@lint:phpstan"
+        ],
+        "format:phpcs": "phpcbf .",
+        "format:phpstan": "phpstan analyse --fix --memory-limit=2G",
+        "format": [
+            "@format:phpcs",
+            "@format:phpstan"
+        ],
+        "phpstan-baseline": "phpstan analyse --generate-baseline=tests/phpstan-baseline.neon --memory-limit=2G",
         "test": [
             "Composer\\Config::disableProcessTimeout",
             "@php ./vendor/phpunit/phpunit/phpunit"
