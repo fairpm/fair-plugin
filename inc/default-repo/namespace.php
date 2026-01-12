@@ -53,6 +53,7 @@ function replace_repo_api_urls( $status, $args, $url ) {
 	if (
 		! str_contains( $url, 'api.wordpress.org/plugins/' )
 		&& ! str_contains( $url, 'api.wordpress.org/themes/' )
+		&& ! str_contains( $url, 'api.wordpress.org/translations/' )
 		&& ! str_contains( $url, 'api.wordpress.org/core/version-check/' )
 	) {
 		return $status;
