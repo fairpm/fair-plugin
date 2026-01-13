@@ -238,9 +238,10 @@ function fetch_package_metadata( string $id ) {
  * Fetch the metadata document for a package.
  *
  * @param string $url URL for the metadata document.
+ * @param string $did DID of the package.
  * @return MetadataDocument|WP_Error
  */
-function fetch_metadata_doc( string $url ) {
+function fetch_metadata_doc( string $url, string $did ) {
 	$cache_key = CACHE_KEY . md5( $url );
 	$response = get_site_transient( $cache_key );
 	$response = fetch_metadata_from_local( $response, $url );
@@ -259,9 +260,15 @@ function fetch_metadata_doc( string $url ) {
 		$response = wp_remote_get( $url, $options );
 		$code = wp_remote_retrieve_response_code( $response );
 		if ( is_wp_error( $response ) ) {
+			cache_update_error( $did, $response );
 			return $response;
 		} elseif ( $code !== 200 ) {
-			return new WP_Error( 'fair.packages.metadata.failure', __( 'HTTP error code received', 'fair' ) );
+			$error = new WP_Error(
+				'fair.packages.metadata.http_error',
+				sprintf( __( 'HTTP %d error received', 'fair' ), $code )
+			);
+			cache_update_error( $did, $error );
+			return $error;
 		}
 
 		// Reorder sections before caching.
