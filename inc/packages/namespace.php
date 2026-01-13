@@ -727,6 +727,9 @@ function cache_did_for_install( array $options ): array {
 		$did = array_find_key(
 			$releases,
 			function ( $release ) use ( $options ) {
+				if ( ! is_array( $release->artifacts->package ) ) {
+					return false;
+				}
 				$artifact = pick_artifact_by_lang( $release->artifacts->package );
 				return $artifact && $artifact->url === $options['package'];
 			}
