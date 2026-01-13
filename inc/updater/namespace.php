@@ -140,9 +140,9 @@ function display_plugin_update_error( $plugin_file, $plugin_data, $status, $did 
 				<div class="update-message notice inline notice-error notice-alt"><p>%4$s</p></div>
 			</td>
 		</tr>',
-		$active_class,
+		esc_attr( $active_class ),
 		esc_attr( sanitize_title( $plugin_file ) ),
-		$colspan,
+		esc_attr( $colspan ),
 		esc_html( $message ),
 	);
 }
