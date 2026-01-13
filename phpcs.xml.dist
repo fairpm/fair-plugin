@@ -39,6 +39,9 @@
 	<!-- Exclude language files -->
 	<exclude-pattern>languages/*</exclude-pattern>
 
+	<!-- Exclude GitHub workflow files -->
+	<exclude-pattern>/.github/*</exclude-pattern>
+
 	<!-- Exclude sample files -->
 	<exclude-pattern>wp-tests-config-sample\.php</exclude-pattern>
 
