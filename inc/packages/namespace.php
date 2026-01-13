@@ -9,6 +9,7 @@ namespace FAIR\Packages;
 
 use const FAIR\CACHE_BASE;
 use const FAIR\CACHE_LIFETIME;
+use const FAIR\CACHE_LIFETIME_FAILURE;
 use FAIR\Packages\DID\Document as DIDDocument;
 use FAIR\Packages\DID\PLC;
 use FAIR\Packages\DID\Web;
@@ -22,11 +23,32 @@ use WP_Upgrader;
 const CACHE_KEY = CACHE_BASE . 'packages-';
 const CACHE_METADATA_DOCUMENTS = CACHE_BASE . 'metadata-documents-';
 const CACHE_RELEASE_PACKAGES = CACHE_BASE . 'release-packages';
+const CACHE_UPDATE_ERRORS = CACHE_BASE . 'update-errors-';
 const CACHE_DID_FOR_INSTALL = 'fair-install-did';
 const CONTENT_TYPE = 'application/json+fair';
 const SERVICE_ID = 'FairPackageManagementRepo';
 
 // phpcs:disable WordPress.NamingConventions.ValidVariableName
+
+/**
+ * Cache an update error for a package.
+ *
+ * @param string   $did   DID of the package.
+ * @param WP_Error $error The error to cache.
+ */
+function cache_update_error( string $did, WP_Error $error ): void {
+	$error->add_data( [ 'timestamp' => time() ], $error->get_error_code() );
+	set_site_transient( CACHE_UPDATE_ERRORS . $did, $error, CACHE_LIFETIME_FAILURE );
+}
+
+/**
+ * Clear a cached update error for a package.
+ *
+ * @param string $did DID of the package.
+ */
+function clear_update_error( string $did ): void {
+	delete_site_transient( CACHE_UPDATE_ERRORS . $did );
+}
 
 /**
  * Bootstrap.
@@ -93,6 +115,12 @@ function get_did_hash( string $id ) {
  * @return DIDDocument|WP_Error
  */
 function get_did_document( string $id ) {
+	// Check for cached error from previous failed request.
+	$cached_error = get_site_transient( CACHE_UPDATE_ERRORS . $id );
+	if ( is_wp_error( $cached_error ) ) {
+		return $cached_error;
+	}
+
 	$cached = get_site_transient( CACHE_METADATA_DOCUMENTS . $id );
 	if ( $cached ) {
 		return $cached;
@@ -101,13 +129,18 @@ function get_did_document( string $id ) {
 	// Parse the DID, then fetch the details.
 	$did = parse_did( $id );
 	if ( is_wp_error( $did ) ) {
+		cache_update_error( $id, $did );
 		return $did;
 	}
 
 	$document = $did->fetch_document();
 	if ( is_wp_error( $document ) ) {
+		cache_update_error( $id, $document );
 		return $document;
 	}
+
+	// Clear any previous error on success.
+	clear_update_error( $id );
 	set_site_transient( CACHE_METADATA_DOCUMENTS . $id, $document, CACHE_LIFETIME );
 
 	return $document;
@@ -177,19 +210,26 @@ function fetch_package_metadata( string $id ) {
 	// Fetch data from the repository.
 	$service = $document->get_service( SERVICE_ID );
 	if ( empty( $service ) ) {
-		return new WP_Error( 'fair.packages.fetch_metadata.no_service', __( 'DID is not a valid package to fetch metadata for.', 'fair' ) );
+		$error = new WP_Error( 'fair.packages.fetch_metadata.no_service', __( 'DID is not a valid package to fetch metadata for.', 'fair' ) );
+		cache_update_error( $id, $error );
+		return $error;
 	}
 	$repo_url = $service->serviceEndpoint;
 
-	$metadata = fetch_metadata_doc( $repo_url );
+	$metadata = fetch_metadata_doc( $repo_url, $id );
 
 	if ( is_wp_error( $metadata ) ) {
 		return $metadata;
 	}
 
 	if ( $metadata->id !== $id ) {
-		return new WP_Error( 'fair.packages.fetch_metadata.mismatch', __( 'Fetched metadata does not match the requested DID.', 'fair' ) );
+		$error = new WP_Error( 'fair.packages.fetch_metadata.mismatch', __( 'Fetched metadata does not match the requested DID.', 'fair' ) );
+		cache_update_error( $id, $error );
+		return $error;
 	}
+
+	// Clear any previous error on success.
+	clear_update_error( $id );
 
 	return $metadata;
 }
