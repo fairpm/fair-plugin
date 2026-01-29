@@ -70,13 +70,24 @@ function get_packages() : array {
  * @return void
  */
 function run() {
+	if ( ! Updater::should_run_on_current_page() ) {
+		return;
+	}
+
 	$packages = get_packages();
 	$plugins = $packages['plugins'] ?? [];
 	$themes = $packages['themes'] ?? [];
-	$packages = array_merge( $plugins, $themes );
-	foreach ( $packages as $did => $filepath ) {
-		( new Updater( $did, $filepath ) )->run();
+
+	foreach ( $plugins as $did => $filepath ) {
+		Updater::register_plugin( $did, $filepath );
 	}
+
+	foreach ( $themes as $did => $filepath ) {
+		Updater::register_theme( $did, $filepath );
+	}
+
+	// Load hooks once for all packages.
+	Updater::load_hooks();
 }
 
 /**
