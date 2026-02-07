@@ -471,17 +471,17 @@ function parse_user_agent( $user_agent ) {
 
 	// Identify platform/OS in user-agent string.
 	if ( preg_match(
-		'/(?P<platform>'                                  // Capture subpattern matches into 'platform' array.
-		.     'Windows Phone( OS)?|Symbian|SymbOS|Android|iPhone' // Platform tokens.
-		.     '|iPad|Windows|Linux|Macintosh|FreeBSD|OpenBSD'     // More platform tokens.
-		.     '|SunOS|RIM Tablet OS|PlayBook'                     // More platform tokens.
+		'/(?P<platform>'                              // Capture subpattern matches into 'platform' array.
+		. 'Windows Phone( OS)?|Symbian|SymbOS|Android|iPhone' // Platform tokens.
+		. '|iPad|Windows|Linux|Macintosh|FreeBSD|OpenBSD'     // More platform tokens.
+		. '|SunOS|RIM Tablet OS|PlayBook'                     // More platform tokens.
 		. ')'
 		. '(?:'
-		.     ' (NT|amd64|armv7l|zvav)'                           // Possibly followed by specific modifiers/specifiers.
+		. ' (NT|amd64|armv7l|zvav)'                           // Possibly followed by specific modifiers/specifiers.
 		. ')*'
 		. '(?:'
-		.     ' [ix]?[0-9._]+'                                    // Possibly followed by architecture modifier (e.g. x86_64).
-		.     '(\-[0-9a-z\.\-]+)?'                                // Possibly followed by a hypenated version number.
+		. ' [ix]?[0-9._]+'                                    // Possibly followed by architecture modifier (e.g. x86_64).
+		. '(\-[0-9a-z\.\-]+)?'                                // Possibly followed by a hypenated version number.
 		. ')*'
 		. '(;|\))'                                                // Ending in a semi-colon or close parenthesis.
 		. '/im',                                                  // Case insensitive, multiline.
@@ -493,7 +493,7 @@ function parse_user_agent( $user_agent ) {
 
 	// Find tokens of interest in user-agent string.
 	preg_match_all(
-		  '%(?P<name>'                                    // Capture subpattern matches into the 'name' array.
+		'%(?P<name>'                                    // Capture subpattern matches into the 'name' array.
 		.     'Opera Mini|Opera|OPR|Edge|UCBrowser|UCWEB'         // Browser tokens.
 		.     '|QQBrowser|SymbianOS|Symbian|S40OviBrowser'        // More browser tokens.
 		.     '|Trident|Silk|Konqueror|PaleMoon|Puffin'           // More browser tokens.
@@ -524,31 +524,18 @@ function parse_user_agent( $user_agent ) {
 		} else {
 			$data['platform'] = 'Android';
 		}
-	}
-	// Normalize Windows Phone OS name when "OS" is omitted.
-	elseif ( 'Windows Phone' === $data['platform'] ) {
+	} elseif ( 'Windows Phone' === $data['platform'] ) {
+		// Normalize Windows Phone OS name when "OS" is omitted.
 		$data['platform'] = 'Windows Phone OS';
-	}
-	// Standardize Symbian OS name.
-	elseif (
-		in_array( $data['platform'], [ 'Symbian', 'SymbOS' ] )
-	||
-		! empty( $tokens['SymbianOS'] )
-	||
-		! empty( $tokens['Symbian'] )
-	) {
+	} elseif ( in_array( $data['platform'], [ 'Symbian', 'SymbOS' ] ) || ! empty( $tokens['SymbianOS'] ) || ! empty( $tokens['Symbian'] ) ) {
+		// Standardize Symbian OS name.
 		if ( ! in_array( $data['platform'], [ 'Symbian', 'SymbOS' ] ) ) {
 			unset( $tokens['SymbianOS'] );
 			unset( $tokens['Symbian'] );
 		}
 		$data['platform'] = 'Symbian';
-	}
-	// Generically detect some mobile devices.
-	elseif (
-		! $data['platform']
-	&&
-		preg_match( '/BlackBerry|Nokia|SonyEricsson/', $user_agent, $matches )
-	) {
+	} elseif ( ! $data['platform'] && preg_match( '/BlackBerry|Nokia|SonyEricsson/', $user_agent, $matches ) ) {
+		// Generically detect some mobile devices.
 		$data['platform'] = 'Mobile';
 		$mobile_device    = $matches[0];
 	}
@@ -558,7 +545,7 @@ function parse_user_agent( $user_agent ) {
 		$data['mobile'] = true;
 	}
 
-	// If Version/x.x.x was specified in UA string store it and ignore it
+	// If Version/x.x.x was specified in UA string store it and ignore it.
 	if ( ! empty( $tokens['Version'] ) ) {
 		$version = $tokens['Version'];
 		unset( $tokens['Version'] );
@@ -566,16 +553,15 @@ function parse_user_agent( $user_agent ) {
 
 	$explicit_tokens = get_explicit_browser_tokens();
 
-	// No indentifiers provided
+	// No indentifiers provided.
 	if ( ! $tokens ) {
 		if ( 'BlackBerry' === $mobile_device ) {
 			$data['name'] = 'BlackBerry Browser';
 		} else {
 			$data['name'] = 'unknown';
 		}
-	}
-	// Explicitly identified browser (info defined above in $explicit_tokens).
-	elseif ( $found = array_intersect( array_keys( $explicit_tokens ), array_keys( $tokens ) ) ) {
+	} elseif ( $found = array_intersect( array_keys( $explicit_tokens ), array_keys( $tokens ) ) ) {
+		// Explicitly identified browser (info defined above in $explicit_tokens).
 		$token = reset( $found );
 
 		$data['name']    = $explicit_tokens[ $token ]['name'] ?? $token;
@@ -589,9 +575,8 @@ function parse_user_agent( $user_agent ) {
 		if ( ! empty( $explicit_tokens[ $token ]['platform'] ) ) {
 			$data['platform'] = $explicit_tokens[ $token ]['platform'];
 		}
-	}
-	// Puffin
-	elseif ( ! empty( $tokens['Puffin'] ) ) {
+	} elseif ( ! empty( $tokens['Puffin'] ) ) {
+		// Puffin
 		$data['name']     = 'Puffin';
 		$data['version']  = $tokens['Puffin'];
 		$version          = '';
