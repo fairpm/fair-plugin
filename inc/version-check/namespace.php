@@ -90,15 +90,15 @@ function get_browser_check_response( string $agent ) {
 	$data = parse_user_agent( $agent );
 
 	$default_data = [
-			'platform' => _x( 'your platform', 'operating system check', 'fair' ),
-			'name' => _x( 'your browser', 'browser version check', 'fair' ),
-			'version' => '',
+			'platform'        => _x( 'your platform', 'operating system check', 'fair' ),
+			'name'            => _x( 'your browser', 'browser version check', 'fair' ),
+			'version'         => '',
 			'current_version' => '',
-			'upgrade' => ! $supported,
-			'insecure' => ! $supported,
-			'update_url' => 'https://browsehappy.com/',
-			'img_src' => '',
-			'img_src_ssl' => '',
+			'upgrade'         => ! $supported,
+			'insecure'        => ! $supported,
+			'update_url'      => 'https://browsehappy.com/',
+			'img_src'         => '',
+			'img_src_ssl'     => '',
 	];
 	$data = array_merge( $default_data, $data );
 
@@ -278,7 +278,7 @@ function get_server_check_response( string $version ) {
  */
 function get_browser_current_versions() {
 	return [
-		'Chrome'            => '18', // Lowest version at the moment (mobile)
+		'Chrome'            => '18', // Lowest version at the moment (mobile).
 		'Firefox'           => '56',
 		'Microsoft Edge'    => '15.15063',
 		'Opera'             => '12.18',
@@ -375,62 +375,62 @@ function get_browser_data( $browser = false ) {
  */
 function get_explicit_browser_tokens() {
 	 return [
-		'Camino'          => [],
-		'Chromium'        => [],
-		'Edge'            => [
-			'name'        => 'Microsoft Edge',
+		'Camino'         => [],
+		'Chromium'       => [],
+		'Edge'           => [
+			'name' => 'Microsoft Edge',
 		],
-		'Kindle'          => [
+		'Kindle'         => [
 			'name'        => 'Kindle Browser',
 			'use_version' => true,
 		],
-		'Konqueror'       => [],
-		'konqueror'       => [
-			'name'        => 'Konqueror',
+		'Konqueror'      => [],
+		'konqueror'      => [
+			'name'=> 'Konqueror',
 		],
-		'NokiaBrowser'    => [
-			'name'        => 'Nokia Browser',
-			'mobile'      => true,
+		'NokiaBrowser'   => [
+			'name'   => 'Nokia Browser',
+			'mobile' => true,
 		],
-		'Opera Mini'      => [ // Must be before 'Opera'
+		'Opera Mini'     => [ // Must be before 'Opera'
 			'mobile'      => true,
 			'use_version' => true,
 		],
-		'Opera'           => [
+		'Opera'          => [
 			'use_version' => true,
 		],
-		'OPR'             => [
+		'OPR'            => [
 			'name'        => 'Opera',
 			'use_version' => true,
 		],
-		'PaleMoon'        => [
-			'name'        => 'Pale Moon',
+		'PaleMoon'       => [
+			'name' => 'Pale Moon',
 		],
-		'QQBrowser'       => [
-			'name'        => 'QQ Browser',
+		'QQBrowser'      => [
+			'name' => 'QQ Browser',
 		],
-		'RockMelt'        => [],
-		'SamsungBrowser'  => [
-			'name'        => 'Samsung Browser',
+		'RockMelt'       => [],
+		'SamsungBrowser' => [
+			'name' => 'Samsung Browser',
 		],
-		'SeaMonkey'       => [],
-		'Silk'            => [
-			'name'        => 'Amazon Silk',
+		'SeaMonkey'      => [],
+		'Silk'           => [
+			'name'=> 'Amazon Silk',
 		],
-		'S40OviBrowser'   => [
-			'name'        => 'Ovi Browser',
-			'mobile'      => true,
-			'platform'    => 'Symbian',
+		'S40OviBrowser'  => [
+			'name'     => 'Ovi Browser',
+			'mobile'   => true,
+			'platform' => 'Symbian',
 		],
-		'UCBrowser'       => [ // Must be before 'UCWEB'
-			'name'        => 'UC Browser',
+		'UCBrowser'      => [ // Must be before 'UCWEB'
+			'name' => 'UC Browser',
 		],
-		'UCWEB'           => [
-			'name'        => 'UC Browser',
+		'UCWEB'          => [
+			'name' => 'UC Browser',
 		],
-		'Vivaldi'         => [],
-		'IEMobile'        => [ // Keep last just in case
-			'name'        => 'Internet Explorer Mobile',
+		'Vivaldi'        => [],
+		'IEMobile'       => [ // Keep last just in case
+			'name' => 'Internet Explorer Mobile',
 		],
 	 ];
 }
@@ -471,20 +471,20 @@ function parse_user_agent( $user_agent ) {
 
 	// Identify platform/OS in user-agent string.
 	if ( preg_match(
-		'/(?P<platform>'                                          // Capture subpattern matches into 'platform' array
-		.     'Windows Phone( OS)?|Symbian|SymbOS|Android|iPhone' // Platform tokens
-		.     '|iPad|Windows|Linux|Macintosh|FreeBSD|OpenBSD'     // More platform tokens
-		.     '|SunOS|RIM Tablet OS|PlayBook'                     // More platform tokens
+		'/(?P<platform>'                                  // Capture subpattern matches into 'platform' array.
+		.     'Windows Phone( OS)?|Symbian|SymbOS|Android|iPhone' // Platform tokens.
+		.     '|iPad|Windows|Linux|Macintosh|FreeBSD|OpenBSD'     // More platform tokens.
+		.     '|SunOS|RIM Tablet OS|PlayBook'                     // More platform tokens.
 		. ')'
 		. '(?:'
-		.     ' (NT|amd64|armv7l|zvav)'                           // Possibly followed by specific modifiers/specifiers
+		.     ' (NT|amd64|armv7l|zvav)'                           // Possibly followed by specific modifiers/specifiers.
 		. ')*'
 		. '(?:'
-		.     ' [ix]?[0-9._]+'                                    // Possibly followed by architecture modifier (e.g. x86_64)
-		.     '(\-[0-9a-z\.\-]+)?'                                // Possibly followed by a hypenated version number
+		.     ' [ix]?[0-9._]+'                                    // Possibly followed by architecture modifier (e.g. x86_64).
+		.     '(\-[0-9a-z\.\-]+)?'                                // Possibly followed by a hypenated version number.
 		. ')*'
-		. '(;|\))'                                                // Ending in a semi-colon or close parenthesis
-		. '/im',                                                  // Case insensitive, multiline
+		. '(;|\))'                                                // Ending in a semi-colon or close parenthesis.
+		. '/im',                                                  // Case insensitive, multiline.
 		$user_agent,
 		$regs
 	) ) {
@@ -493,22 +493,22 @@ function parse_user_agent( $user_agent ) {
 
 	// Find tokens of interest in user-agent string.
 	preg_match_all(
-		  '%(?P<name>'                                            // Capture subpattern matches into the 'name' array
-		.     'Opera Mini|Opera|OPR|Edge|UCBrowser|UCWEB'         // Browser tokens
-		.     '|QQBrowser|SymbianOS|Symbian|S40OviBrowser'        // More browser tokens
-		.     '|Trident|Silk|Konqueror|PaleMoon|Puffin'           // More browser tokens
-		.     '|SeaMonkey|Vivaldi|Camino|Chromium|Kindle|Firefox' // More browser tokens
-		.     '|SamsungBrowser|(?:Mobile )?Safari|NokiaBrowser'   // More browser tokens
-		.     '|MSIE|RockMelt|AppleWebKit|Chrome|IEMobile'        // More browser tokens
-		.     '|Version'                                          // Version token
+		  '%(?P<name>'                                    // Capture subpattern matches into the 'name' array.
+		.     'Opera Mini|Opera|OPR|Edge|UCBrowser|UCWEB'         // Browser tokens.
+		.     '|QQBrowser|SymbianOS|Symbian|S40OviBrowser'        // More browser tokens.
+		.     '|Trident|Silk|Konqueror|PaleMoon|Puffin'           // More browser tokens.
+		.     '|SeaMonkey|Vivaldi|Camino|Chromium|Kindle|Firefox' // More browser tokens.
+		.     '|SamsungBrowser|(?:Mobile )?Safari|NokiaBrowser'   // More browser tokens.
+		.     '|MSIE|RockMelt|AppleWebKit|Chrome|IEMobile'        // More browser tokens.
+		.     '|Version'                                          // Version token.
 		. ')'
 		. '(?:'
-		.     '[/ ]'                                              // Forward slash or space
+		.     '[/ ]'                                              // Forward slash or space.
 		. ')'
-		. '(?P<version>'                                          // Capture subpattern matches into 'version' array
-		.     '[0-9.]+'                                           // One or more numbers and/or decimal points
+		. '(?P<version>'                                          // Capture subpattern matches into 'version' array.
+		.     '[0-9.]+'                                           // One or more numbers and/or decimal points.
 		. ')'
-		. '%im',                                                  // Case insensitive, multiline
+		. '%im',                                                  // Case insensitive, multiline.
 		$user_agent,
 		$result,
 		PREG_PATTERN_ORDER
@@ -600,12 +600,11 @@ function parse_user_agent( $user_agent ) {
 			$data['mobile']   = true;
 			$data['platform'] = '';
 		}
-	}
-	// Trident (Internet Explorer)
-	elseif ( ! empty( $tokens['Trident'] ) ) {
+	} elseif ( ! empty( $tokens['Trident'] ) ) {
+		// Trident (Internet Explorer).
 		// IE 8-10 more reliably report version via Trident token than MSIE token.
 		// IE 11 uses Trident token without an MSIE token.
-		// https://msdn.microsoft.com/library/hh869301(v=vs.85).aspx
+		// https://msdn.microsoft.com/library/hh869301(v=vs.85).aspx.
 		$data['name'] = 'Internet Explorer';
 		$trident_ie_mapping = [
 			'4.0' => '8.0',
@@ -615,14 +614,12 @@ function parse_user_agent( $user_agent ) {
 		];
 		$ver = $tokens['Trident'];
 		$data['version'] = $trident_ie_mapping[ $ver ] ?? $ver;
-	}
-	// Internet Explorer (pre v8.0)
-	elseif ( ! empty( $tokens['MSIE'] ) ) {
+	} elseif ( ! empty( $tokens['MSIE'] ) ) {
+		// Internet Explorer (pre v8.0).
 		$data['name'] = 'Internet Explorer';
 		$data['version'] = $tokens['MSIE'];
-	}
-	// AppleWebKit-emulating browsers
-	elseif ( ! empty( $tokens['AppleWebKit'] ) ) {
+	} elseif ( ! empty( $tokens['AppleWebKit'] ) ) {
+		// AppleWebKit-emulating browsers.
 		if ( ! empty( $tokens['Mobile Safari'] ) ) {
 			if ( ! empty( $tokens['Chrome'] ) ) {
 				$data['name'] = 'Chrome';
@@ -662,9 +659,8 @@ function parse_user_agent( $user_agent ) {
 			$version = '';
 		}
 		$data['version'] = $tokens[ $data['name'] ] ?? '';
-	}
-	// Fall back to whatever is being reported.
-	else {
+	} else {
+		// Fall back to whatever is being reported.
 		$ordered_tokens = array_reverse( $tokens );
 		$data['version'] = reset( $ordered_tokens );
 		$data['name'] = key( $ordered_tokens );
@@ -676,7 +672,7 @@ function parse_user_agent( $user_agent ) {
 		$data['mobile']   = true;
 	}
 
-	// If Version/x.x.x was specified in UA string
+	// If Version/x.x.x was specified in UA string.
 	if ( ! empty( $version ) ) {
 		$data['version'] = $version;
 	}
