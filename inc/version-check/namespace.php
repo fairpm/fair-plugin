@@ -567,7 +567,7 @@ function parse_user_agent( $user_agent ) {
 		} else {
 			$data['name'] = 'unknown';
 		}
-	} elseif ( $found = array_intersect( array_keys( $explicit_tokens ), array_keys( $tokens ) ) ) {
+	} elseif ( $found = array_intersect( array_keys( $explicit_tokens ), array_keys( $tokens ) ) ) { // phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
 		// Explicitly identified browser (info defined above in $explicit_tokens).
 		$token = reset( $found );
 
