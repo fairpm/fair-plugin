@@ -386,13 +386,13 @@ function get_explicit_browser_tokens() {
 		],
 		'Konqueror'      => [],
 		'konqueror'      => [
-			'name'=> 'Konqueror',
+			'name' => 'Konqueror',
 		],
 		'NokiaBrowser'   => [
 			'name'   => 'Nokia Browser',
 			'mobile' => true,
 		],
-		'Opera Mini'     => [ // Must be before 'Opera'
+		'Opera Mini'     => [ // Must be before 'Opera'.
 			'mobile'      => true,
 			'use_version' => true,
 		],
@@ -415,21 +415,21 @@ function get_explicit_browser_tokens() {
 		],
 		'SeaMonkey'      => [],
 		'Silk'           => [
-			'name'=> 'Amazon Silk',
+			'name' => 'Amazon Silk',
 		],
 		'S40OviBrowser'  => [
 			'name'     => 'Ovi Browser',
 			'mobile'   => true,
 			'platform' => 'Symbian',
 		],
-		'UCBrowser'      => [ // Must be before 'UCWEB'
+		'UCBrowser'      => [ // Must be before 'UCWEB'.
 			'name' => 'UC Browser',
 		],
 		'UCWEB'          => [
 			'name' => 'UC Browser',
 		],
 		'Vivaldi'        => [],
-		'IEMobile'       => [ // Keep last just in case
+		'IEMobile'       => [ // Keep last just in case.
 			'name' => 'Internet Explorer Mobile',
 		],
 	];
@@ -471,20 +471,20 @@ function parse_user_agent( $user_agent ) {
 
 	/**
 	 * Identify platform/OS in user-agent string.
-	 *	'/(?P<platform>'                                      // Capture subpattern matches into 'platform' array.
-	 *	. 'Windows Phone( OS)?|Symbian|SymbOS|Android|iPhone' // Platform tokens.
-	 *	. '|iPad|Windows|Linux|Macintosh|FreeBSD|OpenBSD'     // More platform tokens.
-	 *	. '|SunOS|RIM Tablet OS|PlayBook'                     // More platform tokens.
-	 *	. ')'
-	 *	. '(?:'
-	 *	. ' (NT|amd64|armv7l|zvav)'                           // Possibly followed by specific modifiers/specifiers.
-	 *	. ')*'
-	 *	. '(?:'
-	 *	. ' [ix]?[0-9._]+'                                    // Possibly followed by architecture modifier (e.g. x86_64).
-	 *	. '(\-[0-9a-z\.\-]+)?'                                // Possibly followed by a hypenated version number.
-	 *	. ')*'
-	 *	. '(;|\))'                                            // Ending in a semi-colon or close parenthesis.
-	 *	. '/im',                                              // Case insensitive, multiline.
+	 * '/(?P<platform>'                                      // Capture subpattern matches into 'platform' array.
+	 * . 'Windows Phone( OS)?|Symbian|SymbOS|Android|iPhone' // Platform tokens.
+	 * . '|iPad|Windows|Linux|Macintosh|FreeBSD|OpenBSD'     // More platform tokens.
+	 * . '|SunOS|RIM Tablet OS|PlayBook'                     // More platform tokens.
+	 * . ')'
+	 * . '(?:'
+	 * . ' (NT|amd64|armv7l|zvav)'                           // Possibly followed by specific modifiers/specifiers.
+	 * . ')*'
+	 * . '(?:'
+	 * . ' [ix]?[0-9._]+'                                    // Possibly followed by architecture modifier (e.g. x86_64).
+	 * . '(\-[0-9a-z\.\-]+)?'                                // Possibly followed by a hypenated version number.
+	 * . ')*'
+	 * . '(;|\))'                                            // Ending in a semi-colon or close parenthesis.
+	 * . '/im',                                              // Case insensitive, multiline.
 	 */
 	if ( preg_match(
 		'/(?P<platform>Windows Phone( OS)?|Symbian|SymbOS|Android|iPhone|iPad|Windows|Linux|Macintosh|FreeBSD|OpenBSD|SunOS|RIM Tablet OS|PlayBook)(?: (NT|amd64|armv7l|zvav))*(?: [ix]?[0-9._]+(\-[0-9a-z\.\-]+)?)*(;|\))/im',
@@ -497,22 +497,22 @@ function parse_user_agent( $user_agent ) {
 	/**
 	 * Find tokens of interest in user-agent string.
 	 *
-	 *	'%(?P<name>'                                    // Capture subpattern matches into the 'name' array.
-	 *	.     'Opera Mini|Opera|OPR|Edge|UCBrowser|UCWEB'         // Browser tokens.
-	 *	.     '|QQBrowser|SymbianOS|Symbian|S40OviBrowser'        // More browser tokens.
-	 *	.     '|Trident|Silk|Konqueror|PaleMoon|Puffin'           // More browser tokens.
-	 *	.     '|SeaMonkey|Vivaldi|Camino|Chromium|Kindle|Firefox' // More browser tokens.
-	 *	.     '|SamsungBrowser|(?:Mobile )?Safari|NokiaBrowser'   // More browser tokens.
-	 *	.     '|MSIE|RockMelt|AppleWebKit|Chrome|IEMobile'        // More browser tokens.
-	 *	.     '|Version'                                          // Version token.
-	 *	. ')'
-	 *	. '(?:'
-	 *	.     '[/ ]'                                              // Forward slash or space.
-	 *	. ')'
-	 *	. '(?P<version>'                                          // Capture subpattern matches into 'version' array.
-	 *	.     '[0-9.]+'                                           // One or more numbers and/or decimal points.
-	 *	. ')'
-	 *	. '%im',                                                  // Case insensitive, multiline.
+	 * '%(?P<name>'                                              // Capture subpattern matches into the 'name' array.
+	 * .     'Opera Mini|Opera|OPR|Edge|UCBrowser|UCWEB'         // Browser tokens.
+	 * .     '|QQBrowser|SymbianOS|Symbian|S40OviBrowser'        // More browser tokens.
+	 * .     '|Trident|Silk|Konqueror|PaleMoon|Puffin'           // More browser tokens.
+	 * .     '|SeaMonkey|Vivaldi|Camino|Chromium|Kindle|Firefox' // More browser tokens.
+	 * .     '|SamsungBrowser|(?:Mobile )?Safari|NokiaBrowser'   // More browser tokens.
+	 * .     '|MSIE|RockMelt|AppleWebKit|Chrome|IEMobile'        // More browser tokens.
+	 * .     '|Version'                                          // Version token.
+	 * . ')'
+	 * . '(?:'
+	 * .     '[/ ]'                                              // Forward slash or space.
+	 * . ')'
+	 * . '(?P<version>'                                          // Capture subpattern matches into 'version' array.
+	 * .     '[0-9.]+'                                           // One or more numbers and/or decimal points.
+	 * . ')'
+	 * . '%im',                                                  // Case insensitive, multiline.
 	 */
 	preg_match_all(
 		'%(?P<name>Opera Mini|Opera|OPR|Edge|UCBrowser|UCWEB|QQBrowser|SymbianOS|Symbian|S40OviBrowser|Trident|Silk|Konqueror|PaleMoon|Puffin|SeaMonkey|Vivaldi|Camino|Chromium|Kindle|Firefox|SamsungBrowser|(?:Mobile )?Safari|NokiaBrowser|MSIE|RockMelt|AppleWebKit|Chrome|IEMobile|Version)(?:[/ ])(?P<version>[0-9.]+)%im',
@@ -583,7 +583,7 @@ function parse_user_agent( $user_agent ) {
 			$data['platform'] = $explicit_tokens[ $token ]['platform'];
 		}
 	} elseif ( ! empty( $tokens['Puffin'] ) ) {
-		// Puffin
+		// Puffin.
 		$data['name']     = 'Puffin';
 		$data['version']  = $tokens['Puffin'];
 		$version          = '';
