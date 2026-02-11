@@ -19,6 +19,22 @@ touch /tmp/fair-dist/SHA1SUMS
 touch /tmp/fair-dist/SHA256SUMS
 touch /tmp/fair-dist/SHA384SUMS
 
+# Auto-detect and hash plugin zip.
+PLUGIN_VERSION=$(get_plugin_header "Version")
+REPO_NAME=$(basename "$GITHUB_REPOSITORY")
+PLUGIN_ZIP="/tmp/${REPO_NAME}-${PLUGIN_VERSION}.zip"
+
+if [ -f "$PLUGIN_ZIP" ]; then
+	echo "Hashing plugin zip: $PLUGIN_ZIP" >&2
+	# Change to /tmp so hash files contain just filename, not full path
+	cd /tmp
+	md5sum -b "$(basename "$PLUGIN_ZIP")" >> /tmp/fair-dist/MD5SUMS
+	sha1sum -b "$(basename "$PLUGIN_ZIP")" >> /tmp/fair-dist/SHA1SUMS
+	sha256sum -b "$(basename "$PLUGIN_ZIP")" >> /tmp/fair-dist/SHA256SUMS
+	sha384sum -b "$(basename "$PLUGIN_ZIP")" >> /tmp/fair-dist/SHA384SUMS
+	cd - > /dev/null
+fi
+
 # Bundle our plugin first.
 [ -d /tmp/fair-temp ] && rm -rf /tmp/fair-temp
 mkdir -p /tmp/fair-temp/wordpress/wp-content/plugins/fair-plugin
