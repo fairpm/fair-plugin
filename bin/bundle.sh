@@ -55,7 +55,7 @@ for VERSION in $AVAILABLE_VERSIONS; do
 	EXPECTED_HASH=$(curl -sSL "$WP_ZIP_URL.sha1")
 
 	# Skip if we can't get a valid hash.
-	if ![[ $EXPECTED_HASH =~ ^[a-z0-9]{40}$ ]]; then
+	if [[ ! "$EXPECTED_HASH" =~ ^[a-z0-9]{40}$ ]]; then
 		echo "Failed to fetch valid hash for $VERSION" >&2
 		continue
 	fi
