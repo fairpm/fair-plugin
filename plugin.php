@@ -2,7 +2,7 @@
 /**
  * Plugin Name: FAIR Connect - Federated and Independent Repositories
  * Description: Make your site more FAIR.
- * Version: 1.2.2
+ * Version: 1.3.0-RC1
  * Author: FAIR Contributors
  * Author URI: https://fair.pm
  * Security: security@fair.pm
@@ -20,7 +20,7 @@
 
 namespace FAIR;
 
-const VERSION = '1.2.2';
+const VERSION = '1.3.0-RC1';
 const PLUGIN_DIR = __DIR__;
 const PLUGIN_FILE = __FILE__;
 
