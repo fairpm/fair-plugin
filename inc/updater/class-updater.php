@@ -131,18 +131,20 @@ class Updater {
 
 		// Rename plugins.
 		if ( $upgrader instanceof Plugin_Upgrader ) {
-			if ( isset( $hook_extra['plugin'] ) ) {
-				$slug       = dirname( $hook_extra['plugin'] );
-				$new_source = trailingslashit( $remote_source ) . $slug;
+			if ( ! isset( $hook_extra['plugin'] ) ) {
+				return $source;
 			}
+			$slug       = dirname( $hook_extra['plugin'] );
+			$new_source = trailingslashit( $remote_source ) . $slug;
 		}
 
 		// Rename themes.
 		if ( $upgrader instanceof Theme_Upgrader ) {
-			if ( isset( $hook_extra['theme'] ) ) {
-				$slug       = $hook_extra['theme'];
-				$new_source = trailingslashit( $remote_source ) . $slug;
+			if ( ! isset( $hook_extra['theme'] ) ) {
+				return $source;
 			}
+			$slug       = $hook_extra['theme'];
+			$new_source = trailingslashit( $remote_source ) . $slug;
 		}
 
 		if ( basename( $source ) === $slug ) {
