@@ -110,7 +110,7 @@ class Updater {
 	 *
 	 * @return string|WP_Error
 	 */
-	public function upgrader_source_selection( $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
+	public static function upgrader_source_selection( $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra = null ) {
 		global $wp_filesystem;
 
 		// Exit early for errors.
