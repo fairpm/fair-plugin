@@ -5,8 +5,8 @@
  * @package FAIR
  */
 
-use function FAIR\Updater\verify_did_on_source_selection;
 use const FAIR\Packages\CACHE_DID_FOR_INSTALL;
+use function FAIR\Updater\verify_did_on_source_selection;
 
 /**
  * Tests for FAIR\Updater\verify_did_on_source_selection().
@@ -22,6 +22,9 @@ class VerifyDidOnSourceSelectionTest extends WP_UnitTestCase {
 	 */
 	private string $fixtures_dir;
 
+	/**
+	 * Set up each test.
+	 */
 	public function set_up() {
 		parent::set_up();
 
