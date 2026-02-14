@@ -240,6 +240,62 @@ function verify_signature_on_download( $reply, string $package, WP_Upgrader $upg
 }
 
 /**
+ * Verify the DID in the extracted package matches the expected DID.
+ *
+ * Hooked to `upgrader_source_selection` at priority 9, before renaming hooks.
+ *
+ * @param string|WP_Error $source        File source location, or a WP_Error object.
+ * @param string          $remote_source Remote file source location.
+ * @param WP_Upgrader     $upgrader      WP_Upgrader instance.
+ * @param array           $hook_extra    Extra arguments passed to hooked filters.
+ * @return string|WP_Error The source path on success, WP_Error on failure.
+ */
+function verify_did_on_source_selection( $source, string $remote_source, WP_Upgrader $upgrader, $hook_extra ) {
+	// Pass through errors from earlier hooks.
+	if ( is_wp_error( $source ) ) {
+		return $source;
+	}
+
+	if ( ! $upgrader instanceof Plugin_Upgrader && ! $upgrader instanceof Theme_Upgrader ) {
+		return $source;
+	}
+
+	$expected_did = get_site_transient( CACHE_DID_FOR_INSTALL );
+	if ( ! $expected_did ) {
+		return $source;
+	}
+
+	$type = $upgrader instanceof Plugin_Upgrader ? 'plugin' : 'theme';
+
+	$actual_did = Packages\get_did_by_path( $source, $type );
+
+	if ( is_wp_error( $actual_did ) ) {
+		return new WP_Error(
+			'fair.packages.did_verification.not_found',
+			sprintf(
+				/* translators: %s: The expected DID. */
+				__( 'Could not find a package ID in the downloaded package. Expected: %s', 'fair' ),
+				$expected_did
+			)
+		);
+	}
+
+	if ( $actual_did->get_id() === $expected_did ) {
+		return $source;
+	}
+
+	return new WP_Error(
+		'fair.packages.did_verification.mismatch',
+		sprintf(
+			/* translators: %1$s: The expected DID, %2$s: The actual DID found. */
+			__( 'Package ID mismatch. Expected: %1$s, found: %2$s', 'fair' ),
+			$expected_did,
+			$actual_did->get_id()
+		)
+	);
+}
+
+/**
  * Get trusted keys for signature verification.
  *
  * @return array
