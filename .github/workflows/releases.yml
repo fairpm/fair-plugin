@@ -37,6 +37,18 @@ jobs:
             /tmp/${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.zip
             /tmp/fair-dist/*
 
+      - name: Upload to Fastly Object Storage
+        # note the plugin filename is always 'fair-connect', regardless of the repo name or slug
+        run: |
+          aws s3 cp /tmp/${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.zip s3://download.fair.pm/release/fair-connect-${{ steps.tag.outputs.tag }}.zip
+          aws s3 cp --recursive --exclude '*'  --include '*.zip' /tmp/fair-dist s3://download.fair.pm/release/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DOWNLOAD_BUCKET_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DOWNLOAD_BUCKET_SECRET_KEY }}
+          AWS_DEFAULT_REGION: 'us-west'
+          AWS_ENDPOINT_URL: 'https://us-west.object.fastlystorage.app'
+          AWS_REQUEST_CHECKSUM_CALCULATION: 'WHEN_REQUIRED'
+
       - name: Build provenance attestation
         uses: actions/attest-build-provenance@v2
         with:
