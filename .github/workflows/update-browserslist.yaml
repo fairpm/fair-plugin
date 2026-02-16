@@ -2,6 +2,8 @@ name: Update browserslist regex
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1" # Every Monday at midnight
 
 jobs:
   update-browserslist-regex:
