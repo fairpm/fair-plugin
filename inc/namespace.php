@@ -7,8 +7,6 @@
 
 namespace FAIR;
 
-use Fragen\Git_Updater;
-
 const CACHE_BASE = 'fair-';
 const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
 const NS_SEPARATOR = '\\';
@@ -44,9 +42,6 @@ function bootstrap() {
 	Upgrades\bootstrap();
 	User_Notification\bootstrap();
 	Version_Check\bootstrap();
-
-	// Self-update check.
-	( new Git_Updater\Lite( PLUGIN_FILE ) )->run();
 }
 
 /**
