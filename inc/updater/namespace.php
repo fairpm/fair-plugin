@@ -73,13 +73,89 @@ function get_packages() : array {
  * @return void
  */
 function run() {
+	if ( ! Updater::should_run_on_current_page() ) {
+		return;
+	}
+
 	$packages = get_packages();
 	$plugins = $packages['plugins'] ?? [];
 	$themes = $packages['themes'] ?? [];
-	$packages = array_merge( $plugins, $themes );
-	foreach ( $packages as $did => $filepath ) {
-		( new Updater( $did, $filepath ) )->run();
+
+	foreach ( $plugins as $did => $filepath ) {
+		Updater::register_plugin( $did, $filepath );
 	}
+
+	foreach ( $themes as $did => $filepath ) {
+		Updater::register_theme( $did, $filepath );
+	}
+
+	// Load hooks once for all packages.
+	Updater::load_hooks();
+}
+
+/**
+ * Register hooks to display update errors below plugin rows.
+ */
+function register_plugin_row_hooks(): void {
+	$packages = get_packages();
+	$plugins = $packages['plugins'] ?? [];
+
+	foreach ( $plugins as $did => $path ) {
+		$plugin_file = plugin_basename( $path );
+		add_action(
+			"after_plugin_row_{$plugin_file}",
+			function ( $file, $plugin_data, $status ) use ( $did ) {
+				display_plugin_update_error( $file, $plugin_data, $status, $did );
+			},
+			10,
+			3
+		);
+	}
+}
+
+/**
+ * Display a cached update error below the plugin row.
+ *
+ * @param string $plugin_file Path to the plugin file relative to the plugins directory.
+ * @param array  $plugin_data An array of plugin data.
+ * @param string $status      Status filter currently applied to the plugin list.
+ * @param string $did         The DID of the plugin.
+ */
+function display_plugin_update_error( $plugin_file, $plugin_data, $status, $did ): void {
+	$error = get_site_transient( CACHE_UPDATE_ERRORS . $did );
+	if ( ! is_wp_error( $error ) ) {
+		return;
+	}
+
+	$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
+	$colspan = $wp_list_table->get_column_count();
+
+	// Calculate time remaining until retry.
+	$error_data = $error->get_error_data();
+	$timestamp = $error_data['timestamp'] ?? 0;
+	$retry_time = $timestamp + CACHE_LIFETIME_FAILURE;
+	$time_remaining = human_time_diff( time(), $retry_time );
+
+	$message = sprintf(
+		/* translators: %1$s: Error message, %2$s: Time period */
+		__( 'Error: %1$s. Update checks paused for %2$s.', 'fair' ),
+		$error->get_error_message(),
+		$time_remaining,
+	);
+
+	$active_class = is_plugin_active( $plugin_file ) ? ' active' : '';
+
+	printf(
+		'<tr class="plugin-update-tr%1$s" id="fair-error-%2$s">
+			<td colspan="%3$d" class="plugin-update colspanchange">
+				<div class="update-message notice inline notice-error notice-alt"><p>%4$s</p></div>
+			</td>
+		</tr>',
+		esc_attr( $active_class ),
+		esc_attr( sanitize_title( $plugin_file ) ),
+		esc_attr( $colspan ),
+		esc_html( $message ),
+	);
 }
 
 /**
