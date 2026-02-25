@@ -1,5 +1,15 @@
 [unreleased]
 
+#### 1.3.0 / 2026-2-25
+
+* Improved automated release process
+* Improved caching errors
+* Clarify steps in RELEASE.MD by @cdils in https://github.com/fairpm/fair-plugin/pull/407
+* set update-browserslist.yaml to manual dispatch only by @chuckadams in https://github.com/fairpm/fair-plugin/pull/444
+* [bump-version] Bump version to 1.3.0 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/453
+* Generate POT - 2026-02-25-215627 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/454
+* Release merging 1.3.0 into main for production release! by @Ipstenu in https://github.com/fairpm/fair-plugin/pull/439
+
 #### 1.2.2 / 2025-12-24
 
 * Add RELEASE.md documenting the version release process by @cdils in https://github.com/fairpm/fair-plugin/pull/355
