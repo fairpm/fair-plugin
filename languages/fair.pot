@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-25T21:56:26+00:00\n"
+"POT-Creation-Date: 2026-02-25T22:03:18+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fair\n"
@@ -319,76 +319,77 @@ msgstr ""
 msgid "The PLC directory did not return the DID that was sent or the DID was invalid."
 msgstr ""
 
-#: inc/packages/namespace.php:50
+#: inc/packages/namespace.php:72
 msgid "ID is not a valid DID."
 msgstr ""
 
-#: inc/packages/namespace.php:55
+#: inc/packages/namespace.php:77
 msgid "DID could not be parsed as a URI."
 msgstr ""
 
-#: inc/packages/namespace.php:66
+#: inc/packages/namespace.php:88
 msgid "Unsupported DID method."
 msgstr ""
 
-#: inc/packages/namespace.php:146
+#: inc/packages/namespace.php:179
 msgid "The package's file list could not be retrieved."
 msgstr ""
 
-#: inc/packages/namespace.php:162
+#: inc/packages/namespace.php:195
 msgid "No FAIR packages were found."
 msgstr ""
 
-#: inc/packages/namespace.php:180
+#: inc/packages/namespace.php:213
 msgid "DID is not a valid package to fetch metadata for."
 msgstr ""
 
-#: inc/packages/namespace.php:191
+#: inc/packages/namespace.php:226
 msgid "Fetched metadata does not match the requested DID."
 msgstr ""
 
-#: inc/packages/namespace.php:224
-msgid "HTTP error code received"
+#: inc/packages/namespace.php:268
+#, php-format
+msgid "HTTP %d error received"
 msgstr ""
 
-#: inc/packages/namespace.php:306
+#: inc/packages/namespace.php:353
 msgid "DID does not contain valid signing keys."
 msgstr ""
 
-#: inc/packages/namespace.php:316
+#: inc/packages/namespace.php:363
 msgid "No releases found in the repository."
 msgstr ""
 
-#: inc/packages/namespace.php:954
+#: inc/packages/namespace.php:1004
 msgctxt "alias validation error"
 msgid "Multiple aliases set in DID; packages may only have a single alias"
 msgstr ""
 
-#: inc/packages/namespace.php:964
+#: inc/packages/namespace.php:1014
 msgctxt "alias validation error"
 msgid "Invalid FAIR alias format"
 msgstr ""
 
-#: inc/packages/namespace.php:973
+#: inc/packages/namespace.php:1023
 msgctxt "alias validation error"
 msgid "FAIR alias format exceeds valid domain length"
 msgstr ""
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:986
+#: inc/packages/namespace.php:1036
 #, php-format
 msgctxt "alias validation error"
 msgid "Missing verification record for \"%s\""
 msgstr ""
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:1000
+#: inc/packages/namespace.php:1050
 #, php-format
 msgctxt "alias validation error"
 msgid "Verification record for \"%s\" is invalid"
 msgstr ""
 
-#: inc/packages/namespace.php:1011
+#: inc/packages/namespace.php:1061
 msgctxt "alias validation error"
 msgid "DID in validation record does not match"
 msgstr ""
@@ -444,46 +445,52 @@ msgid "%s is reachable"
 msgstr ""
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:393
-#: inc/updater/class-updater.php:334
+#: inc/updater/class-lite.php:403
+#: inc/updater/class-updater.php:340
 #, php-format
 msgid "There is a new version of %s available."
 msgstr ""
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
-#: inc/updater/class-lite.php:404
-#: inc/updater/class-updater.php:345
+#: inc/updater/class-lite.php:414
+#: inc/updater/class-updater.php:351
 #, php-format
 msgid "View version %1$s details%2$s or %3$supdate now%2$s."
 msgstr ""
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:409
-#: inc/updater/class-updater.php:350
+#: inc/updater/class-lite.php:419
+#: inc/updater/class-updater.php:356
 #, php-format
 msgid "%s: update now"
 msgstr ""
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
-#: inc/updater/class-lite.php:416
-#: inc/updater/class-updater.php:357
+#: inc/updater/class-lite.php:426
+#: inc/updater/class-updater.php:363
 #, php-format
 msgid "View version %1$s details%2$s."
 msgstr ""
 
-#: inc/updater/class-lite.php:421
-#: inc/updater/class-updater.php:362
+#: inc/updater/class-lite.php:431
+#: inc/updater/class-updater.php:368
 msgid "Automatic update is unavailable for this theme."
 msgstr ""
 
+#. translators: %1$s: Error message, %2$s: Time period
+#: inc/updater/namespace.php:130
+#, php-format
+msgid "Error: %1$s. Update checks paused for %2$s."
+msgstr ""
+
 #. translators: %s: The DID of the package.
-#: inc/updater/namespace.php:141
+#: inc/updater/namespace.php:209
 #, php-format
 msgid "Verified signature for %s"
 msgstr ""
 
 #. translators: %s: The package's URL.
-#: inc/updater/namespace.php:157
+#: inc/updater/namespace.php:225
 #, php-format
 msgid "Signature verification could not be performed for the package: %s"
 msgstr ""
@@ -494,12 +501,12 @@ msgstr ""
 msgid "Updates served from the <a href=\"%1$s\">FAIR Package Manager</a> and <a href=\"%2$s\">AspirePress</a>"
 msgstr ""
 
-#: inc/version-check/namespace.php:97
+#: inc/version-check/namespace.php:93
 msgctxt "operating system check"
 msgid "your platform"
 msgstr ""
 
-#: inc/version-check/namespace.php:98
+#: inc/version-check/namespace.php:94
 msgctxt "browser version check"
 msgid "your browser"
 msgstr ""

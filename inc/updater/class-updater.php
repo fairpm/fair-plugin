@@ -21,69 +21,25 @@ use WP_Upgrader;
 class Updater {
 
 	/**
-	 * DID.
+	 * Registered plugins.
 	 *
-	 * @var string
+	 * @var array<string, PluginPackage>
 	 */
-	protected $did;
+	private static array $plugins = [];
 
 	/**
-	 * Absolute path to the "main" file.
+	 * Registered themes.
 	 *
-	 * For plugins, this is the PHP file with the plugin header. For themes,
-	 * this is the style.css file.
-	 *
-	 * @var string|null
+	 * @var array<string, ThemePackage>
 	 */
-	protected $filepath;
+	private static array $themes = [];
 
 	/**
-	 * Current installed version of the package.
-	 *
-	 * @var string|null
-	 */
-	protected $local_version;
-
-	/**
-	 * Package type, plugin or theme.
-	 *
-	 * @var string
-	 */
-	protected $type;
-
-	/**
-	 * Metadata document.
-	 *
-	 * @var \FAIR\Packages\MetadataDocument
-	 */
-	protected $metadata;
-
-	/**
-	 * Release document.
-	 *
-	 * @var \FAIR\Packages\ReleaseDocument
-	 */
-	protected $release;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param string $did DID.
-	 * @param string $filepath Absolute file path.
-	 */
-	public function __construct( string $did, string $filepath = '' ) {
-		$this->did = $did;
-		$this->filepath = $filepath;
-		$this->local_version = $filepath ? get_file_data( $filepath, [ 'Version' => 'Version' ] )['Version'] : null;
-	}
-
-	/**
-	 * Get API data.
+	 * Check if we should run on the current page.
 	 *
 	 * @global string $pagenow Current page.
-	 * @return void|WP_Error
 	 */
-	public function run() {
+	public static function should_run_on_current_page(): bool {
 		global $pagenow;
 
 		// Needed for mu-plugin.
@@ -101,20 +57,10 @@ class Updater {
 		$view_details     = [ 'plugin-install.php', 'theme-install.php' ];
 		$autoupdate_pages = [ 'admin-ajax.php', 'index.php', 'wp-cron.php' ];
 		if ( ! in_array( $pagenow, array_merge( $pages, $view_details, $autoupdate_pages ), true ) ) {
-			return;
+			return false;
 		}
 
-		$this->metadata = Packages\fetch_package_metadata( $this->did );
-		if ( is_wp_error( $this->metadata ) ) {
-			return $this->metadata;
-		}
-		$this->release = Packages\get_latest_release_from_did( $this->did );
-		if ( is_wp_error( $this->release ) ) {
-			return $this->release;
-		}
-		$this->type = str_replace( 'wp-', '', $this->metadata->type );
-
-		$this->load_hooks();
+		return true;
 	}
 
 	/**
@@ -122,16 +68,16 @@ class Updater {
 	 *
 	 * @return void
 	 */
-	public function load_hooks() {
-		add_filter( 'upgrader_source_selection', [ $this, 'upgrader_source_selection' ], 10, 4 );
-		add_filter( "{$this->type}s_api", [ $this, 'repo_api_details' ], 99, 3 );
+	public static function load_hooks() {
+		add_filter( 'upgrader_source_selection', [ __CLASS__, 'upgrader_source_selection' ], 10, 4 );
+		add_filter( 'plugins_api', [ __CLASS__, 'plugin_api_details' ], 99, 3 );
+		add_filter( 'themes_api', [ __CLASS__, 'theme_api_details' ], 99, 3 );
 
-		if ( ! empty( $this->filepath ) && ! empty( $this->local_version ) ) {
-			add_filter( "site_transient_update_{$this->type}s", [ $this, 'update_site_transient' ], 20, 1 );
-		}
+		add_filter( 'site_transient_update_plugins', [ __CLASS__, 'handle_update_plugins_transient' ], 20, 1 );
+		add_filter( 'site_transient_update_themes', [ __CLASS__, 'handle_update_themes_transient' ], 20, 1 );
 
 		if ( ! is_multisite() ) {
-			add_filter( 'wp_prepare_themes_for_js', [ $this, 'customize_theme_update_html' ] );
+			add_filter( 'wp_prepare_themes_for_js', [ __CLASS__, 'customize_theme_update_html' ] );
 		}
 
 		/**
@@ -144,7 +90,12 @@ class Updater {
 			add_filter( 'upgrader_pre_download', 'FAIR\\Updater\\verify_signature_on_download', 10, 4 );
 		}
 
-		Packages\add_package_to_release_cache( $this->did );
+		foreach ( self::$plugins as $package ) {
+			Packages\add_package_to_release_cache( $package->did );
+		}
+		foreach ( self::$themes as $package ) {
+			Packages\add_package_to_release_cache( $package->did );
+		}
 	}
 
 	/**
@@ -180,18 +131,20 @@ class Updater {
 
 		// Rename plugins.
 		if ( $upgrader instanceof Plugin_Upgrader ) {
-			if ( isset( $hook_extra['plugin'] ) ) {
-				$slug       = dirname( $hook_extra['plugin'] );
-				$new_source = trailingslashit( $remote_source ) . $slug;
+			if ( ! isset( $hook_extra['plugin'] ) ) {
+				return $source;
 			}
+			$slug       = dirname( $hook_extra['plugin'] );
+			$new_source = trailingslashit( $remote_source ) . $slug;
 		}
 
 		// Rename themes.
 		if ( $upgrader instanceof Theme_Upgrader ) {
-			if ( isset( $hook_extra['theme'] ) ) {
-				$slug       = $hook_extra['theme'];
-				$new_source = trailingslashit( $remote_source ) . $slug;
+			if ( ! isset( $hook_extra['theme'] ) ) {
+				return $source;
 			}
+			$slug       = $hook_extra['theme'];
+			$new_source = trailingslashit( $remote_source ) . $slug;
 		}
 
 		if ( basename( $source ) === $slug ) {
@@ -214,48 +167,130 @@ class Updater {
 	 *
 	 * @return stdClass|bool
 	 */
-	public function repo_api_details( $result, string $action, stdClass $response ) {
-		if ( "{$this->type}_information" !== $action ) {
+	public static function plugin_api_details( $result, string $action, stdClass $response ) {
+		if ( 'plugin_information' !== $action ) {
 			return $result;
 		}
 
-		// Exit if not our repo.
-		$slug_arr = [ $this->metadata->slug, $this->metadata->slug . '-' . Packages\get_did_hash( $this->did ) ];
-		if ( ! in_array( $response->slug, $slug_arr, true ) ) {
+		return self::handle_plugin_api( $result, $response->slug ?? '' );
+	}
+
+	/**
+	 * Put changelog in themes_api, return WP.org data as appropriate
+	 *
+	 * @param bool     $result   Default false.
+	 * @param string   $action   The type of information being requested from the Theme Installation API.
+	 * @param stdClass $response Repo API arguments.
+	 *
+	 * @return stdClass|bool
+	 */
+	public static function theme_api_details( $result, string $action, stdClass $response ) {
+		if ( 'theme_information' !== $action ) {
 			return $result;
 		}
 
-		return (object) Packages\get_package_data( $this->did );
+		return self::handle_theme_api( $result, $response->slug ?? '' );
+	}
+
+	/**
+	 * Find a package by its API slug.
+	 *
+	 * @param bool|object $result   The result object or false.
+	 * @param string      $slug     The package slug.
+	 * @param Package[]   $packages The packages to search.
+	 * @return bool|object The result.
+	 */
+	private static function find_package_by_api_slug( $result, string $slug, array $packages ) {
+		if ( empty( $slug ) ) {
+			return $result;
+		}
+
+		foreach ( $packages as $package ) {
+			$metadata = $package->get_metadata();
+			if ( is_wp_error( $metadata ) || ! $metadata ) {
+				continue;
+			}
+
+			// Check if slug matches (with or without DID hash suffix).
+			$slug_arr = [ $metadata->slug, $metadata->slug . '-' . Packages\get_did_hash( $package->did ) ];
+			if ( in_array( $slug, $slug_arr, true ) ) {
+				return (object) Packages\get_package_data( $package->did );
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Handle site_transient_update_plugins filter.
+	 *
+	 * @param stdClass $transient Plugin|Theme update transient.
+	 * @return stdClass The modified transient.
+	 */
+	public static function handle_update_plugins_transient( $transient ) {
+		$transient = self::update_site_transient( $transient, self::$plugins );
+
+		// WordPress expects plugin responses as objects.
+		foreach ( $transient->response ?? [] as $key => $value ) {
+			$transient->response[ $key ] = (object) $value;
+		}
+		foreach ( $transient->no_update ?? [] as $key => $value ) {
+			$transient->no_update[ $key ] = (object) $value;
+		}
+
+		return $transient;
+	}
+
+	/**
+	 * Handle site_transient_update_themes filter.
+	 *
+	 * @param stdClass $transient Plugin|Theme update transient.
+	 * @return stdClass The modified transient.
+	 */
+	public static function handle_update_themes_transient( $transient ) {
+		return self::update_site_transient( $transient, self::$themes );
 	}
 
 	/**
 	 * Hook into site_transient_update_{plugins|themes} to update from GitHub.
 	 *
 	 * @param stdClass $transient Plugin|Theme update transient.
-	 *
+	 * @param array<string, Package> $packages Array of packages to process.
 	 * @return stdClass
 	 */
-	public function update_site_transient( $transient ) {
+	private static function update_site_transient( $transient, array $packages ) {
 		// needed to fix PHP 7.4 warning.
 		if ( ! is_object( $transient ) ) {
 			$transient = new stdClass();
 		}
 
-		$rel_path = plugin_basename( $this->filepath );
-		$rel_path = 'theme' === $this->type ? dirname( $rel_path ) : $rel_path;
-		$response = Packages\get_package_data( $this->did );
-		if ( is_wp_error( $response ) ) {
-			return $transient;
-		}
-		$response['slug'] = $response['slug_didhash'];
-		$response = 'plugin' === $this->type ? (object) $response : $response;
-		$is_compatible = Packages\check_requirements( $this->release );
+		foreach ( $packages as $package ) {
+			if ( empty( $package->filepath ) || empty( $package->local_version ) ) {
+				continue;
+			}
 
-		if ( $is_compatible && version_compare( $this->release->version, $this->local_version, '>' ) ) {
-			$transient->response[ $rel_path ] = $response;
-		} else {
-			// Add repo without update to $transient->no_update for 'View details' link.
-			$transient->no_update[ $rel_path ] = $response;
+			$release = $package->get_release();
+			if ( is_wp_error( $release ) || ! $release ) {
+				continue;
+			}
+
+			$response = Packages\get_package_data( $package->did );
+			if ( is_wp_error( $response ) ) {
+				continue;
+			}
+
+			$rel_path = $package->get_relative_path();
+
+			$response['slug'] = $response['slug_didhash'];
+
+			$is_compatible = Packages\check_requirements( $release );
+
+			if ( $is_compatible && version_compare( $release->version, $package->local_version, '>' ) ) {
+				$transient->response[ $rel_path ] = $response;
+			} else {
+				// Add repo without update to $transient->no_update for 'View details' link.
+				$transient->no_update[ $rel_path ] = $response;
+			}
 		}
 
 		return $transient;
@@ -270,17 +305,22 @@ class Updater {
 	 *
 	 * @return array
 	 */
-	public function customize_theme_update_html( $prepared_themes ) {
-		$theme = $this->metadata;
+	public static function customize_theme_update_html( $prepared_themes ) {
+		foreach ( self::$themes as $package ) {
+			$theme = $package->get_metadata();
+			if ( is_wp_error( $theme ) || ! $theme ) {
+				continue;
+			}
 
-		if ( 'theme' !== $this->type ) {
-			return $prepared_themes;
-		}
+			if ( ! isset( $prepared_themes[ $theme->slug ] ) ) {
+				continue;
+			}
 
-		if ( ! empty( $prepared_themes[ $theme->slug ]['hasUpdate'] ) ) {
-			$prepared_themes[ $theme->slug ]['update'] = $this->append_theme_actions_content( $theme );
-		} else {
-			$prepared_themes[ $theme->slug ]['description'] .= $this->append_theme_actions_content( $theme );
+			if ( ! empty( $prepared_themes[ $theme->slug ]['hasUpdate'] ) ) {
+				$prepared_themes[ $theme->slug ]['update'] = self::append_theme_actions_content( $theme );
+			} else {
+				$prepared_themes[ $theme->slug ]['description'] .= self::append_theme_actions_content( $theme );
+			}
 		}
 
 		return $prepared_themes;
@@ -298,7 +338,7 @@ class Updater {
 	 *
 	 * @return string (content buffer)
 	 */
-	protected function append_theme_actions_content( $theme ) {
+	private static function append_theme_actions_content( $theme ) {
 		$details_url       = esc_attr(
 			add_query_arg(
 				[
@@ -375,5 +415,138 @@ class Updater {
 		}
 
 		return trim( ob_get_clean(), '1' );
+	}
+
+	/**
+	 * Handle plugin API requests.
+	 *
+	 * @param bool|object $result The result object or false.
+	 * @param string      $slug   The plugin slug.
+	 * @return bool|object The result.
+	 */
+	private static function handle_plugin_api( $result, string $slug ) {
+		return self::find_package_by_api_slug( $result, $slug, self::$plugins );
+	}
+
+	/**
+	 * Handle theme API requests.
+	 *
+	 * @param bool|object $result The result object or false.
+	 * @param string      $slug   The theme slug.
+	 * @return bool|object The result.
+	 */
+	private static function handle_theme_api( $result, string $slug ) {
+		return self::find_package_by_api_slug( $result, $slug, self::$themes );
+	}
+
+	/**
+	 * Register a plugin with the registry.
+	 *
+	 * @param string $did      The DID of the plugin.
+	 * @param string $filepath Absolute path to the main plugin file.
+	 */
+	public static function register_plugin( string $did, string $filepath ): void {
+		self::$plugins[ $did ] = new PluginPackage( $did, $filepath );
+	}
+
+	/**
+	 * Register a theme with the registry.
+	 *
+	 * @param string $did      The DID of the theme.
+	 * @param string $filepath Absolute path to the theme's style.css file.
+	 */
+	public static function register_theme( string $did, string $filepath ): void {
+		self::$themes[ $did ] = new ThemePackage( $did, $filepath );
+	}
+
+	/**
+	 * Get a plugin by DID.
+	 *
+	 * @param string $did The DID to look up.
+	 */
+	public static function get_plugin( string $did ): ?PluginPackage {
+		return self::$plugins[ $did ] ?? null;
+	}
+
+	/**
+	 * Get a theme by DID.
+	 *
+	 * @param string $did The DID to look up.
+	 */
+	public static function get_theme( string $did ): ?ThemePackage {
+		return self::$themes[ $did ] ?? null;
+	}
+
+	/**
+	 * Get all registered plugins.
+	 *
+	 * @return array<string, PluginPackage> All registered plugins.
+	 */
+	public static function get_plugins(): array {
+		return self::$plugins;
+	}
+
+	/**
+	 * Get all registered themes.
+	 *
+	 * @return array<string, ThemePackage> All registered themes.
+	 */
+	public static function get_themes(): array {
+		return self::$themes;
+	}
+
+	/**
+	 * Find a plugin by the plugin file path (relative to plugins directory).
+	 *
+	 * @param string $plugin_file Plugin file path relative to plugins directory (e.g., 'my-plugin/my-plugin.php').
+	 */
+	public static function get_plugin_by_file( string $plugin_file ): ?PluginPackage {
+		$plugin_path = trailingslashit( WP_PLUGIN_DIR ) . $plugin_file;
+
+		foreach ( self::$plugins as $package ) {
+			if ( $package->filepath === $plugin_path ) {
+				return $package;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Find a plugin by its slug.
+	 *
+	 * @param string $slug The plugin directory name.
+	 */
+	public static function get_plugin_by_slug( string $slug ): ?PluginPackage {
+		foreach ( self::$plugins as $package ) {
+			if ( $package->get_slug() === $slug ) {
+				return $package;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Find a theme by its slug.
+	 *
+	 * @param string $slug The theme stylesheet.
+	 */
+	public static function get_theme_by_slug( string $slug ): ?ThemePackage {
+		foreach ( self::$themes as $package ) {
+			if ( $package->get_slug() === $slug ) {
+				return $package;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Reset the registry.
+	 */
+	public static function reset(): void {
+		self::$plugins = [];
+		self::$themes  = [];
 	}
 }
