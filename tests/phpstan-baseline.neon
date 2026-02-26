@@ -1,0 +1,109 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Function sanitize_hex_color\(\) should return string but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: ../inc/icons/svg.php
+
+		-
+			message: '#^Action callback returns bool but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: ../inc/packages/admin/namespace.php
+
+		-
+			message: '#^Callback expects 0 parameters, \$accepted_args is set to 3\.$#'
+			identifier: arguments.count
+			count: 1
+			path: ../inc/packages/admin/namespace.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: ../inc/packages/class-metadatadocument.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: ../inc/packages/class-releasedocument.php
+
+		-
+			message: '#^Callback expects 4 parameters, \$accepted_args is set to 3\.$#'
+			identifier: arguments.count
+			count: 1
+			path: ../inc/packages/namespace.php
+
+		-
+			message: '#^Call to static method add_hook\(\) on an unknown class WP_CLI\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../inc/packages/wp-cli/compat/namespace.php
+
+		-
+			message: '#^Call to static method get_runner\(\) on an unknown class WP_CLI\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../inc/packages/wp-cli/compat/namespace.php
+
+		-
+			message: '#^Call to static method halt\(\) on an unknown class WP_CLI\.$#'
+			identifier: class.notFound
+			count: 5
+			path: ../inc/packages/wp-cli/compat/namespace.php
+
+		-
+			message: '#^Call to static method log\(\) on an unknown class WP_CLI\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../inc/packages/wp-cli/compat/namespace.php
+
+		-
+			message: '#^Call to static method run_command\(\) on an unknown class WP_CLI\.$#'
+			identifier: class.notFound
+			count: 3
+			path: ../inc/packages/wp-cli/compat/namespace.php
+
+		-
+			message: '#^Call to static method warning\(\) on an unknown class WP_CLI\.$#'
+			identifier: class.notFound
+			count: 3
+			path: ../inc/packages/wp-cli/compat/namespace.php
+
+		-
+			message: '#^Caught class WP_CLI\\ExitException not found\.$#'
+			identifier: class.notFound
+			count: 2
+			path: ../inc/packages/wp-cli/compat/namespace.php
+
+		-
+			message: '#^Function WP_CLI\\Utils\\get_flag_value not found\.$#'
+			identifier: function.notFound
+			count: 3
+			path: ../inc/packages/wp-cli/compat/namespace.php
+
+		-
+			message: '#^Used function WP_CLI\\Utils\\get_flag_value not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: ../inc/packages/wp-cli/compat/namespace.php
+
+		-
+			message: '#^Action callback returns string but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: ../inc/pings/namespace.php
+
+		-
+			message: '#^Found usage of constant MULTISITE\. Use is_multisite\(\) instead\.$#'
+			identifier: phpstanWP.wpConstant.fetch
+			count: 1
+			path: ../inc/settings/namespace.php
+
+		-
+			message: '#^Call to static method success\(\) on an unknown class WP_CLI\.$#'
+			identifier: class.notFound
+			count: 1
+			path: ../inc/updater/namespace.php

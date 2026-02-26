@@ -5,7 +5,6 @@ on:
     branches:
       - main
   pull_request:
-
   workflow_dispatch:
 
 # Cancels all previous workflow runs for pull requests that have not completed.
@@ -20,44 +19,40 @@ concurrency:
 permissions: {}
 
 jobs:
-  # Runs the PHP coding standards checks.
-  #
-  # Violations are reported inline with annotations.
-  #
-  # Performs the following steps:
-  # - Checks out the repository.
-  # - Sets up PHP.
-  # - Installs Composer dependencies.
-  # - Make Composer packages available globally.
-  # - Runs PHPCS on the full codebase (warnings excluded).
-  # - Ensures version-controlled files are not modified or deleted.
-  phpcs:
+  lint:
     name: Run coding standards checks
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    timeout-minutes: 20
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          show-progress: ${{ runner.debug == '1' && 'true' || 'false' }}
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2.33.0
+      - name: Setup cache
+        uses: actions/cache@v5
         with:
-          coverage: none
+          key: ${{ runner.os }}-${{ hashFiles('composer.json') }} # Note that lock file will change between runs.
+          path: .cache
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start the development environment
+        run: npm run env start
 
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # v3.1.1
+        run: npm run test:php:install-deps
 
-      - name: Make Composer packages available globally
-        run: echo "${PWD}/vendor/bin" >> $GITHUB_PATH
+      - name: Lint PHPCS
+        # TODO: Remove the flag once all warnings are fixed.
+        run: npm run lint:php:phpcs -- -- -- --warning-severity=0
 
-      - name: Run PHPCS on all files
-        id: phpcs-files
-        run: phpcs . -n --report-full
-
-      - name: Ensure version-controlled files are not modified during the checks
-        run: git diff --exit-code
+      - name: Run PHPStan
+        run: npm run lint:php:phpstan
