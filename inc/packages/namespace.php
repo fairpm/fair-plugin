@@ -697,6 +697,9 @@ function get_package_data( $did ) {
 		$response['author'] = [
 			'display_name' => $metadata->authors[0]->name,
 		];
+	} else {
+		$response['author'] = $metadata->authors[0]->name;
+		$response['author_uri'] = $metadata->authors[0]->url;
 	}
 
 	return $response;
