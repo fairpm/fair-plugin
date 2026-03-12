@@ -30,7 +30,7 @@ A production release represents a stable, tested version ready for general use.
 
 ### Release Candidate (RC)
 A release candidate is a pre-release version intended for testing and validation before the final production release. Multiple RCs may be created and tested before the final release.
-- **Version format:** `MAJOR.MINOR.PATCH-rcN` (e.g., `1.2.0-rc1`, `1.2.0-rc2`)
+- **Version format:** `MAJOR.MINOR.PATCH-RC#` (e.g., `1.2.0-RC1`, `1.2.0-RC2`)
 - **Merge target:** `development` branch
 - **GitHub release:** Marked as a pre-release (not the latest release)
 - **Announcement:** Typically not announced to production users; may be shared in Discussions for testing feedback
@@ -77,7 +77,7 @@ Follow these steps to release an RC from the `release/X.Y.Z` branch. Multiple RC
 2. Complete the following fields:
 
     - **Use workflow from:** Select **Branch: release/X.Y.Z**
-    - **New version being released:** Enter the RC version using the format `X.Y.Z-rcN` (e.g., `1.2.0-rc1`, `1.2.0-rc2`)
+    - **New version being released:** Enter the RC version using the format `X.Y.Z-RC#` (e.g., `1.2.0-RC1`, `1.2.0-RC2`)
 
 3. Click the **Run workflow** button to start the release process.
 
@@ -124,11 +124,11 @@ The `release/X.Y.Z` branch must be merged to `development` for testing and valid
 2. Click the **Draft a new release** button.
 
 3. In the **Select tag** field:
-    - Select the tag that matches the version you just bumped to (e.g., `1.2.0-rc1`).
+    - Select the tag that matches the version you just bumped to (e.g., `1.2.0-RC1`).
     - Create a new tag if it does not appear in the dropdown.
     - **Target branch:** Select `development`
 
-4. In the **Release title** field, enter a title for the release (e.g., `1.2.0-rc1`).
+4. In the **Release title** field, enter a title for the release (e.g., `1.2.0-RC1`).
 
 5. Under **Release notes**:
    - Leave the **Describe this release** field empty or add minimal testing instructions (release notes will be generated when the final production release is created).
@@ -157,10 +157,10 @@ The `release/X.Y.Z` branch must be merged to `development` for testing and valid
 ### If additional testing iterations are needed:
 1. Continue making fixes on the `release/X.Y.Z` branch
 2. Merge fixes back to `development`
-3. Repeat steps 2-6 for the next RC (e.g., `1.2.0-rc2`)
+3. Repeat steps 2-6 for the next RC (e.g., `1.2.0-RC2`)
 
 ### If the RC is validated and ready for production:
-Proceed to the **Production Release** workflow below to merge `development` → `main` for the final release.
+Proceed to the **Production Release** workflow below for the final release.
 
 ---
 
@@ -295,13 +295,18 @@ Flush the caches in the following order:
 1. Log in to Fastly and go to the Fair.pm page: https://manage.fastly.com/configure/services/0EAkUOqF5q35zrk6oobCP4
 2. From the Purge menu option, select **Purge URL**
 3. Leave subdomain blank and put in the path `/wp-json/git-updater/v1/update-api/`
-4. When prompted, purse another URL
+4. When prompted, purge another URL
 5. Put in the subdomain `api` and the path `/git-updater/v1/update-api/`
 
 ## 9. Verify the release:
 - Visit the [Releases page](https://github.com/fairpm/fair-plugin/releases) to confirm latest release.
-- Go to `https://api.fair.pm/git-updater/v1/update-api/?slug=fair-plugin` and check 
+- Go to `https://api.fair.pm/git-updater/v1/update-api/?slug=fair-plugin` and check
 - Check any site using FAIR Connect to ensure the new version is available.
+
+## 10. Merge the new production code back
+
+- Merge `main` back into `development`
+- Create a new branch for the next release off of `main`
 
 Guess what?
 
