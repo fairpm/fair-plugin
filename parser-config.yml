@@ -1,0 +1,223 @@
+version: 1
+
+project:
+  name: fair-plugin
+  repository: Block2Docs/fair-plugin/  # GitHub owner/repo slug (e.g. "owner/repo")
+  default_branch: main
+
+# Define the sources for the parser.
+# Possible sources: code, tests, docblocks, pull_requests, issues, issue_comments, pull_request_comments.
+#
+# Common parameters per source:
+# - enabled (bool): true|false
+# - include (sequence): inclusion filters
+# - exclude (sequence): exclusion filters
+#
+# Filter item shapes:
+# 1) Plain string
+#    - For code/tests/docblocks: treated as a path/glob filter.
+#    - For tracker sources: treated as a source-native filter value.
+# 2) Typed rule object
+#    - type (string): filter kind
+#    - value (string|sequence<string>): one or more filter values
+#
+# Allowed typed rule kinds by source:
+# - code, tests: path
+# - docblocks: tag, path
+# - pull_requests, issues, issue_comments, pull_request_comments: author, state, label
+#
+# Examples:
+# - code.exclude:
+#   - "**/vendor/**"
+#   - type: path
+#     value: "packages/legacy/**"
+# - docblocks.include:
+#   - type: tag
+#     value: ["@public", "@api"]
+# - pull_requests.exclude:
+#   - type: author
+#     value: "dependabot"
+#   - type: state
+#     value: "open"
+# - issues.exclude:
+#   - type: label
+#     value: ["wontfix", "duplicate"]
+sources:
+  code:
+    enabled: true
+    include:
+      - "packages/**"
+    exclude:
+      - "**/node_modules/**"
+      - "**/vendor/**"
+  tests:
+    enabled: true
+    include:
+      - "packages/**/test/**"
+  docblocks:
+    enabled: true
+    include:
+      - type: "tag"
+        value: ["@public", "@api", "@internal"]
+  pull_requests:
+    enabled: true
+    exclude:
+      - type: author
+        value: dependabot
+      - type: state
+        value: open
+  issues:
+    enabled: true
+    exclude:
+      - type: state
+        value: open
+  issue_comments:
+    enabled: false
+  pull_request_comments:
+    enabled: false
+
+# Define the docs types to generate. Each doc type can specify:
+# - enabled (bool): true|false
+# - audience (string): target audience for the doc type (e.g., developer, user)
+# - evidence_policy: rules for which evidence sources are mandatory, preferred, or ignored for claims in this doc type
+#   - require: mandatory sources; claims/doc output are invalid without them
+#   - prefer: higher-priority sources when multiple valid sources exist; not mandatory
+#   - ignore: sources that must not be used for this doc type
+#
+# Possible extensions for the future:
+# - `evidence_policy` params with `evidence_overrides` per `doc_type`.
+# - `output_format` to specify the desired output format for each doc type (e.g., markdown, html, pdf).
+# - `template` to specify a custom template for rendering each doc type, allowing for different layouts or styles based on the audience or content type.
+#
+# Example:
+#   api_reference:
+#     output:
+#       format: markdown
+#       template: api_reference
+
+doc_types:
+  api_reference:
+    enabled: true
+    audience: developer
+    evidence_policy:
+      require:
+        - code
+        - docblocks
+      ignore:
+        - pull_requests
+  changelog:
+    enabled: true
+    audience: developer
+    evidence_policy:
+      require:
+        - code
+      prefer:
+        - pull_requests
+  user_guide:
+    enabled: true
+    audience: end-user
+    evidence_policy:
+      require:
+        - code
+      prefer:
+        - docblocks 
+  dev_note:
+    enabled: true
+    evidence_policy:
+      require:
+        - code
+        - pull_requests
+  field_guide:
+    enabled: true
+    evidence_policy:
+      require:
+        - code
+        - docblocks
+
+# Define the evidence requirements and policies for claims made in the generated docs.
+# This section can specify:
+# - minimum_sources: the minimum number of independent sources required to support a claim
+# - freshness: rules about how old evidence can be to be considered valid (e.g., max age in days for issues or PRs) 
+evidence:
+  minimum_sources: 2
+  freshness:
+    max_issue_age_days: 90
+    max_pr_age_days: 180
+
+# Define inference rules and settings for generating content that is not explicitly stated in the sources but can be reasonably inferred.
+# This section can specify:
+# - mode: the inference mode (e.g., constrained_synthesis, evidence_driven, gap_filling)
+# - require_label_for_inferred_content: whether inferred content must be explicitly labeled as such
+# - label_for_inferred_content: the label to use for inferred content if required
+# - allow_gap_filling: whether the system is allowed to generate content to fill gaps in
+inference:
+  mode: constrained_synthesis
+  require_label_for_inferred_content: true
+  label_for_inferred_content: "[inferred]"
+  allow_gap_filling: false
+
+# Define the traceability and documentation generation settings, including how to handle insufficient or conflicting evidence.
+# 
+# - traceability: settings for generating traceability artifacts that link claims back to their supporting evidence
+# - failure_behavior: rules for how to handle cases where evidence is insufficient or conflicting (e.g., fail, mark_uncertain, ignore)
+# The traceability settings specify:
+# - enabled: whether to generate traceability artifacts
+# - include_in_final_docs: whether to include traceability information in the final generated documentation
+# - artifact_format: the format for traceability artifacts (e.g., json, csv)
+# The failure_behavior settings specify:
+# - on_insufficient_evidence: the action to take when a claim does not have enough supporting evidence (e.g., fail, mark_uncertain, ignore)
+# - on_conflicting_evidence: the action to take when there are conflicting pieces of evidence for a claim (e.g., fail, mark_uncertain, ignore)
+# 
+# Example of a claim with supporting evidence from multiple sources, demonstrating how the system can extract and correlate information to generate a well-supported documentation claim.
+#
+# ## Authentication
+#
+# The API supports token-based authentication via bearer tokens.
+#
+# {
+#   "doc_type": "api_reference",
+#   "claims": [
+#     {
+#       "id": "claim.auth.bearer_tokens",
+#       "text": "The API supports token-based authentication via bearer tokens.",
+#       "status": "supported",
+#       "evidence": [
+#         {
+#           "source": "code",
+#           "location": "packages/auth/src/AuthMiddleware.php:42",
+#           "excerpt": "if (str_starts_with($header, 'Bearer ')) { ... }"
+#         },
+#         {
+#           "source": "docblocks",
+#           "location": "packages/auth/src/AuthMiddleware.php:10",
+#           "excerpt": "@description Validates Bearer tokens from Authorization header."
+#         }
+#       ]
+#     }
+#   ]
+# }
+outputs:
+  traceability:
+    enabled: true
+    include_in_final_docs: false
+    artifact_format: json
+  failure_behavior:
+    on_insufficient_evidence: fail
+    on_conflicting_evidence: mark_uncertain
+
+# Define execution settings for the parser, including caching, debug file generation, and strict mode.
+# 
+# - cache: whether to enable caching of intermediate results to speed up subsequent runs
+# - save_debug_files: whether to save debug files with intermediate data and processing details for troubleshooting
+# - strict_mode: whether to enforce strict validation of sources and evidence, causing the parser to fail if any issues are detected with the input data or evidence quality
+# 
+# Cache
+# Uses cached results so repeated runs are faster and avoid reprocessing unchanged inputs.
+# Debug Files
+# Writes intermediate outputs (parsed source snapshots, evidence maps, temporary generation artifacts) for debugging and auditability.
+# Strict Mode
+# Enforces strict validation/error handling. Missing required config, invalid evidence, or schema/rule violations fail the run instead of continuing with warnings.
+execution:
+  cache: true
+  save_debug_files: true
+  strict_mode: true
