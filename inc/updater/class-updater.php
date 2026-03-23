@@ -90,6 +90,8 @@ class Updater {
 			add_filter( 'upgrader_pre_download', 'FAIR\\Updater\\verify_signature_on_download', 10, 4 );
 		}
 
+		add_filter( 'upgrader_source_selection', 'FAIR\\Updater\\verify_did_on_source_selection', 9, 4 );
+
 		foreach ( self::$plugins as $package ) {
 			Packages\add_package_to_release_cache( $package->did );
 		}
