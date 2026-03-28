@@ -27,8 +27,6 @@ const CACHE_DID_FOR_INSTALL = 'fair-install-did';
 const CONTENT_TYPE = 'application/json+fair';
 const SERVICE_ID = 'FairPackageManagementRepo';
 
-// phpcs:disable WordPress.NamingConventions.ValidVariableName
-
 /**
  * Get the PLC client singleton.
  *
@@ -1166,5 +1164,3 @@ function get_plugin_information( $result, $action, $args ) {
 
 	return (object) $api_data;
 }
-
-// phpcs:enable
