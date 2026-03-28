@@ -11,6 +11,7 @@ use const FAIR\CACHE_LIFETIME_FAILURE;
 use const FAIR\Packages\CACHE_DID_FOR_INSTALL;
 use const FAIR\Packages\CACHE_RELEASE_PACKAGES;
 use const FAIR\Packages\CACHE_UPDATE_ERRORS;
+use FAIR\DID\Crypto\DidCodec;
 use FAIR\Packages;
 use function FAIR\is_wp_cli;
 use Plugin_Upgrader;
@@ -254,15 +255,14 @@ function get_trusted_keys(): array {
 	$recoded_keys = [];
 	foreach ( $keys as $key ) {
 		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		$str = Base58BTC::decode( $key->publicKeyMultibase );
+		$decoded = DidCodec::from_multibase_key( $key->publicKeyMultibase );
 
 		// Ed25519 keys only.
-		if ( substr( $str, 0, 2 ) !== "\xed\x01" ) {
+		if ( $decoded['codec'] !== DidCodec::MULTICODEC_ED25519_PUB ) {
 			continue;
 		}
 
-		$key_material = substr( $str, 2 );
-		$recoded_keys[] = base64_encode( $key_material );
+		$recoded_keys[] = base64_encode( $decoded['key'] );
 	}
 
 	return $recoded_keys;
