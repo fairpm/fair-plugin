@@ -245,7 +245,7 @@ function get_trusted_keys(): array {
 		return [];
 	}
 
-	$keys = $doc->get_fair_signing_keys();
+	$keys = Packages\get_fair_signing_keys( $doc );
 	if ( empty( $keys ) ) {
 		return [];
 	}
@@ -254,8 +254,7 @@ function get_trusted_keys(): array {
 	// Core expects base64-encoded keys.
 	$recoded_keys = [];
 	foreach ( $keys as $key ) {
-		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		$decoded = DidCodec::from_multibase_key( $key->publicKeyMultibase );
+		$decoded = DidCodec::from_multibase_key( $key['publicKeyMultibase'] );
 
 		// Ed25519 keys only.
 		if ( $decoded['codec'] !== DidCodec::MULTICODEC_ED25519_PUB ) {
