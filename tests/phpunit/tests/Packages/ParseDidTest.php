@@ -38,7 +38,7 @@ class ParseDidTest extends WP_UnitTestCase {
 	/**
 	 * Test should return the DID string even with minimal method-specific-id.
 	 *
-	 * parse_did() only validates format, not content.
+	 * Parse_did() only validates format, not content.
 	 */
 	public function test_should_return_string_for_minimal_plc_did() {
 		$did = 'did:plc:x';
