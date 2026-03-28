@@ -11,6 +11,7 @@ use const FAIR\CACHE_BASE;
 use const FAIR\CACHE_LIFETIME;
 use const FAIR\CACHE_LIFETIME_FAILURE;
 use FAIR\DID\PLC\PlcClient;
+use FAIR\WordPress\DID\Parsers\PluginHeaderParser;
 use FAIR\Updater;
 use function FAIR\Packages\Admin\sort_sections_in_api;
 use Plugin_Upgrader;
@@ -190,8 +191,6 @@ function get_did_document( string $id ) {
  * @return string|WP_Error The DID string on success, WP_Error on failure.
  */
 function get_did_by_path( $path, $type ) {
-	global $wp_filesystem;
-
 	if ( $type === 'theme' ) {
 		if ( ! str_ends_with( $path, 'style.css' ) ) {
 			$path = trailingslashit( $path ) . 'style.css';
@@ -204,27 +203,11 @@ function get_did_by_path( $path, $type ) {
 	}
 
 	if ( $type === 'plugin' ) {
-		if ( str_ends_with( $path, '.php' ) ) {
-			$id = get_file_data( $path, [ 'id' => 'Plugin ID' ] )['id'];
+		$parser = new PluginHeaderParser();
+		$headers = $parser->parse( $path );
+		$id = $headers['plugin_id'] ?? '';
+		if ( $id ) {
 			return parse_did( $id );
-		}
-
-		$files = $wp_filesystem->dirlist( $path ) ?: false;
-		if ( ! $files ) {
-			// Finding a DID is impossible.
-			return new WP_Error( 'fair.packages.dirlist_failed', __( "The package's file list could not be retrieved.", 'fair' ) );
-		}
-
-		foreach ( $files as $filename => $data ) {
-			if ( $data['type'] !== 'f' || ! str_ends_with( $filename, '.php' ) ) {
-				continue;
-			}
-
-			$filepath = trailingslashit( $path ) . $filename;
-			$id = get_file_data( $filepath, [ 'id' => 'Plugin ID' ] )['id'];
-			if ( $id ) {
-				return parse_did( $id );
-			}
 		}
 	}
 
