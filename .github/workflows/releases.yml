@@ -17,12 +17,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@master
 
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction
+
       - name: Get tag
         id: tag
         run: echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Build project
-        run: git archive -o /tmp/${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.zip --prefix=${{ github.event.repository.name }}/ ${{ steps.tag.outputs.tag }}
+        run: |
+          git archive -o /tmp/${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.zip --prefix=${{ github.event.repository.name }}/ ${{ steps.tag.outputs.tag }}
+          mkdir -p /tmp/vendor-stage/${{ github.event.repository.name }}
+          cp -r vendor /tmp/vendor-stage/${{ github.event.repository.name }}/vendor
+          cd /tmp/vendor-stage
+          zip -r /tmp/${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.zip ${{ github.event.repository.name }}/vendor/
 
       - name: Create WP distribution files
         run: bin/bundle.sh
