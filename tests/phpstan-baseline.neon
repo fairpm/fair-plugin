@@ -19,6 +19,12 @@ parameters:
 			path: ../inc/packages/admin/namespace.php
 
 		-
+			message: '#^Class FAIR\\Updater\\Updater does not have a constructor and must be instantiated without any parameters\.$#'
+			identifier: new.noConstructor
+			count: 1
+			path: ../inc/packages/admin/namespace.php
+
+		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
@@ -29,12 +35,6 @@ parameters:
 			identifier: new.static
 			count: 1
 			path: ../inc/packages/class-releasedocument.php
-
-		-
-			message: '#^Callback expects 4 parameters, \$accepted_args is set to 3\.$#'
-			identifier: arguments.count
-			count: 1
-			path: ../inc/packages/namespace.php
 
 		-
 			message: '#^Call to static method add_hook\(\) on an unknown class WP_CLI\.$#'
