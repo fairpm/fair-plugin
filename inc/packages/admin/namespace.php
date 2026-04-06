@@ -124,7 +124,7 @@ function handle_did_during_ajax( $result, $action, $args ) {
 		return $result;
 	}
 
-	// FIXME: Updater\Updater has neither a constructor nor a run() method
+	// FIXME: Updater\Updater has neither a constructor nor a run() method.
 	( new Updater\Updater( $did ) )->run();
 
 	Packages\add_package_to_release_cache( $did );
