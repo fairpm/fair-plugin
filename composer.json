@@ -28,7 +28,7 @@
         }
     },
     "scripts": {
-        "lint:phpcs": "phpcs . --warning-severity=0",
+        "lint:phpcs": "phpcs .",
         "lint:phpstan": "phpstan analyse --verbose --memory-limit=2G",
         "lint": [
             "@lint:phpcs",
