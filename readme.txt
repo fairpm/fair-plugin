@@ -6,7 +6,7 @@ Tags: packages, updater, installer, technical independence
 Requires at least: 5.4
 Requires PHP: 8.0
 Tested up to: 6.9
-Stable tag: 1.1.0
+Stable tag: 1.4.0
 
 FAIR is a system for using **F**ederated **a**nd **I**ndependent **R**epositories in WordPress.
 
