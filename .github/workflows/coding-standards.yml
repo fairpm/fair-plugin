@@ -35,24 +35,11 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('composer.json') }} # Note that lock file will change between runs.
           path: .cache
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          cache: 'npm'
-          node-version: '18'
+      - name: Set up PHP
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2.33.0
 
       - name: Install dependencies
-        run: npm install
+        run: composer install
 
-      - name: Start the development environment
-        run: npm run env start
-
-      - name: Install Composer dependencies
-        run: npm run test:php:install-deps
-
-      - name: Lint PHPCS
-        # TODO: Remove the flag once all warnings are fixed.
-        run: npm run lint:php:phpcs -- -- -- --warning-severity=0
-
-      - name: Run PHPStan
-        run: npm run lint:php:phpstan
+      - name: Lint PHP
+        run: composer run lint
