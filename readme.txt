@@ -4,9 +4,9 @@ Contributors: FAIR Contributors
 License: GPLv2 or later
 Tags: packages, updater, installer, technical independence
 Requires at least: 5.4
-Requires PHP: 7.4
+Requires PHP: 8.0
 Tested up to: 6.9
-Stable tag: 1.1.0
+Stable tag: 1.4.0
 
 FAIR is a system for using **F**ederated **a**nd **I**ndependent **R**epositories in WordPress.
 
@@ -63,7 +63,7 @@ FAIR can be installed manually by downloading the latest zip from releases and i
 
 ### Uninstallation
 
-To remove the FAIR Connect plugin and its features, you can deactivate and delete the plugin. There are no changes made to your database outside of the plugin settings, and no external files are edited. FAIR is a self-contained plugin, using the accepted WordPress standards and practices.
+To remove the FAIR Connect plugin and its features, you can deactivate and delete the plugin. There are no changes made to your database outside of the plugin settings, and no external files are edited. FAIR Connect is a self-contained plugin, using the accepted WordPress standards and practices.
 
 
 ## Screenshots

@@ -11,7 +11,9 @@
         }
     ],
     "require": {
-        "php": ">=7.4"
+        "php": ">=8.0",
+        "fairpm/did-manager": "^0.0.3",
+        "fairpm/did-manager-wordpress": "^0.0.1"
     },
     "require-dev": {
         "yoast/phpunit-polyfills": "*",

@@ -1,5 +1,39 @@
 [unreleased]
 
+#### 1.3.0 / 2026-2-25
+
+* Improved automated release process
+* Improved caching errors
+* Clarify steps in RELEASE.MD by @cdils in https://github.com/fairpm/fair-plugin/pull/407
+* set update-browserslist.yaml to manual dispatch only by @chuckadams in https://github.com/fairpm/fair-plugin/pull/444
+* [bump-version] Bump version to 1.3.0 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/453
+* Generate POT - 2026-02-25-215627 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/454
+* Release merging 1.3.0 into main for production release! by @Ipstenu in https://github.com/fairpm/fair-plugin/pull/439
+
+#### 1.2.2 / 2025-12-24
+
+* Add RELEASE.md documenting the version release process by @cdils in https://github.com/fairpm/fair-plugin/pull/355
+* Update changelog.md with 1.2.1 release notes by @cdils in https://github.com/fairpm/fair-plugin/pull/391
+* Pass 4 arguments to `maybe_rename_on_package_download`. by @costdev in https://github.com/fairpm/fair-plugin/pull/394
+* [bump-version] Bump version to 1.2.2 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/395
+
+#### 1.2.1 / 2025-12-22
+
+* confirm array or object parts exist before using by @norcross in https://github.com/fairpm/fair-plugin/pull/372
+* Rename function for context by @afragen in https://github.com/fairpm/fair-plugin/pull/377
+* Update rename on download by @afragen in https://github.com/fairpm/fair-plugin/pull/378
+* Fix modal for empty $sections by @afragen in https://github.com/fairpm/fair-plugin/pull/375
+* Update jdecked/twemoji to 17.0.2. by @costdev in https://github.com/fairpm/fair-plugin/pull/379
+* Workflows: Add WP 6.8, 6.9 and PHP 8.5 to PHPUnit tests. by @costdev in https://github.com/fairpm/fair-plugin/pull/380
+* More FAIR Connect naming changes by @johnbillion in https://github.com/fairpm/fair-plugin/pull/385
+* Hash the directory name of a package on install. by @costdev in https://github.com/fairpm/fair-plugin/pull/227
+* Update ca POT translation (12-18-25) by @marcarmengou in https://github.com/fairpm/fair-plugin/pull/387
+* [bump-version] Bump version to 1.2.1 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/388
+* Fix variable quoting in Generate POT by @cdils in https://github.com/fairpm/fair-plugin/pull/389
+
+##### New Contributors
+* @cdils made their first contribution inhttps://github.com/fairpm/fair-plugin/pull/389
+
 #### 1.2.0 / 2025-12-11
 
 * Generate POT - 2025-11-07 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/314

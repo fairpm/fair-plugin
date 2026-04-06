@@ -19,6 +19,22 @@ touch /tmp/fair-dist/SHA1SUMS
 touch /tmp/fair-dist/SHA256SUMS
 touch /tmp/fair-dist/SHA384SUMS
 
+# Auto-detect and hash plugin zip.
+PLUGIN_VERSION=$(get_plugin_header "Version")
+REPO_NAME=$(basename "$GITHUB_REPOSITORY")
+PLUGIN_ZIP="/tmp/${REPO_NAME}-${PLUGIN_VERSION}.zip"
+
+if [ -f "$PLUGIN_ZIP" ]; then
+	echo "Hashing plugin zip: $PLUGIN_ZIP" >&2
+	# Change to /tmp so hash files contain just filename, not full path
+	cd /tmp
+	md5sum -b "$(basename "$PLUGIN_ZIP")" >> /tmp/fair-dist/MD5SUMS
+	sha1sum -b "$(basename "$PLUGIN_ZIP")" >> /tmp/fair-dist/SHA1SUMS
+	sha256sum -b "$(basename "$PLUGIN_ZIP")" >> /tmp/fair-dist/SHA256SUMS
+	sha384sum -b "$(basename "$PLUGIN_ZIP")" >> /tmp/fair-dist/SHA384SUMS
+	cd - > /dev/null
+fi
+
 # Bundle our plugin first.
 [ -d /tmp/fair-temp ] && rm -rf /tmp/fair-temp
 mkdir -p /tmp/fair-temp/wordpress/wp-content/plugins/fair-plugin
@@ -53,6 +69,12 @@ for VERSION in $AVAILABLE_VERSIONS; do
 	echo "  Downloading $WP_ZIP_URL..." >&2
 	curl -sSL "$WP_ZIP_URL" -o "$WP_ZIP_FILE"
 	EXPECTED_HASH=$(curl -sSL "$WP_ZIP_URL.sha1")
+
+	# Skip if we can't get a valid hash.
+	if [[ ! "$EXPECTED_HASH" =~ ^[a-z0-9]{40}$ ]]; then
+		echo "Failed to fetch valid hash for $VERSION" >&2
+		continue
+	fi
 
 	# Verify the checksum.
 	# (sha1 is suboptimal, but it's all we've got.)

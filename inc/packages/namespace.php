@@ -9,10 +9,10 @@ namespace FAIR\Packages;
 
 use const FAIR\CACHE_BASE;
 use const FAIR\CACHE_LIFETIME;
-use FAIR\Packages\DID\Document as DIDDocument;
-use FAIR\Packages\DID\PLC;
-use FAIR\Packages\DID\Web;
+use const FAIR\CACHE_LIFETIME_FAILURE;
+use FAIR\DID\PLC\PlcClient;
 use FAIR\Updater;
+use FAIR\WordPress\DID\Parsers\PluginHeaderParser;
 use function FAIR\Packages\Admin\sort_sections_in_api;
 use Plugin_Upgrader;
 use Theme_Upgrader;
@@ -22,11 +22,71 @@ use WP_Upgrader;
 const CACHE_KEY = CACHE_BASE . 'packages-';
 const CACHE_METADATA_DOCUMENTS = CACHE_BASE . 'metadata-documents-';
 const CACHE_RELEASE_PACKAGES = CACHE_BASE . 'release-packages';
+const CACHE_UPDATE_ERRORS = CACHE_BASE . 'update-errors-';
 const CACHE_DID_FOR_INSTALL = 'fair-install-did';
 const CONTENT_TYPE = 'application/json+fair';
 const SERVICE_ID = 'FairPackageManagementRepo';
 
-// phpcs:disable WordPress.NamingConventions.ValidVariableName
+/**
+ * Get the PLC client singleton.
+ *
+ * @return PlcClient
+ */
+function get_plc_client(): PlcClient {
+	static $client;
+	if ( ! $client ) {
+		$client = new PlcClient();
+	}
+	return $client;
+}
+
+/**
+ * Get a service from a DID document by type.
+ *
+ * @param array  $did_doc DID document array.
+ * @param string $type    Service type.
+ * @return array|null Service data, or null if not found.
+ */
+function get_did_service( array $did_doc, string $type ): ?array {
+	return array_find( $did_doc['service'] ?? [], fn ( $s ) => $s['type'] === $type );
+}
+
+/**
+ * Get valid signing keys for FAIR from a DID document.
+ *
+ * @param array $did_doc DID document array.
+ * @return array List of key arrays with id and publicKeyMultibase.
+ */
+function get_fair_signing_keys( array $did_doc ): array {
+	return array_filter( $did_doc['verificationMethod'] ?? [], function ( $key ) {
+		if ( $key['type'] !== 'Multikey' ) {
+			return false;
+		}
+
+		$parsed = parse_url( $key['id'] );
+		return str_starts_with( $parsed['fragment'] ?? '', 'fair' );
+	} );
+}
+
+/**
+ * Cache an update error for a package.
+ *
+ * @param string   $did   DID of the package.
+ * @param WP_Error $error The error to cache.
+ */
+function cache_update_error( string $did, WP_Error $error ): void {
+	$error->add_data( [ 'timestamp' => time() ], $error->get_error_code() );
+	set_site_transient( CACHE_UPDATE_ERRORS . $did, $error, CACHE_LIFETIME_FAILURE );
+}
+
+/**
+ * Clear a cached update error for a package.
+ *
+ * @param string $did DID of the package.
+ */
+function clear_update_error( string $did ): void {
+	delete_site_transient( CACHE_UPDATE_ERRORS . $did );
+}
 
 /**
  * Bootstrap.
@@ -36,13 +96,14 @@ const SERVICE_ID = 'FairPackageManagementRepo';
 function bootstrap() {
 	Admin\bootstrap();
 	WP_CLI\bootstrap();
+	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\move_package_during_install', 10, 4 );
 }
 
 /**
  * Parse DID.
  *
  * @param string $id DID.
- * @return DID|WP_Error
+ * @return string|WP_Error Validated DID string on success, WP_Error on failure.
  */
 function parse_did( string $id ) {
 	if ( ! str_starts_with( $id, 'did:plc:' ) ) {
@@ -54,16 +115,11 @@ function parse_did( string $id ) {
 		return new WP_Error( 'fair.packages.validate_did.not_uri', __( 'DID could not be parsed as a URI.', 'fair' ) );
 	}
 
-	switch ( $parts[1] ) {
-		case PLC::METHOD:
-			return new PLC( $id );
-
-		case Web::METHOD:
-			return new Web( $id );
-
-		default:
-			return new WP_Error( 'fair.packages.validate_did.invalid_method', __( 'Unsupported DID method.', 'fair' ) );
+	if ( $parts[1] !== 'plc' ) {
+		return new WP_Error( 'fair.packages.validate_did.invalid_method', __( 'Unsupported DID method.', 'fair' ) );
 	}
+
+	return $id;
 }
 
 /**
@@ -82,16 +138,22 @@ function get_did_hash( string $id ) {
 		return $did;
 	}
 
-	return substr( hash( 'sha256', $did->get_id() ), 0, 6 );
+	return substr( hash( 'sha256', $did ), 0, 6 );
 }
 
 /**
  * Get DID document.
  *
  * @param string $id DID.
- * @return DIDDocument|WP_Error
+ * @return array|WP_Error DID document array on success, WP_Error on failure.
  */
 function get_did_document( string $id ) {
+	// Check for cached error from previous failed request.
+	$cached_error = get_site_transient( CACHE_UPDATE_ERRORS . $id );
+	if ( is_wp_error( $cached_error ) ) {
+		return $cached_error;
+	}
+
 	$cached = get_site_transient( CACHE_METADATA_DOCUMENTS . $id );
 	if ( $cached ) {
 		return $cached;
@@ -100,16 +162,54 @@ function get_did_document( string $id ) {
 	// Parse the DID, then fetch the details.
 	$did = parse_did( $id );
 	if ( is_wp_error( $did ) ) {
+		cache_update_error( $id, $did );
 		return $did;
 	}
 
-	$document = $did->fetch_document();
-	if ( is_wp_error( $document ) ) {
-		return $document;
+	try {
+		$document = get_plc_client()->resolve_did( $did );
+	} catch ( \RuntimeException $e ) {
+		$error = new WP_Error( 'fair.packages.did.fetch_error', $e->getMessage() );
+		cache_update_error( $id, $error );
+		return $error;
 	}
+
+	// Clear any previous error on success.
+	clear_update_error( $id );
 	set_site_transient( CACHE_METADATA_DOCUMENTS . $id, $document, CACHE_LIFETIME );
 
 	return $document;
+}
+
+/**
+ * Get a package's DID by its path.
+ *
+ * @param string $path The absolute path to the package's directory or main file.
+ * @param string $type The type of package. Allowed types are 'plugin' or 'theme'.
+ * @return string|WP_Error The DID string on success, WP_Error on failure.
+ */
+function get_did_by_path( $path, $type ) {
+	if ( $type === 'theme' ) {
+		if ( ! str_ends_with( $path, 'style.css' ) ) {
+			$path = trailingslashit( $path ) . 'style.css';
+		}
+
+		$id = get_file_data( $path, [ 'id' => 'Theme ID' ] )['id'];
+		if ( $id ) {
+			return parse_did( $id );
+		}
+	}
+
+	if ( $type === 'plugin' ) {
+		$parser = new PluginHeaderParser();
+		$headers = $parser->parse( $path );
+		$id = $headers['plugin_id'] ?? '';
+		if ( $id ) {
+			return parse_did( $id );
+		}
+	}
+
+	return new WP_Error( 'fair.packages.none_found', __( 'No FAIR packages were found.', 'fair' ) );
 }
 
 /**
@@ -125,21 +225,28 @@ function fetch_package_metadata( string $id ) {
 	}
 
 	// Fetch data from the repository.
-	$service = $document->get_service( SERVICE_ID );
+	$service = get_did_service( $document, SERVICE_ID );
 	if ( empty( $service ) ) {
-		return new WP_Error( 'fair.packages.fetch_metadata.no_service', __( 'DID is not a valid package to fetch metadata for.', 'fair' ) );
+		$error = new WP_Error( 'fair.packages.fetch_metadata.no_service', __( 'DID is not a valid package to fetch metadata for.', 'fair' ) );
+		cache_update_error( $id, $error );
+		return $error;
 	}
-	$repo_url = $service->serviceEndpoint;
+	$repo_url = $service['serviceEndpoint'];
 
-	$metadata = fetch_metadata_doc( $repo_url );
+	$metadata = fetch_metadata_doc( $repo_url, $id );
 
 	if ( is_wp_error( $metadata ) ) {
 		return $metadata;
 	}
 
 	if ( $metadata->id !== $id ) {
-		return new WP_Error( 'fair.packages.fetch_metadata.mismatch', __( 'Fetched metadata does not match the requested DID.', 'fair' ) );
+		$error = new WP_Error( 'fair.packages.fetch_metadata.mismatch', __( 'Fetched metadata does not match the requested DID.', 'fair' ) );
+		cache_update_error( $id, $error );
+		return $error;
 	}
+
+	// Clear any previous error on success.
+	clear_update_error( $id );
 
 	return $metadata;
 }
@@ -148,9 +255,10 @@ function fetch_package_metadata( string $id ) {
  * Fetch the metadata document for a package.
  *
  * @param string $url URL for the metadata document.
+ * @param string $did DID of the package.
  * @return MetadataDocument|WP_Error
  */
-function fetch_metadata_doc( string $url ) {
+function fetch_metadata_doc( string $url, string $did ) {
 	$cache_key = CACHE_KEY . md5( $url );
 	$response = get_site_transient( $cache_key );
 	$response = fetch_metadata_from_local( $response, $url );
@@ -169,9 +277,15 @@ function fetch_metadata_doc( string $url ) {
 		$response = wp_remote_get( $url, $options );
 		$code = wp_remote_retrieve_response_code( $response );
 		if ( is_wp_error( $response ) ) {
+			cache_update_error( $did, $response );
 			return $response;
 		} elseif ( $code !== 200 ) {
-			return new WP_Error( 'fair.packages.metadata.failure', __( 'HTTP error code received', 'fair' ) );
+			$error = new WP_Error(
+				'fair.packages.metadata.http_error',
+				sprintf( __( 'HTTP %d error received', 'fair' ), $code )
+			);
+			cache_update_error( $did, $error );
+			return $error;
 		}
 
 		// Reorder sections before caching.
@@ -251,7 +365,7 @@ function get_latest_release_from_did( $id ) {
 		return $document;
 	}
 
-	$valid_keys = $document->get_fair_signing_keys();
+	$valid_keys = get_fair_signing_keys( $document );
 	if ( empty( $valid_keys ) ) {
 		return new WP_Error( 'fair.packages.install.no_signing_keys', __( 'DID does not contain valid signing keys.', 'fair' ) );
 	}
@@ -660,7 +774,7 @@ function get_package_data( $did ) {
  */
 function upgrader_pre_download( $false ) : bool {
 	add_filter( 'http_request_args', 'FAIR\\Packages\\maybe_add_accept_header', 20, 2 );
-	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\maybe_rename_on_package_download', 11, 3 );
+	add_filter( 'upgrader_source_selection', __NAMESPACE__ . '\\maybe_rename_on_package_download', 11, 4 );
 	return $false;
 }
 
@@ -677,6 +791,9 @@ function cache_did_for_install( array $options ): array {
 		$did = array_find_key(
 			$releases,
 			function ( $release ) use ( $options ) {
+				if ( ! is_array( $release->artifacts->package ) ) {
+					return false;
+				}
 				$artifact = pick_artifact_by_lang( $release->artifacts->package );
 				return $artifact && $artifact->url === $options['package'];
 			}
@@ -704,7 +821,7 @@ function delete_cached_did_for_install(): void {
  *
  * This is commonly required for packages from Git hosts.
  *
- * @param string $source        Path of $source.
+ * @param string|WP_Error $source Path of $source, or a WP_Error object.
  * @param string $remote_source Path of $remote_source.
  * @param WP_Upgrader $upgrader An Upgrader object.
  * @param array $hook_extra     Array of hook data.
@@ -755,6 +872,58 @@ function maybe_rename_on_package_download( $source, string $remote_source, WP_Up
 	}
 
 	return trailingslashit( $new_source );
+}
+
+/**
+ * Move a package to the correctly named directory during installation.
+ *
+ * @param string|WP_Error $source        Path of $source, or a WP_Error object.
+ * @param string          $remote_source Path of $remote_source.
+ * @param WP_Upgrader     $upgrader      An Upgrader object.
+ * @param array           $hook_extra    Array of hook data.
+ * @return string|WP_Error The correct directory path for installation, or a WP_Error object.
+ */
+function move_package_during_install( $source, string $remote_source, WP_Upgrader $upgrader, array $hook_extra ) {
+	global $wp_filesystem;
+
+	if ( is_wp_error( $source ) ) {
+		return $source;
+	}
+
+	if ( ! isset( $hook_extra['action'] ) || $hook_extra['action'] !== 'install' ) {
+		// Other actions are handled elsewhere.
+		return $source;
+	}
+
+	if ( ! in_array( $hook_extra['type'] ?? '', [ 'plugin', 'theme' ], true ) ) {
+		// This package type is not supported.
+		return $source;
+	}
+
+	$did = get_did_by_path( $source, $hook_extra['type'] );
+	if ( is_wp_error( $did ) ) {
+		// This isn't a valid FAIR package.
+		return $source;
+	}
+
+	$did_hash = get_did_hash( $did );
+	if ( str_ends_with( $source, "{$did_hash}/" ) ) {
+		// The directory name is likely already correct.
+		return $source;
+	}
+
+	$metadata = fetch_package_metadata( $did );
+	if ( is_wp_error( $metadata ) || trim( $metadata->slug ?? '' ) === '' ) {
+		// Cannot guarantee a slug-didhash format. dir-didhash is the best achievable.
+		$new_source = untrailingslashit( $source ) . "-{$did_hash}/";
+	} else {
+		$new_source = dirname( untrailingslashit( $source ), 2 ) . "/{$metadata->slug}-{$did_hash}/";
+	}
+
+	// Core must be able to find the new source directory.
+	$wp_filesystem->move( $source, $new_source, true );
+
+	return $new_source;
 }
 
 /**
@@ -812,17 +981,17 @@ function maybe_add_accept_header( $args, $url ) : array {
  *
  * Uses cached result for one hour.
  *
- * @param DIDDocument $did DID to validate.
+ * @param array $did_doc DID document array.
  * @return string|WP_Error|null Alias domain if successfully validated, null if no valid alias is set, or error otherwise.
  */
-function validate_package_alias( DIDDocument $did ) {
-	$cache_key = sprintf( 'fair_did_alias_%s', $did->id );
+function validate_package_alias( array $did_doc ) {
+	$cache_key = sprintf( 'fair_did_alias_%s', $did_doc['id'] );
 	$cached = get_site_transient( $cache_key );
 	if ( $cached ) {
 		return $cached;
 	}
 
-	$alias = fetch_and_validate_package_alias( $did );
+	$alias = fetch_and_validate_package_alias( $did_doc );
 	set_site_transient( $cache_key, $alias, HOUR_IN_SECONDS );
 	return $alias;
 }
@@ -836,11 +1005,11 @@ function validate_package_alias( DIDDocument $did ) {
  *
  * This function queries DNS directly, and is uncached.
  *
- * @param DIDDocument $did DID to validate.
+ * @param array $did_doc DID document array.
  * @return string|WP_Error|null Alias domain if successfully validated, null if no valid alias is set, or error otherwise.
  */
-function fetch_and_validate_package_alias( DIDDocument $did ) {
-	$aliases = array_filter( $did->alsoKnownAs, fn ( $alias ) => is_string( $alias ) && str_starts_with( $alias, 'fair://' ) );
+function fetch_and_validate_package_alias( array $did_doc ) {
+	$aliases = array_filter( $did_doc['alsoKnownAs'] ?? [], fn ( $alias ) => is_string( $alias ) && str_starts_with( $alias, 'fair://' ) );
 
 	// Packages may only have a single alias, so ignore multiple.
 	if ( empty( $aliases ) ) {
@@ -903,7 +1072,7 @@ function fetch_and_validate_package_alias( DIDDocument $did ) {
 	}
 	$expected_did = $record_match[1];
 
-	if ( $expected_did !== $did->id ) {
+	if ( $expected_did !== $did_doc['id'] ) {
 		return new WP_Error(
 			'fair.packages.get_package_alias.mismatched_did',
 			_x( 'DID in validation record does not match', 'alias validation error', 'fair' ),
@@ -995,5 +1164,3 @@ function get_plugin_information( $result, $action, $args ) {
 
 	return (object) $api_data;
 }
-
-// phpcs:enable

@@ -11,6 +11,7 @@ use Fragen\Git_Updater;
 
 const CACHE_BASE = 'fair-';
 const CACHE_LIFETIME = 12 * HOUR_IN_SECONDS;
+const CACHE_LIFETIME_FAILURE = HOUR_IN_SECONDS;
 const NS_SEPARATOR = '\\';
 
 /**
