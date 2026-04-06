@@ -26,7 +26,7 @@ function bootstrap() {
 function load_single_site_avatar_settings() {
 
 	// Don't set this up if we're on a multisite.
-	if ( defined( 'MULTISITE' ) && false !== MULTISITE ) {
+	if ( defined( 'MULTISITE' ) && false !== MULTISITE ) { //@phpstan-ignore phpstanWP.wpConstant.fetch
 		return;
 	}
 

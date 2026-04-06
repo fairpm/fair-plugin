@@ -13,9 +13,9 @@ $color = isset( $_GET['color'] ) ? sanitize_hex_color( '#' . stripslashes( $_GET
  *
  * @param  string $color Hex color.
  *
- * @return string
+ * @return string|null
  */
-function sanitize_hex_color( $color ) {
+function sanitize_hex_color( $color ): ?string {
 	if ( '' === $color ) {
 		return '';
 	}
@@ -24,6 +24,8 @@ function sanitize_hex_color( $color ) {
 	if ( preg_match( '|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ) {
 		return $color;
 	}
+
+	return null;
 }
 
 // Add the proper header.

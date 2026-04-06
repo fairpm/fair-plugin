@@ -68,10 +68,10 @@ class ReleaseDocument {
 	 *
 	 * @param  stdClass $data Data to parse.
 	 *
-	 * @return ReleaseDocument|WP_Error
+	 * @return self|WP_Error
 	 */
 	public static function from_data( stdClass $data ) {
-		$doc = new static();
+		$doc = new self();
 		$mandatory = [
 			'version',
 			'artifacts',
