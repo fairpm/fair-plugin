@@ -4,7 +4,7 @@ Contributors: FAIR Contributors
 License: GPLv2 or later
 Tags: packages, updater, installer, technical independence
 Requires at least: 5.4
-Requires PHP: 7.4
+Requires PHP: 8.0
 Tested up to: 6.9
 Stable tag: 1.4.0
 
