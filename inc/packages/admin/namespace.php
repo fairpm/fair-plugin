@@ -29,7 +29,7 @@ function bootstrap() {
 	add_filter( 'plugins_api', __NAMESPACE__ . '\\handle_did_during_ajax', 10, 3 );
 	add_filter( 'plugins_api', 'FAIR\\Packages\\search_by_did', 10, 3 );
 	add_filter( 'upgrader_package_options', 'FAIR\\Packages\\cache_did_for_install', 10, 1 );
-	add_action( 'upgrader_post_install', 'FAIR\\Packages\\delete_cached_did_for_install', 10, 3 );
+	add_action( 'upgrader_post_install', 'FAIR\\Packages\\delete_cached_did_for_install', 10, 0 );
 	add_filter( 'upgrader_pre_download', 'FAIR\\Packages\\upgrader_pre_download', 10, 1 );
 	add_action( 'install_plugins_' . TAB_DIRECT, __NAMESPACE__ . '\\render_tab_direct' );
 	add_action( 'load-plugin-install.php', __NAMESPACE__ . '\\load_plugin_install' );
@@ -44,7 +44,7 @@ function bootstrap() {
 	// Needed for pre WordPress 6.9 compatibility.
 	if ( ! is_wp_version_compatible( '6.9' ) ) {
 		add_action( 'install_plugins_featured', __NAMESPACE__ . '\\replace_featured_message' );
-		add_action( 'admin_init', fn() => remove_action( 'install_plugins_featured', 'install_dashboard' ) );
+		add_action( 'admin_init', static fn() => remove_action( 'install_plugins_featured', 'install_dashboard' ) ); // @phpstan-ignore return.void
 	}
 }
 
@@ -124,6 +124,7 @@ function handle_did_during_ajax( $result, $action, $args ) {
 		return $result;
 	}
 
+	// FIXME: Updater\Updater has neither a constructor nor a run() method.
 	( new Updater\Updater( $did ) )->run();
 
 	Packages\add_package_to_release_cache( $did );
@@ -499,7 +500,7 @@ function maybe_hijack_plugin_install_button( $links, $plugin ) {
 		$requires_wp  = isset( $plugin['requires'] ) ? $plugin['requires'] : null;
 		$compatible_php = is_php_version_compatible( $requires_php );
 		$compatible_wp  = is_wp_version_compatible( $requires_wp );
-		$name = strip_tags( $plugin['name'] . ' ' . $plugin['version'] );
+		$name = wp_strip_all_tags( $plugin['name'] . ' ' . $plugin['version'] );
 		$link = wp_get_plugin_action_button( $name, $plugin_override, $compatible_php, $compatible_wp );
 	}
 	return $links;

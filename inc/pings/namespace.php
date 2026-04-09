@@ -13,7 +13,7 @@ namespace FAIR\Pings;
 function bootstrap() {
 	add_filter( 'pre_option_ping_sites', __NAMESPACE__ . '\\remove_pingomatic_from_ping_sites' );
 	add_filter( 'query_vars', __NAMESPACE__ . '\\register_query_vars' );
-	add_action( 'init', __NAMESPACE__ . '\\get_indexnow_key' );
+	add_action( 'init', __NAMESPACE__ . '\\get_indexnow_key' ); // @phpstan-ignore-line return.void
 	add_action( 'init', __NAMESPACE__ . '\\add_key_rewrite_rule' );
 	add_action( 'parse_request', __NAMESPACE__ . '\\handle_key_file_request' );
 	add_action( 'transition_post_status', __NAMESPACE__ . '\\ping_indexnow', 10, 3 );

@@ -116,10 +116,10 @@ class MetadataDocument {
 	 * Collate data.
 	 *
 	 * @param stdClass $data Data to parse.
-	 * @return static|WP_Error Instance if valid, WP_Error otherwise.
+	 * @return self|WP_Error Instance if valid, WP_Error otherwise.
 	 */
 	public static function from_data( stdClass $data ) {
-		$doc = new static();
+		$doc = new self();
 		$mandatory = [
 			'id',
 			'type',

@@ -7,8 +7,7 @@
 
 namespace FAIR\Packages\WP_CLI\Compat;
 
-use FAIR\Packages as Packages;
-use function WP_CLI\Utils\get_flag_value as get_flag_value;
+use FAIR\Packages;
 use WP_CLI;
 
 /**
@@ -289,4 +288,20 @@ function replace_dids_with_hashed_filenames( array $items, array $dids ): array 
 		},
 		$items
 	);
+}
+
+// For some reason, neither phpstan nor IDEA are aware wp-cli's version of this exists,
+// so in case something is wonky about the import, here's the same trivial function below.
+if ( ! function_exists( 'get_flag_value' ) ) {
+	/**
+	 * Equivalent to $assoc_args[$flag] ?? null
+	 *
+	 * @param array  $assoc_args source array
+	 * @param string $flag       array key
+	 * @param mixed  $default   (default null)
+	 * @return mixed
+	 */
+	function get_flag_value( array $assoc_args, string $flag, mixed $default = null ): mixed {
+		return isset( $assoc_args[ $flag ] ) ? $assoc_args[ $flag ] : $default;
+	}
 }

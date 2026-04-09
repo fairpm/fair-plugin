@@ -7,6 +7,8 @@
 
 namespace FAIR\Site_Health;
 
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
+
 /**
  * Bootstrap.
  */
@@ -107,4 +109,4 @@ function filter_debug_information( $info ) {
 
 	return $info;
 }
-add_filter( 'debug_information', __NAMESPACE__ . '\\filter_debug_information' );
+add_filter( 'debug_information', __NAMESPACE__ . '\\filter_debug_information' ); // FIXME: move this into an init hook.
