@@ -12,8 +12,7 @@
     ],
     "require": {
         "php": ">=8.0",
-        "fairpm/did-manager": "^0.0.3",
-        "fairpm/did-manager-wordpress": "^0.0.1"
+        "fairpm/did-manager-wordpress": "0.0.4"
     },
     "require-dev": {
         "yoast/phpunit-polyfills": "*",
@@ -22,7 +21,6 @@
         "szepeviktor/phpstan-wordpress": "^2.0"
     },
     "config": {
-        "lock": false,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
