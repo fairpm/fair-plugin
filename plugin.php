@@ -2,13 +2,13 @@
 /**
  * Plugin Name: FAIR Connect - Federated and Independent Repositories
  * Description: Make your site more FAIR.
- * Version: 1.3.0
+ * Version: 1.4.0-BETA
  * Author: FAIR Contributors
  * Author URI: https://fair.pm
  * Security: security@fair.pm
  * License: GPLv2
  * Requires at least: 5.4
- * Requires PHP: 7.4
+ * Requires PHP: 8.0
  * Text Domain: fair
  * Domain Path: /languages
  * Update URI: https://api.fair.pm
@@ -20,7 +20,12 @@
 
 namespace FAIR;
 
-const VERSION = '1.3.0';
+const VERSION = '1.4.0-BETA';
+const PLUGIN_DIR = __DIR__;
+const PLUGIN_FILE = __FILE__;
+
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/inc/namespace.php';
 require_once __DIR__ . '/inc/avatars/namespace.php';
 require_once __DIR__ . '/inc/credits/namespace.php';
 require_once __DIR__ . '/inc/dashboard-widgets/namespace.php';

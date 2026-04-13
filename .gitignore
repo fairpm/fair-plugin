@@ -3,12 +3,15 @@
 *.bak
 /.vscode
 /vendor/
+.wp-env.override.json
 .phpunit.result.cache
 phpunit.xml
 phpcs.xml
+phpstan.neon
 /tests/phpunit/cache
 /tests/phpunit/coverage
 wp-tests-config.php
+*.swp
 
 # Track placeholders so that empty directories stay in the repo.
 !.gitkeep
