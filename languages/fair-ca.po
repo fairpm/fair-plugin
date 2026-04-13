@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2025-06-10T04:28:22+00:00\n"
-"PO-Revision-Date: 2025-12-18 09:29+0000\n"
+"PO-Revision-Date: 2026-02-26 14:50+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Domain: fair\n"
 "Language: ca\n"
@@ -37,7 +37,7 @@ msgstr ""
 "%s, o carregueu una imatge de perfil personalitzada per al vostre compte."
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:409 inc/updater/class-updater.php:350
+#: inc/updater/class-lite.php:419 inc/updater/class-updater.php:356
 #, php-format
 msgid "%s: update now"
 msgstr "%s: actualitza ara"
@@ -116,36 +116,36 @@ msgstr "Activa"
 msgid "Activate %s now"
 msgstr "Activa %s ara"
 
-#: inc/packages/namespace.php:884
+#: inc/packages/namespace.php:1061
 msgctxt "alias validation error"
 msgid "DID in validation record does not match"
 msgstr "El DID en el registre de validació no coincideix"
 
-#: inc/packages/namespace.php:846
+#: inc/packages/namespace.php:1023
 msgctxt "alias validation error"
 msgid "FAIR alias format exceeds valid domain length"
 msgstr "El format de l'àlies FAIR excedeix la longitud vàlida del domini"
 
-#: inc/packages/namespace.php:837
+#: inc/packages/namespace.php:1014
 msgctxt "alias validation error"
 msgid "Invalid FAIR alias format"
 msgstr "El format de l'àlies FAIR no és vàlid"
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:859
+#: inc/packages/namespace.php:1036
 #, php-format
 msgctxt "alias validation error"
 msgid "Missing verification record for \"%s\""
 msgstr "Falta el registre de verificació de «%s»"
 
-#: inc/packages/namespace.php:827
+#: inc/packages/namespace.php:1004
 msgctxt "alias validation error"
 msgid "Multiple aliases set in DID; packages may only have a single alias"
 msgstr ""
 "Múltiples àlies establerts a DID; els paquets només poden tenir un sol àlies"
 
 #. translators: %s: domain
-#: inc/packages/namespace.php:873
+#: inc/packages/namespace.php:1050
 #, php-format
 msgctxt "alias validation error"
 msgid "Verification record for \"%s\" is invalid"
@@ -164,7 +164,7 @@ msgstr "S'ha produït un error desconegut"
 msgid "Authors"
 msgstr "Autors"
 
-#: inc/updater/class-lite.php:421 inc/updater/class-updater.php:362
+#: inc/updater/class-lite.php:431 inc/updater/class-updater.php:368
 #| msgid "%1$sAutomatic update is unavailable for this theme.%2$s"
 msgid "Automatic update is unavailable for this theme."
 msgstr "L'actualització automàtica no està disponible per a aquest tema."
@@ -177,7 +177,7 @@ msgstr "Font de l'avatar"
 msgid "Avatars will be loaded from the selected source."
 msgstr "Es pujaran els avatars des de la font seleccionada."
 
-#: inc/version-check/namespace.php:98
+#: inc/version-check/namespace.php:94
 msgctxt "browser version check"
 msgid "your browser"
 msgstr "el vostre navegador"
@@ -239,15 +239,15 @@ msgctxt "default event location"
 msgid "Online"
 msgstr "En línia"
 
-#: inc/packages/namespace.php:52
+#: inc/packages/namespace.php:77
 msgid "DID could not be parsed as a URI."
 msgstr "El DID no s'ha pogut analitzar com un URI."
 
-#: inc/packages/namespace.php:252
+#: inc/packages/namespace.php:353
 msgid "DID does not contain valid signing keys."
 msgstr "El DID no conté claus de signatura vàlides."
 
-#: inc/packages/namespace.php:128
+#: inc/packages/namespace.php:213
 msgid "DID is not a valid package to fetch metadata for."
 msgstr "El DID no és un paquet vàlid per a obtenir les metadades."
 
@@ -267,6 +267,13 @@ msgstr "Introduïu un ID d'extensió per a veure els detalls i instal·lar."
 #: assets/js/fair-site-health.js:29
 msgid "Error"
 msgstr "Error"
+
+#. translators: %1$s: Error message, %2$s: Time period
+#: inc/updater/namespace.php:130
+#, php-format
+msgid "Error: %1$s. Update checks paused for %2$s."
+msgstr ""
+"Error: %1$s. Les comprovacions d'actualitzacions s'han pausat durant %2$s."
 
 #: inc/dashboard-widgets/namespace.php:202
 msgid "Events (by The WP World)"
@@ -297,7 +304,7 @@ msgstr "Col·laboradors del FAIR"
 msgid "FAIR Settings"
 msgstr "Configuració del FAIR"
 
-#: inc/packages/namespace.php:139
+#: inc/packages/namespace.php:226
 msgid "Fetched metadata does not match the requested DID."
 msgstr "Les metadades recuperades no coincideixen amb el DID sol·licitat."
 
@@ -315,9 +322,10 @@ msgstr "Gravatar"
 msgid "Hosted on %1$s"
 msgstr "Allotjat a %1$s"
 
-#: inc/packages/namespace.php:172
-msgid "HTTP error code received"
-msgstr "S'ha rebut el codi d'error HTTP"
+#: inc/packages/namespace.php:268
+#, php-format
+msgid "HTTP %d error received"
+msgstr "S'ha rebut un error HTTP %d"
 
 #. Author URI of the plugin
 #: plugin.php
@@ -334,7 +342,7 @@ msgstr "https://fair.pm/packages/plugins/"
 msgid "https://wordpress.org/support/forums/"
 msgstr "https://wordpress.org/support/forums/"
 
-#: inc/packages/namespace.php:47
+#: inc/packages/namespace.php:72
 msgid "ID is not a valid DID."
 msgstr "L'ID no és un DID vàlid."
 
@@ -376,11 +384,15 @@ msgstr "Notícies"
 msgid "No credits could be found."
 msgstr "No s'han trobat crèdits."
 
+#: inc/packages/namespace.php:195
+msgid "No FAIR packages were found."
+msgstr "No s'ha trobat cap paquet FAIR."
+
 #: inc/packages/class-metadatadocument.php:156
 msgid "No releases found in the metadata document."
 msgstr "No s'ha trobat cap versió en el document de metadades."
 
-#: inc/packages/namespace.php:262
+#: inc/packages/namespace.php:363
 msgid "No releases found in the repository."
 msgstr "No s'ha trobat cap versió al repositori."
 
@@ -388,7 +400,7 @@ msgstr "No s'ha trobat cap versió al repositori."
 msgid "Not validated: No domain alias is set"
 msgstr "No validat: no s'ha establert cap àlies de domini"
 
-#: inc/version-check/namespace.php:97
+#: inc/version-check/namespace.php:93
 msgctxt "operating system check"
 msgid "your platform"
 msgstr "la vostra plataforma"
@@ -475,7 +487,7 @@ msgid "Requires:"
 msgstr "Requereix:"
 
 #. translators: %s: The package's URL.
-#: inc/updater/namespace.php:157
+#: inc/updater/namespace.php:225
 #, php-format
 msgid "Signature verification could not be performed for the package: %s"
 msgstr "No s'ha pogut verificar la signatura del paquet: %s"
@@ -487,6 +499,10 @@ msgstr "Àlies:"
 #: inc/packages/admin/info.php:308
 msgid "Suggests:"
 msgstr "Suggeriment:"
+
+#: inc/packages/namespace.php:179
+msgid "The package's file list could not be retrieved."
+msgstr "No s'ha pogut recuperar la llista de fitxers del paquet."
 
 #: inc/packages/did/class-plc.php:74
 msgid ""
@@ -500,7 +516,7 @@ msgid "The verify-checksums command is not currently supported for DIDs."
 msgstr "L'ordre verify-checksums no és compatible actualment amb els DIDs."
 
 #. translators: %s: theme name
-#: inc/updater/class-lite.php:393 inc/updater/class-updater.php:334
+#: inc/updater/class-lite.php:403 inc/updater/class-updater.php:340
 #, php-format
 msgid "There is a new version of %s available."
 msgstr "Hi ha disponible una versió nova de %s."
@@ -513,7 +529,7 @@ msgstr "No s'han pogut recuperar els esdeveniments (error d'anàlisi)."
 msgid "Unable to parse DID document response."
 msgstr "No s'ha pogut analitzar la resposta del document DID."
 
-#: inc/packages/namespace.php:63
+#: inc/packages/namespace.php:88
 msgid "Unsupported DID method."
 msgstr "Mètode DID no compatible."
 
@@ -550,7 +566,7 @@ msgid "Validation failed"
 msgstr "Ha fallat la validació"
 
 #. translators: %s: The DID of the package.
-#: inc/updater/namespace.php:141
+#: inc/updater/namespace.php:209
 #, php-format
 msgid "Verified signature for %s"
 msgstr "Signatura verificada per a %s"
@@ -560,13 +576,13 @@ msgid "Version:"
 msgstr "Versió:"
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
-#: inc/updater/class-lite.php:404 inc/updater/class-updater.php:345
+#: inc/updater/class-lite.php:414 inc/updater/class-updater.php:351
 #, php-format
 msgid "View version %1$s details%2$s or %3$supdate now%2$s."
 msgstr "Mostra els %1$s detalls%2$s de la versió o %3$sactualitza ara%2$s."
 
 #. translators: 1: opening anchor with version number, 2: closing anchor tag, 3: opening anchor with update URL
-#: inc/updater/class-lite.php:416 inc/updater/class-updater.php:357
+#: inc/updater/class-lite.php:426 inc/updater/class-updater.php:363
 #, php-format
 msgid "View version %1$s details%2$s."
 msgstr "Mostra els %1$s detalls%2$s. de la versió."
