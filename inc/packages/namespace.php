@@ -936,12 +936,13 @@ function add_package_to_release_cache( string $did ) : void {
 	if ( empty( $did ) ) {
 		return;
 	}
-	$releases = get_site_transient( CACHE_RELEASE_PACKAGES ) ?: [];
-	$releases[ $did ] = get_latest_release_from_did( $did );
-	if ( is_wp_error( $releases[ $did ] ) ) {
-		unset( $releases[ $did ] );
+ 	$latest_release = get_latest_release_from_did( $did );
+	if ( is_wp_error( $latest_release ) ) {
+		return;
 	}
-	set_site_transient( CACHE_RELEASE_PACKAGES, $releases );
+ 	$releases = get_site_transient( CACHE_RELEASE_PACKAGES ) ?: [];
+ 	$releases[ $did ] = $latest_release;
+ 	set_site_transient( CACHE_RELEASE_PACKAGES, $releases );
 }
 
 /**
