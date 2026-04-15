@@ -938,6 +938,9 @@ function add_package_to_release_cache( string $did ) : void {
 	}
 	$releases = get_site_transient( CACHE_RELEASE_PACKAGES ) ?: [];
 	$releases[ $did ] = get_latest_release_from_did( $did );
+	if ( is_wp_error( $releases[ $did ] ) ) {
+		unset( $releases[ $did ] );
+	}
 	set_site_transient( CACHE_RELEASE_PACKAGES, $releases );
 }
 
