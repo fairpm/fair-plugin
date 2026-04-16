@@ -117,6 +117,8 @@ The `release/X.Y.Z` branch must be merged to `development` for testing and valid
 
 **BE AWARE!** The release branch may be auto-deleted. If so, _BEFORE_ you close the window, click **RESTORE BRANCH**
 
+**ALSO BE AWARE!** Any open PRs targeting the release branch will be auto-closed if the branch is deleted. You will need to reopen them.
+
 ## 5. Create a new release on GitHub
 
 1. From the repository's main page, click the **Releases** link — or go directly to the [Releases page](https://github.com/fairpm/fair-plugin/releases).
