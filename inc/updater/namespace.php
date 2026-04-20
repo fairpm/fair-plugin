@@ -11,6 +11,7 @@ use const FAIR\CACHE_LIFETIME_FAILURE;
 use const FAIR\Packages\CACHE_DID_FOR_INSTALL;
 use const FAIR\Packages\CACHE_RELEASE_PACKAGES;
 use const FAIR\Packages\CACHE_UPDATE_ERRORS;
+use FAIR\DID\Crypto\DidCodec;
 use FAIR\Packages;
 use function FAIR\is_wp_cli;
 use Plugin_Upgrader;
@@ -73,13 +74,24 @@ function get_packages() : array {
  * @return void
  */
 function run() {
+	if ( ! Updater::should_run_on_current_page() ) {
+		return;
+	}
+
 	$packages = get_packages();
 	$plugins = $packages['plugins'] ?? [];
 	$themes = $packages['themes'] ?? [];
-	$packages = array_merge( $plugins, $themes );
-	foreach ( $packages as $did => $filepath ) {
-		( new Updater( $did, $filepath ) )->run();
+
+	foreach ( $plugins as $did => $filepath ) {
+		Updater::register_plugin( $did, $filepath );
 	}
+
+	foreach ( $themes as $did => $filepath ) {
+		Updater::register_theme( $did, $filepath );
+	}
+
+	// Load hooks once for all packages.
+	Updater::load_hooks();
 }
 
 /**
@@ -244,7 +256,7 @@ function get_trusted_keys(): array {
 		return [];
 	}
 
-	$keys = $doc->get_fair_signing_keys();
+	$keys = Packages\get_fair_signing_keys( $doc );
 	if ( empty( $keys ) ) {
 		return [];
 	}
@@ -253,16 +265,14 @@ function get_trusted_keys(): array {
 	// Core expects base64-encoded keys.
 	$recoded_keys = [];
 	foreach ( $keys as $key ) {
-		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		$str = Base58BTC::decode( $key->publicKeyMultibase );
+		$decoded = DidCodec::from_multibase_key( $key['publicKeyMultibase'] );
 
 		// Ed25519 keys only.
-		if ( substr( $str, 0, 2 ) !== "\xed\x01" ) {
+		if ( $decoded['codec'] !== DidCodec::MULTICODEC_ED25519_PUB ) {
 			continue;
 		}
 
-		$key_material = substr( $str, 2 );
-		$recoded_keys[] = base64_encode( $key_material );
+		$recoded_keys[] = base64_encode( $decoded['key'] );
 	}
 
 	return $recoded_keys;
