@@ -54,7 +54,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: 'npm'
-          node-version: '18'
+          node-version-file: '.nvmrc'
 
       - name: Install dependencies
         run: npm install
@@ -111,7 +111,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: 'npm'
-          node-version: '18'
+          node-version-file: '.nvmrc'
 
       - name: Install dependencies
         run: npm install
