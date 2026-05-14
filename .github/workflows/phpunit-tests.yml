@@ -82,7 +82,7 @@ jobs:
         run: rm composer.lock
 
       - name: Install dependencies
-        run: npm run cli -- composer require --dev phpunit/phpunit:^${{ matrix.wp-version < '5.1' && '6' || ( matrix.wp-version < '5.9' || matrix.php-version < '8.0' ) && '7' || '9' }}
+        run: npm run cli -- composer require --ignore-platform-req=ext-gmp --dev phpunit/phpunit:^${{ matrix.wp-version < '5.1' && '6' || ( matrix.wp-version < '5.9' || matrix.php-version < '8.0' ) && '7' || '9' }}
 
       - name: Run PHPUnit tests (single site)
         run: npm run test:php
