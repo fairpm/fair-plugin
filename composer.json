@@ -43,11 +43,11 @@
         "phpstan-baseline": "phpstan analyse --generate-baseline=tests/phpstan-baseline.neon --memory-limit=2G",
         "test": [
             "Composer\\Config::disableProcessTimeout",
-            "@php vendor/bin/phpunit"
+            "phpunit"
         ],
         "test:multisite": [
             "Composer\\Config::disableProcessTimeout",
-            "@php vendor/bin/phpunit -c phpunit-multisite.xml.dist"
+            "phpunit -c phpunit-multisite.xml.dist"
         ],
         "coverage:merge": [
             "Composer\\Config::disableProcessTimeout",
