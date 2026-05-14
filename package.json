@@ -12,7 +12,7 @@
 		"format:php": "npm run cli -- composer run format",
 		"format:php:phpcs": "npm run cli -- composer run format:phpcs",
 		"format:php:phpstan": "npm run cli -- composer run format:phpstan",
-		"test:php:install-deps": "npm run tests:cli -- composer install",
+		"test:php:install-deps": "npm run tests:cli -- composer install --ignore-platform-req=ext-gmp",
 		"test:php": "npm run tests:cli -- composer run test",
 		"test:php:multisite": "npm run tests:cli -- composer run test:multisite",
 		"coverage:php:single": "npm run tests:cli -- composer run coverage:single",
