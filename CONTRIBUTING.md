@@ -24,7 +24,7 @@ This plugin is ready to use with wp-env for local development, with a default co
 - `npm run env stop` to stop the development server.
 - `npm run cli` to run any CLI commands inside the environment, such as `npm run cli -- wp plugin list`.
 
-By default, wp-env is configured with PHP 7.4 (our minimum supported version), as well as Airplane Mode to avoid inadvertent requests.
+By default, wp-env is configured with PHP 8.0 (our minimum supported version), as well as Airplane Mode to avoid inadvertent requests.
 
 For linting and static analysis:
 
