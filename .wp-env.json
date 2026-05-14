@@ -1,6 +1,6 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/wp-env.json",
-	"phpVersion": "7.4",
+	"phpVersion": "8.0",
 	"plugins": [
 		"norcross/airplane-mode",
 		"johnbillion/query-monitor#3.18.0"
