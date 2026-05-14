@@ -3,7 +3,7 @@
  * Plugin Name: FAIR Connect - Federated and Independent Repositories
  * Plugin ID: did:plc:ppicmk23c5pimdivve34bcp2
  * Description: Make your site more FAIR.
- * Version: 1.4.0-RC1
+ * Version: 1.4.0
  * Author: FAIR Contributors
  * Author URI: https://fair.pm
  * Security: security@fair.pm
@@ -21,7 +21,7 @@
 
 namespace FAIR;
 
-const VERSION = '1.4.0-RC1';
+const VERSION = '1.4.0';
 const PLUGIN_DIR = __DIR__;
 const PLUGIN_FILE = __FILE__;
 
