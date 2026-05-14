@@ -1,0 +1,45 @@
+name: Publish FAIR Metadata
+
+on:
+  workflow_run:
+    workflows: ["Upload Release Asset"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version tag (for example v1.2.3)
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get tag
+        id: tag
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ inputs.version }}" ]]; then
+            echo "tag=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish to FAIR
+        uses: fairpm/fair-pulse@v1
+        with:
+          version: ${{ steps.tag.outputs.tag }}
+          artifact-name: ${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.zip
+          upload-metadata: 'true'
+        env:
+          FAIR_VERIFICATION_KEY_PRIVATE: ${{ secrets.FAIR_VERIFICATION_KEY_PRIVATE }}
+          FAIR_VERIFICATION_KEY_PUBLIC: ${{ secrets.FAIR_VERIFICATION_KEY_PUBLIC }}
+          FAIR_DID: ${{ vars.FAIR_DID }}
