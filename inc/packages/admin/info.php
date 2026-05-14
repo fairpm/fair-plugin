@@ -9,7 +9,6 @@ namespace FAIR\Packages\Admin\Info;
 
 use FAIR\Packages;
 use FAIR\Packages\Admin;
-use FAIR\Packages\DID\Document as DIDDocument;
 use FAIR\Packages\MetadataDocument;
 use FAIR\Packages\ReleaseDocument;
 use FAIR\Updater;
@@ -359,13 +358,12 @@ function get_repository_hostname( string $did ) : ?string {
 		return null;
 	}
 
-	$repo = $did_doc->get_service( Packages\SERVICE_ID );
+	$repo = Packages\get_did_service( $did_doc, Packages\SERVICE_ID );
 	if ( empty( $repo ) ) {
 		return null;
 	}
 
-	// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-	$host = parse_url( $repo->serviceEndpoint, PHP_URL_HOST );
+	$host = parse_url( $repo['serviceEndpoint'], PHP_URL_HOST );
 	if ( empty( $host ) ) {
 		// Invalid URL.
 		return null;
@@ -448,11 +446,14 @@ function add_requirement_notices( ReleaseDocument $release ) : void {
  * validation are not safe, while those without an alias or with a valid alias
  * are safe.
  *
- * @param DIDDocument $did DID to validate.
+ * @param array $did_doc DID document array to validate.
  * @return bool True if the package is "safe" to install, false if install should be blocked.
  */
-function render_alias_notice( DIDDocument $did ) : bool {
-	$validation = Packages\validate_package_alias( $did );
+function render_alias_notice( $did_doc ) : bool {
+	if ( is_wp_error( $did_doc ) ) {
+		return true;
+	}
+	$validation = Packages\validate_package_alias( $did_doc );
 	$title = __( 'Domain Alias:', 'fair' );
 	$result = false;
 	switch ( gettype( $validation ) ) {
