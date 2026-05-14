@@ -1,5 +1,29 @@
 [unreleased]
 
+#### 1.4.0 / 2026-5-14
+
+* [bump-version] Bump version to 1.3.0-RC1 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/432
+* release: merge release_1.3.0 into development for RC testing by @cdils in https://github.com/fairpm/fair-plugin/pull/433
+* Pass at validation of hash by @afragen in https://github.com/fairpm/fair-plugin/pull/436
+* Validate bundle hash by @afragen in https://github.com/fairpm/fair-plugin/pull/437
+* Rearchitect `Updater` into a registry by @johnbillion in https://github.com/fairpm/fair-plugin/pull/428
+* set update-browserslist.yaml to manual dispatch only by @chuckadams in https://github.com/fairpm/fair-plugin/pull/447
+* release: merge release/1.3.0-RC4 into development for RC testing by @cdils in https://github.com/fairpm/fair-plugin/pull/449
+* Update RELEASE.MD by @Ipstenu in https://github.com/fairpm/fair-plugin/pull/458
+* hotfix, originally in PR4428 by @afragen in https://github.com/fairpm/fair-plugin/pull/463
+* Update ca POT translation (02-26-25) by @marcarmengou in https://github.com/fairpm/fair-plugin/pull/459
+* Update stable tag version to 1.4.0 by @marcarmengou in https://github.com/fairpm/fair-plugin/pull/461
+* Did manager integration by @namithj in https://github.com/fairpm/fair-plugin/pull/465
+* Add PHPStan checks by @kasparsd in https://github.com/fairpm/fair-plugin/pull/382
+* [bump-version] Bump version to 1.4.0-BETA by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/468
+* Release: merge 1.4.0 into development for BETA testing by @cdils in https://github.com/fairpm/fair-plugin/pull/469
+* Remove < PHP 8.0 & WP 6.2 from test matrix by @jazzsequence in https://github.com/fairpm/fair-plugin/pull/485
+* release: merge Release 1.4.0 into main for production release by @cdils in https://github.com/fairpm/fair-plugin/pull/484
+
+##### New Contributors
+* @namithj made their first contribution in https://github.com/fairpm/fair-plugin/pull/465
+* @kasparsd made their first contribution in https://github.com/fairpm/fair-plugin/pull/382
+
 #### 1.3.0 / 2026-2-25
 
 * Improved automated release process
