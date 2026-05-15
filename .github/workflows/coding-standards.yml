@@ -5,9 +5,14 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
   workflow_dispatch:
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
 
 # Disable permissions for all available scopes by default.
 # Any needed permissions should be configured at the job level.
@@ -15,10 +20,11 @@ permissions: {}
 
 jobs:
   lint:
-    name: Lint PHP
+    name: Run coding standards checks
     runs-on: ubuntu-latest
     permissions:
       contents: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -27,8 +33,7 @@ jobs:
         uses: actions/cache@v5
         with:
           key: ${{ runner.os }}-${{ hashFiles('composer.json') }} # Note that lock file will change between runs.
-          path: |
-            .cache
+          path: .cache
 
       - name: Setup Node
         uses: actions/setup-node@v6
