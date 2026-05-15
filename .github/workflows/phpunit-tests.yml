@@ -40,6 +40,7 @@ jobs:
       contents: read
     needs: generate-matrix
     env:
+      WP_ENV_HOME: .cache/wp-env
       WP_ENV_PHP_VERSION: ${{ matrix.php-version }}
       WP_ENV_CORE: ${{ matrix.wp-version == 'trunk' && 'WordPress/WordPress' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wp-version ) }}
     strategy:
@@ -95,6 +96,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      WP_ENV_HOME: .cache/wp-env
     steps:
       - name: Checkout
         uses: actions/checkout@v6

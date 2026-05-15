@@ -24,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      WP_ENV_HOME: .cache/wp-env
 
     steps:
       - name: Checkout
