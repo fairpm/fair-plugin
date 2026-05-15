@@ -63,7 +63,7 @@ jobs:
       - name: Setup cache
         uses: actions/cache@v5
         with:
-          key: ${{ runner.os }}-${{ hashFiles('composer.json') }} # Note that lock file will change between runs.
+          key: ${{ runner.os }}-${{ hashFiles('composer.json', 'package.json') }}
           path: |
             .cache
             tests/phpunit/cache
@@ -105,7 +105,7 @@ jobs:
       - name: Setup cache
         uses: actions/cache@v5
         with:
-          key: ${{ runner.os }}-${{ hashFiles('composer.json') }} # Note that lock file will change between runs.
+          key: ${{ runner.os }}-${{ hashFiles('composer.json', 'package.json') }}
           path: |
             .cache
             tests/phpunit/cache
