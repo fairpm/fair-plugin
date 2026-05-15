@@ -12,7 +12,7 @@
     ],
     "require": {
         "php": ">=8.0",
-        "fairpm/did-manager-wordpress": "0.0.4-a"
+        "fairpm/did-manager-wordpress": ">=0.0.5"
     },
     "require-dev": {
         "yoast/phpunit-polyfills": "*",
@@ -38,6 +38,7 @@
             "@format:phpcs",
             "@format:phpstan"
         ],
+		"detect-min-php": "sh -c 'for v in 5.4 5.5 5.6 7.0 7.1 7.2 7.3 7.4 8.0 8.1 8.2 8.3 8.4; do echo Testing PHP $v...; if docker run --rm -v \"$PWD:/app\" -w /app php:${v}-cli sh -c \"find . -type f -name \\\"*.php\\\" -not -path \\\"*/vendor/*\\\" -print0 | xargs -0 -n1 php -l\" >/dev/null 2>&1; then echo Minimum supported PHP version: $v; exit 0; fi; done; echo No supported PHP version detected; exit 1'",
         "phpstan-baseline": "phpstan analyse --generate-baseline=tests/phpstan-baseline.neon --memory-limit=2G",
         "test": [
             "Composer\\Config::disableProcessTimeout",
