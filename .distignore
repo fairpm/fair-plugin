@@ -6,7 +6,7 @@ bin/
 node_modules/
 tests/
 phpunit.xml.dist
-wp-tests-config-sample.php
+phpunit-*.xml.dist
 phpcs.xml.dist
 phpstan.dist.neon
 composer.json
@@ -18,3 +18,4 @@ package-lock.json
 .gitattributes
 .distignore
 .editorconfig
+.nvmrc

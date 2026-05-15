@@ -7,7 +7,7 @@
 /node_modules export-ignore
 /tests export-ignore
 phpunit.xml.dist export-ignore
-wp-tests-config-sample.php export-ignore
+phpunit-multisite.xml.dist export-ignore
 phpcs.xml.dist export-ignore
 composer.json export-ignore
 composer.lock export-ignore
@@ -18,3 +18,4 @@ package-lock.json export-ignore
 .gitattributes export-ignore
 .distignore export-ignore
 .editorconfig export-ignore
+.nvmrc export-ignore
