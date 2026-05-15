@@ -5,6 +5,7 @@
 bin/
 node_modules/
 tests/
+RELEASE.md
 phpunit.xml.dist
 phpunit-*.xml.dist
 phpcs.xml.dist

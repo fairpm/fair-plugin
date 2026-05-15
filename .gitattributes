@@ -6,6 +6,7 @@
 /.cache export-ignore
 /node_modules export-ignore
 /tests export-ignore
+RELEASE.md export-ignore
 phpunit.xml.dist export-ignore
 phpunit-multisite.xml.dist export-ignore
 phpcs.xml.dist export-ignore
