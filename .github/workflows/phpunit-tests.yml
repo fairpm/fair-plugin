@@ -37,6 +37,7 @@ jobs:
   phpunit:
     name: Run tests (WP ${{ matrix.wp-version }}, PHP ${{ matrix.php-version }})
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.wp-version == 'trunk' }} # Allow tests to fail for trunk.
     permissions:
       contents: read
     needs: generate-matrix
@@ -44,6 +45,7 @@ jobs:
       WP_ENV_PHP_VERSION: ${{ matrix.php-version }}
       WP_ENV_CORE: ${{ matrix.wp-version == 'trunk' && 'WordPress/WordPress' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wp-version ) }}
     strategy:
+      fail-fast: false
       matrix: ${{ fromJSON( needs.generate-matrix.outputs.matrix ) }}
 
     steps:
