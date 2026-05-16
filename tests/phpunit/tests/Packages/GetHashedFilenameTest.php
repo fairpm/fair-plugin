@@ -108,6 +108,23 @@ class GetHashedFilenameTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test that a hash-like substring in the middle of the slug still gets the DID hash appended.
+	 */
+	public function test_should_append_hash_when_same_value_appears_in_middle_of_plugin_slug() {
+		$hash = get_did_hash( 'did:plc:example1234567890123456789' );
+		$slug = 'vendor-' . $hash . '-plugin';
+		$metadata = $this->create_metadata_document(
+			[
+				'filename' => $slug . '/' . $slug . '.php',
+				'slug' => $slug,
+				'type' => 'wp-plugin',
+			]
+		);
+
+		$this->assertSame( $slug . '-' . $hash . '/' . $slug . '.php', get_hashed_filename( $metadata ) );
+	}
+
+	/**
 	 * Test that empty plugin filenames behave the same as missing filenames.
 	 */
 	public function test_should_fall_back_to_slug_when_plugin_filename_is_empty_string() {
