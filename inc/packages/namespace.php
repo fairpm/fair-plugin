@@ -470,6 +470,9 @@ function pick_artifact_by_lang( array $artifacts, ?string $locale = null ) {
 
 		return $score;
 	};
+
+	// Minimal behavior only: missing lang is tolerated, but equal-score ordering
+	// and partial-locale fallback precedence are intentionally unspecified.
 	usort( $artifacts, function ( $a, $b ) use ( $score_artifact ) {
 		$a_score = $score_artifact( $a );
 		$b_score = $score_artifact( $b );
