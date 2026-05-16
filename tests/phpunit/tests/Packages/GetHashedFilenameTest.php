@@ -123,6 +123,23 @@ class GetHashedFilenameTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test that a missing type is treated as non-plugin metadata.
+	 *
+	 * This covers the operator precedence difference between
+	 * `'wp-plugin' === ( $metadata->type ?? '' )` and
+	 * `'wp-plugin' === $metadata->type ?? ''`.
+	 */
+	public function test_should_treat_missing_type_as_non_plugin_metadata() {
+		$metadata = (object) [
+			'id' => 'did:plc:example1234567890123456789',
+			'slug' => 'example',
+			'filename' => 'example/example.php',
+		];
+
+		$this->assertSame( 'example-' . get_did_hash( $metadata->id ), get_hashed_filename( $metadata ) );
+	}
+
+	/**
 	 * Create a metadata document for testing.
 	 *
 	 * @param array $overrides Document overrides.
