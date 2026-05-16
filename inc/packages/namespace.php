@@ -701,7 +701,7 @@ function get_hashed_filename( $metadata ) : string {
 	}
 
 	// Append DID hash to slug if not already present.
-	if ( ! str_contains( $slug, $did_hash ) ) {
+	if ( ! str_ends_with( $slug, $did_hash ) ) {
 		$slug .= $did_hash;
 	}
 
