@@ -460,9 +460,10 @@ function pick_artifact_by_lang( array $artifacts, ?string $locale = null ) {
 	// Score artifacts based on match.
 	$score_artifact = function ( $artifact ) use ( $langs ) {
 		$score = 0;
+		$lang = strtolower( $artifact->lang ?? '' );
 
 		// Check for lang match.
-		$idx = array_search( strtolower( $artifact->lang ), $langs, true );
+		$idx = array_search( $lang, $langs, true );
 		if ( $idx !== false ) {
 			$score += ( count( $langs ) - $idx ) * 100;
 		}
