@@ -687,21 +687,30 @@ function get_banners( $banners ) : array {
  * @return string
  */
 function get_hashed_filename( $metadata ) : string {
-	$filename = $metadata->filename;
-	$type = str_replace( 'wp-', '', $metadata->type );
 	$did_hash = '-' . get_did_hash( $metadata->id );
 
-	list( $slug, $file ) = explode( '/', $filename, 2 );
-	if ( 'plugin' === $type ) {
-		if ( ! str_contains( $slug, $did_hash ) ) {
-			$slug .= $did_hash;
-		}
-		$filename = $slug . '/' . $file;
-	} else {
-		$filename = $slug . $did_hash;
+	// Use the slug from the filename, if present.
+	list( $slug, $file ) = array_pad( explode( '/', $metadata->filename ?? '', 2 ), 2, '' );
+	if ( '' === $slug ) {
+		$slug = $metadata->slug ?? '';
 	}
 
-	return $filename;
+	// Default to slug matching the plugin filename, if not specified.
+	if ( '' === $file ) {
+		$file = $slug . '.php';
+	}
+
+	// Append DID hash to slug if not already present.
+	if ( ! str_contains( $slug, $did_hash ) ) {
+		$slug .= $did_hash;
+	}
+
+	// WP plugins must include the plugin filename.
+	if ( 'wp-plugin' === $metadata->type ?? '' ) {
+		return $slug . '/' . $file;
+	}
+
+	return $slug;
 }
 
 /**
