@@ -726,6 +726,7 @@ function get_package_data( $did ) {
 	$type = str_replace( 'wp-', '', $metadata->type );
 	$sections = (array) $metadata->sections;
 	$description = trim( $sections['description'] ?? '' );
+	$package_artifact = isset( $release->artifacts->package ) ? pick_artifact_by_lang( $release->artifacts->package ) : null;
 
 	$response = [
 		'name'              => $metadata->name,
@@ -747,8 +748,8 @@ function get_package_data( $did ) {
 		'new_version'       => $release->version,
 		'version'           => $release->version,
 		'remote_version'    => $release->version,
-		'package'           => $release->artifacts->package[0]->url,
-		'download_link'     => $release->artifacts->package[0]->url,
+		'package'           => $package_artifact->url ?? '',
+		'download_link'     => $package_artifact->url ?? '',
 		'tested'            => $required_versions['tested_to'] ?? '',
 		'external'          => 'xxx',
 		'last_updated'      => $metadata->last_updated ?? '',
@@ -791,10 +792,7 @@ function cache_did_for_install( array $options ): array {
 		$did = array_find_key(
 			$releases,
 			function ( $release ) use ( $options ) {
-				if ( ! is_array( $release->artifacts->package ) ) {
-					return false;
-				}
-				$artifact = pick_artifact_by_lang( $release->artifacts->package );
+				$artifact = isset( $release->artifacts->package ) ? pick_artifact_by_lang( $release->artifacts->package ) : null;
 				return $artifact && $artifact->url === $options['package'];
 			}
 		);
@@ -964,8 +962,12 @@ function maybe_add_accept_header( $args, $url ) : array {
 	}
 
 	foreach ( $releases as $release ) {
-		if ( $url === $release->artifacts->package[0]->url ) {
-			$content_type = $release->artifacts->package[0]->{'content-type'};
+		$artifact = array_find(
+			$release->artifacts->package ?? [],
+			fn ( $package_artifact ) => $url === ( $package_artifact->url ?? '' )
+		);
+		if ( $artifact ) {
+			$content_type = $artifact->{'content-type'} ?? '';
 			if ( $content_type === 'application/octet-stream' ) {
 				$args = array_merge( $args, [ 'headers' => [ 'Accept' => $content_type ] ] );
 				break;
