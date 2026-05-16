@@ -95,6 +95,15 @@ class ReleaseDocument {
 			}
 		}
 
+		// Normalize to arrays of artifact objects since spec supports both formats.
+		if ( $doc->artifacts instanceof stdClass ) {
+			foreach ( get_object_vars( $doc->artifacts ) as $type => $artifact ) {
+				if ( is_object( $artifact ) ) {
+					$doc->artifacts->{$type} = [ $artifact ];
+				}
+			}
+		}
+
 		return $doc;
 	}
 }
