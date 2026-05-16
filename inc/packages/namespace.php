@@ -706,7 +706,7 @@ function get_hashed_filename( $metadata ) : string {
 	}
 
 	// WP plugins must include the plugin filename.
-	if ( 'wp-plugin' === $metadata->type ?? '' ) {
+	if ( 'wp-plugin' === ( $metadata->type ?? '' ) ) {
 		return $slug . '/' . $file;
 	}
 
