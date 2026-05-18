@@ -721,9 +721,6 @@ function get_package_data( $did ) {
 	}
 
 	$required_versions = version_requirements( $release );
-	$hashed_slug = get_hashed_slug( $metadata );
-	$type = str_replace( 'wp-', '', $metadata->type );
-	$sections = (array) $metadata->sections;
 	$description = trim( $sections['description'] ?? '' );
 
 	$response = [
@@ -731,9 +728,9 @@ function get_package_data( $did ) {
 		'author'            => $metadata->authors[0]->name,
 		'author_uri'        => $metadata->authors[0]->url,
 		'slug'              => $metadata->slug,
-		'slug_didhash'      => $hashed_slug,
+		'slug_didhash'      => get_hashed_slug( $metadata ),
 		'url'               => $metadata->url ?? $metadata->slug,
-		'sections'          => $sections,
+		'sections'          => (array) $metadata->sections,
 		'description'       => $description,
 		'short_description' => substr( strip_tags( $description ), 0, 147 ) . '...',
 		'icons'             => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
@@ -754,7 +751,8 @@ function get_package_data( $did ) {
 		'active_installs'   => 0,
 		'_fair'             => $metadata,
 	];
-	if ( 'theme' === $type ) {
+
+	if ( 'wp-theme' === $metadata->type ) {
 		$response['theme_uri'] = $response['url'];
 	}
 
