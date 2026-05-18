@@ -731,8 +731,6 @@ function get_package_data( $did ) {
 		'author'            => $metadata->authors[0]->name,
 		'author_uri'        => $metadata->authors[0]->url,
 		'slug'              => $metadata->slug,
-		$type               => $filename,
-		'file'              => $filename,
 		'slug_didhash'      => $hashed_slug,
 		'url'               => $metadata->url ?? $metadata->slug,
 		'sections'          => $sections,
