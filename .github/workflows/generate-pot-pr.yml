@@ -9,7 +9,7 @@ on:
 jobs:
   generate-pot:
     name: Generate POT PR
-    if: github.repository == ${{ github.event.repository.full_name }}
+    if: github.repository == github.event.repository.full_name
     permissions:
       contents: write
       pull-requests: write

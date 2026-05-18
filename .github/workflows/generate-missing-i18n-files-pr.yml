@@ -11,7 +11,7 @@ on:
 jobs:
   generate-missing-i18n-files:
     name: Generate missing i18n files PR
-    if: github.repository == ${{ github.event.repository.full_name }}
+    if: github.repository == github.event.repository.full_name
     permissions:
       contents: write
       pull-requests: write
