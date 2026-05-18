@@ -1,25 +1,25 @@
 <?php
 /**
- * Tests for FAIR\Packages\get_hashed_filename().
+ * Tests for FAIR\Packages package identity helpers.
  *
  * @package FAIR
  */
 
 use FAIR\Packages\MetadataDocument;
 use function FAIR\Packages\get_did_hash;
-use function FAIR\Packages\get_hashed_filename;
+use function FAIR\Packages\get_hashed_slug;
 
 /**
- * Tests for FAIR\Packages\get_hashed_filename().
+ * Tests for FAIR\Packages package identity helpers.
  *
- * @covers FAIR\Packages\get_hashed_filename
+ * @covers FAIR\Packages\get_hashed_slug
  */
-class GetHashedFilenameTest extends WP_UnitTestCase {
+class GetHashedPackageIdentityTest extends WP_UnitTestCase {
 
 	/**
-	 * Test that plugin filenames append the DID hash to the directory name.
+	 * Test that hashed slugs stay decoupled from the plugin bootstrap filename.
 	 */
-	public function test_should_hash_plugin_directory_name() {
+	public function test_should_return_hashed_slug_for_plugin_metadata() {
 		$metadata = $this->create_metadata_document(
 			[
 				'filename' => 'example/example.php',
@@ -28,26 +28,26 @@ class GetHashedFilenameTest extends WP_UnitTestCase {
 			]
 		);
 
-		$this->assertSame( 'example-' . get_did_hash( $metadata->id ) . '/example.php', get_hashed_filename( $metadata ) );
+		$this->assertSame( 'example-' . get_did_hash( $metadata->id ), get_hashed_slug( $metadata ) );
 	}
 
 	/**
-	 * Test that missing plugin filenames fall back to the slug.
+	 * Test that plugin slugs hash independently of the bootstrap filename.
 	 */
-	public function test_should_fall_back_to_slug_when_plugin_filename_missing() {
+	public function test_should_ignore_plugin_bootstrap_filename_when_hashing_slug() {
 		$metadata = $this->create_metadata_document(
 			[
-				'filename' => null,
+				'filename' => 'example/custom-bootstrap.php',
 				'slug' => 'example',
 				'type' => 'wp-plugin',
 			]
 		);
 
-		$this->assertSame( 'example-' . get_did_hash( $metadata->id ) . '/example.php', get_hashed_filename( $metadata ) );
+		$this->assertSame( 'example-' . get_did_hash( $metadata->id ), get_hashed_slug( $metadata ) );
 	}
 
 	/**
-	 * Test that malformed plugin filenames still produce a valid hashed path.
+	 * Test that malformed plugin filenames still produce a valid hashed slug.
 	 */
 	public function test_should_recover_when_plugin_filename_has_no_main_file() {
 		$metadata = $this->create_metadata_document(
@@ -58,11 +58,11 @@ class GetHashedFilenameTest extends WP_UnitTestCase {
 			]
 		);
 
-		$this->assertSame( 'example-' . get_did_hash( $metadata->id ) . '/example.php', get_hashed_filename( $metadata ) );
+		$this->assertSame( 'example-' . get_did_hash( $metadata->id ), get_hashed_slug( $metadata ) );
 	}
 
 	/**
-	 * Test that theme filenames append the DID hash to the slug.
+	 * Test that theme slugs append the DID hash.
 	 */
 	public function test_should_hash_theme_slug() {
 		$metadata = $this->create_metadata_document(
@@ -73,7 +73,7 @@ class GetHashedFilenameTest extends WP_UnitTestCase {
 			]
 		);
 
-		$this->assertSame( 'example-' . get_did_hash( $metadata->id ), get_hashed_filename( $metadata ) );
+		$this->assertSame( 'example-' . get_did_hash( $metadata->id ), get_hashed_slug( $metadata ) );
 	}
 
 	/**
@@ -88,7 +88,7 @@ class GetHashedFilenameTest extends WP_UnitTestCase {
 			]
 		);
 
-		$this->assertSame( 'example-' . get_did_hash( $metadata->id ), get_hashed_filename( $metadata ) );
+		$this->assertSame( 'example-' . get_did_hash( $metadata->id ), get_hashed_slug( $metadata ) );
 	}
 
 	/**
@@ -104,7 +104,7 @@ class GetHashedFilenameTest extends WP_UnitTestCase {
 			]
 		);
 
-		$this->assertSame( 'example-' . $hash . '/example.php', get_hashed_filename( $metadata ) );
+		$this->assertSame( 'example-' . $hash, get_hashed_slug( $metadata ) );
 	}
 
 	/**
@@ -121,11 +121,11 @@ class GetHashedFilenameTest extends WP_UnitTestCase {
 			]
 		);
 
-		$this->assertSame( $slug . '-' . $hash . '/' . $slug . '.php', get_hashed_filename( $metadata ) );
+		$this->assertSame( $slug . '-' . $hash, get_hashed_slug( $metadata ) );
 	}
 
 	/**
-	 * Test that empty plugin filenames behave the same as missing filenames.
+	 * Test that empty plugin filenames behave the same as missing filenames for slug hashing.
 	 */
 	public function test_should_fall_back_to_slug_when_plugin_filename_is_empty_string() {
 		$metadata = $this->create_metadata_document(
@@ -136,7 +136,7 @@ class GetHashedFilenameTest extends WP_UnitTestCase {
 			]
 		);
 
-		$this->assertSame( 'example-' . get_did_hash( $metadata->id ) . '/example.php', get_hashed_filename( $metadata ) );
+		$this->assertSame( 'example-' . get_did_hash( $metadata->id ), get_hashed_slug( $metadata ) );
 	}
 
 	/**
@@ -153,7 +153,7 @@ class GetHashedFilenameTest extends WP_UnitTestCase {
 			'filename' => 'example/example.php',
 		];
 
-		$this->assertSame( 'example-' . get_did_hash( $metadata->id ), get_hashed_filename( $metadata ) );
+		$this->assertSame( 'example-' . get_did_hash( $metadata->id ), get_hashed_slug( $metadata ) );
 	}
 
 	/**
