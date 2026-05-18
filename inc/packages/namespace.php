@@ -680,28 +680,27 @@ function get_banners( $banners ) : array {
 }
 
 /**
- * Get hashed file name from MetadataDocument.
+ * Get hashed slug from MetadataDocument.
  *
  * @param  MetadataDocument $metadata MetadataDocument.
  *
  * @return string
  */
-function get_hashed_filename( $metadata ) : string {
-	$filename = $metadata->filename;
-	$type = str_replace( 'wp-', '', $metadata->type );
+function get_hashed_slug( $metadata ) : string {
 	$did_hash = '-' . get_did_hash( $metadata->id );
 
-	list( $slug, $file ) = explode( '/', $filename, 2 );
-	if ( 'plugin' === $type ) {
-		if ( ! str_contains( $slug, $did_hash ) ) {
-			$slug .= $did_hash;
-		}
-		$filename = $slug . '/' . $file;
-	} else {
-		$filename = $slug . $did_hash;
+	// Use the slug from the filename, if present.
+	list( $slug ) = array_pad( explode( '/', $metadata->filename ?? '', 2 ), 1, '' );
+	if ( '' === $slug ) {
+		$slug = $metadata->slug ?? '';
 	}
 
-	return $filename;
+	// Append DID hash to slug if not already present.
+	if ( ! str_ends_with( $slug, $did_hash ) ) {
+		$slug .= $did_hash;
+	}
+
+	return $slug;
 }
 
 /**
@@ -722,9 +721,6 @@ function get_package_data( $did ) {
 	}
 
 	$required_versions = version_requirements( $release );
-	$filename = get_hashed_filename( $metadata );
-	$type = str_replace( 'wp-', '', $metadata->type );
-	$sections = (array) $metadata->sections;
 	$description = trim( $sections['description'] ?? '' );
 
 	$response = [
@@ -732,11 +728,9 @@ function get_package_data( $did ) {
 		'author'            => $metadata->authors[0]->name,
 		'author_uri'        => $metadata->authors[0]->url,
 		'slug'              => $metadata->slug,
-		'slug_didhash'      => $metadata->slug . '-' . get_did_hash( $did ),
-		$type               => $filename,
-		'file'              => $filename,
+		'slug_didhash'      => get_hashed_slug( $metadata ),
 		'url'               => $metadata->url ?? $metadata->slug,
-		'sections'          => $sections,
+		'sections'          => (array) $metadata->sections,
 		'description'       => $description,
 		'short_description' => substr( strip_tags( $description ), 0, 147 ) . '...',
 		'icons'             => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
@@ -757,7 +751,8 @@ function get_package_data( $did ) {
 		'active_installs'   => 0,
 		'_fair'             => $metadata,
 	];
-	if ( 'theme' === $type ) {
+
+	if ( 'wp-theme' === $metadata->type ) {
 		$response['theme_uri'] = $response['url'];
 	}
 
@@ -865,7 +860,7 @@ function maybe_rename_on_package_download( $source, string $remote_source, WP_Up
 		return $source;
 	}
 
-	$new_source = trailingslashit( $remote_source ) . $metadata->slug . '-' . get_did_hash( $did );
+	$new_source = trailingslashit( $remote_source ) . get_hashed_slug( $metadata );
 
 	if ( trailingslashit( strtolower( $source ) ) !== trailingslashit( strtolower( $new_source ) ) ) {
 		$wp_filesystem->move( $source, $new_source, true );
@@ -917,7 +912,7 @@ function move_package_during_install( $source, string $remote_source, WP_Upgrade
 		// Cannot guarantee a slug-didhash format. dir-didhash is the best achievable.
 		$new_source = untrailingslashit( $source ) . "-{$did_hash}/";
 	} else {
-		$new_source = dirname( untrailingslashit( $source ), 2 ) . "/{$metadata->slug}-{$did_hash}/";
+		$new_source = dirname( untrailingslashit( $source ), 2 ) . '/' . get_hashed_slug( $metadata ) . '/';
 	}
 
 	// Core must be able to find the new source directory.

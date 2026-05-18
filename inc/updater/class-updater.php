@@ -279,8 +279,11 @@ class Updater {
 			}
 
 			$rel_path = $package->get_relative_path();
+			$meta = $package->get_metadata();
+			$package_type = str_replace( 'wp-', '', $meta->type );
 
 			$response['slug'] = $response['slug_didhash'];
+			$response[ $package_type ] = $rel_path;
 
 			$is_compatible = Packages\check_requirements( $release );
 

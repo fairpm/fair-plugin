@@ -8,6 +8,7 @@
 namespace FAIR\Packages\WP_CLI\Compat;
 
 use FAIR\Packages as Packages;
+use function FAIR\Updater\get_packages;
 use function WP_CLI\Utils\get_flag_value as get_flag_value;
 use WP_CLI;
 
@@ -89,13 +90,6 @@ function maybe_handle_command( array $args = [], array $assoc_args = [] ): void 
  * @return void
  */
 function handle_command( string $command, string $subcommand, array $args, array $assoc_args, array $items, array $dids ): void {
-	$hashed_items = replace_dids_with_hashed_filenames( $items, $dids );
-	if ( $hashed_items === array_values( $items ) ) {
-		return;
-	}
-
-	force_detection_by_did( $dids );
-
 	switch ( $subcommand ) {
 		case 'activate':
 		case 'deactivate':
@@ -107,7 +101,37 @@ function handle_command( string $command, string $subcommand, array $args, array
 		case 'toggle':
 		case 'uninstall':
 		case 'update':
-			$args = array_merge( [ $command, $subcommand ], $hashed_items );
+			$packages = get_packages();
+			$plugin_basename_by_did = [];
+
+			// Get the plugin basenames for the DIDs.
+			foreach ( $dids as $did ) {
+				if ( ! empty( $packages['plugins'][ $did ] ) ) {
+					$plugin_basename_by_did[ $did ] = plugin_basename( $packages['plugins'][ $did ] );
+				}
+			}
+
+			// Replace positional DIDs with plugin basenames where possible.
+			$plugin_items = array_map(
+				fn ( $item ) => $plugin_basename_by_did[ $item ] ?? $item,
+				$items
+			);
+
+			// Match DIDs to plugin information too.
+			add_filter(
+				'all_plugins',
+				function ( $all_plugins ) use ( $plugin_basename_by_did ) {
+					foreach ( $plugin_basename_by_did as $did => $plugin_file ) {
+						if ( isset( $all_plugins[ $plugin_file ] ) ) {
+							$all_plugins[ $did ] = $all_plugins[ $plugin_file ];
+						}
+					}
+
+					return $all_plugins;
+				}
+			);
+
+			$args = array_merge( [ $command, $subcommand ], $plugin_items );
 			run_command_and_halt( $args, $assoc_args );
 			break;
 		case 'search':
@@ -127,47 +151,7 @@ function handle_command( string $command, string $subcommand, array $args, array
 			WP_CLI::log( __( 'The verify-checksums command is not currently supported for DIDs.', 'fair' ) );
 			WP_CLI::halt( 1 );
 			break;
-		default:
-			// Do nothing.
-			break;
 	}
-}
-
-/**
- * Force WP to detect plugins by their DIDs.
- *
- * This adds a filter to 'all_plugins' that duplicates entries
- * for the hashed filenames to also be accessible by their DIDs.
- *
- * @param string[] $dids The DIDs to force detection for.
- * @return void
- */
-function force_detection_by_did( array $dids ): void {
-	add_filter(
-		'all_plugins',
-		function ( $all_plugins ) use ( $dids ) {
-			foreach ( $dids as $did ) {
-				$metadata = Packages\fetch_package_metadata( $did );
-				if ( is_wp_error( $metadata ) ) {
-					WP_CLI::warning(
-						sprintf(
-							/* translators: 1: The DID, 2: The error message. */
-							__( 'Could not retrieve metadata for %1$s - %2$s', 'fair' ),
-							$did,
-							$metadata->get_error_message()
-						)
-					);
-					continue;
-				}
-
-				$filename = Packages\get_hashed_filename( $metadata );
-				if ( isset( $all_plugins[ $filename ] ) ) {
-					$all_plugins[ $did ] = $all_plugins[ $filename ];
-				}
-			}
-			return $all_plugins;
-		}
-	);
 }
 
 /**
@@ -257,36 +241,4 @@ function run_command_and_halt( array $args, array $assoc_args = [] ): void {
 			WP_CLI::halt( $e->getCode() );
 		}
 	}
-}
-
-/**
- * Replace DIDs in an array of items with their hashed filenames.
- *
- * @param string[] $items The command line items.
- * @param string[] $dids  The DIDs to replace.
- * @return string[] The modified items.
- */
-function replace_dids_with_hashed_filenames( array $items, array $dids ): array {
-	return array_map(
-		function ( $item ) use ( $dids ) {
-			if ( in_array( $item, $dids, true ) ) {
-				$metadata = Packages\fetch_package_metadata( $item );
-				if ( is_wp_error( $metadata ) ) {
-					WP_CLI::warning(
-						sprintf(
-							/* translators: 1: The DID, 2: The error message. */
-							__( 'Could not retrieve metadata for %1$s - %2$s', 'fair' ),
-							$item,
-							$metadata->get_error_message()
-						)
-					);
-					return $item;
-				}
-
-				return Packages\get_hashed_filename( $metadata );
-			}
-			return $item;
-		},
-		$items
-	);
 }
