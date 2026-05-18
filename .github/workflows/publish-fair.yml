@@ -20,7 +20,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           fetch-depth: 0
 
@@ -34,7 +34,7 @@ jobs:
           fi
 
       - name: Publish to FAIR
-        uses: fairpm/fair-pulse@v1
+        uses: fairpm/fair-pulse@v1 # not using sha hash for now, it's our own action anyway
         with:
           version: ${{ steps.tag.outputs.tag }}
           artifact-name: ${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.zip
