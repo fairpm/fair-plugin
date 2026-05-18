@@ -19,7 +19,7 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          persist-credentials: true # needed to create PR
+          persist-credentials: false
 
       - name: Bump version
         run: |
@@ -33,6 +33,7 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
 
+      # TODO: use `gh pr new` instead
       - name: Create pull request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:

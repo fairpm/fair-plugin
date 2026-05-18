@@ -22,7 +22,7 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
-          persist-credentials: true # needed to create PR
+          persist-credentials: true # git cli needs this
 
       - name: Set up PHP environment
         uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
