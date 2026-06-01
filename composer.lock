@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2d9bb03b2d90fcb6fe7a5842ae3c5a0",
+    "content-hash": "53f98dad6461a824051a14aedc1e0172",
     "packages": [
         {
             "name": "afragen/wordpress-plugin-readme-parser",
@@ -54,16 +54,16 @@
         },
         {
             "name": "brick/math",
-            "version": "0.17.0",
+            "version": "0.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "a62af7ab2e3cee9f9bf4cf77a5d1e6ba408a44ee"
+                "reference": "6aef71a9fbbd1ee7be0e313cd627f8e6f7125a5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/a62af7ab2e3cee9f9bf4cf77a5d1e6ba408a44ee",
-                "reference": "a62af7ab2e3cee9f9bf4cf77a5d1e6ba408a44ee",
+                "url": "https://api.github.com/repos/brick/math/zipball/6aef71a9fbbd1ee7be0e313cd627f8e6f7125a5b",
+                "reference": "6aef71a9fbbd1ee7be0e313cd627f8e6f7125a5b",
                 "shasum": ""
             },
             "require": {
@@ -101,7 +101,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.17.0"
+                "source": "https://github.com/brick/math/tree/0.17.1"
             },
             "funding": [
                 {
@@ -109,7 +109,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-03-17T12:54:54+00:00"
+            "time": "2026-04-19T20:55:20+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -169,16 +169,16 @@
         },
         {
             "name": "fairpm/did-manager",
-            "version": "0.0.4",
+            "version": "0.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fairpm/did-manager.git",
-                "reference": "2aaea668dc045e9ce0a57a3375597b2e233d4695"
+                "reference": "28305a8d3b48b94b4f444268337129deb46154b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fairpm/did-manager/zipball/2aaea668dc045e9ce0a57a3375597b2e233d4695",
-                "reference": "2aaea668dc045e9ce0a57a3375597b2e233d4695",
+                "url": "https://api.github.com/repos/fairpm/did-manager/zipball/28305a8d3b48b94b4f444268337129deb46154b6",
+                "reference": "28305a8d3b48b94b4f444268337129deb46154b6",
                 "shasum": ""
             },
             "require": {
@@ -190,9 +190,12 @@
                 "yocto/yoclib-multibase": "^1.2"
             },
             "require-dev": {
-                "carthage-software/mago": "^1.0.0-rc.12",
-                "phpunit/phpunit": "^10.0",
-                "roave/security-advisories": "dev-latest"
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpstan/phpstan": "^1.12",
+                "phpunit/phpunit": "^9.6",
+                "roave/security-advisories": "dev-latest",
+                "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
             "autoload": {
@@ -213,35 +216,38 @@
             "description": "Core PHP library for DID management, key handling, and PLC operations",
             "support": {
                 "issues": "https://github.com/fairpm/did-manager/issues",
-                "source": "https://github.com/fairpm/did-manager/tree/0.0.4"
+                "source": "https://github.com/fairpm/did-manager/tree/0.0.6"
             },
-            "time": "2026-03-28T15:20:21+00:00"
+            "time": "2026-05-19T17:15:37+00:00"
         },
         {
             "name": "fairpm/did-manager-wordpress",
-            "version": "0.0.4-a",
+            "version": "0.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fairpm/did-manager-wordpress.git",
-                "reference": "ec9d707414bad62c8fbfdb00e86a79e752a077ac"
+                "reference": "ae4149376560e8aba6959471df16b8632e5d62aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fairpm/did-manager-wordpress/zipball/ec9d707414bad62c8fbfdb00e86a79e752a077ac",
-                "reference": "ec9d707414bad62c8fbfdb00e86a79e752a077ac",
+                "url": "https://api.github.com/repos/fairpm/did-manager-wordpress/zipball/ae4149376560e8aba6959471df16b8632e5d62aa",
+                "reference": "ae4149376560e8aba6959471df16b8632e5d62aa",
                 "shasum": ""
             },
             "require": {
                 "afragen/wordpress-plugin-readme-parser": "^1.2025.12",
                 "erusev/parsedown": "^1.7",
                 "ext-json": "*",
-                "fairpm/did-manager": "^0.0.4",
+                "fairpm/did-manager": "0.0.6",
                 "php": ">=8.0"
             },
             "require-dev": {
-                "carthage-software/mago": "^1.0.0-rc.12",
-                "phpunit/phpunit": "^10.0",
-                "roave/security-advisories": "dev-latest"
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "phpcompatibility/php-compatibility": "^9.3",
+                "phpstan/phpstan": "^1.12",
+                "phpunit/phpunit": "^9.0",
+                "roave/security-advisories": "dev-latest",
+                "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
             "autoload": {
@@ -262,9 +268,9 @@
             "description": "WordPress integration layer for FAIR DID management and metadata generation",
             "support": {
                 "issues": "https://github.com/fairpm/did-manager-wordpress/issues",
-                "source": "https://github.com/fairpm/did-manager-wordpress/tree/0.0.4-a"
+                "source": "https://github.com/fairpm/did-manager-wordpress/tree/0.0.8"
             },
-            "time": "2026-04-13T17:38:55+00:00"
+            "time": "2026-05-23T00:55:11+00:00"
         },
         {
             "name": "simplito/bigint-wrapper-php",
@@ -3992,9 +3998,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "fairpm/did-manager-wordpress": 15
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
