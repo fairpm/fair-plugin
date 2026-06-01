@@ -155,7 +155,7 @@ function get_did_document( string $id ) {
 	}
 
 	$cached = get_site_transient( CACHE_METADATA_DOCUMENTS . $id );
-	if ( $cached ) {
+	if ( $cached && is_array( $cached ) ) {
 		return $cached;
 	}
 
