@@ -41,11 +41,11 @@ $FIXTURES = load_fixtures( $FIXTURES_DIR );
 
 $DID_MAP = [
 	'did:plc:z72i7hdynmk6r22z27h6tvur'       => 'did-doc-integration',
+	'did:plc:no-services'                      => 'did-doc-no-services-integration',
 	'did:plc:ppicmk23c5pimdivve34bcp2'        => 'did-doc-valid',
 	'did:plc:alias-valid'                      => 'did-doc-alias-valid',
 	'did:plc:alias-invalid-domain'             => 'did-doc-alias-invalid-domain',
 	'did:plc:no-keys'                          => 'did-doc-no-keys',
-	'did:plc:no-services'                      => 'did-doc-no-services',
 ];
 
 $META_MAP = [
