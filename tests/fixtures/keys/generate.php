@@ -1,13 +1,15 @@
 <?php
 /**
  * Generate test Ed25519 key fixtures for signature verification tests.
+ * Idempotent — skips if keypair already exists.
  *
  * Usage: php tests/fixtures/keys/generate.php
  *
- * Creates:
+ * Creates (if missing):
  *   tests/fixtures/keys/ed25519-keypair.json   — hex-encoded secret + public key
  *   tests/fixtures/keys/did-doc-signed.json     — DID doc with the public key
- *   tests/fixtures/zips/hello-dolly.sig         — detached signature of the zip
+ *   tests/fixtures/keys/hello-dolly.sig         — detached signature of hello-dolly.zip
+ *   tests/fixtures/keys/release-doc-signed.json — release with signature
  */
 
 declare( strict_types=1 );
@@ -15,6 +17,17 @@ declare( strict_types=1 );
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use FAIR\DID\Crypto\DidCodec;
+
+// Idempotent: skip if fixtures already exist.
+$keypair_file = __DIR__ . '/ed25519-keypair.json';
+if ( file_exists( $keypair_file ) ) {
+	$existing = json_decode( file_get_contents( $keypair_file ), true );
+	if ( ! empty( $existing['secret_key_hex'] ) && ! empty( $existing['public_key_multibase'] ) ) {
+		echo "Keypair already exists. Skipping generation.\n";
+		echo "  To regenerate, delete: {$keypair_file}\n";
+		exit( 0 );
+	}
+}
 
 // ── Generate Ed25519 keypair ───────────────────────────────────────
 
