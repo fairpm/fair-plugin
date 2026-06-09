@@ -26,6 +26,7 @@ services:
     volumes:
       - ../../../../:/app
       - composer-cache:/root/.composer
+      - mutation-vendor:/app/tests/mutation/vendor
     working_dir: /app
     environment:
       XDEBUG_MODE: coverage
@@ -37,11 +38,11 @@ services:
     command: >
       sh -c '
         composer install --ignore-platform-reqs --no-interaction --prefer-dist &&
-        composer require --dev infection/infection --ignore-platform-reqs --no-interaction --prefer-dist &&
+        cd tests/mutation && ls -la vendor/bin/infection 2>/dev/null || composer install --no-interaction --prefer-dist && cd /app &&
         mkdir -p tests/unit/infection &&
         rm -f wp-tests-config.php &&
         php bin/setup-local-tests.php &&
-        ./vendor/bin/infection --configuration=infection.json --threads=2 --no-progress
+        tests/mutation/vendor/bin/infection --configuration=infection.json --threads=2 --no-progress
       '
     networks:
       - mutation-net
@@ -52,3 +53,4 @@ networks:
 
 volumes:
   composer-cache:
+  mutation-vendor:
