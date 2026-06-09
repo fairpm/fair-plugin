@@ -45,10 +45,10 @@ The plan is designed to be executed incrementally. Each phase produces runnable 
 **Bug fixed:** `pick_release()` — added empty-array guard to prevent TypeError on `reset()` returning false with `?ReleaseDocument` return type.
 **Note:** `get_site_transient` converts `null` → `''`; alias cache test accounts for this.
 
-## Phase 4: DTO validation
+## Phase 4: DTO validation ✅
 
-- [ ] `MetadataDocumentTest.php` — all `from_data()` and `from_response()` cases
-- [ ] `ReleaseDocumentTest.php` — all `from_data()` cases
+- [x] `MetadataDocumentTest.php` — 13 tests (from_data): all fields, minimal, 5 missing mandatory fields, missing releases, invalid release propagation, optional fields null, multiple releases parsed, security array. 5 tests (from_response): valid response, invalid JSON, valid JSON + invalid data, empty body, null body (TypeError note)
+- [x] `ReleaseDocumentTest.php` — 10 tests: all fields, with requirements, specific version, missing version, missing artifacts, optional fields null, minimal artifacts, builder with unset fields
 
 ## Phase 5: DID pipeline transient/HTTP functions (Priority B)
 
