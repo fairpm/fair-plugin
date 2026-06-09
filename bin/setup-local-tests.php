@@ -470,6 +470,22 @@ function install_test_suite( string $tests_dir, string $wp_version, string $tmpd
 	recurse_copy( $src_includes, "{$tests_dir}/includes" );
 	recurse_copy( $src_data, "{$tests_dir}/data" );
 
+	// Patch: E_STRICT was removed in PHP 8.4. The WP test library's
+	// install.php references it in error_reporting(), which causes
+	// a "Constant E_STRICT is deprecated" noise on every test run.
+	// This must be patched here (not in bootstrap.php) because
+	// install.php runs as a separate subprocess via system().
+	$install_php = "{$tests_dir}/includes/install.php";
+	if ( file_exists( $install_php ) ) {
+		$content = file_get_contents( $install_php );
+		$content = str_replace(
+			'E_ALL & ~E_DEPRECATED & ~E_STRICT',
+			'E_ALL & ~E_DEPRECATED',
+			$content
+		);
+		file_put_contents( $install_php, $content );
+	}
+
 	// Also copy the bundled wp-tests-config-sample.php for reference.
 	if ( file_exists( "{$base}/wp-tests-config-sample.php" ) ) {
 		copy( "{$base}/wp-tests-config-sample.php", "{$tests_dir}/wp-tests-config-sample.php" );
