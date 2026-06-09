@@ -19,13 +19,14 @@
 # ────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
-SUITE="${1:-integration}"
+SUITE="${1:-all}"
 shift || true
 PHPUNIT_ARGS="${*:-}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-COMPOSE_DIR="${PROJECT_DIR}/tests/sites/ephemeral/${SUITE}"
+COMPOSE_SUITE="integration"  # Both integration and http share the same WP + mock-server stack.
+COMPOSE_DIR="${PROJECT_DIR}/tests/sites/${COMPOSE_SUITE}"
 COMPOSE_FILE="${COMPOSE_DIR}/docker-compose.yml"
 COMPOSE_PROJECT="fair-integration-${SUITE}"
 
@@ -126,7 +127,8 @@ say "Activating plugin..."
 $WP_CLI wp plugin activate fair-plugin --network 2>&1 | sed 's/^/  /' || die "Plugin activation failed"
 
 # ── Seed test data ──────────────────────────────────────────────────
-SEED_FILE="/var/www/html/wp-content/plugins/fair-plugin/tests/sites/ephemeral/${SUITE}/seed.php"
+# Seed and smoke tests always use the integration seed (shared infrastructure).
+SEED_FILE="/var/www/html/wp-content/plugins/fair-plugin/tests/sites/integration/seed.php"
 if $WP_CLI test -f "$SEED_FILE" 2>/dev/null; then
 	say "Seeding test data..."
 	$WP_CLI wp eval-file "$SEED_FILE" 2>&1 | sed 's/^/  /' || warn "Seed script had errors (non-fatal)"
@@ -145,42 +147,76 @@ say "Smoke test: Metadata lookup..."
 $WP_CLI curl -s http://mock-server:8080/metadata/did:plc:z72i7hdynmk6r22z27h6tvur 2>&1 | head -3 | sed 's/^/  /'
 
 # ── Run tests ───────────────────────────────────────────────────────
-say "Running integration tests..."
-PHPUNIT_XML="/var/www/html/wp-content/plugins/fair-plugin/tests/integration/phpunit.xml"
+TEST_EXIT=0
+PASSED=false
 
-set +e
-$WP_CLI php /var/www/html/wp-content/plugins/fair-plugin/vendor/bin/phpunit \
-	-c "$PHPUNIT_XML" \
-	$PHPUNIT_ARGS \
-	2>&1
-INTEG_EXIT=$?
-set -e
+# Always set both phpunit config paths (they may or may not be used).
+INTEG_XML="/var/www/html/wp-content/plugins/fair-plugin/tests/integration/phpunit.xml"
+HTTP_XML="/var/www/html/wp-content/plugins/fair-plugin/tests/http/phpunit.xml"
 
-say "Running HTTP tests..."
-HTTP_PHPUNIT_XML="/var/www/html/wp-content/plugins/fair-plugin/tests/http/phpunit.xml"
-if $WP_CLI test -f "$HTTP_PHPUNIT_XML" 2>/dev/null; then
-	set +e
-	$WP_CLI php /var/www/html/wp-content/plugins/fair-plugin/vendor/bin/phpunit \
-		-c "$HTTP_PHPUNIT_XML" \
-		$PHPUNIT_ARGS \
-		2>&1
-	HTTP_EXIT=$?
-	set -e
-else
-	HTTP_EXIT=0
-	say "No HTTP test config found — skipping."
-fi
+case "${SUITE}" in
+	integration)
+		say "Running integration tests..."
+		set +e
+		$WP_CLI php /var/www/html/wp-content/plugins/fair-plugin/vendor/bin/phpunit \
+			-c "$INTEG_XML" \
+			$PHPUNIT_ARGS \
+			2>&1
+		TEST_EXIT=$?
+		set -e
+		PASSED=true
+		;;
+	http)
+		say "Running HTTP tests..."
+		if $WP_CLI test -f "$HTTP_XML" 2>/dev/null; then
+			set +e
+			$WP_CLI php /var/www/html/wp-content/plugins/fair-plugin/vendor/bin/phpunit \
+				-c "$HTTP_XML" \
+				$PHPUNIT_ARGS \
+				2>&1
+			TEST_EXIT=$?
+			set -e
+		else
+			die "HTTP test config not found: $HTTP_XML"
+		fi
+		PASSED=true
+		;;
+	all)
+		say "Running integration tests..."
+		set +e
+		$WP_CLI php /var/www/html/wp-content/plugins/fair-plugin/vendor/bin/phpunit \
+			-c "$INTEG_XML" \
+			$PHPUNIT_ARGS \
+			2>&1
+		INTEG_EXIT=$?
+		set -e
 
-TEST_EXIT=$(( INTEG_EXIT > HTTP_EXIT ? INTEG_EXIT : HTTP_EXIT ))
+		say "Running HTTP tests..."
+		if $WP_CLI test -f "$HTTP_XML" 2>/dev/null; then
+			set +e
+			$WP_CLI php /var/www/html/wp-content/plugins/fair-plugin/vendor/bin/phpunit \
+				-c "$HTTP_XML" \
+				$PHPUNIT_ARGS \
+				2>&1
+			HTTP_EXIT=$?
+			set -e
+		else
+			HTTP_EXIT=0
+			say "No HTTP test config found — skipping."
+		fi
+		TEST_EXIT=$(( INTEG_EXIT > HTTP_EXIT ? INTEG_EXIT : HTTP_EXIT ))
+		PASSED=true
+		;;
+	*)
+		die "Unknown suite: ${SUITE}. Expected: integration, http, or all."
+		;;
+esac
 
-if [ $TEST_EXIT -eq 0 ]; then
-	say "${GREEN}All integration + HTTP tests passed.${NC}"
-else
-	if [ $INTEG_EXIT -ne 0 ]; then
-		warn "Integration tests failed with exit code ${INTEG_EXIT}"
-	fi
-	if [ $HTTP_EXIT -ne 0 ]; then
-		warn "HTTP tests failed with exit code ${HTTP_EXIT}"
+if $PASSED; then
+	if [ $TEST_EXIT -eq 0 ]; then
+		say "${GREEN}All ${SUITE} tests passed.${NC}"
+	else
+		warn "${SUITE} tests failed with exit code ${TEST_EXIT}"
 	fi
 fi
 

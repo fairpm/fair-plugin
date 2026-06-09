@@ -18,13 +18,13 @@ services:
 
   mutation:
     build:
-      context: ../../../..
-      dockerfile: tests/sites/ephemeral/mutation/Dockerfile
+      context: ../../..
+      dockerfile: tests/sites/mutation/Dockerfile
     depends_on:
       mysql:
         condition: service_healthy
     volumes:
-      - ../../../../:/app
+      - ../../..:/app
       - composer-cache:/root/.composer
       - mutation-vendor:/app/tests/mutation/vendor
     working_dir: /app

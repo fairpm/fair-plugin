@@ -81,7 +81,7 @@
             "@coverage:multisite",
             "@coverage:merge"
         ],
-        "infection": "docker compose -f tests/sites/ephemeral/mutation/docker-compose.yml run --rm mutation",
+        "infection": "docker compose -f tests/sites/mutation/docker-compose.yml run --rm mutation",
         "test:integration": "bin/run-integration.sh integration",
         "test:http": "bin/run-integration.sh http",
         "test:browser": "cd tests/browser && npm run test",

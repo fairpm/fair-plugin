@@ -1,4 +1,4 @@
-name: fair-browser-test
+name: fair-integration
 
 services:
   mysql:
@@ -14,17 +14,15 @@ services:
       retries: 30
       start_period: 5s
     networks:
-      - fair-browser-net
+      - fair-test-net
 
   wordpress:
     build:
-      context: ../../../..
-      dockerfile: tests/sites/ephemeral/Dockerfile.wp
+      context: ../../..
+      dockerfile: tests/sites/Dockerfile.wp
       args:
         WORDPRESS_VERSION: "${WORDPRESS_VERSION:-6.4}"
         PHP_VERSION: "${PHP_VERSION:-8.0}"
-    ports:
-      - "8899:80"
     depends_on:
       mysql:
         condition: service_healthy
@@ -40,10 +38,10 @@ services:
         define('FAIR_DEFAULT_REPO_DOMAIN', 'mock-server:8080');
         define('FAIR_PLC_DIRECTORY_URL', 'http://mock-server:8080');
     volumes:
-      - ../../../../:/var/www/html/wp-content/plugins/fair-plugin:delegated
+      - ../../..:/var/www/html/wp-content/plugins/fair-plugin:delegated
       - wp-data:/var/www/html
     networks:
-      - fair-browser-net
+      - fair-test-net
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/"]
       interval: 3s
@@ -52,11 +50,12 @@ services:
 
   wp-cli:
     image: "wordpress:cli-php${PHP_VERSION:-8.0}"
+    command: tail -f /dev/null
     depends_on:
       wordpress:
         condition: service_healthy
     volumes:
-      - ../../../../:/var/www/html/wp-content/plugins/fair-plugin:delegated
+      - ../../..:/var/www/html/wp-content/plugins/fair-plugin:delegated
       - wp-data:/var/www/html
     user: "33:33"
     environment:
@@ -66,22 +65,26 @@ services:
       WORDPRESS_DB_NAME: wordpress_test
       WORDPRESS_TABLE_PREFIX: wptests_
     networks:
-      - fair-browser-net
+      - fair-test-net
+    healthcheck:
+      test: ["CMD", "php", "-v"]
+      interval: 5s
+      retries: 3
 
   mock-server:
     build:
-      context: ../../../..
+      context: ../../..
       dockerfile: tests/mock-server/Dockerfile
-    networks:
-      - fair-browser-net
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 2s
       retries: 15
       start_period: 2s
+    networks:
+      - fair-test-net
 
 networks:
-  fair-browser-net:
+  fair-test-net:
     driver: bridge
 
 volumes:

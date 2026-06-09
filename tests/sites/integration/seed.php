@@ -2,7 +2,7 @@
 /**
  * Integration test seed script.
  *
- * Run via: wp eval-file tests/sites/ephemeral/integration/seed.php
+ * Run via: wp eval-file tests/sites/integration/seed.php
  *
  * Pre-populates the environment for integration tests.
  *

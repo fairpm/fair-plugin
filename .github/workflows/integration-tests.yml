@@ -71,11 +71,11 @@ jobs:
 
       - name: Start Docker services
         run: |
-          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml up -d --wait
+          docker compose -f tests/sites/browser-test/docker-compose.yml up -d --wait
 
       - name: Install WordPress and seed
         run: |
-          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
+          docker compose -f tests/sites/browser-test/docker-compose.yml run --rm wp-cli \
             wp core install \
             --url=http://localhost:8899 \
             --title="FAIR CI Test" \
@@ -83,11 +83,11 @@ jobs:
             --admin_password=password \
             --admin_email=admin@ci.local
 
-          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
+          docker compose -f tests/sites/browser-test/docker-compose.yml run --rm wp-cli \
             wp plugin activate fair-plugin
 
-          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
-            php /var/www/html/wp-content/plugins/fair-plugin/tests/sites/ephemeral/browser-test/seed.php
+          docker compose -f tests/sites/browser-test/docker-compose.yml run --rm wp-cli \
+            php /var/www/html/wp-content/plugins/fair-plugin/tests/sites/browser-test/seed.php
 
       - name: Run browser tests
         id: browser
@@ -108,7 +108,7 @@ jobs:
       - name: Tear down Docker
         if: always()
         run: |
-          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml down -v --remove-orphans
+          docker compose -f tests/sites/browser-test/docker-compose.yml down -v --remove-orphans
 
   # ── All @slow browser tests on main/RC only ────────────────────────
   browser-slow:
@@ -134,11 +134,11 @@ jobs:
 
       - name: Start Docker services
         run: |
-          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml up -d --wait
+          docker compose -f tests/sites/browser-test/docker-compose.yml up -d --wait
 
       - name: Install WordPress and seed
         run: |
-          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
+          docker compose -f tests/sites/browser-test/docker-compose.yml run --rm wp-cli \
             wp core install \
             --url=http://localhost:8899 \
             --title="FAIR CI Test" \
@@ -146,11 +146,11 @@ jobs:
             --admin_password=password \
             --admin_email=admin@ci.local
 
-          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
+          docker compose -f tests/sites/browser-test/docker-compose.yml run --rm wp-cli \
             wp plugin activate fair-plugin
 
-          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
-            php /var/www/html/wp-content/plugins/fair-plugin/tests/sites/ephemeral/browser-test/seed.php
+          docker compose -f tests/sites/browser-test/docker-compose.yml run --rm wp-cli \
+            php /var/www/html/wp-content/plugins/fair-plugin/tests/sites/browser-test/seed.php
 
       - name: Run @slow browser tests
         run: |
@@ -170,4 +170,4 @@ jobs:
       - name: Tear down Docker
         if: always()
         run: |
-          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml down -v --remove-orphans
+          docker compose -f tests/sites/browser-test/docker-compose.yml down -v --remove-orphans
