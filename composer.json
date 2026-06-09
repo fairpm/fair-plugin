@@ -81,7 +81,18 @@
             "@coverage:multisite",
             "@coverage:merge"
         ],
-        "infection": "docker compose -f tests/sites/ephemeral/mutation/docker-compose.yml run --rm mutation"
+        "infection": "docker compose -f tests/sites/ephemeral/mutation/docker-compose.yml run --rm mutation",
+        "test:integration": "bin/run-integration.sh integration",
+        "test:http": "bin/run-integration.sh http",
+        "test:browser": "cd tests/browser && npm run test",
+        "test:browser:headed": "cd tests/browser && npm run test:headed",
+        "test:e2e": "@test:browser",
+        "test:all": [
+            "@test:unit",
+            "@test:unit:multisite",
+            "@test:integration",
+            "@test:http"
+        ]
     },
     "support": {
         "issues": "https://github.com/fairpm/fair-plugin/issues",
