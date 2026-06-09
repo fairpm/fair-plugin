@@ -16,6 +16,12 @@
 		"test:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test:unit:multisite",
 		"coverage:php:single": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:single",
 		"coverage:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:multisite",
-		"coverage:php:full": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:full"
+		"coverage:php:full": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:full",
+		"test:browser": "cd tests/browser && npm run test",
+		"test:browser:headed": "cd tests/browser && npm run test:headed",
+		"test:browser:install": "cd tests/browser && npm install",
+		"test:browser:docker:start": "cd tests/browser && npm run start-docker",
+		"test:browser:docker:stop": "cd tests/browser && npm run stop-docker",
+		"test:browser:seed": "cd tests/browser && npm run seed"
 	}
 }
