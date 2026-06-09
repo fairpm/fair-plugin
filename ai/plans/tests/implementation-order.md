@@ -2,6 +2,21 @@
 
 The plan is designed to be executed incrementally. Each phase produces runnable tests before moving on.
 
+---
+
+## Current totals
+
+| Layer | Count | Assertions | Key Metric | Runner |
+|-------|-------|------------|------------|--------|
+| Unit | 248 | 430 | 1 skipped | `composer run test:unit` (local) |
+| Integration | 12 | 38 | 2 skipped | `bin/run-integration.sh` (Docker) |
+| HTTP | 12 | 38 | all pass | `bin/run-integration.sh` (Docker) |
+| Browser | 15 | — | all pass | `npm run test:browser` (Playwright) |
+| Mutation | 486 mutants | — | 97% covered MSI | `composer run infection` (Docker) |
+| **Total** | **287 tests / 486 mutants** | **506+** | | |
+
+---
+
 ## Phase 1: Infrastructure migration ✅
 
 - [x] Rename `tests/phpunit/` → `tests/unit/`
@@ -73,8 +88,7 @@ Uses `pre_http_request` filter + pre-seeded transients instead of real HTTP call
 - [x] `GetTrustedKeysTest.php` — included above
 - [x] `DisplayPluginUpdateErrorTest.php` — included above
 - [x] `GetPackagesTest.php` — included above
-- [ ] `SignatureVerificationTest.php` — deferred (needs real crypto operations, better suited for manual/integration testing)
-- [ ] `RegisterPluginRowHooksTest.php` — deferred (hook registration verified implicitly through admin_init flow)
+- ↳ `SignatureVerificationTest.php`, `RegisterPluginRowHooksTest.php` → Phase 14
 
 Uses temp file creation (`wp_mkdir_p` + `file_put_contents`) so constructors'
 `get_file_data()` calls resolve successfully.
@@ -85,9 +99,7 @@ Uses temp file creation (`wp_mkdir_p` + `file_put_contents`) so constructors'
 - [x] `PingsTest.php` — 11 tests: remove_pingomatic (5), get_indexnow_key (4), register_query_vars (2)
 - [x] `SaltsTest.php` — 9 tests: replace_salt_api (3), define_keynames (1), generate_salt (3), response_body (2), get_response (1)
 - [x] `DefaultRepoAndVersionCheckTest.php` — 6 tests: default repo domain (2), version-check constants (4)
-- [ ] `Compatibility/PolyfillTest.php` — deferred
-- [ ] `Settings/*` — deferred (heavily WP-hook dependent)
-- [ ] `Upgrades/*` — deferred (heavily WP-hook dependent)
+↳ `Compatibility/PolyfillTest.php`, `Settings/*`, `Upgrades/*` → Phase 14
 
 **Bugs found:** `generate_default_avatar()` uses `add_filter()` instead of `apply_filters()` for `fair_avatars_default_color` (1 test skipped). `esc_attr()` can expand salt strings beyond 64 chars.
 
@@ -108,14 +120,9 @@ Uses temp file creation (`wp_mkdir_p` + `file_put_contents`) so constructors'
 - [x] `DidResolutionIntegrationTest.php` — 4 tests: mock health, full pipeline, log check (skipped), unknown DID error
 - [x] `PackageDataIntegrationTest.php` — 5 tests: complete response, _fair metadata, no-service error, unknown DID, caching
 - [x] `UpdateTransientIntegrationTest.php` — 3 tests: valid transient, seeded plugin (skipped), empty registry
-- [ ] `SignatureVerificationIntegrationTest.php` — deferred
-- [ ] `WpCliCompatTest.php` — deferred
+↳ `SignatureVerificationIntegrationTest.php`, `WpCliCompatTest.php` → Phase 14
 
 12 integration tests (10 pass, 2 skipped), 38 assertions.
-
----
-
----
 
 ## Phase 10: HTTP test harness & tests ✅
 
@@ -124,9 +131,7 @@ Uses temp file creation (`wp_mkdir_p` + `file_put_contents`) so constructors'
 - [x] `SaltApiHttpTest.php` — 3 tests: salt API URL interception, 64-char values, passthrough
 - [x] `DefaultRepoHttpTest.php` — 5 tests: domain config, non-WP.org passthrough, filter registration, plugins/themes API interception
 - [x] `AvatarHttpTest.php` — 4 tests: should_replace_url, SVG default avatar, alt text for users
-- [ ] `AdminAjaxTest.php` — deferred
-- [ ] `PluginsApiTest.php` — deferred to browser tests
-- [ ] `UpdateTransientShapeTest.php` — covered in integration
+↳ `AdminAjaxTest.php`, `PluginsApiTest.php`, `UpdateTransientShapeTest.php` → Phase 14
 
 12 HTTP tests + 12 integration = 24 Docker tests, 76 assertions.
 
@@ -137,24 +142,10 @@ Uses temp file creation (`wp_mkdir_p` + `file_put_contents`) so constructors'
 - [x] `tests/browser/global-setup.ts` — login as browser_admin, save storage
 - [x] `tests/browser/specs/direct-install.spec.ts` — 9 tests: label, pattern, required, submit focus, validation, thickbox role/label/iframe/close (all pass)
 - [x] `tests/browser/specs/search-did.spec.ts` — 6 tests: searchbox label, DID result, no-results, install button, hostname, heading (all pass)
-- [ ] `tests/browser/specs/install-activate-update.spec.ts` — deferred (@slow, needs stable plugin data)
-- [ ] `tests/browser/specs/avatar-upload.spec.ts` — deferred
-- [ ] `tests/browser/specs/update-error-row.spec.ts` — deferred
+↳ `install-activate-update.spec.ts`, `avatar-upload.spec.ts`, `update-error-row.spec.ts` → Phase 14
 
 **15 tests pass, 0 skipped, 0 failed.**
 Run: `npm run test:browser` (needs `npm run test:browser:docker:start` first)
-
----
-
-## Current totals (after Phase 11)
-
-| Layer | Tests | Assertions | Runner |
-|-------|-------|------------|--------|
-| Unit | 248 | 430 | `composer run test:unit` (local) |
-| Integration | 12 | 38 | `bin/run-integration.sh` (Docker) |
-| HTTP | 12 | 38 | `bin/run-integration.sh` (Docker) |
-| Browser | 15 | — | `npm run test:browser` (Playwright) |
-| **Total** | **287** | **506+** | |
 
 ---
 
@@ -165,8 +156,7 @@ Run: `npm run test:browser` (needs `npm run test:browser:docker:start` first)
   - `browser-tests` job: Playwright fast tests, runs on PRs only when labeled `run-browser-tests`, always on push to main/dev/release
   - `browser-slow` job: `@slow` tests (install/activate/update flow), push to main/release only
   - All Docker jobs use trap-based teardown + explicit cleanup verification
-- [ ] Coverage reporting — deferred (Phase 13)
-- [ ] Slack/Discord notification on failure — deferred
+↳ Coverage reporting, Slack/Discord notification → Phase 14
 
 Existing `phpunit-tests.yml` (PHP matrix unit tests) and `coding-standards.yml` (PHPCS + PHPStan) are preserved unchanged.
 
@@ -187,30 +177,47 @@ Existing `phpunit-tests.yml` (PHP matrix unit tests) and `coding-standards.yml` 
 
 ---
 
-## Current totals (after Phase 13)
+## Phase 14: Deferred & future work
 
-| Layer | Tests | Runner |
-|-------|-------|--------|
-| Unit | 248 | `composer run test:unit` (local) |
-| Integration | 12 | `bin/run-integration.sh` (Docker) |
-| HTTP | 12 | `bin/run-integration.sh` (Docker) |
-| Browser | 15 | `npm run test:browser` (Playwright) |
-| Mutation | 486 | `composer run infection` (Docker) |
-| **Total** | **287 tests / 486 mutants** | |
+### Unit tests
 
----
+- [ ] `SignatureVerificationTest.php` — needs real crypto operations, better suited for manual/integration testing
+- [ ] `RegisterPluginRowHooksTest.php` — hook registration verified implicitly through admin_init flow
+- [ ] `Compatibility/PolyfillTest.php` — low priority, polyfills are self-evident
+- [ ] `Settings/*` — heavily WP-hook dependent, needs WP test suite stub improvements
+- [ ] `Upgrades/*` — heavily WP-hook dependent, needs WP test suite stub improvements
 
-## Future work
+### Integration tests
+
+- [ ] `SignatureVerificationIntegrationTest.php` — needs real crypto operations
+- [ ] `WpCliCompatTest.php` — theme support is marked TODO in production code
+
+### HTTP tests
+
+- [ ] `AdminAjaxHttpTest.php` — needs stable admin-ajax endpoint responses from mock server
+- [ ] `PluginsApiHttpTest.php` — covered by browser DID search tests
+- [ ] `UpdateTransientShapeHttpTest.php` — covered in integration update transient tests
+
+### Browser tests
+
+- [ ] `install-activate-update.spec.ts` (@slow) — needs stable plugin data in mock server
+- [ ] `avatar-upload.spec.ts` — needs file upload mock/page in Playwright
+- [ ] `update-error-row.spec.ts` — needs seeded update-error cache state
+
+### CI & tooling
+
+- [ ] Coverage reporting in CI (via `composer run coverage:full` in Docker)
+- [ ] Slack/Discord notification on CI failure
+- [ ] Regular infection runs in CI on main/RC branches
+- [ ] Set `minMsi` threshold in infection.json once baseline reaches target (e.g. 20%)
+
+### Test quality
 
 - [ ] Raise overall MSI by expanding unit test coverage to admin/settings/upgrades modules
-- [ ] Add coverage reporting to CI (via `composer run coverage:full` in Docker)
-- [ ] Set `minMsi` threshold in infection.json once baseline reaches target (e.g. 20%)
-- [ ] Add `@slow` browser tests for install/activate/update flow
-- [ ] Add Slack/Discord CI notification on failure
-- [ ] Regular infection runs in CI on main/RC branches
+- [ ] Run infection against the full `inc/` tree (remove exclusions) and kill escaped mutants
 
 ---
 
 ## Parallelizable work
 
-Phases 3–7 (unit tests) are largely independent per module and can be parallelized across contributors. Phases 8–11 are sequential — each builds on the previous. Phase 12 depends on all tests being in place.
+Phases 3–7 (unit tests) are largely independent per module and can be parallelized across contributors. Phases 8–11 are sequential — each builds on the previous. Phase 12 depends on all tests being in place. Phase 14 items are independent and can be tackled in any order.
