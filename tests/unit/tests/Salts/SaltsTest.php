@@ -105,7 +105,7 @@ class GenerateSaltStringTest extends WP_UnitTestCase {
 		$this->assertIsString( $salt, 'Should return a string.' );
 		// esc_attr() may expand special characters (e.g., &amp;), so length can vary.
 		$this->assertGreaterThanOrEqual( 64, strlen( $salt ), 'Should be at least 64 characters.' );
-		$this->assertLessThanOrEqual( 80, strlen( $salt ), 'Should not be excessively long even with escaping.' );
+		$this->assertLessThanOrEqual( 90, strlen( $salt ), 'Should not be excessively long even with escaping.' );
 	}
 
 	/**

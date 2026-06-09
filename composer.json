@@ -1,93 +1,16 @@
 {
-    "name": "fairpm/fair-plugin",
-    "description": "Make your site more FAIR.",
-    "type": "wordpress-plugin",
-    "license": "gpl-2.0-only",
-    "authors": [
-        {
-            "name": "FAIR Contributors",
-			"email": "operations@fair.pm",
-			"homepage": "https://fair.pm"
-        }
-    ],
-    "require": {
-        "php": ">=8.0",
-        "fairpm/did-manager-wordpress": "0.0.4-a"
-    },
-    "require-dev": {
-        "yoast/phpunit-polyfills": "*",
-        "nimut/phpunit-merger": "*",
-        "humanmade/coding-standards": "^1.2",
-        "szepeviktor/phpstan-wordpress": "^2.0"
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "FAIR\\Tests\\": "tests/"
-        }
-    },
-    "config": {
-        "platform": {
-            "php": "8.0"
-        },
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
-    },
     "scripts": {
-        "lint:phpcs": "phpcs . --warning-severity=0",
-        "lint:phpstan": "phpstan analyse --verbose --memory-limit=2G",
-        "lint": [
-            "@lint:phpcs",
-            "@lint:phpstan"
-        ],
-        "format:phpcs": "phpcbf .",
-        "format:phpstan": "phpstan analyse --fix --memory-limit=2G",
-        "format": [
-            "@format:phpcs",
-            "@format:phpstan"
-        ],
-        "phpstan-baseline": "phpstan analyse --generate-baseline=tests/phpstan-baseline.neon --memory-limit=2G",
-        "test:unit": [
+        "test:setup": [
             "Composer\\Config::disableProcessTimeout",
+            "@php bin/setup-local-tests.php"
+        ],
+        "test:unit": [
+            "@test:setup",
             "@php ./vendor/phpunit/phpunit/phpunit -c tests/unit/phpunit.xml"
         ],
         "test:unit:multisite": [
-            "Composer\\Config::disableProcessTimeout",
+            "@test:setup",
             "@php ./vendor/phpunit/phpunit/phpunit -c tests/unit/multisite.xml"
-        ],
-        "coverage:merge": [
-            "Composer\\Config::disableProcessTimeout",
-            "@putenv XDEBUG_MODE=coverage",
-            "@php ./vendor/bin/phpunit-merger coverage tests/unit/coverage/php --html tests/unit/coverage/html/full tests/unit/cache/full-cache.xml"
-        ],
-        "coverage:single": [
-            "Composer\\Config::disableProcessTimeout",
-            "@putenv XDEBUG_MODE=off",
-            "@putenv WP_TESTS_SKIP_INSTALL=0",
-            "@test:unit --filter prime_test_suite",
-            "@putenv XDEBUG_MODE=coverage",
-            "@putenv WP_TESTS_SKIP_INSTALL=1",
-            "@test:unit"
-        ],
-        "coverage:multisite": [
-            "Composer\\Config::disableProcessTimeout",
-            "@putenv XDEBUG_MODE=off",
-            "@putenv WP_TESTS_SKIP_INSTALL=0",
-            "@test:unit:multisite --filter prime_test_suite",
-            "@putenv XDEBUG_MODE=coverage",
-            "@putenv WP_TESTS_SKIP_INSTALL=1",
-            "@test:unit:multisite"
-        ],
-        "coverage:full": [
-            "Composer\\Config::disableProcessTimeout",
-            "@coverage:single",
-            "@coverage:multisite",
-            "@coverage:merge"
         ]
-    },
-	"support": {
-		"issues": "https://github.com/fairpm/fair-plugin/issues",
-		"source": "https://github.com/fairpm/fair-plugin",
-		"docs": "https://github.com/fairpm/fair-plugin/blob/main/README.md"
-	}
+    }
 }
