@@ -92,9 +92,9 @@ tests/
 │   ├── release-doc-no-version.json
 │   └── release-doc-with-requirements.json
 │
-├── factory/                           # Test factories (builder pattern)
-│   ├── class-metadata-document-factory.php
-│   └── class-release-document-factory.php
+├── Factory/                          # Test factories (PSR-4, builder pattern)
+│   ├── MetadataDocumentFactory.php
+│   └── ReleaseDocumentFactory.php
 │
 ├── integration/                       # Docker-based integration tests
 │   ├── bootstrap.php

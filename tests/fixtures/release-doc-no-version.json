@@ -1,0 +1,11 @@
+{
+    "artifacts": {
+        "package": [
+            {
+                "url": "https://example.com/no-version.zip",
+                "lang": "en-US",
+                "content-type": "application/zip"
+            }
+        ]
+    }
+}

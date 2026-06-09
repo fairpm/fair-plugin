@@ -1,0 +1,11 @@
+{
+    "id": "did:plc:no-releases-123456789012345",
+    "type": "wp-plugin",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Test Author"
+        }
+    ],
+    "security": []
+}

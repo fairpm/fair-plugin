@@ -19,12 +19,14 @@ The plan is designed to be executed incrementally. Each phase produces runnable 
 
 **Remaining known issue:** `simplito/elliptic-php` (dependency of `fairpm/did-manager`) requires `ext-gmp`, which is missing from the wp-env PHP 8.0 Docker image. Workaround: `--ignore-platform-req=ext-gmp` in the install-deps script. A proper fix would be installing gmp in the Docker image or upstreaming an ext-gmp change to the wp-env image.
 
-## Phase 2: Fixtures & factories
+## Phase 2: Fixtures & factories ✅
 
-- [ ] Create `tests/fixtures/` directory
-- [ ] Create all fixture JSON files (did-doc, metadata-doc, release-doc variants)
-- [ ] Create `tests/factory/class-metadata-document-factory.php`
-- [ ] Create `tests/factory/class-release-document-factory.php`
+- [x] Create `tests/fixtures/` directory
+- [x] Create all fixture JSON files (did-doc, metadata-doc, release-doc variants — 13 files total)
+- [x] Create `tests/Factory/MetadataDocumentFactory.php` (full, minimal, from_fixture, builder, error paths)
+- [x] Create `tests/Factory/ReleaseDocumentFactory.php` (full, with_version, with_requirements, builder, error paths)
+- [x] Add `autoload-dev` PSR-4 entry for `FAIR\Tests\` → `tests/` in composer.json
+- [x] Verify existing tests still pass: 19 tests, 30 assertions ✅
 
 ## Phase 3: DID pipeline pure functions (Priority A)
 

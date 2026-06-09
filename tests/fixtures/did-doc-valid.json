@@ -1,0 +1,35 @@
+{
+    "id": "did:plc:z72i7hdynmk6r22z27h6tvur",
+    "alsoKnownAs": [
+        "fair://test-plugin.example.com/"
+    ],
+    "verificationMethod": [
+        {
+            "id": "did:plc:z72i7hdynmk6r22z27h6tvur#fair-signing",
+            "type": "Multikey",
+            "publicKeyMultibase": "zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169"
+        },
+        {
+            "id": "did:plc:z72i7hdynmk6r22z27h6tvur#fair-backup",
+            "type": "Multikey",
+            "publicKeyMultibase": "zQ3shXjHeiBuRCKmM36cuYnm7YEMzhGnCmCyW92sRJ9pribSF"
+        },
+        {
+            "id": "did:plc:z72i7hdynmk6r22z27h6tvur#atproto",
+            "type": "Multikey",
+            "publicKeyMultibase": "z6MkjP2sQ5HqJWvBxBtQhJjFvqXfRqLdHpNrWsGdY8nTk3"
+        }
+    ],
+    "service": [
+        {
+            "id": "#fair-repo",
+            "type": "FairPackageManagementRepo",
+            "serviceEndpoint": "https://repo.fair.example.com"
+        },
+        {
+            "id": "#atproto-pds",
+            "type": "AtprotoPersonalDataServer",
+            "serviceEndpoint": "https://pds.example.com"
+        }
+    ]
+}

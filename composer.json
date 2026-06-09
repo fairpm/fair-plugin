@@ -20,6 +20,11 @@
         "humanmade/coding-standards": "^1.2",
         "szepeviktor/phpstan-wordpress": "^2.0"
     },
+    "autoload-dev": {
+        "psr-4": {
+            "FAIR\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "platform": {
             "php": "8.0"
