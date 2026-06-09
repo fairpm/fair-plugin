@@ -13,9 +13,11 @@ The plan is designed to be executed incrementally. Each phase produces runnable 
 - [x] Update `package.json` npm scripts to reference new composer script names
 - [x] Update `tests/unit/README.md` with new paths
 - [x] Bump `.wp-env.json` PHP version from 7.4 → 8.0 (hard floor per AGENTS.md)
+- [x] Add `"platform": {"php": "8.0"}` to `composer.json` config → ran `composer update` → lock file resolves all deps for PHP 8.0
+- [x] Fix `test:php:install-deps` npm script: add `--ignore-platform-req=ext-gmp` (wp-env PHP 8.0 image lacks gmp)
 - [x] Verify existing tests still pass: 19 tests, 30 assertions ✅
 
-**Known issue noted:** `composer.lock` contains dependencies requiring PHP 8.2 (brick/math, symfony/console, etc.) — the tests-cli container needs `--ignore-platform-reqs` on PHP 8.0. This is the transitive-dependency regression flagged in AGENTS.md. Not fixed in this phase.
+**Remaining known issue:** `simplito/elliptic-php` (dependency of `fairpm/did-manager`) requires `ext-gmp`, which is missing from the wp-env PHP 8.0 Docker image. Workaround: `--ignore-platform-req=ext-gmp` in the install-deps script. A proper fix would be installing gmp in the Docker image or upstreaming an ext-gmp change to the wp-env image.
 
 ## Phase 2: Fixtures & factories
 

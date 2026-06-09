@@ -11,7 +11,7 @@
 		"format:php": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format",
 		"format:php:phpcs": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format:phpcs",
 		"format:php:phpstan": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format:phpstan",
-		"test:php:install-deps": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer install",
+		"test:php:install-deps": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer install --ignore-platform-req=ext-gmp",
 		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test:unit",
 		"test:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test:unit:multisite",
 		"coverage:php:single": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:single",

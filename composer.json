@@ -21,6 +21,9 @@
         "szepeviktor/phpstan-wordpress": "^2.0"
     },
     "config": {
+        "platform": {
+            "php": "8.0"
+        },
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
