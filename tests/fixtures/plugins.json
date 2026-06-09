@@ -1,0 +1,17 @@
+{
+    "description": "Test plugin catalog for FAIR browser tests. Plugins can reference local fixture zips or remote URLs.",
+    "plugins": [
+        {
+            "did": "did:plc:hellodolly000000000000001",
+            "name": "Hello Dolly",
+            "slug": "hello-dolly",
+            "version": "1.7.3",
+            "type": "wp-plugin",
+            "description": "A simple lyrics plugin used for testing FAIR install flow.",
+            "zip": "./fixtures/zips/hello-dolly.zip",
+            "requires_php": "5.6",
+            "requires_wp": "4.6"
+        }
+    ],
+    "url_plugins": []
+}

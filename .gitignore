@@ -24,3 +24,6 @@ tests/browser/node_modules/
 
 # Infection mutation test output
 tests/unit/infection/
+
+# Test fixture generated artifacts (keys are reproducible via generate.php)
+tests/fixtures/keys/ed25519-keypair.json
