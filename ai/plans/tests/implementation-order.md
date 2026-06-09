@@ -28,22 +28,22 @@ The plan is designed to be executed incrementally. Each phase produces runnable 
 - [x] Add `autoload-dev` PSR-4 entry for `FAIR\Tests\` → `tests/` in composer.json
 - [x] Verify existing tests still pass: 19 tests, 30 assertions ✅
 
-## Phase 3: DID pipeline pure functions (Priority A)
+## Phase 3: DID pipeline pure functions (Priority A) ✅
 
-Targeting `inc/packages/namespace.php` functions that don't depend on WordPress APIs.
+- [x] `GetDidHashTest.php` — 8 tests: hex string, deterministic, different DIDs, error propagation, empty string, 32-char, long DID, non-plc method
+- [x] `GetLanguagePriorityListTest.php` — 11 tests: full locale first, underscore conversion, lowercase, prefix decomposition, x- subtag skip, doubled primary code, defaults, simple locale, filter hook, filter override, zh-Hans-CN order
+- [x] `PickArtifactByLangTest.php` — 10 tests: exact match, specificity preference, no-match fallback, empty artifacts, single artifact, doubled primary code, en-us default, filter hook, filter override, underscore locale
+- [x] `PickReleaseTest.php` — 7 tests: latest default, specific version, version not found, sort correctness, single release, empty releases, null version
+- [x] `VersionRequirementsTest.php` — 9 tests: requires_php, requires_wp, tested_to, all three, empty, caret/tilde strip, non-env ignore, missing requires, missing suggests
+- [x] `GetUnmetRequirementsTest.php` — 6 tests (+ data provider): all met, unmet PHP, unmet WP, empty, multi-unmet joined, invalid specifiers, unknown env, operator comparison
+- [x] `CheckRequirementsTest.php` — 4 tests: all met, PHP unmet, WP unmet, empty requires
+- [x] `GetIconsTest.php` — 7 tests: 1x/2x, wporg SVG default, non-wporg SVG, empty, no valid sizes, only 1x, only 2x
+- [x] `GetBannersTest.php` — 5 tests: low/high, empty, no valid sizes, only low, only high
+- [x] `GetHashedFilenameTest.php` — 5 tests: plugin slug with hash, theme slug, no double-append, deterministic, different DIDs
+- [x] `ValidatePackageAliasTest.php` — 9 tests (cached + uncached): cache hit, cache set, unique keys, no aliases, non-fair aliases, multiple aliases, invalid domain, no TLD, excessively long domain, missing alsoKnownAs, non-string aliases
 
-- [ ] `GetDidHashTest.php`
-- [ ] `GetLanguagePriorityListTest.php`
-- [ ] `PickArtifactByLangTest.php`
-- [ ] `PickReleaseTest.php`
-- [ ] `VersionRequirementsTest.php`
-- [ ] `GetUnmetRequirementsTest.php`
-- [ ] `CheckRequirementsTest.php`
-- [ ] `GetIconsTest.php`
-- [ ] `GetBannersTest.php`
-- [ ] `GetHashedFilenameTest.php`
-- [ ] `ValidatePackageAliasTest.php`
-- [ ] `FetchAndValidatePackageAliasTest.php`
+**Bug fixed:** `pick_release()` — added empty-array guard to prevent TypeError on `reset()` returning false with `?ReleaseDocument` return type.
+**Note:** `get_site_transient` converts `null` → `''`; alias cache test accounts for this.
 
 ## Phase 4: DTO validation
 

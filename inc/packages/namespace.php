@@ -341,6 +341,10 @@ function fetch_metadata_from_local( $response, $url ) {
  * @return ReleaseDocument|null The selected release or null if not found.
  */
 function pick_release( array $releases, ?string $version = null ) : ?ReleaseDocument {
+	if ( empty( $releases ) ) {
+		return null;
+	}
+
 	// Sort releases by version, descending.
 	usort( $releases, fn ( $a, $b ) => version_compare( $b->version, $a->version ) );
 
