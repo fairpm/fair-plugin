@@ -15,4 +15,9 @@ wp-tests-config.php
 
 # Track placeholders so that empty directories stay in the repo.
 !.gitkeep
-# Playwright browser test artifacts\n.playwright-cli/\ntests/browser/test-results/\ntests/browser/.auth/
+
+# Playwright browser test artifacts
+.playwright-cli/
+tests/browser/test-results/
+tests/browser/.auth/
+tests/browser/node_modules/

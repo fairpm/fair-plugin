@@ -1,0 +1,173 @@
+name: Integration & Browser Tests
+
+on:
+  push:
+    branches: [main, development, 'release/*']
+  pull_request:
+    branches: [main, development]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ── Integration + HTTP tests (ephemeral Docker) ────────────────────
+  docker-tests:
+    name: Docker (${{ matrix.php }}, WP ${{ matrix.wp }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.0', '8.4']
+        wp: ['5.4', 'latest']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run integration + HTTP tests
+        timeout-minutes: 12
+        run: |
+          PHP_VERSION=${{ matrix.php }} \
+          WORDPRESS_VERSION=${{ matrix.wp }} \
+          bin/run-integration.sh
+
+      - name: Verify no leftover Docker containers
+        if: always()
+        run: |
+          LEFTOVERS=$(docker ps -q 2>/dev/null | wc -l)
+          if [ "$LEFTOVERS" -gt 0 ]; then
+            echo "WARNING: $LEFTOVERS leftover containers"
+            docker ps
+            docker rm -f $(docker ps -q)
+          fi
+
+  # ── Browser tests (Playwright, fast only) ──────────────────────────
+  browser-tests:
+    name: Browser (chromium, fast)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Only run on push to main/development/release, or on PRs labeled run-browser-tests.
+    if: |
+      github.event_name != 'pull_request' ||
+      contains(github.event.pull_request.labels.*.name, 'run-browser-tests')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: |
+          cd tests/browser
+          npm ci
+          npx playwright install chromium --with-deps
+
+      - name: Start Docker services
+        run: |
+          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml up -d --wait
+
+      - name: Install WordPress and seed
+        run: |
+          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
+            wp core install \
+            --url=http://localhost:8899 \
+            --title="FAIR CI Test" \
+            --admin_user=admin \
+            --admin_password=password \
+            --admin_email=admin@ci.local
+
+          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
+            wp plugin activate fair-plugin
+
+          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
+            php /var/www/html/wp-content/plugins/fair-plugin/tests/sites/ephemeral/browser-test/seed.php
+
+      - name: Run browser tests
+        id: browser
+        run: |
+          cd tests/browser
+          npx playwright test --grep-invert @slow
+        env:
+          FAIR_TEST_BASE_URL: http://localhost:8899
+
+      - name: Upload test results on failure
+        if: failure() && steps.browser.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: tests/browser/test-results/
+          retention-days: 7
+
+      - name: Tear down Docker
+        if: always()
+        run: |
+          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml down -v --remove-orphans
+
+  # ── All @slow browser tests on main/RC only ────────────────────────
+  browser-slow:
+    name: Browser (chromium, @slow)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: |
+      github.event_name == 'push' &&
+      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/'))
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: |
+          cd tests/browser
+          npm ci
+          npx playwright install chromium --with-deps
+
+      - name: Start Docker services
+        run: |
+          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml up -d --wait
+
+      - name: Install WordPress and seed
+        run: |
+          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
+            wp core install \
+            --url=http://localhost:8899 \
+            --title="FAIR CI Test" \
+            --admin_user=admin \
+            --admin_password=password \
+            --admin_email=admin@ci.local
+
+          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
+            wp plugin activate fair-plugin
+
+          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml run --rm wp-cli \
+            php /var/www/html/wp-content/plugins/fair-plugin/tests/sites/ephemeral/browser-test/seed.php
+
+      - name: Run @slow browser tests
+        run: |
+          cd tests/browser
+          npx playwright test --grep @slow
+        env:
+          FAIR_TEST_BASE_URL: http://localhost:8899
+
+      - name: Upload test results on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-slow
+          path: tests/browser/test-results/
+          retention-days: 7
+
+      - name: Tear down Docker
+        if: always()
+        run: |
+          docker compose -f tests/sites/ephemeral/browser-test/docker-compose.yml down -v --remove-orphans

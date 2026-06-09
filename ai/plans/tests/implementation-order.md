@@ -158,11 +158,19 @@ Run: `npm run test:browser` (needs `npm run test:browser:docker:start` first)
 
 ---
 
-## Phase 12: CI workflow
+## Phase 12: CI workflow ✅
 
-- [ ] Create `.github/workflows/test.yml`
-- [ ] Verify matrix passes on push
-- [ ] Tune timeouts and retries
+- [x] `.github/workflows/integration-tests.yml` — new workflow (complements existing `phpunit-tests.yml`)
+  - `docker-tests` job: PHP 8.0/8.4 × WP 5.4/latest matrix, runs `bin/run-integration.sh` (integration + HTTP)
+  - `browser-tests` job: Playwright fast tests, runs on PRs only when labeled `run-browser-tests`, always on push to main/dev/release
+  - `browser-slow` job: `@slow` tests (install/activate/update flow), push to main/release only
+  - All Docker jobs use trap-based teardown + explicit cleanup verification
+- [ ] Coverage reporting — deferred (Phase 13)
+- [ ] Slack/Discord notification on failure — deferred
+
+Existing `phpunit-tests.yml` (PHP matrix unit tests) and `coding-standards.yml` (PHPCS + PHPStan) are preserved unchanged.
+
+---
 
 ## Phase 13: Coverage baseline & Infection (future)
 
