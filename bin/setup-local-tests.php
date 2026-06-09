@@ -567,7 +567,31 @@ if ( ! has_cmd( 'curl' ) && ! has_cmd( 'wget' ) && ! ini_get( 'allow_url_fopen' 
 say( 'Prerequisites OK.' );
 
 // 3. Detect/create MySQL.
-$mysql = find_local_mysql();
+$mysql = null;
+
+// Try the explicitly configured host first (env vars).
+if ( getenv( 'FAIR_TEST_DB_HOST' ) ) {
+	$host = getenv( 'FAIR_TEST_DB_HOST' );
+	$port = getenv( 'FAIR_TEST_DB_PORT' ) ?: '3306';
+	$user = $DB_USER;
+	$pass = $DB_PASS;
+
+	say( "Trying configured MySQL at {$host}:{$port}..." );
+	try {
+		$mysqli = new mysqli( $host, $user, $pass, 'fair_test', (int) $port );
+		if ( $mysqli->connect_errno === 0 ) {
+			$mysqli->close();
+			say( "Connected to configured MySQL at {$host}:{$port}" );
+			$mysql = [ 'host' => $host, 'port' => $port, 'user' => $user, 'pass' => $pass ];
+		}
+	} catch ( \Throwable $e ) {
+		say( "Configured MySQL not reachable: {$e->getMessage()}" );
+	}
+}
+
+if ( ! $mysql ) {
+	$mysql = find_local_mysql();
+}
 if ( ! $mysql ) {
 	$mysql = start_docker_mysql( $DOCKER_MYSQL_PORT );
 }

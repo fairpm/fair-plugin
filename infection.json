@@ -1,0 +1,36 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "inc"
+        ],
+        "excludes": [
+            "inc/packages/admin",
+            "inc/packages/wp-cli",
+            "inc/compatibility",
+            "inc/repositories",
+            "inc/upgrades",
+            "inc/settings",
+            "inc/updater/class-lite.php",
+            "inc/updater/class-pluginpackage.php",
+            "inc/updater/class-themepackage.php"
+        ]
+    },
+    "logs": {
+        "text": "tests/unit/infection/infection.log",
+        "html": "tests/unit/infection/infection.html",
+        "summary": "tests/unit/infection/summary.log"
+    },
+    "mutators": {
+        "@default": true
+    },
+    "testFramework": "phpunit",
+    "phpUnit": {
+        "configDir": "tests/unit",
+        "customPath": "vendor/phpunit/phpunit/phpunit"
+    },
+    "bootstrap": "tests/infection-bootstrap.php",
+    "timeout": 45,
+    "minMsi": 0,
+    "minCoveredMsi": 0
+}

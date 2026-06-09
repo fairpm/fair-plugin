@@ -172,13 +172,42 @@ Existing `phpunit-tests.yml` (PHP matrix unit tests) and `coding-standards.yml` 
 
 ---
 
-## Phase 13: Coverage baseline & Infection (future)
+## Phase 13: Coverage baseline & Infection ✅
 
-- [ ] Establish coverage baseline report
-- [ ] Add `infection/infection` dev dependency
-- [ ] Configure `infection.json`
-- [ ] Run initial mutation test, record MSI baseline
-- [ ] Iterate on tests to raise MSI to target threshold
+- [x] `infection.json` — source in `inc/`, excludes admin/wp-cli/compatibility/settings/upgrades
+- [x] `tests/sites/ephemeral/mutation/Dockerfile` — PHP 8.5-cli-alpine + mysqli + xdebug
+- [x] `tests/sites/ephemeral/mutation/docker-compose.yml` — MySQL 8.0 + mutation container
+- [x] `tests/infection-bootstrap.php` — FAIR autoloader + WordPress class/function stubs
+- [x] `composer run infection` — runs mutation testing in Docker
+
+**Results**: 486 mutations, 45 killed, 440 uncovered, 1 escaped, 0 errors, 0 timeouts
+- Covered Code MSI: **97%** (excellent test quality for covered code)
+- Overall MSI: **9%** (rooms for improvement in uncovered modules)
+- Escaped mutant: `ArrayItemRemoval` on `ReleaseDocument::$optional` — minor gap
+
+---
+
+## Current totals (after Phase 13)
+
+| Layer | Tests | Runner |
+|-------|-------|--------|
+| Unit | 248 | `composer run test:unit` (local) |
+| Integration | 12 | `bin/run-integration.sh` (Docker) |
+| HTTP | 12 | `bin/run-integration.sh` (Docker) |
+| Browser | 15 | `npm run test:browser` (Playwright) |
+| Mutation | 486 | `composer run infection` (Docker) |
+| **Total** | **287 tests / 486 mutants** | |
+
+---
+
+## Future work
+
+- [ ] Raise overall MSI by expanding unit test coverage to admin/settings/upgrades modules
+- [ ] Add coverage reporting to CI (via `composer run coverage:full` in Docker)
+- [ ] Set `minMsi` threshold in infection.json once baseline reaches target (e.g. 20%)
+- [ ] Add `@slow` browser tests for install/activate/update flow
+- [ ] Add Slack/Discord CI notification on failure
+- [ ] Regular infection runs in CI on main/RC branches
 
 ---
 

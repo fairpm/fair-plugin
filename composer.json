@@ -1,5 +1,54 @@
 {
+    "name": "fairpm/fair-plugin",
+    "description": "Make your site more FAIR.",
+    "type": "wordpress-plugin",
+    "license": "gpl-2.0-only",
+    "authors": [
+        {
+            "name": "FAIR Contributors",
+            "email": "operations@fair.pm",
+            "homepage": "https://fair.pm"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "fairpm/did-manager-wordpress": "0.0.4-a"
+    },
+    "require-dev": {
+        "yoast/phpunit-polyfills": "*",
+        "nimut/phpunit-merger": "*",
+        "humanmade/coding-standards": "^1.2",
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "infection/infection": "^0.27.11"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "infection/extension-installer": true
+        },
+        "platform": {
+            "php": "8.0"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FAIR\\Tests\\": "tests/"
+        }
+    },
     "scripts": {
+        "lint:phpcs": "phpcs . --warning-severity=0",
+        "lint:phpstan": "phpstan analyse --verbose --memory-limit=2G",
+        "lint": [
+            "@lint:phpcs",
+            "@lint:phpstan"
+        ],
+        "format:phpcs": "phpcbf .",
+        "format:phpstan": "phpstan analyse --fix --memory-limit=2G",
+        "format": [
+            "@format:phpcs",
+            "@format:phpstan"
+        ],
+        "phpstan-baseline": "phpstan analyse --generate-baseline=tests/phpstan-baseline.neon --memory-limit=2G",
         "test:setup": [
             "Composer\\Config::disableProcessTimeout",
             "@php bin/setup-local-tests.php"
@@ -11,6 +60,32 @@
         "test:unit:multisite": [
             "@test:setup",
             "@php ./vendor/phpunit/phpunit/phpunit -c tests/unit/multisite.xml"
-        ]
+        ],
+        "coverage:merge": [
+            "Composer\\Config::disableProcessTimeout",
+            "@putenv XDEBUG_MODE=coverage",
+            "@php ./vendor/bin/phpunit-merger coverage tests/unit/coverage/php --html tests/unit/coverage/html/full tests/unit/cache/full-cache.xml"
+        ],
+        "coverage:single": [
+            "@test:setup",
+            "@putenv XDEBUG_MODE=coverage",
+            "@php ./vendor/phpunit/phpunit/phpunit -c tests/unit/phpunit.xml --coverage-php=tests/unit/coverage/php/single.cov"
+        ],
+        "coverage:multisite": [
+            "@test:setup",
+            "@putenv XDEBUG_MODE=coverage",
+            "@php ./vendor/phpunit/phpunit/phpunit -c tests/unit/multisite.xml --coverage-php=tests/unit/coverage/php/multi.cov"
+        ],
+        "coverage:full": [
+            "@coverage:single",
+            "@coverage:multisite",
+            "@coverage:merge"
+        ],
+        "infection": "docker compose -f tests/sites/ephemeral/mutation/docker-compose.yml run --rm mutation"
+    },
+    "support": {
+        "issues": "https://github.com/fairpm/fair-plugin/issues",
+        "source": "https://github.com/fairpm/fair-plugin",
+        "docs": "https://github.com/fairpm/fair-plugin/blob/main/README.md"
     }
 }

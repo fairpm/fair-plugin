@@ -3,6 +3,7 @@
 	bootstrap="./bootstrap.php"
 	backupGlobals="false"
 	colors="true"
+	executionOrder="default"
 	beStrictAboutTestsThatDoNotTestAnything="true"
 	beStrictAboutOutputDuringTests="true"
 	convertErrorsToExceptions="true"

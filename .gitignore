@@ -21,3 +21,6 @@ wp-tests-config.php
 tests/browser/test-results/
 tests/browser/.auth/
 tests/browser/node_modules/
+
+# Infection mutation test output
+tests/unit/infection/
