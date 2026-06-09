@@ -37,7 +37,7 @@ $public_key = sodium_crypto_sign_publickey( $keypair );
 
 $secret_hex = bin2hex( $secret_key );
 $public_hex = bin2hex( $public_key );
-$multibase_pub = DidCodec::to_multibase_key( $public_key );
+$multibase_pub = DidCodec::to_multibase_key( $public_key, DidCodec::MULTICODEC_ED25519_PUB );
 
 // Save keypair.
 file_put_contents(
@@ -130,9 +130,8 @@ $release_doc = [
 	],
 ];
 
-$out_dir = __DIR__ . '/../';
 file_put_contents(
-	$out_dir . 'release-doc-signed.json',
+	__DIR__ . '/release-doc-signed.json',
 	json_encode( $release_doc, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) . "\n"
 );
 

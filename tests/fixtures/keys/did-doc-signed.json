@@ -7,7 +7,7 @@
         {
             "id": "did:plc:signedtest0000000000000000#fair-signing",
             "type": "Multikey",
-            "publicKeyMultibase": "z6DtRYyUWLqngtuTPgBAu2xGoVNhFhzMhTv7C68YkL2NrsAv"
+            "publicKeyMultibase": "z6Mkff5KXsWXNbH7tii2H5mvoqhuCu4PWyCAKKFsttQUQz2d"
         }
     ],
     "service": [
