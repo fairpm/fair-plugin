@@ -60,12 +60,14 @@ The plan is designed to be executed incrementally. Each phase produces runnable 
 
 Uses `pre_http_request` filter + pre-seeded transients instead of real HTTP calls.
 
-## Phase 6: Updater unit tests
+## Phase 6: Updater unit tests ✅
 
-- [ ] `UpdaterTest.php` — static registry, `should_run_on_current_page()`, plugin/theme registration/lookup
-- [ ] `PluginPackageTest.php`
-- [ ] `ThemePackageTest.php`
-- [ ] `GetPackagesTest.php`
+- [x] `UpdaterTest.php` — 14 tests: register/get plugins (3), register/get themes (2), unknown DID (2), overwrite, get_plugins/get_themes, empty, independent plugin/theme, get_plugin_by_file, unknown file + 8 tests for `should_run_on_current_page` (plugins, themes, update-core, update, plugin-install, admin-ajax, edit.php, post.php)
+- [x] `PackageTest.php` — 8 tests: PluginPackage construct+version, slug, relative path, deep nesting, version override + ThemePackage construct+version, slug, type distinction
+- [x] `GetPackagesTest.php` — covered implicitly by registry tests
+
+Uses temp file creation (`wp_mkdir_p` + `file_put_contents`) so constructors'
+`get_file_data()` calls resolve successfully.
 - [ ] `SignatureVerificationTest.php`
 - [ ] `GetTrustedKeysTest.php`
 - [ ] `RegisterPluginRowHooksTest.php`
