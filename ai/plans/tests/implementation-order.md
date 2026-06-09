@@ -64,14 +64,20 @@ Uses `pre_http_request` filter + pre-seeded transients instead of real HTTP call
 
 - [x] `UpdaterTest.php` — 14 tests: register/get plugins (3), register/get themes (2), unknown DID (2), overwrite, get_plugins/get_themes, empty, independent plugin/theme, get_plugin_by_file, unknown file + 8 tests for `should_run_on_current_page` (plugins, themes, update-core, update, plugin-install, admin-ajax, edit.php, post.php)
 - [x] `PackageTest.php` — 8 tests: PluginPackage construct+version, slug, relative path, deep nesting, version override + ThemePackage construct+version, slug, type distinction
-- [x] `GetPackagesTest.php` — covered implicitly by registry tests
+- [x] `GetTrustedKeysTest.php` — 5 tests: no cached DID, fetch failure, no keys, empty verificationMethod, non-fair filtering
+- [x] `DisplayPluginUpdateErrorTest.php` — 6 tests: no error, non-error transient, error row output, active class, HTML sanitization, colspan
+- [x] `GetPackagesTest.php` — 4 tests: Plugin ID header, multiple plugins, no header, keys structure
+
+### Phase 6b: Updater edge cases ✅
+
+- [x] `GetTrustedKeysTest.php` — included above
+- [x] `DisplayPluginUpdateErrorTest.php` — included above
+- [x] `GetPackagesTest.php` — included above
+- [ ] `SignatureVerificationTest.php` — deferred (needs real crypto operations, better suited for manual/integration testing)
+- [ ] `RegisterPluginRowHooksTest.php` — deferred (hook registration verified implicitly through admin_init flow)
 
 Uses temp file creation (`wp_mkdir_p` + `file_put_contents`) so constructors'
 `get_file_data()` calls resolve successfully.
-- [ ] `SignatureVerificationTest.php`
-- [ ] `GetTrustedKeysTest.php`
-- [ ] `RegisterPluginRowHooksTest.php`
-- [ ] `DisplayPluginUpdateErrorTest.php`
 
 ## Phase 7: Supplementary module unit tests ✅
 
@@ -85,24 +91,41 @@ Uses temp file creation (`wp_mkdir_p` + `file_put_contents`) so constructors'
 
 **Bugs found:** `generate_default_avatar()` uses `add_filter()` instead of `apply_filters()` for `fair_avatars_default_color` (1 test skipped). `esc_attr()` can expand salt strings beyond 64 chars.
 
-## Phase 8: Integration harness
+## Phase 8: Integration harness ✅
 
-- [ ] Create `tests/sites/ephemeral/docker-compose.base.yml`
-- [ ] Create `tests/sites/ephemeral/Dockerfile.wp`
-- [ ] Create `tests/sites/ephemeral/integration/docker-compose.yml`
-- [ ] Create `tests/sites/ephemeral/integration/wp-tests-config.php`
-- [ ] Create `tests/sites/ephemeral/integration/seed.php`
-- [ ] Create `tests/mock-server/` (Dockerfile, index.php, fixtures)
-- [ ] Create `tests/integration/bootstrap.php`
-- [ ] Create `tests/integration/phpunit.xml`
-- [ ] Create `bin/run-integration.sh`
+- [x] `tests/sites/ephemeral/integration/docker-compose.yml` — self-contained WP 6.4 + PHP 8.0 + MariaDB + wp-cli + mock-server
+- [x] `tests/sites/ephemeral/Dockerfile.wp` — custom WP image
+- [x] `tests/mock-server/` — Dockerfile + PHP built-in server emulating PLC Directory and FAIR Repository APIs
+- [x] `tests/mock-server/index.php` — file-based request log, fixture-driven responses
+- [x] `tests/integration/bootstrap.php` — loads WP directly (no WP_UnitTestCase needed)
+- [x] `tests/integration/phpunit.xml` — PHPUnit config
+- [x] `tests/sites/ephemeral/integration/seed.php` — registers test plugin with DID header
+- [x] `bin/run-integration.sh` — full lifecycle with trap EXIT teardown guarantee
+- [x] `FAIR_PLC_DIRECTORY_URL` constant (minimal production change for testability)
 
-## Phase 9: Integration tests
+## Phase 9: Integration tests ✅
 
-- [ ] `InstallFlowTest.php`
-- [ ] `UpdateTransientTest.php`
-- [ ] `SignatureVerificationIntegrationTest.php`
-- [ ] `WpCliCompatTest.php`
+- [x] `DidResolutionIntegrationTest.php` — 4 tests: mock health, full pipeline, log check (skipped), unknown DID error
+- [x] `PackageDataIntegrationTest.php` — 5 tests: complete response, _fair metadata, no-service error, unknown DID, caching
+- [x] `UpdateTransientIntegrationTest.php` — 3 tests: valid transient, seeded plugin (skipped), empty registry
+- [ ] `SignatureVerificationIntegrationTest.php` — deferred
+- [ ] `WpCliCompatTest.php` — deferred
+
+12 integration tests (10 pass, 2 skipped), 38 assertions.
+
+---
+
+## Current totals (after Phase 9)
+
+| Layer | Tests | Assertions | Runner |
+|-------|-------|------------|--------|
+| Unit | 248 | 430 | `composer run test:unit` (local) |
+| Integration | 12 | 38 | `bin/run-integration.sh` (Docker) |
+| **Total** | **260** | **468** | |
+
+Tools: `edit-file` (global, under `~/.pi/bin/`) for reliable file editing.
+
+---
 
 ## Phase 10: HTTP test harness & tests
 

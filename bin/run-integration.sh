@@ -153,13 +153,35 @@ $WP_CLI php /var/www/html/wp-content/plugins/fair-plugin/vendor/bin/phpunit \
 	-c "$PHPUNIT_XML" \
 	$PHPUNIT_ARGS \
 	2>&1
-TEST_EXIT=$?
+INTEG_EXIT=$?
 set -e
 
-if [ $TEST_EXIT -eq 0 ]; then
-	say "${GREEN}All integration tests passed.${NC}"
+say "Running HTTP tests..."
+HTTP_PHPUNIT_XML="/var/www/html/wp-content/plugins/fair-plugin/tests/http/phpunit.xml"
+if $WP_CLI test -f "$HTTP_PHPUNIT_XML" 2>/dev/null; then
+	set +e
+	$WP_CLI php /var/www/html/wp-content/plugins/fair-plugin/vendor/bin/phpunit \
+		-c "$HTTP_PHPUNIT_XML" \
+		$PHPUNIT_ARGS \
+		2>&1
+	HTTP_EXIT=$?
+	set -e
 else
-	warn "Tests failed with exit code ${TEST_EXIT}"
+	HTTP_EXIT=0
+	say "No HTTP test config found — skipping."
+fi
+
+TEST_EXIT=$(( INTEG_EXIT > HTTP_EXIT ? INTEG_EXIT : HTTP_EXIT ))
+
+if [ $TEST_EXIT -eq 0 ]; then
+	say "${GREEN}All integration + HTTP tests passed.${NC}"
+else
+	if [ $INTEG_EXIT -ne 0 ]; then
+		warn "Integration tests failed with exit code ${INTEG_EXIT}"
+	fi
+	if [ $HTTP_EXIT -ne 0 ]; then
+		warn "HTTP tests failed with exit code ${HTTP_EXIT}"
+	fi
 fi
 
 # Script exits here → trap EXIT fires → cleanup runs.
