@@ -39,36 +39,36 @@
             "@format:phpstan"
         ],
         "phpstan-baseline": "phpstan analyse --generate-baseline=tests/phpstan-baseline.neon --memory-limit=2G",
-        "test": [
+        "test:unit": [
             "Composer\\Config::disableProcessTimeout",
-            "@php ./vendor/phpunit/phpunit/phpunit"
+            "@php ./vendor/phpunit/phpunit/phpunit -c tests/unit/phpunit.xml"
         ],
-        "test:multisite": [
+        "test:unit:multisite": [
             "Composer\\Config::disableProcessTimeout",
-            "@php ./vendor/phpunit/phpunit/phpunit -c tests/phpunit/multisite.xml"
+            "@php ./vendor/phpunit/phpunit/phpunit -c tests/unit/multisite.xml"
         ],
         "coverage:merge": [
             "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=coverage",
-            "@php ./vendor/bin/phpunit-merger coverage tests/phpunit/coverage/php --html tests/phpunit/coverage/html/full tests/phpunit/cache/full-cache.xml"
+            "@php ./vendor/bin/phpunit-merger coverage tests/unit/coverage/php --html tests/unit/coverage/html/full tests/unit/cache/full-cache.xml"
         ],
         "coverage:single": [
             "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=off",
             "@putenv WP_TESTS_SKIP_INSTALL=0",
-            "@test --filter prime_test_suite",
+            "@test:unit --filter prime_test_suite",
             "@putenv XDEBUG_MODE=coverage",
             "@putenv WP_TESTS_SKIP_INSTALL=1",
-            "@test"
+            "@test:unit"
         ],
         "coverage:multisite": [
             "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=off",
             "@putenv WP_TESTS_SKIP_INSTALL=0",
-            "@test:multisite --filter prime_test_suite",
+            "@test:unit:multisite --filter prime_test_suite",
             "@putenv XDEBUG_MODE=coverage",
             "@putenv WP_TESTS_SKIP_INSTALL=1",
-            "@test:multisite"
+            "@test:unit:multisite"
         ],
         "coverage:full": [
             "Composer\\Config::disableProcessTimeout",

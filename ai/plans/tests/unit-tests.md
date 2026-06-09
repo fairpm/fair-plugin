@@ -3,7 +3,7 @@
 ## Philosophy
 
 - No Docker required — unit tests use the WordPress test framework with a local MySQL database.
-- Run via `composer run test:unit` (mapped from current `composer run test`).
+- Run via `composer run test:unit`.
 - PHP version matrix: 8.0 through 8.4 (minimum floor per AGENTS.md).
 - `WP_UnitTestCase` is the base class — provides WP factory, transient mocking, filter/action hooks.
 - **Exhaustive edge cases** for the DID pipeline: null bytes, Unicode DIDs, malformed JSON in every possible field position, transient race conditions, WP_Error propagation at every hop.

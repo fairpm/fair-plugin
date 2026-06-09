@@ -23,13 +23,13 @@
 ```
 npm run test:php
 ```
-If you're not using wp-env, you can just run `composer run test`.
+If you're not using wp-env, you can just run `composer run test:unit`.
 
 ### Multisite
 ```
 npm run test:php:multisite
 ```
-If you're not using wp-env, you can just run `composer run test:multisite`.
+If you're not using wp-env, you can just run `composer run test:unit:multisite`.
 
 ## Running PHPUnit tests with line coverage
 
@@ -45,7 +45,7 @@ npm run coverage:php:single
 ```
 If you're not using wp-env, you can just run `composer run coverage:single`.
 
-A coverage report will be available at `/tests/phpunit/coverage/html/single-site`.
+A coverage report will be available at `/tests/unit/coverage/html/single-site`.
 
 ### Multisite
 ```
@@ -53,7 +53,7 @@ npm run coverage:php:multisite
 ```
 If you're not using wp-env, you can just run `composer run coverage:multisite`.
 
-A coverage report will be available at `/tests/phpunit/coverage/html/multisite`.
+A coverage report will be available at `/tests/unit/coverage/html/multisite`.
 
 ### Single Site and Multisite
 ```
@@ -61,4 +61,4 @@ npm run coverage:php:full
 ```
 If you're not using wp-env, you can just run `composer run coverage:full`.
 
-A merged coverage report will be available at `/tests/phpunit/coverage/html/full`.
+A merged coverage report will be available at `/tests/unit/coverage/html/full`.

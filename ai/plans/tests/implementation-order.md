@@ -2,15 +2,20 @@
 
 The plan is designed to be executed incrementally. Each phase produces runnable tests before moving on.
 
-## Phase 1: Infrastructure migration
+## Phase 1: Infrastructure migration ✅
 
-- [ ] Rename `tests/phpunit/` → `tests/unit/`
-- [ ] Move `phpunit.xml.dist` → `tests/unit/phpunit.xml`, adjust paths
-- [ ] Move `tests/phpunit/multisite.xml` → `tests/unit/multisite.xml`
-- [ ] Move `tests/phpunit/tests/Packages/*` → `tests/unit/tests/Packages/*` (preserve existing tests)
-- [ ] Move `tests/phpunit/tests/SampleTest.php` → `tests/unit/tests/SampleTest.php`
-- [ ] Update `composer.json` scripts: `test` → `test:unit`, pointing at `tests/unit/phpunit.xml`
-- [ ] Verify existing tests still pass: `composer run test:unit`
+- [x] Rename `tests/phpunit/` → `tests/unit/`
+- [x] Move `phpunit.xml.dist` → `tests/unit/phpunit.xml`, adjust paths
+- [x] Move `tests/phpunit/multisite.xml` → `tests/unit/multisite.xml`
+- [x] Move `tests/phpunit/tests/Packages/*` → `tests/unit/tests/Packages/*` (preserve existing tests)
+- [x] Move `tests/phpunit/tests/SampleTest.php` → `tests/unit/tests/SampleTest.php`
+- [x] Update `composer.json` scripts: `test` → `test:unit`, pointing at `tests/unit/phpunit.xml`. Also `test:multisite` → `test:unit:multisite`. Updated `coverage:*` paths.
+- [x] Update `package.json` npm scripts to reference new composer script names
+- [x] Update `tests/unit/README.md` with new paths
+- [x] Bump `.wp-env.json` PHP version from 7.4 → 8.0 (hard floor per AGENTS.md)
+- [x] Verify existing tests still pass: 19 tests, 30 assertions ✅
+
+**Known issue noted:** `composer.lock` contains dependencies requiring PHP 8.2 (brick/math, symfony/console, etc.) — the tests-cli container needs `--ignore-platform-reqs` on PHP 8.0. This is the transitive-dependency regression flagged in AGENTS.md. Not fixed in this phase.
 
 ## Phase 2: Fixtures & factories
 
