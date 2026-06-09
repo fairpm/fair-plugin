@@ -73,16 +73,17 @@ Uses temp file creation (`wp_mkdir_p` + `file_put_contents`) so constructors'
 - [ ] `RegisterPluginRowHooksTest.php`
 - [ ] `DisplayPluginUpdateErrorTest.php`
 
-## Phase 7: Supplementary module unit tests
+## Phase 7: Supplementary module unit tests ✅
 
-- [ ] `Compatibility/PolyfillTest.php`
-- [ ] `Avatars/*` tests
-- [ ] `Salts/*` tests
-- [ ] `Pings/*` tests
-- [ ] `DefaultRepo/*` tests
-- [ ] `VersionCheck/*` tests
-- [ ] `Settings/*` tests
-- [ ] `Upgrades/*` tests
+- [x] `AvatarsTest.php` — 18 tests: should_replace_url (5), generate_default_avatar (8; 1 skipped for color hook bug), get_avatar_alt (4)
+- [x] `PingsTest.php` — 11 tests: remove_pingomatic (5), get_indexnow_key (4), register_query_vars (2)
+- [x] `SaltsTest.php` — 9 tests: replace_salt_api (3), define_keynames (1), generate_salt (3), response_body (2), get_response (1)
+- [x] `DefaultRepoAndVersionCheckTest.php` — 6 tests: default repo domain (2), version-check constants (4)
+- [ ] `Compatibility/PolyfillTest.php` — deferred
+- [ ] `Settings/*` — deferred (heavily WP-hook dependent)
+- [ ] `Upgrades/*` — deferred (heavily WP-hook dependent)
+
+**Bugs found:** `generate_default_avatar()` uses `add_filter()` instead of `apply_filters()` for `fair_avatars_default_color` (1 test skipped). `esc_attr()` can expand salt strings beyond 64 chars.
 
 ## Phase 8: Integration harness
 
