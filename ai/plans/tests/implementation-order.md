@@ -50,19 +50,15 @@ The plan is designed to be executed incrementally. Each phase produces runnable 
 - [x] `MetadataDocumentTest.php` — 13 tests (from_data): all fields, minimal, 5 missing mandatory fields, missing releases, invalid release propagation, optional fields null, multiple releases parsed, security array. 5 tests (from_response): valid response, invalid JSON, valid JSON + invalid data, empty body, null body (TypeError note)
 - [x] `ReleaseDocumentTest.php` — 10 tests: all fields, with requirements, specific version, missing version, missing artifacts, optional fields null, minimal artifacts, builder with unset fields
 
-## Phase 5: DID pipeline transient/HTTP functions (Priority B)
+## Phase 5: DID pipeline transient/HTTP functions (Priority B) ✅
 
-- [ ] `GetDidDocumentTest.php`
-- [ ] `FetchPackageMetadataTest.php`
-- [ ] `FetchMetadataDocTest.php`
-- [ ] `GetLatestReleaseFromDidTest.php`
-- [ ] `GetPackageDataTest.php`
-- [ ] `AddPackageToReleaseCacheTest.php`
-- [ ] `MaybeAddAcceptHeaderTest.php`
-- [ ] `CacheUpdateErrorTest.php`
-- [ ] `ClearUpdateErrorTest.php`
-- [ ] `SearchByDidTest.php`
-- [ ] `GetPluginInformationTest.php`
+- [x] `CacheUpdateErrorTest.php` — 7 tests: cache error, timestamp, lifetime, clear, idempotent, DID isolation
+- [x] `GetDidDocumentTest.php` — 3 tests: cache hit, cached error, parse error+cache
+- [x] `FetchMetadataDocTest.php` — 6 tests: cache hit, HTTP failure caching, non-200, cache on success, metadata from HTTP
+- [x] `FetchPackageMetadataTest.php` — 6 tests: no service, ID mismatch, success, DID error propagation + get_latest_release_from_did (2 tests: success, no keys)
+- [x] `PipelineWPTest.php` — 20 tests: add_package_to_release_cache (4), maybe_add_accept_header (5), search_by_did (6), get_plugin_information (3)
+
+Uses `pre_http_request` filter + pre-seeded transients instead of real HTTP calls.
 
 ## Phase 6: Updater unit tests
 
