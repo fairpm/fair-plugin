@@ -12,8 +12,8 @@
 |---------|-------|----------|
 | Vacuous / near-zero-value tests | 6 | ✅ 6/6 |
 | Testing antipatterns | 4 | ✅ 1/4 (reflection → reset, rest deferred) |
-| High-value expansions (security) | 5 | ⏳ 0/5 |
-| High-value expansions (general) | 6 | ⏳ 0/6 |
+| High-value expansions (security) | 5 | ✅ 4/5 (#7, #8, #9, #3.3) |
+| High-value expansions (general) | 6 | ✅ 1/6 (#10 memoization) |
 | Code hard to test (design issues) | 3 | ⏳ 0/3 |
 
 ---
@@ -300,10 +300,10 @@ These tests are solid and should serve as patterns for new tests:
 
 | # | Status | Action | Effort |
 |---|--------|--------|--------|
-| 7 | ⏳ | Add `upgrader_source_selection` unit tests (hash-suffix stripping) | Medium |
-| 8 | ⏳ | Add `verify_signature_on_download` unit tests (mocked upgrader) | Medium |
-| 9 | ⏳ | Add `get_trusted_keys` base64 recoding unit test | Small |
-| 10 | ⏳ | Add `Package::get_release()` memoization unit tests | Small |
+| 7 | ✅ | Add `upgrader_source_selection` unit tests (hash-suffix stripping) | Medium |
+| 8 | ✅ | Add `verify_signature_on_download` unit tests (mocked upgrader) | Medium |
+| 9 | ✅ | Add `get_trusted_keys` base64 recoding unit test | Small |
+| 10 | ✅ | Add `Package::get_release()` memoization unit tests | Small |
 
 ### Medium Priority
 

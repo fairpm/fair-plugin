@@ -6,6 +6,7 @@
  */
 
 use function FAIR\Updater\get_trusted_keys;
+use FAIR\DID\Crypto\DidCodec;
 use const FAIR\Packages\CACHE_DID_FOR_INSTALL;
 use const FAIR\Packages\CACHE_METADATA_DOCUMENTS;
 
@@ -109,5 +110,45 @@ class GetTrustedKeysTest extends WP_UnitTestCase {
 
 		// The key has fragment 'atproto', not 'fair', so it should be filtered out.
 		$this->assertEmpty( $keys, 'Non-fair keys should be filtered out.' );
+	}
+
+	/**
+	 * Test that a valid fair-signing key is recoded from multibase (base58btc)
+	 * to base64 as expected by WordPress core's verify_file_signature().
+	 */
+	public function test_should_recode_multibase_key_to_base64(): void {
+		set_site_transient( CACHE_DID_FOR_INSTALL, $this->test_did, HOUR_IN_SECONDS );
+
+		// Use a real multibase-encoded Ed25519 public key from fixtures.
+		$multibase = 'z6MkfvXWEmEYhoJofpw3akAnthgdGrKgFAgAsBRxQX5MqYh3';
+
+		set_site_transient( CACHE_METADATA_DOCUMENTS . $this->test_did, [
+			'id'                 => $this->test_did,
+			'verificationMethod' => [
+				[
+					'id'                 => '#fair-signing',
+					'type'               => 'Multikey',
+					'publicKeyMultibase'  => $multibase,
+				],
+			],
+		], HOUR_IN_SECONDS );
+
+		$keys = get_trusted_keys();
+
+		$this->assertCount( 1, $keys, 'Should return one recoded key.' );
+
+		// Verify the recoded key is valid base64.
+		$base64_key = $keys[0];
+		$decoded = base64_decode( $base64_key, true );
+		$this->assertNotFalse( $decoded, 'Recoded key should be valid base64.' );
+		$this->assertSame( 32, strlen( $decoded ), 'Decoded key should be 32 bytes (raw Ed25519 public key).' );
+
+		// Verify it matches the expected raw key from DidCodec.
+		$expected = DidCodec::from_multibase_key( $multibase );
+		$this->assertSame(
+			$expected['key'],
+			$decoded,
+			'base64_decode of recoded key should equal the raw key bytes from from_multibase_key().'
+		);
 	}
 }
