@@ -68,4 +68,50 @@ class DidResolutionIntegrationTest extends TestCase {
 		$result = \FAIR\Packages\get_did_document( 'did:plc:unknown1234567890123456' );
 		$this->assertInstanceOf( WP_Error::class, $result );
 	}
+
+	/**
+	 * Integration test for search_by_did() success path.
+	 *
+	 * Moved from PipelineWPTest (unit) where it used seed_full_pipeline()
+	 * to mock the entire HTTP layer. The integration layer tests against
+	 * the real mock server, so a schema change won't silently break the test.
+	 */
+	public function test_search_by_did_returns_plugin_result(): void {
+		$did = 'did:plc:z72i7hdynmk6r22z27h6tvur';
+
+		$result = \FAIR\Packages\search_by_did(
+			[ 'plugins' => [] ],
+			'query_plugins',
+			(object) [ 'search' => urlencode( $did ) ]
+		);
+
+		$this->assertIsObject( $result, 'Should return object.' );
+		$this->assertObjectHasProperty( 'plugins', $result, 'Result should have plugins property.' );
+		$this->assertCount( 1, $result->plugins, 'Should have one plugin.' );
+		$this->assertObjectHasProperty( 'info', $result, 'Result should have info property.' );
+	}
+
+	/**
+	 * Integration test for add_package_to_release_cache() success path.
+	 *
+	 * Moved from PipelineWPTest (unit). Verifies flush-append behavior
+	 * against the real mock server.
+	 */
+	public function test_add_package_to_release_cache_populates_cache(): void {
+		$did = 'did:plc:z72i7hdynmk6r22z27h6tvur';
+
+		// Clear cache first.
+		delete_site_transient( \FAIR\Packages\CACHE_RELEASE_PACKAGES );
+
+		\FAIR\Packages\add_package_to_release_cache( $did );
+
+		$releases = get_site_transient( \FAIR\Packages\CACHE_RELEASE_PACKAGES );
+		$this->assertIsArray( $releases, 'Releases cache should be an array.' );
+		$this->assertArrayHasKey( $did, $releases, 'Release should be cached for this DID.' );
+		$this->assertInstanceOf(
+			\FAIR\Packages\ReleaseDocument::class,
+			$releases[ $did ],
+			'Cached value should be a ReleaseDocument.'
+		);
+	}
 }
