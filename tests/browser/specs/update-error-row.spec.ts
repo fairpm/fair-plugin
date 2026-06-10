@@ -24,22 +24,17 @@ test.describe('Update error row', () => {
     await expect(heading).toContainText(/Plugins/i);
   });
 
-  test('FAIR plugin is listed with update error row when transient is set', async ({ page }) => {
-    // The seed.php script should have set a fair_update_error transient
-    // for a test plugin. The error row should appear in the plugins list.
+  test('FAIR plugin error row visible when transient is set', async ({ page }) => {
+    // The seed script creates a dummy plugin and sets a fair_update_error
+    // transient. The error row should appear beneath the plugin in the list.
 
-    // Look for the FAIR error row class.
-    const errorRows = page.locator('.fair-update-error, tr.update-error, .plugin-update-tr');
-    const count = await errorRows.count();
+    const errorRows = page.locator('.plugin-update-tr');
+    await expect(errorRows.first()).toBeVisible({ timeout: 5000 });
 
-    if (count > 0) {
-      // At least one error row exists. Verify it contains meaningful text.
-      const firstError = errorRows.first();
-      const text = await firstError.textContent();
-      expect(text).toBeTruthy();
-        expect(text?.length).toBeGreaterThan(5);
-    }
-    // If no error rows, the test data may not have been seeded — not a test failure.
+    const firstError = errorRows.first();
+    const text = await firstError.textContent();
+    expect(text).toContain('Could not fetch');
+    expect(text).toContain('Update checks paused');
   });
 
   test('active plugin row has correct structure', async ({ page }) => {

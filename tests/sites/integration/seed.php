@@ -44,3 +44,31 @@ PHP
 );
 
 echo "Seed complete: registered test plugin\n";
+
+// Register a second plugin with a DID the mock server doesn't recognize.
+// This exercises the error propagation path: fetch fails → error cached →
+// plugin skipped in transient → error row displayed.
+$bad_plugin_dir  = WP_PLUGIN_DIR . '/fair-bad-plugin';
+$bad_plugin_file = $bad_plugin_dir . '/fair-bad-plugin.php';
+
+if ( ! is_dir( $bad_plugin_dir ) ) {
+	mkdir( $bad_plugin_dir, 0755, true );
+}
+
+file_put_contents( $bad_plugin_file, <<<PHP
+<?php
+/**
+ * Plugin Name: FAIR Bad Plugin
+ * Plugin ID: did:plc:doesnotexist0000000000000
+ * Version: 1.0.0
+ * Description: Plugin with unresolvable DID for error propagation testing.
+ */
+PHP
+);
+
+\FAIR\Updater\Updater::register_plugin(
+	'did:plc:doesnotexist0000000000000',
+	$bad_plugin_file
+);
+
+echo "Seed complete: registered unresolvable-DID plugin for error testing\n";
