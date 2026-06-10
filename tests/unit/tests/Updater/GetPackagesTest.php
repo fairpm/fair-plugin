@@ -55,7 +55,11 @@ class GetPackagesTest extends WP_UnitTestCase {
 
 		$packages = get_packages();
 
-		$this->assertArrayNotHasKey( 'plugins', $packages );
+		// No FAIR-tagged plugins should be returned.
+		$this->assertEmpty(
+			$packages['plugins'] ?? [],
+			'No plugin should be found without a Plugin ID header.'
+		);
 	}
 
 	/**
@@ -67,7 +71,6 @@ class GetPackagesTest extends WP_UnitTestCase {
 		$packages = get_packages();
 
 		$this->assertArrayHasKey( 'plugins', $packages );
-		$this->assertArrayHasKey( "plugins", $packages );
 	}
 
 	private function create_plugin( string $dir_name, string $did, ?string $rel_path = null ): string {

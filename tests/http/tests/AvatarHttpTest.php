@@ -16,26 +16,6 @@ use PHPUnit\Framework\TestCase;
 class AvatarHttpTest extends TestCase {
 
 	/**
-	 * Test that should_replace_url detects Gravatar domains.
-	 */
-	public function test_should_replace_gravatar_urls(): void {
-		$this->assertTrue(
-			\FAIR\Avatars\should_replace_url( 'https://secure.gravatar.com/avatar/abc123' ),
-			'Gravatar URLs should be flagged for replacement.'
-		);
-	}
-
-	/**
-	 * Test that should_replace_url ignores other domains.
-	 */
-	public function test_should_not_replace_other_urls(): void {
-		$this->assertFalse(
-			\FAIR\Avatars\should_replace_url( 'https://example.com/avatar.png' ),
-			'Non-Gravatar URLs should not be flagged.'
-		);
-	}
-
-	/**
 	 * Test that generate_default_avatar returns an SVG data URI.
 	 */
 	public function test_generate_default_avatar_returns_data_uri(): void {

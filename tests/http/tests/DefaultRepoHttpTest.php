@@ -35,17 +35,6 @@ class DefaultRepoHttpTest extends TestCase {
 	}
 
 	/**
-	 * Test that the pre_http_request filter is registered.
-	 */
-	public function test_pre_http_request_filter_is_registered(): void {
-		$this->assertGreaterThan(
-			0,
-			has_filter( 'pre_http_request', 'FAIR\Default_Repo\replace_repo_api_urls' ),
-			'Default repo filter should be registered.'
-		);
-	}
-
-	/**
 	 * Test that a WordPress.org plugins API URL triggers interception.
 	 */
 	public function test_wporg_plugins_url_is_intercepted(): void {

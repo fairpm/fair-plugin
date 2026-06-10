@@ -8,13 +8,13 @@
 
 ## Summary
 
-| Finding | Count |
-|---------|-------|
-| Vacuous / near-zero-value tests | 6 |
-| Testing antipatterns | 4 |
-| High-value expansions (security) | 5 |
-| High-value expansions (general) | 6 |
-| Code hard to test (design issues) | 3 |
+| Finding | Count | Resolved |
+|---------|-------|----------|
+| Vacuous / near-zero-value tests | 6 | ✅ 6/6 |
+| Testing antipatterns | 4 | ✅ 1/4 (reflection → reset, rest deferred) |
+| High-value expansions (security) | 5 | ⏳ 0/5 |
+| High-value expansions (general) | 6 | ⏳ 0/6 |
+| Code hard to test (design issues) | 3 | ⏳ 0/3 |
 
 ---
 
@@ -283,39 +283,41 @@ These tests are solid and should serve as patterns for new tests:
 
 ## 7. Prioritized Action Items
 
-### Immediate (this PR)
+### Immediate (✅ done, commit d5b0f82~1)
 
-| # | Action | Effort |
-|---|--------|--------|
-| 1 | Delete `SampleTest.php` | Trivial |
-| 2 | Remove redundant assertions from `GetPackagesTest::test_should_have_plugins_key_when_packages_present` | Trivial |
-| 3 | Remove duplicate `should_replace_url` assertions from `AvatarHttpTest` | Trivial |
-| 4 | Remove `PickArtifactByLangTest::test_should_fire_filter_hook` | Trivial |
-| 5 | Remove `DefaultRepoHttpTest::test_pre_http_request_filter_is_registered` | Trivial |
-| 6 | Replace reflection in `UpdaterTest::reset_registry` with `Updater::reset()` (check if it already exists) | Small |
+| # | Status | Action | Effort |
+|---|--------|--------|--------|
+| 1 | ✅ | Delete `SampleTest.php` | Trivial |
+| 2 | ✅ | Remove redundant double-quote assertion from `GetPackagesTest`, fix brittle key-exists check | Trivial |
+| 3 | ✅ | Remove duplicate `should_replace_url` assertions from `AvatarHttpTest` | Trivial |
+| 4 | ✅ | Remove `PickArtifactByLangTest::test_should_fire_filter_hook` | Trivial |
+| 5 | ✅ | Remove `DefaultRepoHttpTest::test_pre_http_request_filter_is_registered` | Trivial |
+| 6 | ✅ | Replace reflection in `UpdaterTest::reset_registry` with `Updater::reset()` | Small |
+
+**Result**: 261 tests, 485 assertions (was 262/489). All single-site and multisite pass.
 
 ### High Priority (next iteration)
 
-| # | Action | Effort |
-|---|--------|--------|
-| 7 | Add `upgrader_source_selection` unit tests (hash-suffix stripping) | Medium |
-| 8 | Add `verify_signature_on_download` unit tests (mocked upgrader) | Medium |
-| 9 | Add `get_trusted_keys` base64 recoding unit test | Small |
-| 10 | Add `Package::get_release()` memoization unit tests | Small |
+| # | Status | Action | Effort |
+|---|--------|--------|--------|
+| 7 | ⏳ | Add `upgrader_source_selection` unit tests (hash-suffix stripping) | Medium |
+| 8 | ⏳ | Add `verify_signature_on_download` unit tests (mocked upgrader) | Medium |
+| 9 | ⏳ | Add `get_trusted_keys` base64 recoding unit test | Small |
+| 10 | ⏳ | Add `Package::get_release()` memoization unit tests | Small |
 
 ### Medium Priority
 
-| # | Action | Effort |
-|---|--------|--------|
-| 11 | Test `update_site_transient` via `handle_update_plugins_transient` with mocked packages | Medium |
-| 12 | Test `plugin_api_details` with mocked DID pipeline | Medium |
-| 13 | Add multi-key trust test (two fair keys, wrong one signs → should it pass?) | Small |
-| 14 | Move pipeline-mock tests from unit to integration layer | Medium |
+| # | Status | Action | Effort |
+|---|--------|--------|--------|
+| 11 | ⏳ | Test `update_site_transient` via `handle_update_plugins_transient` with mocked packages | Medium |
+| 12 | ⏳ | Test `plugin_api_details` with mocked DID pipeline | Medium |
+| 13 | ⏳ | Add multi-key trust test (two fair keys, wrong one signs → should it pass?) | Small |
+| 14 | ⏳ | Move pipeline-mock tests from unit to integration layer | Medium |
 
 ### Nice to Have
 
-| # | Action |
-|---|--------|
-| 15 | Refactor `verify_signature_on_download` into testable + glue layers |
-| 16 | Refactor `upgrader_source_selection` path computation into testable pure function |
-| 17 | Make `update_site_transient` protected instead of private |
+| # | Status | Action |
+|---|--------|--------|
+| 15 | ⏳ | Refactor `verify_signature_on_download` into testable + glue layers |
+| 16 | ⏳ | Refactor `upgrader_source_selection` path computation into testable pure function |
+| 17 | ⏳ | Make `update_site_transient` protected instead of private |

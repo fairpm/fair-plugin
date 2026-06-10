@@ -138,30 +138,6 @@ class PickArtifactByLangTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test should fire the pick_artifact_by_lang filter.
-	 */
-	public function test_should_fire_filter_hook() {
-		$filter_fired = false;
-
-		add_filter(
-			'fair.packages.pick_artifact_by_lang',
-			function ( $selected, $artifacts, $locale, $langs ) use ( &$filter_fired ) {
-				$filter_fired = true;
-				$this->assertIsArray( $artifacts, 'Filter receives artifacts array.' );
-				$this->assertIsString( $locale, 'Filter receives locale.' );
-				return $selected;
-			},
-			10,
-			4
-		);
-
-		$artifacts = [ $this->artifact( 'en-US' ) ];
-		pick_artifact_by_lang( $artifacts, 'en-US' );
-
-		$this->assertTrue( $filter_fired, 'Filter hook should have fired.' );
-	}
-
-	/**
 	 * Test filter can override the selected artifact.
 	 */
 	public function test_filter_can_override_selection() {

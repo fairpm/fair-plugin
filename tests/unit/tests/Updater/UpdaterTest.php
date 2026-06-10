@@ -70,13 +70,7 @@ class UpdaterRegistryTest extends WP_UnitTestCase {
 	}
 
 	private function reset_registry(): void {
-		$ref_plugins = new ReflectionProperty( Updater::class, 'plugins' );
-		$ref_plugins->setAccessible( true );
-		$ref_plugins->setValue( null, [] );
-
-		$ref_themes = new ReflectionProperty( Updater::class, 'themes' );
-		$ref_themes->setAccessible( true );
-		$ref_themes->setValue( null, [] );
+		Updater::reset();
 	}
 
 	/**
