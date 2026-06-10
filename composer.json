@@ -34,7 +34,7 @@
         }
     },
     "scripts": {
-        "lint:phpcs": "phpcs . --warning-severity=0",
+        "lint:phpcs": "phpcs -d error_reporting='E_ALL & ~E_DEPRECATED' . --warning-severity=0",
         "lint:phpstan": "phpstan analyse --verbose --memory-limit=2G",
         "lint": [
             "@lint:phpcs",
