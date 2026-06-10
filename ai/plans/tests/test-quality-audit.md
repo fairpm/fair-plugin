@@ -12,7 +12,7 @@
 |---------|-------|----------|
 | Vacuous / near-zero-value tests | 6 | ✅ 6/6 |
 | Testing antipatterns | 4 | ✅ 1/4 (reflection → reset, rest deferred) |
-| High-value expansions (security) | 5 | ✅ 4/5 |
+| High-value expansions (security) | 5 | ✅ 4/5, 🚫 1 protocol concern |
 | High-value expansions (general) | 6 | ✅ 1/6 (memoization) |
 | Code hard to test (design issues) | 3 | ⏳ 0/3 |
 
@@ -83,13 +83,9 @@ The production code in `get_trusted_keys()` (inc/updater/namespace.php) filters 
 
 Added `test_should_recode_multibase_key_to_base64()` to `GetTrustedKeysTest` (commit `e01fadf`). Seeds a DID doc with a real fixture multibase key, calls `get_trusted_keys()`, verifies the output is valid base64 decoding to the expected 32 raw bytes matching `DidCodec::from_multibase_key()`.
 
-### 3.4 Replay attack — no nonce/challenge in signature
+### 3.4 Replay attack — 🚫 Invalid (Protocol Concern)
 
-The signature is over archive content only. An attacker who obtains a valid `release-doc-signed.json` + `hello-dolly.zip` can re-serve those exact files for a different DID (if they control that DID's metadata endpoint). The signature verifies because the content hasn't changed.
-
-**Current tests**: No test for binding between DID and artifact.
-
-**Recommendation**: Not a test issue — this is a protocol design concern. Document it. If the FAIR protocol adds DID-binding to signatures later, add a test.
+Signatures bind to archive content only, not to a specific DID. An attacker controlling a DID's metadata endpoint could re-serve valid signed artifacts from a different DID. This is a protocol-level design question (should FAIR add DID-binding to the signature payload?) — not testable at the plugin layer without a protocol change. Addressed under separate security coverage.
 
 ### 3.5 `upgrader_source_selection()` — ✅ RESOLVED
 
