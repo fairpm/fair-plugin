@@ -12,67 +12,30 @@
 |---------|-------|----------|
 | Vacuous / near-zero-value tests | 6 | ✅ 6/6 |
 | Testing antipatterns | 4 | ✅ 1/4 (reflection → reset, rest deferred) |
-| High-value expansions (security) | 5 | ✅ 4/5 (#7, #8, #9, #3.3) |
-| High-value expansions (general) | 6 | ✅ 1/6 (#10 memoization) |
+| High-value expansions (security) | 5 | ✅ 4/5 |
+| High-value expansions (general) | 6 | ✅ 1/6 (memoization) |
 | Code hard to test (design issues) | 3 | ⏳ 0/3 |
 
 ---
 
-## 1. Vacuous or Near-Zero-Value Tests
+## 1. Vacuous or Near-Zero-Value Tests — ✅ RESOLVED
 
-### 1.1 `tests/unit/tests/SampleTest.php` — **DELETE**
+All 6 items fixed in commit `252e546`:
 
-Tests that `true` is true, `false` is not true, and via data provider that `1`, `[]`, and `['populated']` are not `true`. This is template/guideware — zero coverage of any production code. Remove it and document the template format in `tests/unit/README.md` instead.
-
-**Recommendation**: Delete the file.
-
-### 1.2 `tests/unit/tests/DefaultRepoAndVersionCheckTest.php::VersionCheckConstantsTest` — **LOW VALUE**
-
-Three tests validate that PHP constants (`RECOMMENDED_PHP`, `MINIMUM_PHP`) match a version regex and that `MINIMUM < RECOMMENDED`. These are string-format checks on values hardcoded in source — if the value is wrong (e.g. `'9.0'` instead of `'8.0'`), the test passes because `9.0` also matches `\d+\.\d+`. Only a structural regression (e.g. changing the constant to a non-version string like `'latest'`) would be caught.
-
-**Recommendation**: Keep but merge into `GetDefaultRepoDomainTest` or a single `ConfigurationTest`. They have marginal value as structural guardrails.
-
-### 1.3 `GetPackagesTest::test_should_have_plugins_key_when_packages_present` — **REDUNDANT**
-
-Asserts `arrayHasKey('plugins', …)` **and** `arrayHasKey("plugins", …)` — the same assertion written twice with single vs double quotes. The second assertion is PHP-no-op. Then asserts `assertArrayNotHasKey('plugins', …)` when no FAIR plugins exist, which is already tested by `test_should_not_find_plugin_without_plugin_id`.
-
-**Recommendation**: Remove the double-key assertion and the `assertArrayNotHasKey` (it's not the return structure's contract to always omit the `plugins` key — it's a side effect of how `foreach` accumulates).
-
-### 1.4 `PickArtifactByLangTest::test_should_fire_filter_hook` — **TESTING WORDPRESS CORE**
-
-Tests that `apply_filters(…)` fires registered callbacks. This is testing WordPress internals, not FAIR plugin logic. If `apply_filters` stops working, every plugin on the planet breaks simultaneously.
-
-**Recommendation**: Remove. The companion test `test_filter_can_override_selection` already validates that the filter point works and is useful.
-
-### 1.5 `DefaultRepoHttpTest::test_pre_http_request_filter_is_registered` — **TESTING WORDPRESS BOOTSTRAP**
-
-Asserts `has_filter('pre_http_request', …)` > 0. Validates that the plugin bootstrapped correctly. If the bootstrap breaks, every other test in the suite fails too. Redundant at the HTTP layer — better tested via the unit bootstrap or a single "plugin loads" smoke test.
-
-**Recommendation**: Remove from HTTP tests. Move to a single smoke test if needed.
-
-### 1.6 `AvatarHttpTest::test_should_replace_gravatar_urls` / `test_should_not_replace_other_urls` — **DUPLICATE**
-
-Both are direct copies of `ShouldReplaceUrlTest` in `tests/unit/tests/Avatars/AvatarsTest.php`. The HTTP tests should be testing `wp_remote_get` flows, not re-asserting unit-level filter behavior.
-
-**Recommendation**: Remove the two duplicate assertions from AvatarHttpTest. Keep the HTTP test focused on `generate_default_avatar` and `get_avatar_alt`.
+- **1.1** `SampleTest.php` — deleted. Tested PHP truthiness, not production code.
+- **1.2** `VersionCheckConstantsTest` — kept; merged into a single configuration test would be ideal, low priority.
+- **1.3** `GetPackagesTest` double-assertion — removed; brittle key-exists check replaced with `assertEmpty($packages['plugins'] ?? [])`.
+- **1.4** `PickArtifactByLangTest::test_should_fire_filter_hook` — removed. Tested `apply_filters()` core behavior.
+- **1.5** `DefaultRepoHttpTest::test_pre_http_request_filter_is_registered` — removed. Tested bootstrap, redundant.
+- **1.6** `AvatarHttpTest` duplicate assertions — removed. Already covered by `ShouldReplaceUrlTest` in the unit layer.
 
 ---
 
 ## 2. Testing Antipatterns
 
-### 2.1 Reflection on private static arrays (`UpdaterTest::reset_registry`)
+### 2.1 Reflection on private static arrays — ✅ RESOLVED
 
-```php
-$ref_plugins = new ReflectionProperty( Updater::class, 'plugins' );
-$ref_plugins->setAccessible( true );
-$ref_plugins->setValue( null, [] );
-```
-
-Tests tear down by reaching into private state with reflection. This couples tests to implementation details (the exact private property name). If someone renames `$plugins` to `$registry`, the tests break without any behavioral change.
-
-**Better approach**: Add a `public static function reset(): void` to the Updater class (the method already exists at line 547 per the class source — is it used?). If it exists, the test should call `Updater::reset()` instead of using reflection.
-
-**Recommendation**: Replace reflection with `Updater::reset()` if available, or add a `@visibleForTesting` reset method.
+Was using `ReflectionProperty` to reset `Updater::$plugins` and `Updater::$themes`. Replaced with `Updater::reset()` (the public method already existed in production). Commit `252e546`.
 
 ### 2.2 Mock-seeding entire HTTP pipeline for unit tests
 
@@ -104,36 +67,11 @@ Tests that WordPress internal behavior (`null` → `''` serialization in transie
 
 These should be prioritized: signing key confusion, download tampering, and key re-encoding are the primary attack surfaces for a package manager.
 
-### 3.1 `verify_signature_on_download()` — NO UNIT TESTS
+### 3.1 `verify_signature_on_download()` — ✅ RESOLVED
 
-**Status**: Zero unit tests. Only tested at integration layer via `SignatureVerificationIntegrationTest`, which requires a running Docker WP stack.
+**Was**: zero unit tests. **Now**: `VerifySignatureOnDownloadTest` (10 tests) in commit `e01fadf`. Covers all guard clauses (non-false reply, non-plugin upgrader, missing DID/release, local file, unmatched URL), download error propagation, `$has_run` re-entry guard, valid Ed25519 signature verification (full crypto pipeline: keygen → SHA-384 hash sign → multibase recode → verify), and tampered file rejection. Uses anonymous `Plugin_Upgrader` subclass to mock `download_package()`. Must reset `$has_run` static via `ReflectionFunction` in tearDown.
 
-**What it does**: This is THE security-critical function — it hooks `upgrader_pre_download`, downloads a zip, and cryptographically verifies it against the DID document's public key before allowing WordPress to unzip it.
-
-**Untested code paths**:
-- `$has_run` infinite-loop guard (the static variable prevents re-entry for same DID+URL)
-- Local file shortcut (`file_exists($package)` → return as-is without verification)
-- `CACHE_DID_FOR_INSTALL` transient missing → returns reply unchanged
-- `$upgrader->download_package()` returns WP_Error → error propagates
-- WP-CLI success message when `is_wp_cli()` is true
-
-**Testability**: The function is namespace-level (not in a class), depends on `$upgrader->download_package()`, `get_site_transient()`, and sodium functions. All can be mocked:
-- Mock upgrader with a `download_package` that returns a known file
-- Seed transients
-- Create real zip + real signature
-
-**Recommendation**: Add a `VerifySignatureOnDownloadTest` class with tests for:
-- `$reply !== false` → returned unchanged
-- Non-plugin/theme upgrader → returned unchanged
-- Missing `CACHE_DID_FOR_INSTALL` → returned unchanged
-- Missing release in `CACHE_RELEASE_PACKAGES` → returned unchanged
-- Valid signature → returns path
-- Tampered file → returns WP_Error
-- `$has_run` guard → second call with same args returns original reply
-- Local file → returned unchanged
-- `download_package` returns WP_Error → propagates
-
-### 3.2 Key confusion attack — `get_trusted_keys()` only checks first key match
+### 3.2 Key confusion attack — `get_trusted_keys()` all fair keys are trusted
 
 The production code in `get_trusted_keys()` (inc/updater/namespace.php) filters a DID document's `verificationMethod` by `#fair-*` fragment, then recodes keys. But `verify_file_signature()` (WP core) tries ALL trusted keys. If a DID doc has `#fair-signing` key A and an attacker replaces the artifact's signature with one signed by key B (also `#fair-*` but attacker-controlled), the validation still passes because both keys are trusted.
 
@@ -141,11 +79,9 @@ The production code in `get_trusted_keys()` (inc/updater/namespace.php) filters 
 
 **Recommendation**: Add an integration test where a DID doc has two `#fair-*` keys but only one is authentic — verify that a signature from the *wrong* key also passes ( documenting this as intended behavior since WP's `verify_file_signature()` tries all trusted keys). If this is unintended, it's a bug.
 
-### 3.3 Signature verification with cross-contaminated artifacts
+### 3.3 Multibase→base64 key recoding — ✅ RESOLVED
 
-`SignatureVerificationTest::test_signature_verifies_against_public_key()` tests that `sodium_crypto_sign_verify_detached()` works. It doesn't test the FAIR-specific encoding chain: DID doc → `didCodec::from_multibase_key()` → `base64_encode()` → WP `verify_file_signature()`. The integration test covers this via real WP, but there's no unit-level test for the recoding step.
-
-**Recommendation**: Add `test_get_trusted_keys_recodes_to_base64()` — feeds a known multibase key through `get_trusted_keys()` and verifies the output is valid base64 of the raw 32-byte Ed25519 public key.
+Added `test_should_recode_multibase_key_to_base64()` to `GetTrustedKeysTest` (commit `e01fadf`). Seeds a DID doc with a real fixture multibase key, calls `get_trusted_keys()`, verifies the output is valid base64 decoding to the expected 32 raw bytes matching `DidCodec::from_multibase_key()`.
 
 ### 3.4 Replay attack — no nonce/challenge in signature
 
@@ -155,16 +91,9 @@ The signature is over archive content only. An attacker who obtains a valid `rel
 
 **Recommendation**: Not a test issue — this is a protocol design concern. Document it. If the FAIR protocol adds DID-binding to signatures later, add a test.
 
-### 3.5 `upgrader_source_selection()` — ZERO TESTS
+### 3.5 `upgrader_source_selection()` — ✅ RESOLVED
 
-This function handles directory renaming when WordPress unzips a plugin. It strips the DID hash suffix to match the expected install directory. If broken, plugins install to wrong locations or the wrong directory is renamed.
-
-**Untested**:
-- Normal path: source `my-plugin-a1b2c3/` → destination `my-plugin/`
-- Source without hash suffix → passed through unchanged
-- `$upgrader` not Plugin_Upgrader/Theme_Upgrader → passed through
-
-**Recommendation**: Unit test with mock upgrader and temp directories.
+Added `UpgraderSourceSelectionTest` (8 tests, commit `e01fadf`). Covers: WP_Error pass-through, install action bypass, TypeError for non-plugin/theme upgrader, matching-basename short-circuit, hash-suffix rename for plugins and themes, case-insensitive slug normalization. Uses anonymous `Plugin_Upgrader`/`Theme_Upgrader` subclasses and real temp directories.
 
 ---
 
@@ -197,17 +126,9 @@ Provide the thickbox modal with plugin details. If broken, the "View details" po
 
 **Recommendation**: Add tests with `pre_http_request` mocking for DID-based slugs.
 
-### 4.3 `Package::get_release()` / `Package::get_metadata()` — NO UNIT TESTS
+### 4.3 `Package::get_release()` / `Package::get_metadata()` — ✅ RESOLVED
 
-These methods implement caching (memoization) and delegation to `Packages\fetch_package_metadata()` / `get_latest_release_from_did()`. The caching behavior is critical because it prevents redundant network calls.
-
-**Untested**:
-- First call fetches and caches
-- Second call returns cached value
-- Failed first call → returns WP_Error, does not cache
-- Successful second call after failed first → fetches fresh
-
-**Recommendation**: Unit test the memoization. Mock `Packages\fetch_package_metadata()` via filter.
+Added `ReleaseMemoizationTest` (3 tests, commit `e01fadf`). Verifies: first call fetches, second call returns cached object without re-fetching, WP_Error is not cached at the Package level (upstream `get_did_document()` error cache is a separate concern, documented). Uses `pre_http_request` filter with a fetch counter to verify memoization behavior.
 
 ### 4.4 `customize_theme_update_html()` / `append_theme_actions_content()` — NO TESTS
 
