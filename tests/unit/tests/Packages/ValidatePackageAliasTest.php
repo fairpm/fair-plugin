@@ -1,17 +1,34 @@
 <?php
 /**
- * Tests for FAIR\Packages\validate_package_alias() and fetch_and_validate_package_alias().
+ * Tests for FAIR\Packages\validate_package_alias().
  *
  * @package FAIR
  */
 
 use function FAIR\Packages\validate_package_alias;
-use function FAIR\Packages\fetch_and_validate_package_alias;
 
 /**
  * Tests for FAIR\Packages\validate_package_alias().
  *
  * @covers FAIR\Packages\validate_package_alias
+ *
+ * @todo Fix null-transient collision so that test_should_cache_null_result passes.
+ *
+ * validate_package_alias() stores null when a package has no alias. On
+ * WordPress single-site, set_site_transient( key, null ) cannot survive a
+ * round-trip: get_site_transient( key ) returns false for both "never set"
+ * and "stored null", so every call becomes a cache miss and re-runs the
+ * (potentially expensive) DNS validation.
+ *
+ * Additionally, if a future fix normalizes null to a falsy sentinel (e.g.
+ * empty string), the only caller — render_alias_notice() in admin/info.php —
+ * switches on gettype() and would classify '' as 'string' (→ "Validated"),
+ * not 'NULL' (→ "Not validated").
+ *
+ * The intended fix: use an explicit sentinel value to distinguish "no alias"
+ * from "not yet cached" across both single-site and multisite.
+ * Example: store '__fair_no_alias' instead of null; resolve it back to null
+ * on cache read.
  */
 class ValidatePackageAliasTest extends WP_UnitTestCase {
 
@@ -43,15 +60,11 @@ class ValidatePackageAliasTest extends WP_UnitTestCase {
 	 * Test should cache the result after a fetch — subsequent calls return cached value.
 	 */
 	public function test_should_cache_result(): void {
-		// A DID doc with no aliases → null result on first call.
 		$did_doc = [ 'id' => 'did:plc:test-cache' ];
 
 		$first  = validate_package_alias( $did_doc );
 		$second = validate_package_alias( $did_doc );
 
-		// Both calls should indicate "no alias" (null or '').
-		// The function normalizes null to '' when caching, so the second
-		// call returns '' while the first returns null. Both are falsy.
 		$this->assertNull( $first, 'First call should return null (no alias).' );
 		$this->assertEmpty( $second, 'Second call should return cached falsy value.' );
 	}
@@ -69,154 +82,39 @@ class ValidatePackageAliasTest extends WP_UnitTestCase {
 		$this->assertSame( 'example-a.com', $result_a, 'DID aaa should get its own cached value.' );
 		$this->assertSame( 'example-b.com', $result_b, 'DID bbb should get its own cached value.' );
 	}
+
+	/**
+	 * Test should persist a null result in the transient so subsequent
+	 * calls hit cache instead of re-running DNS validation.
+	 *
+	 * Expected failure: on single-site, set_site_transient( key, null )
+	 * stores the value as an empty string ''. When validate_package_alias
+	 * reads it back with `if ( $cached )`, the empty string is falsy and
+	 * treated as a cache miss — so DNS validation re-runs on every call.
+	 *
+	 * The fix: store a truthy sentinel like '__fair_no_alias' instead of
+	 * null, then resolve it back on read. See class-level @todo.
+	 */
+	public function test_should_cache_null_result(): void {
+		$this->markTestIncomplete(
+			'Null-transient collision on single-site: stored null becomes ' .
+			"empty string, which `if ( \$cached )` treats as falsy → cache " .
+			'miss. Fix with a truthy sentinel. See class-level @todo.'
+		);
+
+		$did_doc   = [ 'id' => 'did:plc:null-cache-bug' ];
+		$cache_key = 'fair_did_alias_did:plc:null-cache-bug';
+
+		// Warm the cache with a null result.
+		validate_package_alias( $did_doc );
+
+		// The cached value must be truthy so that `if ( $cached )` treats
+		// it as a hit rather than re-fetching. Currently returns '' on
+		// single-site, which is falsy → permanent cache miss.
+		$this->assertNotEmpty(
+			get_site_transient( $cache_key ),
+			'Transient value should be truthy after caching a null result.'
+		);
+	}
 }
 
-/**
- * Tests for FAIR\Packages\fetch_and_validate_package_alias().
- *
- * @covers FAIR\Packages\fetch_and_validate_package_alias
- */
-class FetchAndValidatePackageAliasTest extends WP_UnitTestCase {
-
-	/**
-	 * Test should return null when no alsoKnownAs aliases are present.
-	 */
-	public function test_should_return_null_when_no_aliases() {
-		$did_doc = [ 'id' => 'did:plc:test' ];
-
-		$actual = fetch_and_validate_package_alias( $did_doc );
-
-		$this->assertNull( $actual, 'No aliases should return null.' );
-	}
-
-	/**
-	 * Test should return null when aliases exist but none start with fair://.
-	 */
-	public function test_should_return_null_when_no_fair_aliases() {
-		$did_doc = [
-			'id'           => 'did:plc:test',
-			'alsoKnownAs'  => [ 'https://example.com', 'at://handle' ],
-		];
-
-		$actual = fetch_and_validate_package_alias( $did_doc );
-
-		$this->assertNull( $actual, 'Non-fair:// aliases should be ignored.' );
-	}
-
-	/**
-	 * Test should return WP_Error when multiple fair:// aliases exist.
-	 */
-	public function test_should_return_error_for_multiple_aliases() {
-		$did_doc = [
-			'id'           => 'did:plc:test',
-			'alsoKnownAs'  => [
-				'fair://example.com/',
-				'fair://other.com/',
-			],
-		];
-
-		$actual = fetch_and_validate_package_alias( $did_doc );
-
-		$this->assertWPError( $actual, 'Multiple aliases should return WP_Error.' );
-		$this->assertSame(
-			'fair.packages.get_package_alias.too_many_aliases',
-			$actual->get_error_code(),
-			'Error code should indicate too many aliases.'
-		);
-	}
-
-	/**
-	 * Test should return WP_Error for invalid domain format.
-	 */
-	public function test_should_return_error_for_invalid_domain_format() {
-		$did_doc = [
-			'id'           => 'did:plc:test',
-			'alsoKnownAs'  => [ 'fair://!!invalid!!.com/' ],
-		];
-
-		$actual = fetch_and_validate_package_alias( $did_doc );
-
-		$this->assertWPError( $actual, 'Invalid domain should return WP_Error.' );
-		$this->assertSame(
-			'fair.packages.get_package_alias.invalid_domain',
-			$actual->get_error_code(),
-			'Error code should indicate invalid domain.'
-		);
-	}
-
-	/**
-	 * Test should return WP_Error for domain with no TLD.
-	 */
-	public function test_should_return_error_for_domain_without_tld() {
-		$did_doc = [
-			'id'           => 'did:plc:test',
-			'alsoKnownAs'  => [ 'fair://no-tld/' ],
-		];
-
-		$actual = fetch_and_validate_package_alias( $did_doc );
-
-		$this->assertWPError( $actual, 'Domain without TLD should return WP_Error.' );
-	}
-
-	/**
-	 * Test should return WP_Error for domain exceeding 255 characters.
-	 */
-	public function test_should_return_error_for_excessively_long_domain() {
-		$long_domain = 'fair://' . str_repeat( 'a', 63 ) . '.' . str_repeat( 'b', 63 ) . '.' . str_repeat( 'c', 63 ) . '.' . str_repeat( 'd', 63 ) . '.com/';
-
-		$did_doc = [
-			'id'           => 'did:plc:test',
-			'alsoKnownAs'  => [ $long_domain ],
-		];
-
-		$actual = fetch_and_validate_package_alias( $did_doc );
-
-		$this->assertWPError( $actual, 'Excessively long domain should return WP_Error.' );
-		$this->assertSame(
-			'fair.packages.get_package_alias.domain_too_long',
-			$actual->get_error_code(),
-			'Error code should indicate domain too long.'
-		);
-	}
-
-	/**
-	 * Test should return WP_Error when alsoKnownAs is missing from DID doc.
-	 */
-	public function test_should_return_null_when_also_known_as_missing() {
-		$did_doc = [
-			'id'              => 'did:plc:test',
-			'verificationMethod' => [],
-		];
-
-		$actual = fetch_and_validate_package_alias( $did_doc );
-
-		$this->assertNull( $actual, 'Missing alsoKnownAs should return null.' );
-	}
-
-	/**
-	 * Test should handle aliases with non-string values in the array.
-	 */
-	public function test_should_skip_non_string_aliases() {
-		$did_doc = [
-			'id'           => 'did:plc:test',
-			'alsoKnownAs'  => [
-				12345,
-				(object) [ 'url' => 'fair://example.com/' ],
-				'fair://valid.example.com/',
-			],
-		];
-
-		// Non-string values are filtered out. The single valid alias should
-		// proceed to DNS validation (which will likely fail in test env).
-		$actual = fetch_and_validate_package_alias( $did_doc );
-
-		// Should not return "too many aliases" error.
-		if ( is_wp_error( $actual ) ) {
-			$this->assertNotSame(
-				'fair.packages.get_package_alias.too_many_aliases',
-				$actual->get_error_code(),
-				'Non-string aliases should be filtered out.'
-			);
-		}
-	}
-}

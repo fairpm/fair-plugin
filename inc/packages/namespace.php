@@ -998,14 +998,12 @@ function maybe_add_accept_header( $args, $url ) : array {
 function validate_package_alias( array $did_doc ) {
 	$cache_key = sprintf( 'fair_did_alias_%s', $did_doc['id'] );
 	$cached = get_site_transient( $cache_key );
-	if ( false !== $cached ) {
+	if ( $cached ) {
 		return $cached;
 	}
 
 	$alias = fetch_and_validate_package_alias( $did_doc );
-	// Normalize null to empty string for consistent cache behavior
-	// across single-site (null→'') and multisite (null→null) storage.
-	set_site_transient( $cache_key, $alias ?? '', HOUR_IN_SECONDS );
+	set_site_transient( $cache_key, $alias, HOUR_IN_SECONDS );
 	return $alias;
 }
 
