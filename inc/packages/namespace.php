@@ -35,7 +35,10 @@ const SERVICE_ID = 'FairPackageManagementRepo';
 function get_plc_client(): PlcClient {
 	static $client;
 	if ( ! $client ) {
-		$client = new PlcClient();
+		$base_url = defined( 'FAIR_PLC_DIRECTORY_URL' )
+			? FAIR_PLC_DIRECTORY_URL
+			: 'https://plc.directory';
+		$client = new PlcClient( $base_url );
 	}
 	return $client;
 }
