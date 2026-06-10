@@ -54,15 +54,6 @@ class SignatureVerificationTest extends TestCase {
 	}
 
 	/**
-	 * Test that the DID doc fixture has the expected structure.
-	 */
-	public function test_did_doc_has_verification_method(): void {
-		$this->assertArrayHasKey( 'verificationMethod', $this->did_doc );
-		$this->assertNotEmpty( $this->did_doc['verificationMethod'] );
-		$this->assertSame( 'Multikey', $this->did_doc['verificationMethod'][0]['type'] );
-	}
-
-	/**
 	 * Test that DidCodec::from_multibase_key correctly decodes the public key.
 	 */
 	public function test_from_multibase_key_decodes_ed25519(): void {

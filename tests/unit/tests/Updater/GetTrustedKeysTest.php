@@ -113,6 +113,55 @@ class GetTrustedKeysTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test that ALL fair-prefixed Multikey entries are returned as trusted keys.
+	 *
+	 * WordPress core's verify_file_signature() tries every trusted key.
+	 * If a DID doc has two #fair-* keys (e.g. primary + backup), both are
+	 * returned. A signature from EITHER key will pass verification.
+	 * This is intentional: key rotation and backup keys must work.
+	 */
+	public function test_should_return_all_fair_prefixed_multikeys(): void {
+		set_site_transient( CACHE_DID_FOR_INSTALL, $this->test_did, HOUR_IN_SECONDS );
+
+		// Generate two valid Ed25519 keypairs for multibase encoding.
+		$kp1 = sodium_crypto_sign_keypair();
+		$kp2 = sodium_crypto_sign_keypair();
+		$mb1 = \FAIR\DID\Crypto\DidCodec::to_multibase_key(
+			sodium_crypto_sign_publickey( $kp1 ),
+			\FAIR\DID\Crypto\DidCodec::MULTICODEC_ED25519_PUB
+		);
+		$mb2 = \FAIR\DID\Crypto\DidCodec::to_multibase_key(
+			sodium_crypto_sign_publickey( $kp2 ),
+			\FAIR\DID\Crypto\DidCodec::MULTICODEC_ED25519_PUB
+		);
+
+		set_site_transient( CACHE_METADATA_DOCUMENTS . $this->test_did, [
+			'id'                 => $this->test_did,
+			'verificationMethod' => [
+				[
+					'id'                 => '#fair-signing',
+					'type'               => 'Multikey',
+					'publicKeyMultibase'  => $mb1,
+				],
+				[
+					'id'                 => '#fair-backup',
+					'type'               => 'Multikey',
+					'publicKeyMultibase'  => $mb2,
+				],
+				[
+					'id'                 => '#atproto-key',
+					'type'               => 'Multikey',
+					'publicKeyMultibase'  => 'zQ3shXjHeiBuRCKmM36cuYnm7YEMzhGnCmCyW92sRJ9pribSF',
+				],
+			],
+		], HOUR_IN_SECONDS );
+
+		$keys = get_trusted_keys();
+
+		$this->assertCount( 2, $keys, 'Both fair-prefixed Ed25519 keys should be trusted.' );
+	}
+
+	/**
 	 * Test that a valid fair-signing key is recoded from multibase (base58btc)
 	 * to base64 as expected by WordPress core's verify_file_signature().
 	 */

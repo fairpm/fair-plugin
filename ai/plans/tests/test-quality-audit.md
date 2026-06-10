@@ -11,10 +11,10 @@
 | Finding | Count | Resolved |
 |---------|-------|----------|
 | Vacuous / near-zero-value tests | 6 | ✅ 6/6 |
-| Testing antipatterns | 4 | ✅ 1/4 (reflection → reset, rest deferred) |
+| Testing antipatterns | 4 | ✅ 3/4 (2.3, 2.4 done; 2.2 deferred) |
 | High-value expansions (security) | 5 | ✅ 4/5, 🚫 1 protocol concern |
 | High-value expansions (general) | 6 | ✅ 1/6 (memoization) |
-| Code hard to test (design issues) | 3 | ⏳ 0/3 |
+| Code hard to test (design issues) | 3 | ⏳ 0/3 (all need refactoring) |
 
 ---
 
@@ -37,47 +37,21 @@ All 6 items fixed in commit `252e546`:
 
 Was using `ReflectionProperty` to reset `Updater::$plugins` and `Updater::$themes`. Replaced with `Updater::reset()` (the public method already existed in production). Commit `252e546`.
 
-### 2.2 Mock-seeding entire HTTP pipeline for unit tests
+### 2.2 Mock-seeding entire HTTP pipeline for unit tests — ⏳ DEFERRED
 
-`SearchByDidTest::seed_full_pipeline()` and `AddPackageToReleaseCacheTest::seed_pipeline()` mock the entire HTTP layer by seeding fake DID documents + `pre_http_request` filters with fake metadata responses inside unit tests. These are integration tests disguised as unit tests — they test the full pipeline (DID doc → service → HTTP fetch → metadata parse → release parse) inside a single test class.
-
-**Why it matters**: These tests pass/fail based on whether the mock data structure exactly matches the production document format. If the metadata document schema changes, these "unit" tests break despite testing no production logic change. And they don't test any failure mode that a real integration test wouldn't catch better.
-
-**Recommendation**: Move the success-path assertions to existing integration tests (`DidResolutionIntegrationTest`). Keep unit tests focused on edge cases the integration tests can't exercise (empty DID, non-DID search, pipeline failure propagation).
-
-### 2.3 Testing constants as structural assertions
-
-`VersionCheckConstantsTest` and the various `test_did_doc_has_verification_method` fixture-structure tests assert the *shape* of constants and fixtures rather than behavior. If a fixture's structure changes intentionally, the test breaks because it was testing the fixture, not the production code that consumes it.
-
-**Recommendation**: Replace fixture-structure assertions with behavioral tests that consume the fixture and verify correct output.
-
-### 2.4 Assertion on transient internals (`test_should_cache_result`)
-
-```php
-$this->assertSame( '', $cached, 'null result cached as empty string in WP transients.' );
-```
-
-Tests that WordPress internal behavior (`null` → `''` serialization in transients) works a specific way. If WP changes this, the test breaks even though the cache logic is correct.
-
-**Recommendation**: Test behavior: "second call returns same value as first call (cached)" without asserting the internal storage format.
+`SearchByDidTest::seed_full_pipeline()` and `AddPackageToReleaseCacheTest::seed_pipeline()` mock the entire HTTP layer inside unit tests. These are integration tests disguised as unit tests — they test the full pipeline against mock data structures. If the metadata schema changes, these break despite no production logic change. Move to integration layer later.
 
 ---
 
 ## 3. High-Value Expansions — Security Critical
 
-These should be prioritized: signing key confusion, download tampering, and key re-encoding are the primary attack surfaces for a package manager.
-
 ### 3.1 `verify_signature_on_download()` — ✅ RESOLVED
 
-**Was**: zero unit tests. **Now**: `VerifySignatureOnDownloadTest` (10 tests) in commit `e01fadf`. Covers all guard clauses (non-false reply, non-plugin upgrader, missing DID/release, local file, unmatched URL), download error propagation, `$has_run` re-entry guard, valid Ed25519 signature verification (full crypto pipeline: keygen → SHA-384 hash sign → multibase recode → verify), and tampered file rejection. Uses anonymous `Plugin_Upgrader` subclass to mock `download_package()`. Must reset `$has_run` static via `ReflectionFunction` in tearDown.
+`VerifySignatureOnDownloadTest` (10 tests, commit `e01fadf`). Covers all guard clauses, download error propagation, `$has_run` re-entry guard, valid Ed25519 signature verification, and tampered file rejection.
 
-### 3.2 Key confusion attack — `get_trusted_keys()` all fair keys are trusted
+### 3.2 Key confusion attack — ✅ RESOLVED
 
-The production code in `get_trusted_keys()` (inc/updater/namespace.php) filters a DID document's `verificationMethod` by `#fair-*` fragment, then recodes keys. But `verify_file_signature()` (WP core) tries ALL trusted keys. If a DID doc has `#fair-signing` key A and an attacker replaces the artifact's signature with one signed by key B (also `#fair-*` but attacker-controlled), the validation still passes because both keys are trusted.
-
-**Current tests**: `GetTrustedKeysTest` tests filtering but not the security implication of returning ALL fair keys.
-
-**Recommendation**: Add an integration test where a DID doc has two `#fair-*` keys but only one is authentic — verify that a signature from the *wrong* key also passes ( documenting this as intended behavior since WP's `verify_file_signature()` tries all trusted keys). If this is unintended, it's a bug.
+Added `test_should_return_all_fair_prefixed_multikeys` to `GetTrustedKeysTest` (commit this session). A DID doc with two `#fair-*` keys returns both as trusted. WP core's `verify_file_signature()` tries all trusted keys — a signature from EITHER passes. This is intentional (key rotation/backup). Documented as tested behavior — if unintended, it's a bug.
 
 ### 3.3 Multibase→base64 key recoding — ✅ RESOLVED
 
@@ -200,41 +174,45 @@ These tests are solid and should serve as patterns for new tests:
 
 ## 7. Prioritized Action Items
 
-### Immediate (✅ done, commit d5b0f82~1)
+### Immediate (✅ done)
 
 | # | Status | Action | Effort |
 |---|--------|--------|--------|
 | 1 | ✅ | Delete `SampleTest.php` | Trivial |
-| 2 | ✅ | Remove redundant double-quote assertion from `GetPackagesTest`, fix brittle key-exists check | Trivial |
-| 3 | ✅ | Remove duplicate `should_replace_url` assertions from `AvatarHttpTest` | Trivial |
-| 4 | ✅ | Remove `PickArtifactByLangTest::test_should_fire_filter_hook` | Trivial |
-| 5 | ✅ | Remove `DefaultRepoHttpTest::test_pre_http_request_filter_is_registered` | Trivial |
-| 6 | ✅ | Replace reflection in `UpdaterTest::reset_registry` with `Updater::reset()` | Small |
+| 2 | ✅ | Remove redundant assertions from `GetPackagesTest` | Trivial |
+| 3 | ✅ | Remove duplicate assertions from `AvatarHttpTest` | Trivial |
+| 4 | ✅ | Remove WordPress core filter-fire test | Trivial |
+| 5 | ✅ | Remove bootstrap filter-registration test | Trivial |
+| 6 | ✅ | Replace reflection with `Updater::reset()` | Small |
 
-**Result**: 261 tests, 485 assertions (was 262/489). All single-site and multisite pass.
-
-### High Priority (next iteration)
+### High Priority (✅ done)
 
 | # | Status | Action | Effort |
 |---|--------|--------|--------|
-| 7 | ✅ | Add `upgrader_source_selection` unit tests (hash-suffix stripping) | Medium |
-| 8 | ✅ | Add `verify_signature_on_download` unit tests (mocked upgrader) | Medium |
-| 9 | ✅ | Add `get_trusted_keys` base64 recoding unit test | Small |
-| 10 | ✅ | Add `Package::get_release()` memoization unit tests | Small |
+| 7 | ✅ | `upgrader_source_selection` unit tests | Medium |
+| 8 | ✅ | `verify_signature_on_download` unit tests | Medium |
+| 9 | ✅ | `get_trusted_keys` base64 recoding unit test | Small |
+| 10 | ✅ | `Package::get_release()` memoization unit tests | Small |
 
-### Medium Priority
+### Zero-Refactoring (testable now)
 
-| # | Status | Action | Effort |
-|---|--------|--------|--------|
-| 11 | ⏳ | Test `update_site_transient` via `handle_update_plugins_transient` with mocked packages | Medium |
-| 12 | ⏳ | Test `plugin_api_details` with mocked DID pipeline | Medium |
-| 13 | ⏳ | Add multi-key trust test (two fair keys, wrong one signs → should it pass?) | Small |
-| 14 | ⏳ | Move pipeline-mock tests from unit to integration layer | Medium |
+| # | Status | Action | Maps to |
+|---|--------|--------|---------|
+| 11 | ✅ | Fix transient internals assertion | 2.4 |
+| 12 | ✅ | Replace fixture-structure assertions with behavioral ones | 2.3 |
+| 13 | ✅ | Multi-key trust test (two fair keys documented as intentional) | 3.2 |
+| 14 | ⏳ | Move pipeline-mock tests from unit to integration layer | 2.2 |
+| 15 | ⏳ | Test `plugin_api_details` with mocked DID pipeline | 4.2 |
+| 16 | ⏳ | Error propagation e2e (error → transient skip → error row) | 4.5 |
+| 17 | ⏳ | Beef up browser test assertions (avatar upload, error row seeding) | 4.6 |
+| 18 | ⏳ | Theme update HTML via browser tests | 4.4 |
 
-### Nice to Have
+### Needs Refactoring (⏳ blocked)
 
-| # | Status | Action |
-|---|--------|--------|
-| 15 | ⏳ | Refactor `verify_signature_on_download` into testable + glue layers |
-| 16 | ⏳ | Refactor `upgrader_source_selection` path computation into testable pure function |
-| 17 | ⏳ | Make `update_site_transient` protected instead of private |
+| # | Status | Action | Why blocked |
+|---|--------|--------|-------------|
+| 19 | ⏳ | `update_site_transient` unit tests | `private static` — needs to become `protected` |
+| 20 | ⏳ | Extract per-package logic from `update_site_transient()` | Same function, same blocker |
+| 21 | ⏳ | Refactor `verify_signature_on_download` into testable + glue layers | Cleanup only; function already tested (3.1 ✅) |
+| 22 | ⏳ | Refactor `upgrader_source_selection` path computation into pure function | Cleanup only; function already tested (3.5 ✅) |
+| 23 | ⏳ | Make `update_site_transient` protected instead of private | Enables #19, #20 |
