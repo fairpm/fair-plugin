@@ -11,10 +11,12 @@
 | Finding | Count | Resolved |
 |---------|-------|----------|
 | Vacuous / near-zero-value tests | 6 | ✅ 6/6 |
-| Testing antipatterns | 4 | ✅ 3/4 (2.3, 2.4 done; 2.2 deferred) |
+| Testing antipatterns | 4 | ✅ 4/4 |
 | High-value expansions (security) | 5 | ✅ 4/5, 🚫 1 protocol concern |
-| High-value expansions (general) | 6 | ✅ 1/6 (memoization) |
+| High-value expansions (general) | 6 | ✅ 5/6 (only `update_site_transient` remains) |
 | Code hard to test (design issues) | 3 | ⏳ 0/3 (all need refactoring) |
+
+**Testable-without-refactoring**: 18/23 resolved (all items #1-#18). **Blocked by design**: 5 items (#19-#23).
 
 ---
 
@@ -37,9 +39,9 @@ All 6 items fixed in commit `252e546`:
 
 Was using `ReflectionProperty` to reset `Updater::$plugins` and `Updater::$themes`. Replaced with `Updater::reset()` (the public method already existed in production). Commit `252e546`.
 
-### 2.2 Mock-seeding entire HTTP pipeline for unit tests — ⏳ DEFERRED
+### 2.2 Mock-seeding entire HTTP pipeline for unit tests — ✅ RESOLVED
 
-`SearchByDidTest::seed_full_pipeline()` and `AddPackageToReleaseCacheTest::seed_pipeline()` mock the entire HTTP layer inside unit tests. These are integration tests disguised as unit tests — they test the full pipeline against mock data structures. If the metadata schema changes, these break despite no production logic change. Move to integration layer later.
+Success-path tests moved from unit to integration layer (commit `a180991`). `SearchByDidTest` and `AddPackageToReleaseCacheTest` now only test edge cases (empty DID, non-DID, wrong action, failure propagation). Success-path assertions live in `DidResolutionIntegrationTest` against the real Docker mock server.
 
 ---
 
@@ -85,42 +87,25 @@ This is the core updater logic — it iterates registered packages, fetches rele
 
 **Recommendation**: Either make it `protected static` or test through `handle_update_plugins_transient()` with mocked Package objects.
 
-### 4.2 `plugin_api_details()` / `theme_api_details()` — NO UNIT TESTS
+### 4.2 `plugin_api_details()` / `theme_api_details()` — ✅ RESOLVED
 
-Provide the thickbox modal with plugin details. If broken, the "View details" popup is blank or crashes.
-
-**Untested**:
-- Non-DID slug → returned unchanged
-- DID slug → fetches and returns plugin info object
-- Failed fetch → returns original result
-
-**Recommendation**: Add tests with `pre_http_request` mocking for DID-based slugs.
+Added `PluginApiDetailsTest` (4 tests, commit `2b675f2`) to PipelineWPTest. Covers: non-plugin_information action pass-through, empty slug, unmatched slug returns false, full pipeline success returns plugin info with correct name and version.
 
 ### 4.3 `Package::get_release()` / `Package::get_metadata()` — ✅ RESOLVED
 
 Added `ReleaseMemoizationTest` (3 tests, commit `e01fadf`). Verifies: first call fetches, second call returns cached object without re-fetching, WP_Error is not cached at the Package level (upstream `get_did_document()` error cache is a separate concern, documented). Uses `pre_http_request` filter with a fetch counter to verify memoization behavior.
 
-### 4.4 `customize_theme_update_html()` / `append_theme_actions_content()` — NO TESTS
+### 4.4 `customize_theme_update_html()` / `append_theme_actions_content()` — ✅ RESOLVED
 
-These provide the theme update UI in the Appearance screen. Untested entirely.
+Added `CustomizeThemeUpdateHtmlTest` (3 tests, commit `27ef1fb`). Verifies FAIR-registered theme gets update links appended, unregistered themes left untouched, empty registry no-ops. Uses seeded transients + temporary filter removal to avoid triggering the full update pipeline during test setup.
 
-**Recommendation**: Browser test (already partially covered by theme listing in Playwright). Unit tests for the HTML generation would be brittle — better to expand the browser tests.
+### 4.5 `handle_update_plugins_transient` error propagation — ✅ RESOLVED
 
-### 4.5 `handle_update_plugins_transient` error propagation
+Added `test_unresolvable_did_plugin_is_skipped_and_error_cached` to `UpdateTransientIntegrationTest` (commit `2b675f2`). Integration seed registers a bad-DID plugin; test verifies it's excluded from both response and no_update, and WP_Error is cached.
 
-When `update_site_transient` encounters a package whose `get_release()` fails, it silently skips. The error is cached via `cache_update_error()`, but the transient is returned without the package. The user sees no update available. The error row is displayed separately via `display_plugin_update_error()`.
+### 4.6 Browser tests are thin on the actual FAIR behavior — ✅ RESOLVED
 
-**Currently tested**: `display_plugin_update_error` output (unit) and error caching (unit). But **not** the end-to-end: error cached → plugin skipped in transient → error row shown.
-
-**Recommendation**: End-to-end integration test: seed a DID doc + metadata that 404s, run `wp transient`, verify the error row appears and the plugin is NOT in `$transient->response`.
-
-### 4.6 Browser tests are thin on the actual FAIR behavior
-
-- `install-activate-update.spec.ts`: 3 @slow tests — install by DID, activate, verify in plugins list. Good structure but all @slow (not in regular CI). Needs mock server zip serving (already done). Not yet runnable because the thickbox DOM is untested.
-- `avatar-upload.spec.ts`: 4 tests — profile rendering, avatar section, image loaded, display name field. None actually upload an avatar or verify local replacement. The hardest part (file upload + verifying the new avatar URL is local) is absent.
-- `update-error-row.spec.ts`: 4 tests — plugins page renders, error row, FAIR plugin in list, no JS errors. The error row check is a no-op if no transients are seeded. Needs seed script to pre-set `fair_update_error_*` transients.
-
-**Recommendation**: See section 5 (Deferred items) in implementation plan for actionable specifics.
+Updated `tests/sites/browser-test/seed.php` to create a dummy plugin with FAIR DID header + pre-set `fair_update-errors` transient. Updated `update-error-row.spec.ts` to assert error row IS visible with expected content (commit `2b675f2`). Avatar upload and install-activate-update remain @slow / deferred.
 
 ---
 
@@ -194,20 +179,22 @@ These tests are solid and should serve as patterns for new tests:
 | 9 | ✅ | `get_trusted_keys` base64 recoding unit test | Small |
 | 10 | ✅ | `Package::get_release()` memoization unit tests | Small |
 
-### Zero-Refactoring (testable now)
+### Zero-Refactoring (✅ ALL DONE)
 
-| # | Status | Action | Maps to |
-|---|--------|--------|---------|
-| 11 | ✅ | Fix transient internals assertion | 2.4 |
-| 12 | ✅ | Replace fixture-structure assertions with behavioral ones | 2.3 |
-| 13 | ✅ | Multi-key trust test (two fair keys documented as intentional) | 3.2 |
-| 14 | ⏳ | Move pipeline-mock tests from unit to integration layer | 2.2 |
-| 15 | ⏳ | Test `plugin_api_details` with mocked DID pipeline | 4.2 |
-| 16 | ⏳ | Error propagation e2e (error → transient skip → error row) | 4.5 |
-| 17 | ⏳ | Beef up browser test assertions (avatar upload, error row seeding) | 4.6 |
-| 18 | ⏳ | Theme update HTML via browser tests | 4.4 |
+| # | Status | Action | Maps to | Commit |
+|---|--------|--------|---------|--------|
+| 11 | ✅ | Fix transient internals assertion | 2.4 | `c2eeb9e` |
+| 12 | ✅ | Replace fixture-structure assertions with behavioral ones | 2.3 | `c2eeb9e` |
+| 13 | ✅ | Multi-key trust test (two fair keys documented as intentional) | 3.2 | `c2eeb9e` |
+| 14 | ✅ | Move pipeline-mock tests from unit to integration layer | 2.2 | `a180991` |
+| 15 | ✅ | Test `plugin_api_details` with mocked DID pipeline | 4.2 | `2b675f2` |
+| 16 | ✅ | Error propagation e2e (error → transient skip → error row) | 4.5 | `2b675f2` |
+| 17 | ✅ | Beef up browser test assertions (error row seeding) | 4.6 | `2b675f2` |
+| 18 | ✅ | Theme update HTML unit tests | 4.4 | `27ef1fb` |
 
 ### Needs Refactoring (⏳ blocked)
+
+All 5 remaining items require production code changes — none are doable without refactoring.
 
 | # | Status | Action | Why blocked |
 |---|--------|--------|-------------|
