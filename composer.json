@@ -6,8 +6,8 @@
     "authors": [
         {
             "name": "FAIR Contributors",
-			"email": "operations@fair.pm",
-			"homepage": "https://fair.pm"
+            "email": "operations@fair.pm",
+            "homepage": "https://fair.pm"
         }
     ],
     "require": {
@@ -25,8 +25,13 @@
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "FAIR\\Tests\\": "tests/"
+        }
+    },
     "scripts": {
-        "lint:phpcs": "phpcs . --warning-severity=0",
+        "lint:phpcs": "phpcs -d error_reporting='E_ALL & ~E_DEPRECATED' . --warning-severity=0",
         "lint:phpstan": "phpstan analyse --verbose --memory-limit=2G",
         "lint": [
             "@lint:phpcs",
@@ -39,47 +44,56 @@
             "@format:phpstan"
         ],
         "phpstan-baseline": "phpstan analyse --generate-baseline=tests/phpstan-baseline.neon --memory-limit=2G",
-        "test": [
+        "test:generate-keys": "@php tests/fixtures/keys/generate.php",
+        "test:setup": [
             "Composer\\Config::disableProcessTimeout",
-            "@php ./vendor/phpunit/phpunit/phpunit"
+            "@test:generate-keys",
+            "@php bin/setup-local-tests.php"
         ],
-        "test:multisite": [
-            "Composer\\Config::disableProcessTimeout",
-            "@php ./vendor/phpunit/phpunit/phpunit -c tests/phpunit/multisite.xml"
+        "test:unit": [
+            "@test:setup",
+            "@php ./vendor/phpunit/phpunit/phpunit -c tests/unit/phpunit.xml"
+        ],
+        "test:unit:multisite": [
+            "@test:setup",
+            "@php ./vendor/phpunit/phpunit/phpunit -c tests/unit/multisite.xml"
         ],
         "coverage:merge": [
             "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=coverage",
-            "@php ./vendor/bin/phpunit-merger coverage tests/phpunit/coverage/php --html tests/phpunit/coverage/html/full tests/phpunit/cache/full-cache.xml"
+            "@php ./vendor/bin/phpunit-merger coverage tests/unit/coverage/php --html tests/unit/coverage/html/full tests/unit/cache/full-cache.xml"
         ],
         "coverage:single": [
-            "Composer\\Config::disableProcessTimeout",
-            "@putenv XDEBUG_MODE=off",
-            "@putenv WP_TESTS_SKIP_INSTALL=0",
-            "@test --filter prime_test_suite",
+            "@test:setup",
             "@putenv XDEBUG_MODE=coverage",
-            "@putenv WP_TESTS_SKIP_INSTALL=1",
-            "@test"
+            "@php ./vendor/phpunit/phpunit/phpunit -c tests/unit/phpunit.xml --coverage-php=tests/unit/coverage/php/single.cov"
         ],
         "coverage:multisite": [
-            "Composer\\Config::disableProcessTimeout",
-            "@putenv XDEBUG_MODE=off",
-            "@putenv WP_TESTS_SKIP_INSTALL=0",
-            "@test:multisite --filter prime_test_suite",
+            "@test:setup",
             "@putenv XDEBUG_MODE=coverage",
-            "@putenv WP_TESTS_SKIP_INSTALL=1",
-            "@test:multisite"
+            "@php ./vendor/phpunit/phpunit/phpunit -c tests/unit/multisite.xml --coverage-php=tests/unit/coverage/php/multi.cov"
         ],
         "coverage:full": [
-            "Composer\\Config::disableProcessTimeout",
             "@coverage:single",
             "@coverage:multisite",
             "@coverage:merge"
+        ],
+        "infection": "docker compose -f tests/sites/mutation/docker-compose.yml run --rm mutation",
+        "test:integration": "bin/run-integration.sh integration",
+        "test:http": "bin/run-integration.sh http",
+        "test:browser": "cd tests/browser && npm run test",
+        "test:browser:headed": "cd tests/browser && npm run test:headed",
+        "test:e2e": "@test:browser",
+        "test:all": [
+            "@test:unit",
+            "@test:unit:multisite",
+            "@test:integration",
+            "@test:http"
         ]
     },
-	"support": {
-		"issues": "https://github.com/fairpm/fair-plugin/issues",
-		"source": "https://github.com/fairpm/fair-plugin",
-		"docs": "https://github.com/fairpm/fair-plugin/blob/main/README.md"
-	}
+    "support": {
+        "issues": "https://github.com/fairpm/fair-plugin/issues",
+        "source": "https://github.com/fairpm/fair-plugin",
+        "docs": "https://github.com/fairpm/fair-plugin/blob/main/README.md"
+    }
 }

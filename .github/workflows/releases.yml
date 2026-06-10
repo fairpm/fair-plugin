@@ -20,11 +20,13 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.0'
           tools: composer
 
       - name: Install Composer dependencies
-        run: composer install --no-dev --optimize-autoloader --no-interaction
+        run: |
+          composer config platform.php 8.0
+          composer update --no-dev --optimize-autoloader --no-interaction
 
       - name: Get tag
         id: tag

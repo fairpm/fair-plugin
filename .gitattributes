@@ -18,3 +18,8 @@ package-lock.json export-ignore
 .gitattributes export-ignore
 .distignore export-ignore
 .editorconfig export-ignore
+/ai export-ignore
+.envrc export-ignore
+.pi/ export-ignore
+/tmp export-ignore
+infection.json export-ignore

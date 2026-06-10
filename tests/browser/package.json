@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "playwright test --config=playwright.config.ts",
+    "test:headed": "playwright test --headed --config=playwright.config.ts",
+    "test:slow": "playwright test --grep @slow --config=playwright.config.ts",
+    "test:fast": "playwright test --grep-invert @slow --config=playwright.config.ts",
+    "auth": "playwright test --config=playwright.config.ts global-setup.ts",
+    "start-docker": "docker compose -f ../sites/browser-test/docker-compose.yml up -d --wait",
+    "stop-docker": "docker compose -f ../sites/browser-test/docker-compose.yml down -v",
+    "seed": "docker compose -f ../sites/browser-test/docker-compose.yml exec -T wp-cli php wp-content/plugins/fair-plugin/tests/sites/browser-test/seed.php"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  }
+}

@@ -1,0 +1,17 @@
+{
+    "version": "1.0.0",
+    "artifacts": {
+        "package": [
+            {
+                "url": "./fixtures/zips/hello-dolly.zip",
+                "language": "en_US",
+                "signature": "Mr9DEDCKxGbpALnpGAjptfgq8QRe-Hb_LODmCQW5HDObH76eYh5YKNJCQ4lZb5oUchaXgAdTdwucnnop4wx5Dw"
+            }
+        ]
+    },
+    "files": [],
+    "requires": {
+        "requires_php": "8.0",
+        "requires_wp": "5.4"
+    }
+}

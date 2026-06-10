@@ -1,0 +1,7 @@
+ARG WORDPRESS_VERSION=6.4
+ARG PHP_VERSION=8.0
+FROM wordpress:${WORDPRESS_VERSION}-php${PHP_VERSION}-apache
+
+# The FAIR_DEFAULT_REPO_DOMAIN constant is set via wp-config extra.
+# The PLC directory override is handled by a mu-plugin that rewrites
+# the base URL to point at the mock-server container.

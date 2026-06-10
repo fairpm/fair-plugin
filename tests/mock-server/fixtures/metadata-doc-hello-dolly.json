@@ -1,0 +1,41 @@
+{
+    "id": "did:plc:hellodolly000000000000001",
+    "type": "wp-plugin",
+    "name": "Hello Dolly",
+    "slug": "hello-dolly",
+    "version": "1.7.3",
+    "description": "This is not just a plugin, it symbolizes the hope and enthusiasm of an entire generation summed up in two words sung most famously by Louis Armstrong: Hello, Dolly.",
+    "author": "Matt Mullenweg",
+    "authorUri": "https://ma.tt/",
+    "pluginUri": "https://wordpress.org/plugins/hello-dolly/",
+    "requires": {
+        "env:php": ">=5.6",
+        "env:wp": ">=4.6"
+    },
+    "releases": [
+        {
+            "version": "1.7.3",
+            "artifacts": {
+                "package": [
+                    {
+                        "url": "http://mock-server:8080/artifacts/hello-dolly.zip",
+                        "content-type": "application/zip",
+                        "signature": "Mr9DEDCKxGbpALnpGAjptfgq8QRe-Hb_LODmCQW5HDObH76eYh5YKNJCQ4lZb5oUchaXgAdTdwucnnop4wx5Dw"
+                    }
+                ]
+            }
+        },
+        {
+            "version": "1.7.2",
+            "artifacts": {
+                "package": [
+                    {
+                        "url": "http://mock-server:8080/artifacts/hello-dolly.zip",
+                        "content-type": "application/zip",
+                        "signature": "Mr9DEDCKxGbpALnpGAjptfgq8QRe-Hb_LODmCQW5HDObH76eYh5YKNJCQ4lZb5oUchaXgAdTdwucnnop4wx5Dw"
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -11,11 +11,17 @@
 		"format:php": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format",
 		"format:php:phpcs": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format:phpcs",
 		"format:php:phpstan": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format:phpstan",
-		"test:php:install-deps": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer install",
-		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test",
-		"test:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test:multisite",
+		"test:php:install-deps": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer install --ignore-platform-req=ext-gmp",
+		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test:unit",
+		"test:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test:unit:multisite",
 		"coverage:php:single": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:single",
 		"coverage:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:multisite",
-		"coverage:php:full": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:full"
+		"coverage:php:full": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:full",
+		"test:browser": "cd tests/browser && npm run test",
+		"test:browser:headed": "cd tests/browser && npm run test:headed",
+		"test:browser:install": "cd tests/browser && npm install",
+		"test:browser:docker:start": "cd tests/browser && npm run start-docker",
+		"test:browser:docker:stop": "cd tests/browser && npm run stop-docker",
+		"test:browser:seed": "cd tests/browser && npm run seed"
 	}
 }

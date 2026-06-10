@@ -1,0 +1,56 @@
+name: fair-mutation
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fair_test
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 2s
+      retries: 30
+      start_period: 5s
+    networks:
+      - mutation-net
+
+  mutation:
+    build:
+      context: ../../..
+      dockerfile: tests/sites/mutation/Dockerfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ../../..:/app
+      - composer-cache:/root/.composer
+      - mutation-vendor:/app/tests/mutation/vendor
+    working_dir: /app
+    environment:
+      XDEBUG_MODE: coverage
+      FAIR_TEST_DB_HOST: mysql
+      FAIR_TEST_DB_USER: root
+      FAIR_TEST_DB_PASS: root
+      FAIR_TEST_DB_NAME: fair_test
+      FAIR_TEST_WP_VERSION: "6.2.0"
+    command: >
+      sh -c '
+        composer install --ignore-platform-reqs --no-interaction --prefer-dist &&
+        cd tests/mutation && ls -la vendor/bin/infection 2>/dev/null || composer install --no-interaction --prefer-dist && cd /app &&
+        mkdir -p tests/unit/infection &&
+        rm -f wp-tests-config.php &&
+        php bin/setup-local-tests.php &&
+        tests/mutation/vendor/bin/infection --configuration=infection.json --threads=2 --no-progress
+      '
+    networks:
+      - mutation-net
+
+networks:
+  mutation-net:
+    driver: bridge
+
+volumes:
+  composer-cache:
+  mutation-vendor:

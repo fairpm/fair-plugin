@@ -1,0 +1,17 @@
+{
+    "name": "fairpm/mutation-testing",
+    "description": "Infection mutation testing for the FAIR plugin — isolated from root dev deps.",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.4"
+    },
+    "require-dev": {
+        "infection/infection": "^0.27"
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
+    }
+}

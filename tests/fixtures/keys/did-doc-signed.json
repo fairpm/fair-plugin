@@ -1,0 +1,20 @@
+{
+    "id": "did:plc:signedtest0000000000000000",
+    "alsoKnownAs": [
+        "fair://signed-test.local/"
+    ],
+    "verificationMethod": [
+        {
+            "id": "did:plc:signedtest0000000000000000#fair-signing",
+            "type": "Multikey",
+            "publicKeyMultibase": "z6MkfvXWEmEYhoJofpw3akAnthgdGrKgFAgAsBRxQX5MqYh3"
+        }
+    ],
+    "service": [
+        {
+            "id": "#fair-repo",
+            "type": "FairPackageManagementRepo",
+            "serviceEndpoint": "http://mock-server:8080/metadata/did:plc:signedtest0000000000000000"
+        }
+    ]
+}

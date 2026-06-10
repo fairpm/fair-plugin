@@ -18,3 +18,8 @@ package-lock.json
 .gitattributes
 .distignore
 .editorconfig
+.envrc
+.pi/
+tmp/
+ai/
+infection.json

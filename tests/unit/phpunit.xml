@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<phpunit
+	bootstrap="./bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	executionOrder="default"
+	beStrictAboutTestsThatDoNotTestAnything="true"
+	beStrictAboutOutputDuringTests="true"
+	convertErrorsToExceptions="true"
+	convertWarningsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertDeprecationsToExceptions="true"
+	>
+	<testsuites>
+		<testsuite name="default">
+			<directory suffix="Test.php">./tests/</directory>
+			<exclude>./tests/SampleTest.php</exclude>
+		</testsuite>
+	</testsuites>
+	<groups>
+		<exclude>
+			<group>ms-required</group>
+		</exclude>
+	</groups>
+	<coverage includeUncoveredFiles="true" processUncoveredFiles="false" pathCoverage="false" cacheDirectory="./cache">
+		<include>
+			<directory suffix=".php">../../inc</directory>
+		</include>
+		<report>
+			<text outputFile="php://stdout" showOnlySummary="true"/>
+			<html outputDirectory="./coverage/html/single-site"/>
+			<php outputFile="./coverage/php/single-site.php"/>
+		</report>
+	</coverage>
+</phpunit>

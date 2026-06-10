@@ -1,0 +1,25 @@
+{
+    "id": "did:plc:minimal12345678901234567890",
+    "type": "wp-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Minimal Author"
+        }
+    ],
+    "security": [],
+    "releases": [
+        {
+            "version": "1.0.0",
+            "artifacts": {
+                "package": [
+                    {
+                        "url": "https://example.com/minimal.zip",
+                        "lang": "en-US",
+                        "content-type": "application/zip"
+                    }
+                ]
+            }
+        }
+    ]
+}

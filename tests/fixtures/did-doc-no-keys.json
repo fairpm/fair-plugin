@@ -1,0 +1,13 @@
+{
+    "id": "did:plc:z72i7hdynmk6r22z27h6tvur",
+    "alsoKnownAs": [
+        "fair://test-plugin.example.com/"
+    ],
+    "service": [
+        {
+            "id": "#fair-repo",
+            "type": "FairPackageManagementRepo",
+            "serviceEndpoint": "https://repo.fair.example.com"
+        }
+    ]
+}

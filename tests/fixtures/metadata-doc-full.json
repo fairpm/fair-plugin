@@ -1,0 +1,126 @@
+{
+    "id": "did:plc:z72i7hdynmk6r22z27h6tvur",
+    "type": "wp-plugin",
+    "name": "Test FAIR Plugin",
+    "slug": "test-fair-plugin",
+    "filename": "test-fair-plugin/test-fair-plugin.php",
+    "license": "GPL-2.0-only",
+    "description": "<p>A comprehensive test plugin for FAIR package management.</p><p>Supports DID resolution, signed updates, and all package features.</p>",
+    "keywords": ["fair", "test", "plugin"],
+    "authors": [
+        {
+            "name": "FAIR Contributors",
+            "url": "https://fair.pm"
+        }
+    ],
+    "security": [],
+    "last_updated": "2024-06-01T12:00:00Z",
+    "url": "https://fair.pm/plugins/test-fair-plugin",
+    "sections": {
+        "description": "<p>A comprehensive test plugin for FAIR package management.</p>",
+        "installation": "<p>Install via Direct Install tab using the DID.</p>",
+        "faq": "<p>No frequently asked questions yet.</p>",
+        "changelog": "<h4>1.0.0</h4><ul><li>Initial release</li></ul>",
+        "screenshots": "",
+        "upgrade_notice": "",
+        "other_notes": "",
+        "reviews": ""
+    },
+    "releases": [
+        {
+            "version": "2.0.0",
+            "artifacts": {
+                "icon": [
+                    {
+                        "url": "https://fair.pm/icons/test-plugin-128.png",
+                        "width": 128,
+                        "height": 128,
+                        "content-type": "image/png"
+                    },
+                    {
+                        "url": "https://fair.pm/icons/test-plugin-256.png",
+                        "width": 256,
+                        "height": 256,
+                        "content-type": "image/png"
+                    },
+                    {
+                        "url": "https://s.w.org/plugins/geopattern-icon/test-plugin.svg",
+                        "width": 128,
+                        "height": 128,
+                        "content-type": "image/svg+xml"
+                    }
+                ],
+                "banner": [
+                    {
+                        "url": "https://fair.pm/banners/test-plugin-772x250.png",
+                        "width": 772,
+                        "height": 250
+                    },
+                    {
+                        "url": "https://fair.pm/banners/test-plugin-1544x500.png",
+                        "width": 1544,
+                        "height": 500
+                    }
+                ],
+                "package": [
+                    {
+                        "url": "https://github.com/fairpm/test-plugin/releases/download/v2.0.0/test-plugin.zip",
+                        "lang": "en-US",
+                        "content-type": "application/zip",
+                        "signature": "zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169"
+                    }
+                ]
+            },
+            "provides": {},
+            "requires": {
+                "env:php": ">=8.0",
+                "env:wp": ">=5.4"
+            },
+            "suggests": {
+                "env:wp": ">=6.0"
+            },
+            "auth": []
+        },
+        {
+            "version": "1.5.0",
+            "artifacts": {
+                "package": [
+                    {
+                        "url": "https://github.com/fairpm/test-plugin/releases/download/v1.5.0/test-plugin.zip",
+                        "lang": "en-US",
+                        "content-type": "application/zip",
+                        "signature": "zQ3shXjHeiBuRCKmM36cuYnm7YEMzhGnCmCyW92sRJ9pribSF"
+                    }
+                ]
+            },
+            "provides": {},
+            "requires": {
+                "env:php": ">=8.0",
+                "env:wp": ">=5.4"
+            },
+            "auth": []
+        },
+        {
+            "version": "1.0.0",
+            "artifacts": {
+                "package": [
+                    {
+                        "url": "https://github.com/fairpm/test-plugin/releases/download/v1.0.0/test-plugin.zip",
+                        "lang": "en-US",
+                        "content-type": "application/zip",
+                        "signature": "z6MkjP2sQ5HqJWvBxBtQhJjFvqXfRqLdHpNrWsGdY8nTk3"
+                    }
+                ]
+            },
+            "provides": {},
+            "requires": {
+                "env:php": ">=7.4",
+                "env:wp": ">=5.0"
+            },
+            "suggests": {
+                "env:wp": ">=5.4"
+            },
+            "auth": []
+        }
+    ]
+}

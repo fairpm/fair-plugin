@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "artifacts": {
+        "package": [
+            {
+                "url": "https://github.com/fairpm/test-plugin/releases/download/v2.0.0/test-plugin.zip",
+                "lang": "en-US",
+                "content-type": "application/zip",
+                "signature": "zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169"
+            }
+        ]
+    },
+    "requires": {
+        "env:php": ">=8.0",
+        "env:wp": ">=5.4",
+        "env:php-gmp": "*",
+        "env:php-mbstring": "*"
+    },
+    "suggests": {
+        "env:wp": ">=6.4"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "id": "did:plc:z72i7hdynmk6r22z27h6tvur",
+    "verificationMethod": [
+        {
+            "id": "did:plc:z72i7hdynmk6r22z27h6tvur#fair-signing",
+            "type": "Multikey",
+            "publicKeyMultibase": "zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169"
+        }
+    ]
+}

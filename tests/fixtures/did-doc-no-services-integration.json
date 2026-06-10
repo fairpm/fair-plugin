@@ -1,0 +1,12 @@
+{
+    "id": "did:plc:no-services",
+    "alsoKnownAs": [],
+    "verificationMethod": [
+        {
+            "id": "did:plc:no-services#fair-signing",
+            "type": "Multikey",
+            "publicKeyMultibase": "zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169"
+        }
+    ],
+    "service": []
+}

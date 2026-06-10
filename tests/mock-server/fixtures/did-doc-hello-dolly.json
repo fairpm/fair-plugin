@@ -1,0 +1,21 @@
+{
+    "id": "did:plc:hellodolly000000000000001",
+    "alsoKnownAs": [
+        "fair://hello-dolly.example.com/"
+    ],
+    "verificationMethod": [
+        {
+            "id": "did:plc:hellodolly000000000000001#fair-signing",
+            "type": "Multikey",
+            "controller": "did:plc:hellodolly000000000000001",
+            "publicKeyMultibase": "z6MkfvXWEmEYhoJofpw3akAnthgdGrKgFAgAsBRxQX5MqYh3"
+        }
+    ],
+    "service": [
+        {
+            "id": "#fair-repository",
+            "type": "FairRepository",
+            "serviceEndpoint": "http://mock-server:8080"
+        }
+    ]
+}

@@ -1,0 +1,91 @@
+name: fair-integration
+
+services:
+  mysql:
+    image: mariadb:10.6
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wordpress_test
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "--silent"]
+      interval: 2s
+      retries: 30
+      start_period: 5s
+    networks:
+      - fair-test-net
+
+  wordpress:
+    build:
+      context: ../../..
+      dockerfile: tests/sites/Dockerfile.wp
+      args:
+        WORDPRESS_VERSION: "${WORDPRESS_VERSION:-6.4}"
+        PHP_VERSION: "${PHP_VERSION:-8.0}"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mock-server:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: wordpress_test
+      WORDPRESS_TABLE_PREFIX: wptests_
+      WORDPRESS_CONFIG_EXTRA: |
+        define('FAIR_DEFAULT_REPO_DOMAIN', 'mock-server:8080');
+        define('FAIR_PLC_DIRECTORY_URL', 'http://mock-server:8080');
+    volumes:
+      - ../../..:/var/www/html/wp-content/plugins/fair-plugin:delegated
+      - wp-data:/var/www/html
+    networks:
+      - fair-test-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 3s
+      retries: 30
+      start_period: 10s
+
+  wp-cli:
+    image: "wordpress:cli-php${PHP_VERSION:-8.0}"
+    command: tail -f /dev/null
+    depends_on:
+      wordpress:
+        condition: service_healthy
+    volumes:
+      - ../../..:/var/www/html/wp-content/plugins/fair-plugin:delegated
+      - wp-data:/var/www/html
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: wordpress_test
+      WORDPRESS_TABLE_PREFIX: wptests_
+    networks:
+      - fair-test-net
+    healthcheck:
+      test: ["CMD", "php", "-v"]
+      interval: 5s
+      retries: 3
+
+  mock-server:
+    build:
+      context: ../../..
+      dockerfile: tests/mock-server/Dockerfile
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 2s
+      retries: 15
+      start_period: 2s
+    networks:
+      - fair-test-net
+
+networks:
+  fair-test-net:
+    driver: bridge
+
+volumes:
+  wp-data:

@@ -1,0 +1,55 @@
+{
+    "version": "1.0.0",
+    "artifacts": {
+        "icon": [
+            {
+                "url": "https://fair.pm/icons/test-plugin-128.png",
+                "width": 128,
+                "height": 128,
+                "content-type": "image/png"
+            },
+            {
+                "url": "https://fair.pm/icons/test-plugin-256.png",
+                "width": 256,
+                "height": 256,
+                "content-type": "image/png"
+            }
+        ],
+        "banner": [
+            {
+                "url": "https://fair.pm/banners/test-plugin-772x250.png",
+                "width": 772,
+                "height": 250
+            },
+            {
+                "url": "https://fair.pm/banners/test-plugin-1544x500.png",
+                "width": 1544,
+                "height": 500
+            }
+        ],
+        "package": [
+            {
+                "url": "https://github.com/fairpm/test-plugin/releases/download/v1.0.0/test-plugin.zip",
+                "lang": "en-US",
+                "content-type": "application/zip",
+                "signature": "zDnaerDaTF5BXEavCrfRZEk316dpbLsfPDZ3WJ5hRTPFU2169"
+            }
+        ]
+    },
+    "provides": {
+        "module:feature-a": "^1.0"
+    },
+    "requires": {
+        "env:php": ">=8.0",
+        "env:wp": ">=5.4"
+    },
+    "suggests": {
+        "env:wp": ">=6.0"
+    },
+    "auth": [
+        {
+            "type": "bearer",
+            "token": "test-token"
+        }
+    ]
+}

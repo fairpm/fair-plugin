@@ -32,6 +32,15 @@
 		<exclude name="HM.Debug.ESLint" />
 	</rule>
 
+	<!-- Exclude test infrastructure, build scripts, and generated config -->
+	<exclude-pattern>tests/*</exclude-pattern>
+	<exclude-pattern>bin/*</exclude-pattern>
+	<exclude-pattern>wp-tests-config\.php</exclude-pattern>
+
+	<!-- Triggers an internal sniffer bug in wpcs on PHP 8.5 -->
+	<exclude-pattern>inc/compatibility/php-polyfill\.php</exclude-pattern>
+	<exclude-pattern>inc/compatibility/wp-polyfill\.php</exclude-pattern>
+
 	<!-- Exclude third-party dependencies -->
 	<exclude-pattern>inc/updater/class-lite\.php</exclude-pattern>
 
