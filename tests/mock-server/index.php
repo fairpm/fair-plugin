@@ -46,11 +46,13 @@ $DID_MAP = [
 	'did:plc:alias-valid'                      => 'did-doc-alias-valid',
 	'did:plc:alias-invalid-domain'             => 'did-doc-alias-invalid-domain',
 	'did:plc:no-keys'                          => 'did-doc-no-keys',
+	'did:plc:hellodolly000000000000001'        => 'did-doc-hello-dolly',
 ];
 
 $META_MAP = [
 	'did:plc:z72i7hdynmk6r22z27h6tvur'        => 'metadata-doc-full',
 	'did:plc:minimal12345678901234567890'      => 'metadata-doc-minimal',
+	'did:plc:hellodolly000000000000001'        => 'metadata-doc-hello-dolly',
 ];
 
 // ── File-based logging ─────────────────────────────────────────────
@@ -158,6 +160,24 @@ if ( $did !== null ) {
 	http_response_code( 404 );
 	header( 'Content-Type: application/json' );
 	echo json_encode( [ 'error' => 'Metadata not found' ] );
+	log_entry( $method, $uri, 404 );
+	exit;
+}
+
+// Zip artifact serving (so browser tests can install packages).
+if ( preg_match( '#^/artifacts/(.+\.zip)$#', $uri, $m ) ) {
+	$zip_file = __DIR__ . '/fixtures/zips/' . basename( $m[1] );
+	if ( file_exists( $zip_file ) ) {
+		http_response_code( 200 );
+		header( 'Content-Type: application/zip' );
+		header( 'Content-Length: ' . filesize( $zip_file ) );
+		readfile( $zip_file );
+		log_entry( $method, $uri, 200 );
+		exit;
+	}
+	http_response_code( 404 );
+	header( 'Content-Type: application/json' );
+	echo json_encode( [ 'error' => 'Artifact not found' ] );
 	log_entry( $method, $uri, 404 );
 	exit;
 }

@@ -40,3 +40,6 @@ require_once "{$_tests_dir}/wp-load.php";
 
 // Load the plugin (already activated, but ensure functions are available).
 require_once "{$plugin_dir}/plugin.php";
+
+// verify_file_signature() lives in wp-admin/includes/file.php (not loaded in CLI).
+require_once ABSPATH . 'wp-admin/includes/file.php';

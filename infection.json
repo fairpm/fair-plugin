@@ -31,6 +31,6 @@
     },
     "bootstrap": "tests/infection-bootstrap.php",
     "timeout": 45,
-    "minMsi": 0,
-    "minCoveredMsi": 0
+    "minMsi": 9,
+    "minCoveredMsi": 90
 }
