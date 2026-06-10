@@ -1,10 +1,10 @@
 name: Integration & Browser Tests
 
 on:
-  push:
-    branches: [main, development, 'release/*']
-  pull_request:
-    branches: [main, development]
+#  push:
+#    branches: [main, development, 'release/*']
+#  pull_request:
+#    branches: [main, development]
   workflow_dispatch:
 
 concurrency:
