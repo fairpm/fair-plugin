@@ -35,7 +35,10 @@ const SERVICE_ID = 'FairPackageManagementRepo';
 function get_plc_client(): PlcClient {
 	static $client;
 	if ( ! $client ) {
-		$client = new PlcClient();
+		$base_url = defined( 'FAIR_PLC_DIRECTORY_URL' )
+			? FAIR_PLC_DIRECTORY_URL
+			: 'https://plc.directory';
+		$client = new PlcClient( $base_url );
 	}
 	return $client;
 }
@@ -346,7 +349,7 @@ function pick_release( array $releases, ?string $version = null ) : ?ReleaseDocu
 
 	// If no version is specified, return the latest release.
 	if ( empty( $version ) ) {
-		return reset( $releases );
+		return reset( $releases ) ?: null;
 	}
 
 	return array_find( $releases, fn ( $release ) => $release->version === $version );
