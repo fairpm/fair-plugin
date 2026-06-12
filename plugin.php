@@ -25,7 +25,11 @@ const VERSION = '1.4.0';
 const PLUGIN_DIR = __DIR__;
 const PLUGIN_FILE = __FILE__;
 
-require_once __DIR__ . '/vendor/autoload.php';
+// Use local autoload if available.
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+}
+
 require_once __DIR__ . '/inc/namespace.php';
 require_once __DIR__ . '/inc/avatars/namespace.php';
 require_once __DIR__ . '/inc/credits/namespace.php';
