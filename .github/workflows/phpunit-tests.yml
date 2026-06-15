@@ -80,7 +80,7 @@ jobs:
           npm run cli -- wp core version
 
       - name: Install dependencies
-        run: npm run cli -- composer install --ignore-platform-req=ext-gmp
+        run: npm run test:php:install-deps
 
       - name: Run PHPUnit tests (single site)
         run: npm run test:php
