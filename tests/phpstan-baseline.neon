@@ -19,12 +19,6 @@ parameters:
 			path: ../inc/packages/admin/namespace.php
 
 		-
-			message: '#^Class FAIR\\Updater\\Updater does not have a constructor and must be instantiated without any parameters\.$#'
-			identifier: new.noConstructor
-			count: 1
-			path: ../inc/packages/admin/namespace.php
-
-		-
 			message: '#^Unsafe usage of new static\(\)\.$#'
 			identifier: new.static
 			count: 1
