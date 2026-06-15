@@ -121,9 +121,9 @@ jobs:
 
       - name: Report Versions
         run: |
-          npm run env run cli -- php -v
-          npm run env run cli -- php -i | grep xdebug
-          npm run env run cli -- wp core version
+          npm run cli -- php -v
+          npm run cli -- php -i | grep xdebug
+          npm run cli -- wp core version
 
       - name: Install Composer dependencies
         run: npm run test:php:install-deps
