@@ -76,14 +76,11 @@ jobs:
 
       - name: Report Versions
         run: |
-          npm run env run cli -- php -v
-          npm run env run cli -- wp core version
-
-      - name: Install fresh dependencies for PHP ${{ matrix.php-version }}
-        run: rm composer.lock
+          npm run cli -- php -v
+          npm run cli -- wp core version
 
       - name: Install dependencies
-        run: npm run cli -- composer require --ignore-platform-req=ext-gmp --dev phpunit/phpunit:^${{ matrix.wp-version < '5.1' && '6' || ( matrix.wp-version < '5.9' || matrix.php-version < '8.0' ) && '7' || '9' }}
+        run: npm run cli -- composer install --ignore-platform-req=ext-gmp
 
       - name: Run PHPUnit tests (single site)
         run: npm run test:php
