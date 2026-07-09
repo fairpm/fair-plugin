@@ -27,7 +27,7 @@ jobs:
     outputs:
       matrix: ${{ steps.generate.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
       - name: Generate PHP and WP testing matrix
         id: generate
         run: echo "matrix=$(node ./bin/github-actions-matrix.js)" >> "$GITHUB_OUTPUT"
@@ -49,10 +49,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           cache: 'npm'
           node-version-file: '.nvmrc'
@@ -61,7 +61,7 @@ jobs:
         run: npm install
 
       - name: Setup cache
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           key: ${{ runner.os }}-${{ hashFiles('composer.json', 'package.json') }}
           path: |
@@ -97,10 +97,10 @@ jobs:
       WP_ENV_HOME: .cache/wp-env
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
 
       - name: Setup cache
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           key: ${{ runner.os }}-${{ hashFiles('composer.json', 'package.json') }}
           path: |
@@ -108,7 +108,7 @@ jobs:
             tests/phpunit/cache
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           cache: 'npm'
           node-version-file: '.nvmrc'
