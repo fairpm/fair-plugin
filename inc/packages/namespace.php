@@ -750,7 +750,7 @@ function get_package_data( $did ) {
 		'url'               => $metadata->url ?? $metadata->slug,
 		'sections'          => $sections,
 		'description'       => $description,
-		'short_description' => substr( strip_tags( $description ), 0, 147 ) . '...',
+		'short_description' => substr( wp_strip_all_tags( $description ), 0, 147 ) . '...',
 		'icons'             => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
 		'banners'           => isset( $release->artifacts->banner ) ? get_banners( $release->artifacts->banner ) : [],
 		'update-supported'  => true,

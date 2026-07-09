@@ -15,10 +15,12 @@
         "fairpm/did-manager-wordpress": "^0.0.8"
     },
     "require-dev": {
-        "yoast/phpunit-polyfills": "*",
-        "nimut/phpunit-merger": "*",
+        "yoast/phpunit-polyfills": "^4.0",
+        "nimut/phpunit-merger": "^1.1",
         "humanmade/coding-standards": "^1.2",
-        "szepeviktor/phpstan-wordpress": "^2.0"
+        "szepeviktor/phpstan-wordpress": "^2.0",
+        "phpunit/phpunit": "^9.0",
+        "wp-cli/wp-cli-bundle": "^2.12"
     },
     "config": {
         "allow-plugins": {
@@ -26,7 +28,7 @@
         }
     },
     "scripts": {
-        "lint:phpcs": "phpcs . --warning-severity=0",
+        "lint:phpcs": "phpcs .",
         "lint:phpstan": "phpstan analyse --verbose --memory-limit=2G",
         "lint": [
             "@lint:phpcs",
@@ -41,33 +43,25 @@
         "phpstan-baseline": "phpstan analyse --generate-baseline=tests/phpstan-baseline.neon --memory-limit=2G",
         "test": [
             "Composer\\Config::disableProcessTimeout",
-            "@php ./vendor/phpunit/phpunit/phpunit"
+            "phpunit"
         ],
         "test:multisite": [
             "Composer\\Config::disableProcessTimeout",
-            "@php ./vendor/phpunit/phpunit/phpunit -c tests/phpunit/multisite.xml"
+            "phpunit -c phpunit-multisite.xml.dist"
         ],
         "coverage:merge": [
             "Composer\\Config::disableProcessTimeout",
             "@putenv XDEBUG_MODE=coverage",
-            "@php ./vendor/bin/phpunit-merger coverage tests/phpunit/coverage/php --html tests/phpunit/coverage/html/full tests/phpunit/cache/full-cache.xml"
+            "phpunit-merger coverage tests/phpunit/coverage/php --html tests/phpunit/coverage/html/full tests/phpunit/cache/full-cache.xml"
         ],
         "coverage:single": [
             "Composer\\Config::disableProcessTimeout",
-            "@putenv XDEBUG_MODE=off",
-            "@putenv WP_TESTS_SKIP_INSTALL=0",
-            "@test --filter prime_test_suite",
             "@putenv XDEBUG_MODE=coverage",
-            "@putenv WP_TESTS_SKIP_INSTALL=1",
             "@test"
         ],
         "coverage:multisite": [
             "Composer\\Config::disableProcessTimeout",
-            "@putenv XDEBUG_MODE=off",
-            "@putenv WP_TESTS_SKIP_INSTALL=0",
-            "@test:multisite --filter prime_test_suite",
             "@putenv XDEBUG_MODE=coverage",
-            "@putenv WP_TESTS_SKIP_INSTALL=1",
             "@test:multisite"
         ],
         "coverage:full": [

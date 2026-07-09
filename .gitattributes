@@ -6,9 +6,11 @@
 /.cache export-ignore
 /node_modules export-ignore
 /tests export-ignore
+RELEASE.md export-ignore
 phpunit.xml.dist export-ignore
-wp-tests-config-sample.php export-ignore
+phpunit-multisite.xml.dist export-ignore
 phpcs.xml.dist export-ignore
+phpstan.neon.dist export-ignore
 package.json export-ignore
 package-lock.json export-ignore
 .wp-env.json export-ignore
@@ -16,3 +18,4 @@ package-lock.json export-ignore
 .gitattributes export-ignore
 .distignore export-ignore
 .editorconfig export-ignore
+.nvmrc export-ignore
