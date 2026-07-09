@@ -35,7 +35,10 @@ const SERVICE_ID = 'FairPackageManagementRepo';
 function get_plc_client(): PlcClient {
 	static $client;
 	if ( ! $client ) {
-		$client = new PlcClient();
+		$base_url = defined( 'FAIR_PLC_DIRECTORY_URL' )
+			? FAIR_PLC_DIRECTORY_URL
+			: 'https://plc.directory';
+		$client = new PlcClient( $base_url );
 	}
 	return $client;
 }
@@ -155,7 +158,7 @@ function get_did_document( string $id ) {
 	}
 
 	$cached = get_site_transient( CACHE_METADATA_DOCUMENTS . $id );
-	if ( $cached ) {
+	if ( $cached && is_array( $cached ) ) {
 		return $cached;
 	}
 
@@ -346,7 +349,7 @@ function pick_release( array $releases, ?string $version = null ) : ?ReleaseDocu
 
 	// If no version is specified, return the latest release.
 	if ( empty( $version ) ) {
-		return reset( $releases );
+		return reset( $releases ) ?: null;
 	}
 
 	return array_find( $releases, fn ( $release ) => $release->version === $version );
@@ -687,21 +690,30 @@ function get_banners( $banners ) : array {
  * @return string
  */
 function get_hashed_filename( $metadata ) : string {
-	$filename = $metadata->filename;
-	$type = str_replace( 'wp-', '', $metadata->type );
 	$did_hash = '-' . get_did_hash( $metadata->id );
 
-	list( $slug, $file ) = explode( '/', $filename, 2 );
-	if ( 'plugin' === $type ) {
-		if ( ! str_contains( $slug, $did_hash ) ) {
-			$slug .= $did_hash;
-		}
-		$filename = $slug . '/' . $file;
-	} else {
-		$filename = $slug . $did_hash;
+	// Use the slug from the filename, if present.
+	list( $slug, $file ) = array_pad( explode( '/', $metadata->filename ?? '', 2 ), 2, '' );
+	if ( '' === $slug ) {
+		$slug = $metadata->slug ?? '';
 	}
 
-	return $filename;
+	// Default to slug matching the plugin filename, if not specified.
+	if ( '' === $file ) {
+		$file = $slug . '.php';
+	}
+
+	// Append DID hash to slug if not already present.
+	if ( ! str_ends_with( $slug, $did_hash ) ) {
+		$slug .= $did_hash;
+	}
+
+	// WP plugins must include the plugin filename.
+	if ( 'wp-plugin' === ( $metadata->type ?? '' ) ) {
+		return $slug . '/' . $file;
+	}
+
+	return $slug;
 }
 
 /**
@@ -738,7 +750,7 @@ function get_package_data( $did ) {
 		'url'               => $metadata->url ?? $metadata->slug,
 		'sections'          => $sections,
 		'description'       => $description,
-		'short_description' => substr( strip_tags( $description ), 0, 147 ) . '...',
+		'short_description' => substr( wp_strip_all_tags( $description ), 0, 147 ) . '...',
 		'icons'             => isset( $release->artifacts->icon ) ? get_icons( $release->artifacts->icon ) : [],
 		'banners'           => isset( $release->artifacts->banner ) ? get_banners( $release->artifacts->banner ) : [],
 		'update-supported'  => true,
