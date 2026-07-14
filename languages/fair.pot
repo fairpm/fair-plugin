@@ -2,7 +2,7 @@
 # This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
-"Project-Id-Version: FAIR Connect - Federated and Independent Repositories 1.4.0\n"
+"Project-Id-Version: FAIR Connect - Federated and Independent Repositories 1.4.1\n"
 "Report-Msgid-Bugs-To: https://github.com/fairpm/fair-plugin/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
