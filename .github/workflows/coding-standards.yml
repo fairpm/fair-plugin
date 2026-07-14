@@ -24,22 +24,41 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      WP_ENV_HOME: .cache/wp-env
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          persist-credentials: false
 
       - name: Setup cache
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
-          key: ${{ runner.os }}-${{ hashFiles('composer.json') }} # Note that lock file will change between runs.
-          path: .cache
+          key: ${{ runner.os }}-${{ hashFiles('composer.json', 'package.json') }}
+          path: |
+            .cache
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # v2.33.0
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
 
       - name: Install dependencies
-        run: composer install
+        run: npm install
 
-      - name: Lint PHP
-        run: composer run lint
+      - name: Start the development environment
+        run: npm run env start
+
+      - name: Install Composer dependencies
+        run: npm run test:php:install-deps
+
+      - name: Lint PHPCS
+        # TODO: Remove the flag once all warnings are fixed.
+        run: npm run lint:php:phpcs -- -- -- --warning-severity=0
+
+      - name: Run PHPStan
+        run: npm run lint:php:phpstan
+

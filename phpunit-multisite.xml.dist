@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <phpunit
-	bootstrap="./bootstrap.php"
+	bootstrap="tests/phpunit/bootstrap.php"
 	backupGlobals="false"
 	colors="true"
     beStrictAboutTestsThatDoNotTestAnything="true"
@@ -9,6 +9,7 @@
     convertWarningsToExceptions="true"
     convertNoticesToExceptions="true"
     convertDeprecationsToExceptions="true"
+	cacheResultFile="tests/phpunit/cache/.phpunit.multisite.cache"
 	>
 	<php>
 		<const name="WP_TESTS_MULTISITE" value="1" />
@@ -16,8 +17,8 @@
 	<testsuites>
 		<!-- Default test suite to run all tests. -->
 		<testsuite name="default">
-			<directory suffix=".php">./tests</directory>
-			<exclude>./tests/SampleTest.php</exclude>
+			<directory suffix="Test.php">tests/phpunit/tests/</directory>
+			<exclude>tests/phpunit/tests/SampleTest.php</exclude>
 		</testsuite>
 	</testsuites>
 	<groups>
@@ -25,14 +26,14 @@
 			<group>ms-excluded</group>
 		</exclude>
 	</groups>
-	<coverage includeUncoveredFiles="true" processUncoveredFiles="false" pathCoverage="false" cacheDirectory="./cache">
+	<coverage includeUncoveredFiles="true" processUncoveredFiles="false" pathCoverage="false" cacheDirectory="tests/phpunit/cache">
 		<include>
-			<directory suffix=".php">../../inc</directory>
+			<directory suffix=".php">inc</directory>
 		</include>
 		<report>
 			<text outputFile="php://stdout" showOnlySummary="true"/>
-			<html outputDirectory="./coverage/html/multisite"/>
-			<php outputFile="./coverage/php/multisite.php"/>
+			<html outputDirectory="tests/phpunit/coverage/html/multisite"/>
+			<php outputFile="tests/phpunit/coverage/php/multisite.php"/>
 		</report>
 	</coverage>
 </phpunit>
