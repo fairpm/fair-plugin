@@ -4,6 +4,8 @@ includes:
 parameters:
 	tmpDir: .cache/phpstan
 	level: 0
+	scanDirectories:
+		- vendor/wp-cli
 	paths:
 		- inc
 		- plugin.php
