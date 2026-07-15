@@ -548,7 +548,7 @@ function parse_user_agent( $user_agent ) {
 	}
 
 	// Flag known mobile platforms as mobile.
-	if ( in_array( $data['platform'], [ 'Android', 'Fire OS', 'iPad', 'iPhone', 'Mobile', 'PlayBook', 'RIM Tablet OS', 'Symbian', 'Windows Phone OS' ] ) ) {
+	if ( in_array( $data['platform'], [ 'Android', 'Fire OS', 'iPad', 'iPhone', 'Mobile', 'PlayBook', 'RIM Tablet OS', 'Symbian', 'Windows Phone OS' ], true ) ) {
 		$data['mobile'] = true;
 	}
 
@@ -559,6 +559,7 @@ function parse_user_agent( $user_agent ) {
 	}
 
 	$explicit_tokens = get_explicit_browser_tokens();
+	$found           = array_intersect( array_keys( $explicit_tokens ), array_keys( $tokens ) );
 
 	// No indentifiers provided.
 	if ( ! $tokens ) {
@@ -567,7 +568,7 @@ function parse_user_agent( $user_agent ) {
 		} else {
 			$data['name'] = 'unknown';
 		}
-	} elseif ( $found = array_intersect( array_keys( $explicit_tokens ), array_keys( $tokens ) ) ) { // phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure
+	} elseif ( $found ) {
 		// Explicitly identified browser (info defined above in $explicit_tokens).
 		$token = reset( $found );
 
