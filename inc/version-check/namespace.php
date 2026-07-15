@@ -534,9 +534,9 @@ function parse_user_agent( $user_agent ) {
 	} elseif ( 'Windows Phone' === $data['platform'] ) {
 		// Normalize Windows Phone OS name when "OS" is omitted.
 		$data['platform'] = 'Windows Phone OS';
-	} elseif ( in_array( $data['platform'], [ 'Symbian', 'SymbOS' ] ) || ! empty( $tokens['SymbianOS'] ) || ! empty( $tokens['Symbian'] ) ) {
+	} elseif ( in_array( $data['platform'], [ 'Symbian', 'SymbOS' ], true ) || ! empty( $tokens['SymbianOS'] ) || ! empty( $tokens['Symbian'] ) ) {
 		// Standardize Symbian OS name.
-		if ( ! in_array( $data['platform'], [ 'Symbian', 'SymbOS' ] ) ) {
+		if ( ! in_array( $data['platform'], [ 'Symbian', 'SymbOS' ], true ) ) {
 			unset( $tokens['SymbianOS'] );
 			unset( $tokens['Symbian'] );
 		}
@@ -634,7 +634,7 @@ function parse_user_agent( $user_agent ) {
 		} elseif ( ! empty( $tokens['Chrome'] ) ) {
 			$data['name'] = 'Chrome';
 			$version = '';
-		} elseif ( ! empty( $data['platform'] ) && 'PlayBook' == $data['platform'] ) {
+		} elseif ( ! empty( $data['platform'] ) && 'PlayBook' === $data['platform'] ) {
 			$data['name'] = 'PlayBook';
 		} elseif ( ! empty( $tokens['Safari'] ) ) {
 			if ( 'Android' === $data['platform'] ) {
@@ -659,7 +659,7 @@ function parse_user_agent( $user_agent ) {
 	}
 
 	// Set the platform for Amazon-related browsers.
-	if ( in_array( $data['name'], [ 'Amazon Silk', 'Kindle Browser' ] ) ) {
+	if ( in_array( $data['name'], [ 'Amazon Silk', 'Kindle Browser' ], true ) ) {
 		$data['platform'] = 'Fire OS';
 		$data['mobile']   = true;
 	}
