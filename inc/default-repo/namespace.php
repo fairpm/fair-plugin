@@ -26,7 +26,7 @@ function bootstrap() {
  */
 function get_default_repo_domain() : string {
 	if ( defined( 'FAIR_DEFAULT_REPO_DOMAIN' ) ) {
-		return FAIR_DEFAULT_REPO_DOMAIN;
+		return (string) \FAIR_DEFAULT_REPO_DOMAIN;
 	}
 
 	return 'api.aspirecloud.net';
