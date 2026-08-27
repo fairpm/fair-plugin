@@ -12,6 +12,7 @@ namespace FAIR\Site_Health;
  */
 function bootstrap() {
 	add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\\enqueue_media_scripts' );
+	add_filter( 'debug_information', __NAMESPACE__ . '\\filter_debug_information' );
 }
 
 /**
@@ -107,4 +108,3 @@ function filter_debug_information( $info ) {
 
 	return $info;
 }
-add_filter( 'debug_information', __NAMESPACE__ . '\\filter_debug_information' );
