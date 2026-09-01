@@ -12,6 +12,8 @@ use WP_Error;
 
 /**
  * Class ReleaseDocument.
+ *
+ * @phpstan-consistent-constructor -- use late static binding to preserve subclass instances, so constructors must remain compatible, see https://phpstan.org/blog/solving-phpstan-error-unsafe-usage-of-new-static
  */
 class ReleaseDocument {
 	/**
