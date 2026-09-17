@@ -24,7 +24,7 @@ This plugin is ready to use with wp-env for local development, with a default co
 - `npm run env stop` to stop the development server.
 - `npm run cli` to run any CLI commands inside the environment, such as `npm run cli -- wp plugin list`.
 
-By default wp-env is configured with PHP 7.4 (our minimum supported version), as well as Airplane Mode to avoid inadvertent requests.
+By default `wp-env` is configured with PHP 8.0 (our minimum supported version), as well as Airplane Mode to avoid inadvertent requests.
 
 For linting and static analysis:
 
@@ -33,6 +33,17 @@ For linting and static analysis:
 - `npm run format:php:phpcs` to automatically fix PHPCS issues.
 - `npm run format:php:phpstan` to automatically fix PHPStan issues.
 - `npm run cli -- composer phpstan-baseline` to update the PHPStan baseline [`tests/phpstan-baseline.neon`](tests/phpstan-baseline.neon) as you fix the reported issues.
+
+For PHP unit tests:
+
+- `npm run test:php` to run PHPUnit tests for WP single site (configured in [`phpunit.xml.dist`](phpunit.xml.dist)).
+- `npm run test:php:multisite` to run PHPUnit multisite tests (configured in [`phpunit-multisite.xml.dist`](phpunit-multisite.xml.dist)).
+
+To enable test coverage reporting, start the environment with `npm run env start -- --xdebug=coverage` and then:
+
+- `npm run coverage:php:single` for coverage of single site tests.
+- `npm run coverage:php:multisite` for coverage of multisite tests.
+- `npm run coverage:php:full` for coverage of both tests.
 
 ### Configuring PHP and WP Versions
 
@@ -44,3 +55,5 @@ To run a specific version of PHP or WP with your local development environment, 
 	"core": "https://wordpress.org/wordpress-6.9.zip"
 }
 ```
+
+and restart the development environment with `npm run env start`. Alternatively, set the `WP_ENV_PHP_VERSION` and `WP_ENV_CORE` environment variables before starting the environment.

@@ -135,7 +135,7 @@ function get_community_events() {
 			'end_unix_timestamp' => $end,
 			'location' => [
 				'location' => $loc_name,
-				'country' => $event['camp_map_location'] ? $event['camp_map_location']['country_short'] : '',
+				'country' => $event['camp_map_location']['country_short'] ?? '',
 				'latitude' => $event['camp_lat'] ?? 0,
 				'longitude' => $event['camp_lng'] ?? 0,
 			],

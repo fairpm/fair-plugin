@@ -496,7 +496,7 @@ function render_alias_notice( $did_doc ) : bool {
 				wp_admin_notice(
 					sprintf(
 						/* translators: %s: validation error message */
-						__( '<p><strong>Error:</strong> Failed domain alias validation, this package may be unsafe: %s</p>', 'fair' ),
+						'<p>' . __( 'Error: Failed domain alias validation, this package may be unsafe: %s', 'fair' ) . '</p>',
 						esc_html( $validation->get_error_message() )
 					),
 					[

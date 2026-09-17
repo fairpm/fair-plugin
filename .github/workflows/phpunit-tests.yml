@@ -5,8 +5,6 @@ on:
     branches:
       - main
   pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 # Cancels all previous workflow runs for pull requests that have not completed.
@@ -16,100 +14,119 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
+# Disable permissions for all available scopes by default.
+# Any needed permissions should be configured at the job level.
+permissions: {}
 
 jobs:
-  # Runs the PHPUnit tests for FAIR.
-  #
-  # Performs the following steps:
-  # - Checks out the repository.
-  # - Sets up PHP.
-  # - Installs Composer dependencies.
-  # - Installs SVN.
-  # - Installs the test suite.
-  # - Runs the PHPUnit tests.
-  # - Ensures version-controlled files are not modified.
+  generate-matrix:
+    name: Generate PHP and WP version testing matrix
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      matrix: ${{ steps.generate.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+      - name: Generate PHP and WP testing matrix
+        id: generate
+        run: echo "matrix=$(node ./bin/github-actions-matrix.js)" >> "$GITHUB_OUTPUT"
+
   phpunit:
     name: Run tests (WP ${{ matrix.wp-version }}, PHP ${{ matrix.php-version }})
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.wp-version == 'trunk' }} # Allow tests to fail for trunk.
+    permissions:
+      contents: read
+    needs: generate-matrix
+    env:
+      WP_ENV_HOME: .cache/wp-env
+      WP_ENV_PHP_VERSION: ${{ matrix.php-version }}
+      WP_ENV_CORE: ${{ matrix.wp-version == 'trunk' && 'WordPress/WordPress' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wp-version ) }}
     strategy:
-      matrix:
-        php-version: [ '8.0', '8.1', '8.2', '8.3', '8.4', '8.5' ]
-        wp-version: [ '6.2', '6.3', '6.4', '6.5', '6.6', '6.7', '6.8', '6.9' ]
-        exclude:
-          # PHP 8.5 exclusions
-          - wp-version: '6.8'
-            php-version: '8.5'
-          - wp-version: '6.7'
-            php-version: '8.5'
-          - wp-version: '6.6'
-            php-version: '8.5'
-          - wp-version: '6.5'
-            php-version: '8.5'
-          - wp-version: '6.4'
-            php-version: '8.5'
-          - wp-version: '6.3'
-            php-version: '8.5'
-          - wp-version: '6.2'
-            php-version: '8.5'
-
-          # PHP 8.4 exclusions
-          - wp-version: '6.6'
-            php-version: '8.4'
-          - wp-version: '6.5'
-            php-version: '8.4'
-          - wp-version: '6.4'
-            php-version: '8.4'
-          - wp-version: '6.3'
-            php-version: '8.4'
-          - wp-version: '6.2'
-            php-version: '8.4'
-
-          # PHP 8.3 exclusions
-          - wp-version: '6.3'
-            php-version: '8.3'
-          - wp-version: '6.2'
-            php-version: '8.3'
+      fail-fast: false
+      matrix: ${{ fromJSON( needs.generate-matrix.outputs.matrix ) }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
 
-      - name: Setup MySQL with mysql_native_password
-        uses: shogo82148/actions-setup-mysql@v1
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          mysql-version: ${{ matrix.wp-version >= '5.0' && '8.0' || '5.6' }}
-          my-cnf: |
-            bind_address=127.0.0.1
-            default-authentication-plugin=mysql_native_password
-          root-password: root
+          cache: 'npm'
+          node-version-file: '.nvmrc'
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
+      - name: Install dependencies
+        run: npm install
+
+      - name: Setup cache
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
-          php-version: ${{ matrix.php-version }}
-          coverage: none
-          extensions: mysql, mysqli
-          tools: composer, wp-cli, phpunit:${{ matrix.wp-version < '5.1' && '6' || ( matrix.wp-version < '5.9' || matrix.php-version < '8.0' ) && '7' || '9' }}, phpunit-polyfills:^1.1.0
-        env:
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          key: ${{ runner.os }}-${{ hashFiles('composer.json', 'package.json') }}
+          path: |
+            .cache
+            tests/phpunit/cache
+
+      - name: Skip development plugins
+        run: echo '{"plugins":[]}' > .wp-env.override.json
+
+      - name: Start the development environment
+        run: npm run env start
+
+      - name: Report Versions
+        run: |
+          npm run cli -- php -v
+          npm run cli -- wp core version
+
+      - name: Install dependencies
+        run: npm run test:php:install-deps
+
+      - name: Run PHPUnit tests (single site)
+        run: npm run test:php
+
+      - name: Run PHPUnit tests (multisite)
+        run: npm run test:php:multisite
+
+  phpunit-coverage:
+    name: PHPUnit Coverage
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      WP_ENV_HOME: .cache/wp-env
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+
+      - name: Setup cache
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          key: ${{ runner.os }}-${{ hashFiles('composer.json', 'package.json') }}
+          path: |
+            .cache
+            tests/phpunit/cache
+
+      - name: Setup Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Start the development environment
+        run: npm run env -- start --xdebug=coverage
+
+      - name: Report Versions
+        run: |
+          npm run cli -- php -v
+          npm run cli -- php -i | grep xdebug
+          npm run cli -- wp core version
 
       - name: Install Composer dependencies
-        run: composer update --optimize-autoloader --prefer-dist
+        run: npm run test:php:install-deps
 
-      - name: Install SVN
-        run: sudo apt-get update && sudo apt-get install -y subversion
-
-      - name: Install test suite
-        run: |
-          echo "WP_VERSION=${{ matrix.wp-version }}" >> $GITHUB_ENV
-          echo "TMPDIR=${{ runner.temp }}" >> $GITHUB_ENV
-          echo "WP_TESTS_DIR=${{ runner.temp }}/wordpress-tests-lib" >> $GITHUB_ENV
-          echo "WP_CORE_DIR=${{ runner.temp }}/wordpress" >> $GITHUB_ENV
-          TMPDIR=${{ runner.temp }} bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 ${{ matrix.wp-version }}
-
-      - name: Run PHPUnit tests
-        run: |
-          echo "define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', '$HOME/.composer/vendor/yoast/phpunit-polyfills');" >> ${{ runner.temp }}/wordpress-tests-lib/wp-tests-config.php
-          phpunit
+      - name: Generate coverage report
+        run: npm run coverage:php:full

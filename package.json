@@ -1,21 +1,22 @@
 {
 	"devDependencies": {
-		"@wordpress/env": "^10.22.0"
+		"@wordpress/env": "^10.39.0"
 	},
 	"scripts": {
 		"env": "wp-env",
 		"cli": "wp-env run cli --env-cwd=wp-content/plugins/plugin",
-		"lint:php": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run lint",
-		"lint:php:phpcs": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run lint:phpcs",
-		"lint:php:phpstan": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run lint:phpstan",
-		"format:php": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format",
-		"format:php:phpcs": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format:phpcs",
-		"format:php:phpstan": "wp-env run cli --env-cwd=wp-content/plugins/plugin composer run format:phpstan",
-		"test:php:install-deps": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer install",
-		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test",
-		"test:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run test:multisite",
-		"coverage:php:single": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:single",
-		"coverage:php:multisite": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:multisite",
-		"coverage:php:full": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin composer run coverage:full"
+		"tests:cli": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin",
+		"lint:php": "npm run cli -- composer run lint",
+		"lint:php:phpcs": "npm run cli -- composer run lint:phpcs",
+		"lint:php:phpstan": "npm run cli -- composer run lint:phpstan",
+		"format:php": "npm run cli -- composer run format",
+		"format:php:phpcs": "npm run cli -- composer run format:phpcs",
+		"format:php:phpstan": "npm run cli -- composer run format:phpstan",
+		"test:php:install-deps": "npm run tests:cli -- composer install --ignore-platform-req=ext-gmp",
+		"test:php": "npm run tests:cli -- composer run test",
+		"test:php:multisite": "npm run tests:cli -- composer run test:multisite",
+		"coverage:php:single": "npm run tests:cli -- composer run coverage:single",
+		"coverage:php:multisite": "npm run tests:cli -- composer run coverage:multisite",
+		"coverage:php:full": "npm run tests:cli -- composer run coverage:full"
 	}
 }

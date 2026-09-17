@@ -1,5 +1,18 @@
 [unreleased]
 
+#### 1.4.1 / 2026-8-25
+
+* Pass at validation of hash by @afragen in https://github.com/fairpm/fair-plugin/pull/436
+* Validate bundle hash by @afragen in https://github.com/fairpm/fair-plugin/pull/437
+* Rearchitect `Updater` into a registry by @johnbillion in https://github.com/fairpm/fair-plugin/pull/428
+* set update-browserslist.yaml to manual dispatch only by @chuckadams in https://github.com/fairpm/fair-plugin/pull/447
+* Update RELEASE.MD by @Ipstenu in https://github.com/fairpm/fair-plugin/pull/458
+* hotfix, originally in PR4428 by @afragen in https://github.com/fairpm/fair-plugin/pull/463
+* Did manager integration by @namithj in https://github.com/fairpm/fair-plugin/pull/465
+* Add PHPStan checks by @kasparsd in https://github.com/fairpm/fair-plugin/pull/382
+* bump fairpm/did-manager-wordpress to 0.0.4-a by @chuckadams in https://github.com/fairpm/fair-plugin/pull/470
+* Release 1.4.1 by @Ipstenu in https://github.com/fairpm/fair-plugin/pull/515
+
 #### 1.4.0 / 2026-5-14
 
 * [bump-version] Bump version to 1.3.0-RC1 by @github-actions[bot] in https://github.com/fairpm/fair-plugin/pull/432

@@ -9,11 +9,12 @@
 	convertWarningsToExceptions="true"
 	convertNoticesToExceptions="true"
 	convertDeprecationsToExceptions="true"
+	cacheResultFile="tests/phpunit/cache/.phpunit.default.cache"
 	>
 	<testsuites>
 		<testsuite name="default">
-			<directory suffix="Test.php">./tests/phpunit/tests/</directory>
-			<exclude>./tests/phpunit/tests/SampleTest.php</exclude>
+			<directory suffix="Test.php">tests/phpunit/tests/</directory>
+			<exclude>tests/phpunit/tests/SampleTest.php</exclude>
 		</testsuite>
 	</testsuites>
 	<groups>
@@ -21,14 +22,14 @@
 			<group>ms-required</group>
 		</exclude>
 	</groups>
-	<coverage includeUncoveredFiles="true" processUncoveredFiles="false" pathCoverage="false" cacheDirectory="./tests/phpunit/cache">
+	<coverage includeUncoveredFiles="true" processUncoveredFiles="false" pathCoverage="false" cacheDirectory="tests/phpunit/cache">
 		<include>
-			<directory suffix=".php">./inc</directory>
+			<directory suffix=".php">inc</directory>
 		</include>
 		<report>
 			<text outputFile="php://stdout" showOnlySummary="true"/>
-			<html outputDirectory="./tests/phpunit/coverage/html/single-site"/>
-			<php outputFile="./tests/phpunit/coverage/php/single-site.php"/>
+			<html outputDirectory="tests/phpunit/coverage/html/single-site"/>
+			<php outputFile="tests/phpunit/coverage/php/single-site.php"/>
 		</report>
 	</coverage>
 </phpunit>

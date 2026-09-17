@@ -15,15 +15,13 @@ $color = isset( $_GET['color'] ) ? sanitize_hex_color( '#' . stripslashes( $_GET
  *
  * @return string
  */
-function sanitize_hex_color( $color ) {
-	if ( '' === $color ) {
-		return '';
-	}
-
+function sanitize_hex_color( $color ): string {
 	// 3 or 6 hex digits, or the empty string.
-	if ( preg_match( '|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ) {
+	if ( ! empty( $color ) && preg_match( '|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ) {
 		return $color;
 	}
+
+	return '';
 }
 
 // Add the proper header.
