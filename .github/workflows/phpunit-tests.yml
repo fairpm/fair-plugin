@@ -42,7 +42,7 @@ jobs:
     env:
       WP_ENV_HOME: .cache/wp-env
       WP_ENV_PHP_VERSION: ${{ matrix.php-version }}
-      WP_ENV_CORE: ${{ matrix.wp-version == 'trunk' && 'WordPress/WordPress' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wp-version ) }}
+      WP_ENV_CORE: ${{ matrix.wp-version == 'trunk' && 'WordPress/WordPress#master' || format( 'https://wordpress.org/wordpress-{0}.zip', matrix.wp-version ) }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON( needs.generate-matrix.outputs.matrix ) }}
