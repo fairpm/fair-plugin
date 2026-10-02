@@ -14,6 +14,40 @@ $ git commit -s -m 'My commit message.'
 
 **Please Note:** This is adding a _sign-off_ to the commit, which is not the same as *signing* your commits (which involves GPG keys).
 
+## Testing Changes in WordPress Playground
+
+Every pull request gets a comment with a link that opens the plugin in [WordPress Playground](https://playground.wordpress.net), running in the browser. The plugin is installed from a ZIP built for that pull request, Composer dependencies included, so the preview behaves like a real install rather than a source checkout.
+
+Click the link, log in, and test your change against a real WordPress.
+
+### How it works
+
+Two GitHub Actions workflows cooperate, both built on [`WordPress/action-wp-playground-pr-preview`](https://github.com/WordPress/action-wp-playground-pr-preview):
+
+1. [`.github/workflows/playground-pr.yml`](.github/workflows/playground-pr.yml) runs on `pull_request` with **read-only** permissions. It builds the ZIP with `npm run release` (see [`bin/release.js`](bin/release.js)) and a Blueprint with `npm run blueprint` (see [`bin/build-blueprint.js`](bin/build-blueprint.js)), then uploads both as a workflow artifact.
+2. [`.github/workflows/playground-publish.yml`](.github/workflows/playground-publish.yml) runs when the first workflow finishes, with **write** permissions. It publishes the ZIP to the public `ci-artifacts` prerelease and comments the preview link.
+
+### Why two workflow files
+
+Because the two jobs need different permissions, and GitHub grants permissions per workflow run:
+
+- The job that **runs pull request code** must be read-only. Pull requests from forks get a read-only `GITHUB_TOKEN`, and no repository secrets, by design.
+- The job that **publishes the ZIP and comments on the pull request** needs `contents: write` and `pull-requests: write`.
+
+A single workflow cannot do both: it would need a write-capable token in the same run that executes someone else's code, which is the well-known `pull_request_target` vulnerability. Splitting them lets a fork contributor's pull request get a working preview while keeping the privileged job away from untrusted code. `workflow_run` runs are also read from the default branch, so a pull request cannot change the logic that publishes its own preview.
+
+The cost of the split is that the ZIP is passed between the two jobs as a workflow artifact, and the publish job verifies the artifact's pull request number and commit SHA before using its contents.
+
+A single workflow would be simpler, and would work for pull requests from branches in this repository, but fork pull requests would get no preview at all. We accept the extra file to keep previews working for outside contributors.
+
+### Things to know
+
+- The Blueprint in [`assets/blueprints/blueprint.json`](assets/blueprints/blueprint.json) is the single source of truth: it sets the landing page, PHP and WP versions, login, and networking. It is also the file that WordPress.org uses for plugin directory previews.
+- `bin/build-blueprint.js` adds the step that installs the plugin from the ZIP, so you never need to edit the JSON by hand.
+- The ZIP must contain a single top-level directory, which WordPress and Playground both require. `bin/release.js` takes care of that, and fails the build if the entry file (`plugin.php`) or the Composer autoloader (`vendor/autoload.php`) is missing, so a broken preview is never published.
+- The ZIP of each pull request is published to a public release, including for forks, since the browser has to download it from somewhere. Only the two most recent builds per pull request are kept.
+- You can reproduce a preview locally: `npm run release` builds the ZIP, and `npm run blueprint -- --plugin-zip <url-or-path>` produces a Blueprint you can load in the Playground builder.
+
 ## Development Environment
 
 This plugin is ready to use with wp-env for local development, with a default configuration included in the repository. `npm run env` is an alias for `wp-env`:

@@ -1,0 +1,25 @@
+name: Playground Build
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# Superseded pushes for the same pull request never need to finish.
+concurrency:
+  group: playground-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    # Builds the plugin ZIP with its Composer dependencies and built assets,
+    # using read-only permissions so fork pull requests are safe to build.
+    uses: WordPress/action-wp-playground-pr-preview/.github/workflows/preview-build.yml@1b15093d61b5e98cdfeb31466f34ade495762cd7 # v4.0.0
+    with:
+      artifacts: fair-plugin=build/fair-plugin.zip
+      blueprint-from-build: blueprint.json
+      node-version: '22'
+      php-version: '8.2'
+      build-command: |
+        npm ci
+        npm run release
+        npm run blueprint -- --plugin-zip '{{ARTIFACT_URL:fair-plugin}}' -o blueprint.json
