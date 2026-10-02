@@ -10,6 +10,7 @@
 		"release": "npm-run-all release:*",
 		"release:build": "npm run build",
 		"release:zip": "git archive --prefix=fair-plugin/ --output fair-plugin.zip HEAD",
+		"blueprint": "node bin/build-blueprint.js",
 		"env": "wp-env",
 		"cli": "wp-env run cli --env-cwd=wp-content/plugins/plugin",
 		"tests:cli": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin",
