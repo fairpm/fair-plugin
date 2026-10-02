@@ -48,6 +48,12 @@ A single workflow would be simpler, and would work for pull requests from branch
 - The ZIP of each pull request is published to a public release, including for forks, since the browser has to download it from somewhere. Only the two most recent builds per pull request are kept.
 - You can reproduce a preview locally: `npm run release` builds the ZIP, and `npm run blueprint -- --plugin-zip <url-or-path>` produces a Blueprint you can load in the Playground builder.
 
+### Playground links on releases
+
+Each release also carries a Playground link at the top of its release notes, built by the same tool: `npm run blueprint -- --plugin-zip <url> --type url` prints a ready to open Playground URL, and `--type markdown` prints that URL as a Markdown link, with `--link-text` to set its wording.
+
+Release links point at the ZIP on `download.fair.pm` rather than the GitHub release asset: the browser fetches it directly, and only the object storage host sends the CORS headers Playground needs.
+
 ## Development Environment
 
 This plugin is ready to use with wp-env for local development, with a default configuration included in the repository. `npm run env` is an alias for `wp-env`:
