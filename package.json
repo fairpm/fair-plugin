@@ -13,7 +13,7 @@
 	"scripts": {
 		"build": "npm-run-all build:composer build:pot",
 		"build:composer": "composer install --optimize-autoloader --ignore-platform-reqs",
-		"build:pot": "composer exec wp -- i18n make-pot . languages/fair.pot --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/fairpm/fair-plugin/issues\",\"POT-Creation-Date\":\"\"}'",
+		"build:pot": "composer exec wp -- i18n make-pot . --exclude=build languages/fair.pot --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/fairpm/fair-plugin/issues\",\"POT-Creation-Date\":\"\"}'",
 		"release": "npm-run-all release:build release:composer release:zip",
 		"release:build": "npm run build",
 		"release:composer": "composer install --no-dev --optimize-autoloader --ignore-platform-reqs",
