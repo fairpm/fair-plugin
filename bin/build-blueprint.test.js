@@ -10,7 +10,11 @@ const script = fileURLToPath( new URL( './build-blueprint.js', import.meta.url )
 
 const run = ( args ) =>
 	JSON.parse(
-		execFileSync( process.execPath, [ script, ...args ], { encoding: 'utf8' } )
+		execFileSync( process.execPath, [ script, ...args ], {
+			encoding: 'utf8',
+			// Capture stderr too, so expected failures do not print help text.
+			stdio: [ 'ignore', 'pipe', 'pipe' ],
+		} ),
 	);
 
 const directories = [];
@@ -38,16 +42,16 @@ describe( 'build-blueprint.js', () => {
 		const template = JSON.parse(
 			fs.readFileSync(
 				fileURLToPath(
-					new URL( '../assets/blueprints/blueprint.json', import.meta.url )
+					new URL( '../assets/blueprints/blueprint.json', import.meta.url ),
 				),
-				'utf8'
-			)
+				'utf8',
+			),
 		);
 
 		expect( blueprint.login ).toBe( true );
 		expect( blueprint.features.networking ).toBe( true );
 		expect( blueprint.preferredVersions ).toEqual(
-			template.preferredVersions
+			template.preferredVersions,
 		);
 		expect( blueprint.landingPage ).toBe( template.landingPage );
 	} );
@@ -60,7 +64,7 @@ describe( 'build-blueprint.js', () => {
 		execFileSync(
 			process.execPath,
 			[ script, '--plugin-zip', 'fair-plugin.zip', '-o', output ],
-			{ encoding: 'utf8' }
+			{ encoding: 'utf8', stdio: [ 'ignore', 'pipe', 'pipe' ] },
 		);
 
 		const blueprint = JSON.parse( fs.readFileSync( output, 'utf8' ) );
