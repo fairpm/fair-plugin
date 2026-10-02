@@ -30,14 +30,26 @@ For linting and static analysis:
 
 - `npm run lint:php:phpcs` to run PHPCS (configured in [`phpcs.xml.dist`](phpcs.xml.dist)).
 - `npm run lint:php:phpstan` to run PHPStan (configured in [`phpstan.dist.neon`](phpstan.dist.neon)).
+- `npm run lint:js` to run ESLint over the Node.js scripts in [`bin/`](bin), via [`wp-scripts lint-js`](https://www.npmjs.com/package/@wordpress/scripts) (configured in [`eslint.config.js`](eslint.config.js)).
 - `npm run format:php:phpcs` to automatically fix PHPCS issues.
 - `npm run format:php:phpstan` to automatically fix PHPStan issues.
 - `npm run cli -- composer phpstan-baseline` to update the PHPStan baseline [`tests/phpstan-baseline.neon`](tests/phpstan-baseline.neon) as you fix the reported issues.
+
+JavaScript tooling comes from [`@wordpress/scripts`](https://www.npmjs.com/package/@wordpress/scripts), so linting and unit tests match WordPress core and Gutenberg. We keep our own [`eslint.config.js`](eslint.config.js) — `wp-scripts lint-js` uses the project's ESLint config when it finds one — so the rules, formatting (single quotes, tabs) and the Vitest rules come from [`@wordpress/eslint-plugin`](https://www.npmjs.com/package/@wordpress/eslint-plugin), with Node's globals and `console` output allowed for our command line scripts. There is no separate JavaScript code formatter in this repository; fix formatting with `npm run lint:js -- --fix`.
+
+Development uses Node 22, pinned in [`.nvmrc`](.nvmrc): `nvm use` before running `npm install`. `@wordpress/scripts` also supports Node 24, but we do not need it yet.
 
 For PHP unit tests:
 
 - `npm run test:php` to run PHPUnit tests for WP single site (configured in [`phpunit.xml.dist`](phpunit.xml.dist)).
 - `npm run test:php:multisite` to run PHPUnit multisite tests (configured in [`phpunit-multisite.xml.dist`](phpunit-multisite.xml.dist)).
+
+For JavaScript unit tests:
+
+- `npm run test:js` to run the unit tests for the Node.js scripts in [`bin/`](bin), via [`wp-scripts test-unit-js`](https://www.npmjs.com/package/@wordpress/scripts).
+- `npm run test-watch:js` to run those tests in watch mode. The script is named `test-watch:js`, not `test:js:watch`, so that it is not picked up by `npm-run-all test:*`.
+
+Test files live next to the code they cover, as `*.test.js`, and there is no Vitest configuration file: Vitest picks them up with its defaults. The runner is [Vitest](https://vitest.dev/), as in WordPress core and Gutenberg, which also runs our ES modules natively without a Babel transform.
 
 To enable test coverage reporting, start the environment with `npm run env start -- --xdebug=coverage` and then:
 
