@@ -12,11 +12,11 @@
 	},
 	"scripts": {
 		"build": "npm-run-all build:*",
-		"build:composer": "composer install --no-dev --optimize-autoloader --ignore-platform-reqs",
 		"build:pot": "composer exec wp -- i18n make-pot . languages/fair.pot --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/fairpm/fair-plugin/issues\",\"POT-Creation-Date\":\"\"}'",
+		"build:composer": "composer install --no-dev --optimize-autoloader --ignore-platform-reqs",
 		"release": "npm-run-all release:*",
 		"release:build": "npm run build",
-		"release:zip": "git archive --prefix=fair-plugin/ --output fair-plugin.zip HEAD",
+		"release:zip": "node bin/release.js --build-dir build --zip build/fair-plugin.zip",
 		"blueprint": "node bin/build-blueprint.js",
 		"env": "wp-env",
 		"cli": "wp-env run cli --env-cwd=wp-content/plugins/plugin",
