@@ -11,9 +11,10 @@
 		"vitest": "^5.0.3"
 	},
 	"scripts": {
-		"build": "npm-run-all build:*",
+		"build": "npm-run-all build:composer build:pot build:composer-prod",
+		"build:composer": "composer install --optimize-autoloader --ignore-platform-reqs",
+		"build:composer-prod": "composer install --no-dev --optimize-autoloader --ignore-platform-reqs",
 		"build:pot": "composer exec wp -- i18n make-pot . languages/fair.pot --headers='{\"Report-Msgid-Bugs-To\":\"https://github.com/fairpm/fair-plugin/issues\",\"POT-Creation-Date\":\"\"}'",
-		"build:composer": "composer install --no-dev --optimize-autoloader --ignore-platform-reqs",
 		"release": "npm-run-all release:*",
 		"release:build": "npm run build",
 		"release:zip": "node bin/release.js --build-dir build --zip build/fair-plugin.zip",
