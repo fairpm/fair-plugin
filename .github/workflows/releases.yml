@@ -47,6 +47,8 @@ jobs:
         run: bin/bundle.sh
 
       - name: Upload to Fastly Object Storage
+        # Runs before the release is created, so a CDN failure does not leave a
+        # published release whose canonical download is missing.
         # note the plugin filename is always 'fair-connect', regardless of the repo name or slug
         run: |
           aws s3 cp /tmp/${{ github.event.repository.name }}-${{ github.ref_name }}.zip s3://download.fair.pm/release/fair-connect-${{ github.ref_name }}.zip
@@ -59,11 +61,11 @@ jobs:
           AWS_REQUEST_CHECKSUM_CALCULATION: 'WHEN_REQUIRED'
 
       - name: Build the Playground link
-        # Points at the Fastly copy of the ZIP, not the GitHub release asset:
-        # the browser fetches it directly, and only Fastly sends the CORS
-        # headers Playground needs.
+        # Uses the GitHub release asset, the same host as the PR previews, and
+        # is uploaded by the step below. Fastly gets a copy too, but that one
+        # is for people downloading the plugin, not for Playground.
         id: playground
-        run: echo "link=$(npm run --silent blueprint -- --plugin-zip "https://download.fair.pm/release/fair-connect-${{ github.ref_name }}.zip" --type markdown --link-text "Launch FAIR Connect ${{ github.ref_name }}")" >> "$GITHUB_OUTPUT"
+        run: echo "link=$(npm run --silent blueprint -- --plugin-zip "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/${{ github.event.repository.name }}-${{ github.ref_name }}.zip" --type markdown --link-text "Launch FAIR Connect ${{ github.ref_name }}")" >> "$GITHUB_OUTPUT"
 
       - name: Create Release
         id: create_release

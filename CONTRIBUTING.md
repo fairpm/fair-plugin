@@ -52,7 +52,7 @@ A single workflow would be simpler, and would work for pull requests from branch
 
 Each release also carries a Playground link at the top of its release notes, built by the same tool: `npm run blueprint -- --plugin-zip <url> --type url` prints a ready to open Playground URL, and `--type markdown` prints that URL as a Markdown link, with `--link-text` to set its wording.
 
-Release links point at the ZIP on `download.fair.pm` rather than the GitHub release asset: the browser fetches it directly, and only the object storage host sends the CORS headers Playground needs.
+Release links point at the ZIP attached to the GitHub release, the same host the pull request previews use. The `download.fair.pm` copy of the ZIP is for people downloading the plugin, not for Playground. Playground proxies blueprint resource downloads, so the ZIP does not need to send CORS headers itself on playground.wordpress.net; the same link may not work in a self-hosted Playground that has no proxy.
 
 ## Development Environment
 
