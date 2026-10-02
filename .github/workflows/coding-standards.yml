@@ -53,7 +53,7 @@ jobs:
         run: npm run env start
 
       - name: Install Composer dependencies
-        run: npm run test:php:install-deps
+        run: npm run cli -- composer install --ignore-platform-reqs
 
       - name: Lint PHPCS
         # TODO: Remove the flag once all warnings are fixed.
