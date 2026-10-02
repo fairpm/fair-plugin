@@ -9,13 +9,11 @@ import { afterEach, describe, expect, test } from 'vitest';
 const script = fileURLToPath( new URL( './build-blueprint.js', import.meta.url ) );
 
 const run = ( args ) =>
-	JSON.parse(
-		execFileSync( process.execPath, [ script, ...args ], {
-			encoding: 'utf8',
-			// Capture stderr too, so expected failures do not print help text.
-			stdio: [ 'ignore', 'pipe', 'pipe' ],
-		} ),
-	);
+	execFileSync( process.execPath, [ script, ...args ], {
+		encoding: 'utf8',
+		// Capture stderr too, so expected failures do not print help text.
+		stdio: [ 'ignore', 'pipe', 'pipe' ],
+	} );
 
 const directories = [];
 
@@ -27,7 +25,9 @@ afterEach( () => {
 
 describe( 'build-blueprint.js', () => {
 	test( 'adds an install step for the given ZIP', () => {
-		const blueprint = run( [ '--plugin-zip', 'fair-plugin.zip' ] );
+		const blueprint = JSON.parse(
+			run( [ '--plugin-zip', 'fair-plugin.zip' ] ),
+		);
 
 		expect( blueprint.steps ).toHaveLength( 1 );
 		expect( blueprint.steps[ 0 ] ).toEqual( {
@@ -38,7 +38,9 @@ describe( 'build-blueprint.js', () => {
 	} );
 
 	test( 'keeps the settings from the default blueprint', () => {
-		const blueprint = run( [ '--plugin-zip', 'fair-plugin.zip' ] );
+		const blueprint = JSON.parse(
+			run( [ '--plugin-zip', 'fair-plugin.zip' ] ),
+		);
 		const template = JSON.parse(
 			fs.readFileSync(
 				fileURLToPath(
@@ -69,6 +71,60 @@ describe( 'build-blueprint.js', () => {
 
 		const blueprint = JSON.parse( fs.readFileSync( output, 'utf8' ) );
 		expect( blueprint.steps[ 0 ].pluginData.url ).toBe( 'fair-plugin.zip' );
+	} );
+
+	test( 'returns a Playground URL with --type url', () => {
+		const url = run( [ '--plugin-zip', 'fair-plugin.zip', '--type', 'url' ] );
+		const parsed = new URL( url );
+
+		expect( parsed.origin + parsed.pathname ).toBe(
+			'https://playground.wordpress.net/',
+		);
+		expect( parsed.searchParams.get( 'mode' ) ).toBe( 'seamless' );
+
+		const blueprint = JSON.parse( decodeURIComponent( parsed.hash.slice( 1 ) ) );
+		expect( blueprint.steps[ 0 ].pluginData.url ).toBe( 'fair-plugin.zip' );
+		expect( blueprint.login ).toBe( true );
+	} );
+
+	test( 'accepts --type json explicitly', () => {
+		expect( () =>
+			run( [ '--plugin-zip', 'fair-plugin.zip', '--type', 'json' ] ),
+		).not.toThrow();
+	} );
+
+	test( 'rejects an unknown type', () => {
+		expect( () =>
+			run( [ '--plugin-zip', 'fair-plugin.zip', '--type', 'xml' ] ),
+		).toThrow();
+	} );
+
+	test( 'renders a Markdown link with --type markdown', () => {
+		const link = run( [
+			'--plugin-zip',
+			'fair-plugin.zip',
+			'--type',
+			'markdown',
+			'--link-text',
+			'Launch FAIR Connect 1.5.0',
+		] );
+		const match = link.match( /^\[🧪 (.+)\]\((.+)\)$/u );
+
+		expect( match ).not.toBeNull();
+		expect( match[ 1 ] ).toBe( 'Launch FAIR Connect 1.5.0' );
+
+		const parsed = new URL( match[ 2 ] );
+		const blueprint = JSON.parse( decodeURIComponent( parsed.hash.slice( 1 ) ) );
+		expect( blueprint.steps[ 0 ].pluginData.url ).toBe( 'fair-plugin.zip' );
+	} );
+
+	test( 'uses a default link text', () => {
+		expect( run( [
+			'--plugin-zip',
+			'fair-plugin.zip',
+			'--type',
+			'markdown',
+		] ) ).toContain( '[🧪 Try it on WordPress Playground](' );
 	} );
 
 	test( 'fails without a ZIP', () => {
