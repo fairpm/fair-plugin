@@ -34,9 +34,6 @@ jobs:
       - name: Install Node dependencies
         run: npm install
 
-      - name: Install Composer dependencies
-        run: composer install --ignore-platform-reqs
-
       - name: Build project
         # Installs Composer dependencies, regenerates the POT, and builds the
         # plugin ZIP (with dependencies and built assets) at build/fair-plugin.zip.
