@@ -4,11 +4,11 @@
 	"devDependencies": {
 		"@wordpress/env": "^10.39.0",
 		"@wordpress/eslint-plugin": "^27.0.0",
+		"@wordpress/scripts": "^36.0.0",
 		"commander": "^15.0.0",
-		"eslint": "^9.39.5",
 		"globals": "^17.13.0",
 		"npm-run-all2": "^8.0.4",
-		"vitest": "^4.1.11"
+		"vitest": "^5.0.3"
 	},
 	"scripts": {
 		"build": "npm-run-all build:*",
@@ -22,7 +22,7 @@
 		"cli": "wp-env run cli --env-cwd=wp-content/plugins/plugin",
 		"tests:cli": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin",
 		"lint": "npm-run-all lint:*",
-		"lint:js": "eslint ./bin *.js",
+		"lint:js": "wp-scripts lint-js ./bin '*.js'",
 		"lint:php": "npm run cli -- composer run lint",
 		"lint:php:phpcs": "npm run cli -- composer run lint:phpcs",
 		"lint:php:phpstan": "npm run cli -- composer run lint:phpstan",
@@ -33,8 +33,8 @@
 		"format:php:phpstan": "npm run cli -- composer run format:phpstan",
 		"test:php:install-deps": "npm run tests:cli -- composer install --ignore-platform-req=ext-gmp",
 		"test:php": "npm run tests:cli -- composer run test",
-		"test:js": "vitest run",
-		"test:js:watch": "vitest",
+		"test:js": "wp-scripts test-unit-js",
+		"test-watch:js": "wp-scripts test-unit-js --watch",
 		"test:php:multisite": "npm run tests:cli -- composer run test:multisite",
 		"coverage:php:single": "npm run tests:cli -- composer run coverage:single",
 		"coverage:php:multisite": "npm run tests:cli -- composer run coverage:multisite",

@@ -9,11 +9,10 @@
  * JavaScript formatter, so the formatting comes from the WordPress ESLint
  * config instead.
  *
- * The scripts in `bin/` are Node.js command line tools, so they get Node's
- * globals and are allowed to write to the console. Anything added to `bin/`
- * in future is covered by the same override.
- *
- * See CONTRIBUTING.md for why we do not use `@wordpress/scripts`.
+ * Which files are linted is decided by the arguments to the lint script, not
+ * here: see `lint:js` in package.json. Those files are the Node.js scripts in
+ * this repository, so they get Node's globals, are allowed to write to the
+ * console, and are tested with Vitest.
  */
 
 import globals from 'globals';
@@ -21,6 +20,8 @@ import wordpress from '@wordpress/eslint-plugin';
 
 export default [
 	...wordpress.configs.esnext,
+	// Vitest rules, as in WordPress core and Gutenberg.
+	...wordpress.configs[ 'test-unit' ],
 	{
 		languageOptions: {
 			sourceType: 'module',
