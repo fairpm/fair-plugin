@@ -17,7 +17,7 @@ jobs:
     with:
       artifacts: fair-plugin=build/fair-plugin.zip
       blueprint-from-build: blueprint.json
-      node-version: '22'
+      node-version: '24'
       php-version: '8.2'
       build-command: |
         npm ci

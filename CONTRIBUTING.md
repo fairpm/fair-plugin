@@ -77,7 +77,7 @@ For linting and static analysis:
 
 JavaScript tooling comes from [`@wordpress/scripts`](https://www.npmjs.com/package/@wordpress/scripts), so linting and unit tests match WordPress core and Gutenberg. We keep our own [`eslint.config.js`](eslint.config.js) — `wp-scripts lint-js` uses the project's ESLint config when it finds one — so the rules, formatting (single quotes, tabs) and the Vitest rules come from [`@wordpress/eslint-plugin`](https://www.npmjs.com/package/@wordpress/eslint-plugin), with Node's globals and `console` output allowed for our command line scripts. There is no separate JavaScript code formatter in this repository; fix formatting with `npm run lint:js -- --fix`.
 
-Development uses Node 22, pinned in [`.nvmrc`](.nvmrc): `nvm use` before running `npm install`. `@wordpress/scripts` also supports Node 24, but we do not need it yet.
+Development uses Node 24, pinned in [`.nvmrc`](.nvmrc): `nvm use` before running `npm install`. Node 22 satisfies most of our dependencies, but some WordPress packages (`@php-wasm/*`, `@wp-playground/*`) now require Node 24.18 or newer, so CI and local installs should use 24.
 
 For PHP unit tests:
 
