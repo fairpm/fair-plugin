@@ -2,12 +2,12 @@
 	"type": "module",
 	"private": true,
 	"devDependencies": {
-		"@wordpress/env": "^10.39.0",
+		"@wordpress/env": "^11.16.0",
 		"@wordpress/eslint-plugin": "^27.0.0",
 		"@wordpress/scripts": "^36.0.0",
 		"commander": "^15.0.0",
 		"globals": "^17.13.0",
-		"npm-run-all2": "^8.0.4",
+		"npm-run-all2": "^9.0.3",
 		"vitest": "^5.0.3"
 	},
 	"scripts": {
