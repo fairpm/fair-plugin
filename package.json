@@ -3,6 +3,9 @@
 	"private": true,
 	"devDependencies": {
 		"@wordpress/env": "^10.39.0",
+		"@wordpress/eslint-plugin": "^27.0.0",
+		"commander": "^15.0.0",
+		"eslint": "^9.39.5",
 		"npm-run-all2": "^8.0.4"
 	},
 	"scripts": {
@@ -16,9 +19,13 @@
 		"env": "wp-env",
 		"cli": "wp-env run cli --env-cwd=wp-content/plugins/plugin",
 		"tests:cli": "wp-env run tests-cli --env-cwd=wp-content/plugins/plugin",
+		"lint": "npm-run-all lint:*",
+		"lint:js": "eslint ./bin *.js",
 		"lint:php": "npm run cli -- composer run lint",
 		"lint:php:phpcs": "npm run cli -- composer run lint:phpcs",
 		"lint:php:phpstan": "npm run cli -- composer run lint:phpstan",
+		"format": "npm-run-all format:*",
+		"format:js": "npm run lint:js -- --fix",
 		"format:php": "npm run cli -- composer run format",
 		"format:php:phpcs": "npm run cli -- composer run format:phpcs",
 		"format:php:phpstan": "npm run cli -- composer run format:phpstan",
