@@ -12,7 +12,7 @@ const isExcluded = ( patterns, buildDir = '' ) =>
 describe( 'parseDistignore', () => {
 	test( 'ignores comments and blank lines', () => {
 		expect( parseDistignore( '# a comment\n\n   \nnode_modules\n' ) ).toHaveLength(
-			1
+			1,
 		);
 	} );
 
