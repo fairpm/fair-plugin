@@ -1,38 +1,33 @@
-/**
+/*
  * ESLint configuration.
  *
- * Uses the WordPress coding standards for JavaScript, via the
- * @wordpress/eslint-plugin config, with two adjustments for the Node.js scripts
- * in bin/:
+ * Uses the WordPress coding standards for JavaScript, via the config shipped
+ * with the `@wordpress/eslint-plugin` package.
  *
- * - Prettier's formatting rule is off: these files are formatted by hand, in
- *   the same style as the PHP in this repository (tabs, double quotes, spaces
- *   inside parentheses), rather than by Prettier.
- * - console output is allowed: these are command line scripts.
+ * We use its "esnext" config rather than "recommended": recommended also turns
+ * on the Prettier formatting rule, and this repository does not run a
+ * JavaScript formatter, so the formatting comes from the WordPress ESLint
+ * config instead.
  *
- * See CONTRIBUTING.md for why we do not use @wordpress/scripts.
+ * The scripts in `bin/` are Node.js command line tools, so they get Node's
+ * globals and are allowed to write to the console. Anything added to `bin/`
+ * in future is covered by the same override.
+ *
+ * See CONTRIBUTING.md for why we do not use `@wordpress/scripts`.
  */
 
-import wpPlugin from "@wordpress/eslint-plugin";
+import globals from 'globals';
+import wordpress from '@wordpress/eslint-plugin';
 
 export default [
+	...wordpress.configs.esnext,
 	{
-		ignores: [ "**/build/**", "**/cache/**", "**/node_modules/**", "**/vendor/**" ],
-	},
-	...wpPlugin.configs.recommended,
-	{
-		files: [ "bin/**/*.{js,mjs,cjs}" ],
 		languageOptions: {
-			ecmaVersion: "latest",
-			sourceType: "module",
-			globals: {
-				console: "readonly",
-				process: "readonly",
-			},
+			sourceType: 'module',
+			globals: globals.node,
 		},
 		rules: {
-			"no-console": "off",
-			"prettier/prettier": "off",
+			'no-console': 'off',
 		},
 	},
 ];
