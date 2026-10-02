@@ -1,4 +1,6 @@
 {
+	"type": "module",
+	"private": true,
 	"devDependencies": {
 		"@wordpress/env": "^10.39.0",
 		"npm-run-all2": "^8.0.4"
