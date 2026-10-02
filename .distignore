@@ -3,9 +3,11 @@
 .github/
 .cache/
 bin/
+build/
 node_modules/
 tests/
 RELEASE.md
+eslint.config.js
 phpunit.xml.dist
 phpunit-*.xml.dist
 phpcs.xml.dist
