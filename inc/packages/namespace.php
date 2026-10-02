@@ -285,6 +285,7 @@ function fetch_metadata_doc( string $url, string $did ) {
 		} elseif ( $code !== 200 ) {
 			$error = new WP_Error(
 				'fair.packages.metadata.http_error',
+				/* translators: %d: HTTP response code. */
 				sprintf( __( 'HTTP %d error received', 'fair' ), $code )
 			);
 			cache_update_error( $did, $error );

@@ -1,0 +1,24 @@
+name: Playground Publish
+
+on:
+  workflow_run:
+    workflows: ['Playground Build']
+    types: [completed]
+
+# Required by preview-publish.yml, both here and on the job, or the run fails
+# at startup before any logs.
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  publish:
+    permissions:
+      contents: write
+      pull-requests: write
+    # Runs from the default branch and never checks out pull request code: it
+    # only publishes the ZIP built by playground-build.yml.
+    uses: WordPress/action-wp-playground-pr-preview/.github/workflows/preview-publish.yml@1b15093d61b5e98cdfeb31466f34ade495762cd7 # v4.0.0
+    with:
+      blueprint-from-artifact: true
+      mode: comment

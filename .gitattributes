@@ -4,9 +4,11 @@
 /.github export-ignore
 /bin export-ignore
 /.cache export-ignore
+/build export-ignore
 /node_modules export-ignore
 /tests export-ignore
 RELEASE.md export-ignore
+eslint.config.js export-ignore
 phpunit.xml.dist export-ignore
 phpunit-multisite.xml.dist export-ignore
 phpcs.xml.dist export-ignore

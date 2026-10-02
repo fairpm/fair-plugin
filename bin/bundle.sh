@@ -35,10 +35,10 @@ if [ -f "$PLUGIN_ZIP" ]; then
 	cd - > /dev/null
 fi
 
-# Bundle our plugin first.
+# Bundle our plugin first: the release ZIP built by `npm run release`.
 [ -d /tmp/fair-temp ] && rm -rf /tmp/fair-temp
-mkdir -p /tmp/fair-temp/wordpress/wp-content/plugins/fair-plugin
-rsync -a --exclude-from="$SCRIPT_DIR/../.distignore" "$SCRIPT_DIR/../" /tmp/fair-temp/wordpress/wp-content/plugins/fair-plugin
+mkdir -p /tmp/fair-temp/wordpress/wp-content/plugins
+unzip -q "$PLUGIN_ZIP" -d /tmp/fair-temp/wordpress/wp-content/plugins/
 
 # Extract minimum required WordPress version from plugin header.
 REQUIRES_AT_LEAST=$(get_plugin_header "Requires at least")
