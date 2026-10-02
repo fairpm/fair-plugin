@@ -46,16 +46,6 @@ jobs:
       - name: Create WP distribution files
         run: bin/bundle.sh
 
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          files: |
-            /tmp/${{ github.event.repository.name }}-${{ github.ref_name }}.zip
-            /tmp/fair-dist/*
-
       - name: Upload to Fastly Object Storage
         # note the plugin filename is always 'fair-connect', regardless of the repo name or slug
         run: |
@@ -67,6 +57,31 @@ jobs:
           AWS_DEFAULT_REGION: 'us-west'
           AWS_ENDPOINT_URL: 'https://us-west.object.fastlystorage.app'
           AWS_REQUEST_CHECKSUM_CALCULATION: 'WHEN_REQUIRED'
+
+      - name: Build the Playground link
+        # Points at the Fastly copy of the ZIP, not the GitHub release asset:
+        # the browser fetches it directly, and only Fastly sends the CORS
+        # headers Playground needs.
+        id: playground
+        run: echo "link=$(npm run --silent blueprint -- --plugin-zip "https://download.fair.pm/release/fair-connect-${{ github.ref_name }}.zip" --type markdown --link-text "Launch FAIR Connect ${{ github.ref_name }}")" >> "$GITHUB_OUTPUT"
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Release candidates (for example 1.5.0-RC1) are prereleases, so they
+          # never become the latest release.
+          prerelease: ${{ contains( github.ref_name, '-' ) }}
+          generate_release_notes: true
+          body: |
+            ## 🧪 Try it on WordPress Playground
+
+            ${{ steps.playground.outputs.link }}
+          files: |
+            /tmp/${{ github.event.repository.name }}-${{ github.ref_name }}.zip
+            /tmp/fair-dist/*
 
       - name: Build provenance attestation
         uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
