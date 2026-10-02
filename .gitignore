@@ -1,6 +1,6 @@
+/build/
 /.cache/
 /node_modules/
-*.bak
 /.vscode
 /vendor/
 .wp-env.override.json
@@ -13,6 +13,8 @@ phpstan.neon
 /tests/phpunit/coverage
 wp-tests-config.php
 *.swp
+*.bak
+*.zip
 
 # Track placeholders so that empty directories stay in the repo.
 !.gitkeep
