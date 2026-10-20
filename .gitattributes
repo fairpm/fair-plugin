@@ -11,6 +11,7 @@ phpunit.xml.dist export-ignore
 phpunit-multisite.xml.dist export-ignore
 phpcs.xml.dist export-ignore
 phpstan.neon.dist export-ignore
+# composer.json must be present in the archive for Composer install workflows
 package.json export-ignore
 package-lock.json export-ignore
 .wp-env.json export-ignore
