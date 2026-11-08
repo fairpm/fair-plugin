@@ -12,7 +12,6 @@ use const FAIR\CACHE_LIFETIME_FAILURE;
 use const FAIR\VERSION;
 use WP_Error;
 
-const PLUGIN_API_RESPONSE_SIZE_WARNING = 1024 * 1024;
 const PLUGIN_API_RESPONSE_TIME_WARNING = 10.0;
 
 /**
@@ -181,10 +180,8 @@ function test_plugin_directory_api(): array {
 	$body = wp_remote_retrieve_body( $response );
 	$headers = wp_remote_retrieve_headers( $response );
 	$data = json_decode( $body, true );
-	$body_size = strlen( $body );
 
 	$details[ __( 'HTTP status', 'fair' ) ] = (string) $status_code;
-	$details[ __( 'Decoded response size', 'fair' ) ] = size_format( $body_size, 2 ) . ' (' . $body_size . ' bytes)';
 	$details[ __( 'Content-Type', 'fair' ) ] = (string) ( $headers['content-type'] ?? '' );
 	$details[ __( 'Cache-Control', 'fair' ) ] = (string) ( $headers['cache-control'] ?? __( 'Not provided', 'fair' ) );
 	$details[ __( 'Response date', 'fair' ) ] = (string) ( $headers['date'] ?? __( 'Not provided', 'fair' ) );
@@ -209,11 +206,11 @@ function test_plugin_directory_api(): array {
 		);
 	}
 
-	if ( $body_size > PLUGIN_API_RESPONSE_SIZE_WARNING || $elapsed >= PLUGIN_API_RESPONSE_TIME_WARNING ) {
+	if ( $elapsed >= PLUGIN_API_RESPONSE_TIME_WARNING ) {
 		return build_test_result(
 			'recommended',
-			__( 'The FAIR plugin directory works, but its response is large or slow', 'fair' ),
-			__( 'Large or slow responses can exceed the 15-second timeout used by Add Plugins on some servers.', 'fair' ),
+			__( 'The FAIR plugin directory works, but its response is slow', 'fair' ),
+			__( 'Slow responses can exceed the 15-second timeout used by Add Plugins on some servers.', 'fair' ),
 			$details
 		);
 	}
@@ -382,18 +379,16 @@ function get_plugin_directory_debug_fields(): array {
 	$body = wp_remote_retrieve_body( $response );
 	$headers = wp_remote_retrieve_headers( $response );
 	$data = json_decode( $body, true );
-	$body_size = strlen( $body );
 	$is_valid = 200 === $status_code && JSON_ERROR_NONE === json_last_error() && is_array( $data ) && isset( $data['plugins'] ) && isset( $data['info'] );
-	$is_large_or_slow = $body_size > PLUGIN_API_RESPONSE_SIZE_WARNING || $elapsed >= PLUGIN_API_RESPONSE_TIME_WARNING;
+	$is_slow = $elapsed >= PLUGIN_API_RESPONSE_TIME_WARNING;
 
 	if ( ! $is_valid ) {
 		$fields['plugin_api_availability'] = build_debug_field( __( 'Plugin listing API availability', 'fair' ), 'invalid response' );
-	} elseif ( $is_large_or_slow ) {
-		$fields['plugin_api_availability'] = build_debug_field( __( 'Plugin listing API availability', 'fair' ), 'available; response is large or slow' );
+	} elseif ( $is_slow ) {
+		$fields['plugin_api_availability'] = build_debug_field( __( 'Plugin listing API availability', 'fair' ), 'available; response is slow' );
 	}
 
 	$fields['plugin_api_http_status'] = build_debug_field( __( 'Plugin listing API HTTP status', 'fair' ), (string) $status_code );
-	$fields['plugin_api_response_size'] = build_debug_field( __( 'Plugin listing API decoded response size', 'fair' ), $body_size . ' bytes' );
 	$fields['plugin_api_plugins_returned'] = build_debug_field( __( 'Plugin listing API plugins returned', 'fair' ), is_array( $data['plugins'] ?? null ) ? (string) count( $data['plugins'] ) : '0' );
 	$fields['plugin_api_content_type'] = build_debug_field( __( 'Plugin listing API Content-Type', 'fair' ), (string) ( $headers['content-type'] ?? '' ) );
 	$fields['plugin_api_cache_control'] = build_debug_field( __( 'Plugin listing API Cache-Control', 'fair' ), (string) ( $headers['cache-control'] ?? 'not provided' ) );
