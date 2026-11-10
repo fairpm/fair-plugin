@@ -1,5 +1,4 @@
 includes:
-	- tests/phpstan-baseline.neon # TODO: Fix all these issues.
 	- vendor/szepeviktor/phpstan-wordpress/extension.neon
 parameters:
 	tmpDir: .cache/phpstan
