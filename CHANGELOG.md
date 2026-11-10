@@ -1,5 +1,13 @@
 [unreleased]
 
+#### 1.5.0 / 2026-11-10
+
+* fix all remaining phpstan issues for level 0
+* Update wp-env
+* Add WordPress 7.1 to the test matrix.
+* Rename to fairpm/fair-connect in composer.json for publishing to packagist.org
+* Extend Site Health report with additional details
+
 #### 1.4.1 / 2026-8-25
 
 * Pass at validation of hash by @afragen in https://github.com/fairpm/fair-plugin/pull/436
