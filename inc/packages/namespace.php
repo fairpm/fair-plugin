@@ -833,6 +833,11 @@ function delete_cached_did_for_install(): void {
  *
  * This is commonly required for packages from Git hosts.
  *
+ * Only applies to installs. Updates must keep the installed package basename
+ * stable: core derives the destination, the old package deletion, and the
+ * active_plugins entry from hook_extra['plugin'], so renaming the source
+ * during an update would orphan the active plugin entry and deactivate it.
+ *
  * @param string|WP_Error $source Path of $source, or a WP_Error object.
  * @param string $remote_source Path of $remote_source.
  * @param WP_Upgrader $upgrader An Upgrader object.
@@ -850,8 +855,9 @@ function maybe_rename_on_package_download( $source, string $remote_source, WP_Up
 		return $source;
 	}
 
-	// Exit early if installing.
-	if ( isset( $hook_extra['action'] ) && $hook_extra['action'] === 'install' ) {
+	// Only ever rename on install. Updates (single and bulk) must keep the
+	// installed basename stable.
+	if ( empty( $hook_extra['action'] ) || 'install' !== $hook_extra['action'] ) {
 		return $source;
 	}
 
