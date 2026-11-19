@@ -91,3 +91,6 @@ The FAIR Connect plugin is currently maintained by the Technical Independence Wo
 FAIR is licensed under the GNU General Public License, v2 or later. Copyright 2025 the contributors.
 
 WordPress is a registered trademark of the WordPress Foundation. FAIR is not endorsed by, or affiliated with, the WordPress Foundation.
+
+### Testing
+See [the testing documentation](./docs/testing/README.md) for information on testing.
